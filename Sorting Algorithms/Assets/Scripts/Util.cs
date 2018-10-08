@@ -1,0 +1,87 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/* -------------------------------------- Utility methods & constants --------------------------------------
+ * Generalized methods and such...
+ * 
+ * ---------------------------------------------------------------------------------------------------------
+*/
+
+public class Util : MonoBehaviour {
+    // Rules (numbers)
+    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100, NUMBER_OF_RULE_TYPES = 2;
+    // Instructions
+    public static readonly int NO_INSTRUCTION = -1, INIT_STATE = -2;
+    // Instructions (strings)
+    public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
+    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", PERFORMED_INST = "Performed";
+    // Checking instruction (strings)
+    public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
+    public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
+    // Rules (cases)
+    public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", NO_DUPLICATES = "No duplicates", ALL_SAME = "All same";
+    // Algorithms
+    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
+    // Object types
+    public static readonly string SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder";
+    // Other switch cases
+    public const string INIT = "Init", UPDATE_BLACKBOARD = "Update blackboard";
+
+    // Colors used
+    public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
+    public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan;
+
+    public static readonly ArrayList exeptionsForAlgorithm = new ArrayList() { INSERTION_SORT };
+
+
+    /* Creates a list of objects
+     * - Puts them ontop of another object if positions are provided 
+    */
+    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, GameObject parent)
+    {
+        GameObject[] objects = new GameObject[numberOfElements];
+        GameObject element;
+
+        for (int x = 0; x < numberOfElements; x++)
+        {
+            if (pos.Length == 1)
+                element = Instantiate(prefab, pos[0] + new Vector3(x, 0f, 0f), Quaternion.identity);
+            else
+                element = Instantiate(prefab, pos[x], Quaternion.identity);
+
+            element.GetComponent<IChild>().Parent = parent;
+            objects[x] = element;
+        }
+        return objects;
+    }
+
+    // Destroys all objects in a list
+    public static void DestroyObjects(GameObject[] objects)
+    {
+        if (objects != null)
+        {
+            for (int i = 0; i < objects.Length; i++)
+            {
+                Destroy(objects[i]);
+            }
+        }
+    }
+
+    // Gather positions of one type of GameObject, such that other objects can be put directly above
+    public static Vector3[] GatherPositionsOfListElements(GameObject[] list)
+    {
+        Vector3[] positions = new Vector3[list.Length];
+        for (int x=0; x < list.Length; x++)
+        {
+            positions[x] = list[x].transform.position + new Vector3(0f, 1f, 0f);
+        }
+        return positions;
+    }
+
+    public static string ModifyPluralString(string singular, int number)
+    {
+        return (number > 1) ? singular + "s" : singular;
+    }
+
+}
