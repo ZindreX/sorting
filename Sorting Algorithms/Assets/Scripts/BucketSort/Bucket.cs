@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Bucket : MonoBehaviour, IChild {
 
+    /* ---------------------------------------- Bucket object ----------------------------------------
+     * bucket index = value * numberOfBuckets / (maxSize + 1)
+     * 
+     * 
+    */
+
+
     private static int BUCKET_NR = 0, BUCKET_SIZE = 10; // change size internal based on how many buckets exists? max - max/2 - max/3 etc.
 
     private int bucketID;
@@ -59,6 +66,14 @@ public class Bucket : MonoBehaviour, IChild {
         return (element.Value >= bucketCapacity[0] && element.Value < bucketCapacity[1]) ? true : false;
     }
 
+    private void AddSortingElementToBucket(SortingElementBase sortingElement)
+    {
+        if (ValidateSortingElement(sortingElement))
+        {
+            currentHolding.Add(sortingElement);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
@@ -70,6 +85,10 @@ public class Bucket : MonoBehaviour, IChild {
                 if (ValidateSortingElement(sortingElement))
                 {
                     // Do animation (color -> green -> color)
+                }
+                else
+                {
+                    // Can't be put into this bucket
                 }
 
             }

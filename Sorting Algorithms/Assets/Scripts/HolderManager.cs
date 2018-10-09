@@ -43,7 +43,7 @@ public class HolderManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfHolders; x++)
         {
             holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3(x, 0f, 0f), Quaternion.identity);
-            holders[x].GetComponent<HolderBase>().Parent = gameObject; // Mergesort null exception?
+            //holders[x].GetComponent<HolderBase>().Parent = gameObject; // Mergesort & Bucketsort null exception?
         }
         containsHolders = true;
     }

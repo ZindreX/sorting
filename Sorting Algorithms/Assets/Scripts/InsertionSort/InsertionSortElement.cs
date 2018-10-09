@@ -5,7 +5,7 @@ using UnityEngine;
 public class InsertionSortElement : SortingElementBase {
 
     private InsertionSortInstruction insertionSortInstruction;
-    private bool isPivot = false;
+    protected bool isPivot = false;
 
     protected override void Awake()
     {

@@ -197,7 +197,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void PerformAlgorithmTutorial()
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
-        StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
+        //StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
+        ((BucketSort)algorithm).BucketSortStandard(elementManager.SortingElements, numberOfElements);
     }
 
     /* --------------------------------------- User Test ---------------------------------------

@@ -2,7 +2,6 @@
 
 public class InsertionSortInstruction : InstructionBase {
 
-
     private int sortingElementID, value, holderID, nextHolderID;
     private bool isPivot;
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -204,11 +204,12 @@ GameObject:
   m_Component:
   - component: {fileID: 119957890}
   - component: {fileID: 119957888}
+  - component: {fileID: 119957884}
+  - component: {fileID: 119957889}
   - component: {fileID: 119957887}
   - component: {fileID: 119957886}
   - component: {fileID: 119957885}
   - component: {fileID: 119957891}
-  - component: {fileID: 119957884}
   m_Layer: 0
   m_Name: BucketSortManager
   m_TagString: Untagged
@@ -239,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e31ed5cc672b1f418908a04def7dae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holderPrefab: {fileID: 1946392530152884, guid: c4715b4d9cf47da429328980c8d6edec,
+  holderPrefab: {fileID: 1946392530152884, guid: d79d9f6da6efd7a4ebadf59e625b76ac,
     type: 2}
 --- !u!114 &119957886
 MonoBehaviour:
@@ -252,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2068fcafa233edf4f96570e015102994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sortingElementPrefab: {fileID: 1486772700085944, guid: 1966695a7e8834d4997c4cc867a1beec,
+  sortingElementPrefab: {fileID: 1486772700085944, guid: 264a28b24ab487041ba598b7713fa738,
     type: 2}
 --- !u!114 &119957887
 MonoBehaviour:
@@ -283,7 +284,20 @@ MonoBehaviour:
   allSame: 0
   worstCase: 0
   bestCase: 0
-  blackboardObj: {fileID: 0}
+  blackboardObj: {fileID: 129821525}
+  numberOfBuckets: 10
+--- !u!114 &119957889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 119957883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be402c03f19cd7e4aa54e0742db219c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bucketPrefab: {fileID: 1809051415}
 --- !u!4 &119957890
 Transform:
   m_ObjectHideFlags: 0
@@ -360,6 +374,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 161005908a886f544bd95fad55d963bb, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &129821525 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1793876141699732, guid: 161005908a886f544bd95fad55d963bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 129821524}
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
