@@ -27,9 +27,9 @@ public class ElementManager : MonoBehaviour, IManager {
 
     public GameObject GetSortingElement(int index)
     {
-        //if (sortingElements[index] == null)
-        //    return GetComponent<InsertionSort>().PivotHolder.GetComponent<HolderBase>().CurrentHolding; // Pivot element:--> test and remove
-        return sortingElements[index];
+        if (index >= 0 && index < sortingElements.Length)
+            return sortingElements[index];
+        return null;
     }
 
     // Creation without rules

@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Blackboard : MonoBehaviour {
 
-    private static readonly int TITLE_LABEL = 0, STATUS_LABEL = 1, SCORE_LABEL = 2;
+    /* -------------------------------------------- Blackboard --------------------------------------------
+     * 
+     * 
+    */
+
+    private static readonly int TITLE_LABEL = 0, STATUS_LABEL = 1, SCORE_LABEL = 2, SPLIT_LABEL = 3;
     private static readonly int STATUS_TEXT = 0, SCORE_TEXT = 1;
 
 
@@ -26,14 +31,17 @@ public class Blackboard : MonoBehaviour {
         texts[SCORE_TEXT].text = score;
     }
 
+    // Sets up the blackboard before a Tutorial or User Test
     public void InitializeBlackboard(bool tutorial)
     {
         if (tutorial)
         {
-            // Result label
+            // Status label
             labels[STATUS_LABEL].transform.position = gameObject.transform.position + new Vector3(0f, -1.63f, 0f);
-            // Result text
+            // Status text
             texts[STATUS_TEXT].transform.position = gameObject.transform.position + new Vector3(0f, -3.4f, 0f);
+            // Split label
+            labels[SPLIT_LABEL].GetComponentInChildren<MeshRenderer>().enabled = false;
             // Score label
             labels[SCORE_LABEL].GetComponentInChildren<MeshRenderer>().enabled = false;
             // Score text

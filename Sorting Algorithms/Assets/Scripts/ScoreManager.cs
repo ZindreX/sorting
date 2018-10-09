@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
 
+    /* -------------------------------------------- Managing the score --------------------------------------------
+     * > Increase streak for each correct move by the user
+     * > Reset streak when the user does a mistake
+     * 
+    */
+
     public readonly int SCORE_PER_STREAK = 10, SUBSTRACTION_PER_ERROR = 2;
     public readonly float SCORE_UPDATE = 0.1f;
     public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", PRO = "Pro";
@@ -20,6 +26,11 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
     public string DifficultyLevel
     {
         get { return difficultyLevel; }
+    }
+
+    public int DifficultyMultiplier
+    {
+        get { return difficultyMultiplier; }
     }
 
     public int CalculateScore()
@@ -40,18 +51,21 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
         return streakScore * difficultyMultiplier;
     }
 
+    // Show of at the end of the user test
     public IEnumerator VisualizeScore()
     {
         // TODO: display score on blackboard at end of game
         yield return new WaitForSeconds(SCORE_UPDATE);
     }
 
+    // Sets when User Test begins
     public void SetStartTime()
     {
         if (startTime == 0)
             startTime = Time.deltaTime;
     }
 
+    // Sets when User Test ends
     public void SetEndTime()
     {
         if (endTime != 0 &&  GetComponent<Algorithm>().IsSortingComplete)
@@ -81,7 +95,7 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
     public void IncrementStreak()
     {
         currentStreak++;
-        streakScore = SCORE_PER_STREAK * currentStreak; // change to float and have a multiplier for streak?
+        streakScore = SCORE_PER_STREAK * currentStreak;
     }
 
     public void Mistake()
@@ -113,7 +127,8 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
 
     public string FillInBlackboard()
     {
-        return "Streak: " + streakScore + "   (x" + difficultyMultiplier + ")\n\nTotal Score: " + totalScore;
+        //return "Streak: " + streakScore + "   (x" + difficultyMultiplier + ")\n\nTotal Score: " + totalScore;
+        return "Streak: " + currentStreak + " (" + longestStreak + ")\n\nTotal Score: " + totalScore;
     }
 
     public void ResetScore()

@@ -88,7 +88,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
         get { return moving; }
     }
 
-    public bool IntermediateMove // TODO: drop?
+    public bool IntermediateMove
     {
         get { return intermediateMove; }
     }
@@ -139,10 +139,6 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                     case Util.CORRECT_HOLDER:
                         standingInCorrectHolder = true;
                         parent.GetComponent<ScoreManager>().IncrementStreak();
-                        break;
-                    case Util.MOVE_INTERMEDIATE:
-                        standingInCorrectHolder = true; // ??? TODO: test / drop?
-                        intermediateMove = true;
                         break;
                     case Util.INIT_ERROR: case Util.WRONG_HOLDER:
                         standingInCorrectHolder = false;

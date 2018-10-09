@@ -8,7 +8,7 @@ public class BubbleSortInstruction : InstructionBase {
      * 
     */
 
-    private int sortingElementID1, sortingElementID2, value1, value2, holderID1, holderID2;
+    private int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
 
     public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, string instruction, bool isCompare, bool isSorted)
         : base(instruction, isCompare, isSorted)
@@ -71,6 +71,6 @@ public class BubbleSortInstruction : InstructionBase {
 
     public override string DebugInfo()
     {
-        return "[" + value1 + "] <--> [" + value2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction; 
+        return "[" + value1 + "] <--> [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID1 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction; 
     }
 }

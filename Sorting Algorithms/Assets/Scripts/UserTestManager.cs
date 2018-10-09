@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UserTestManager : MonoBehaviour, IBlackboardAble {
 
-    /* -------------------------------------------- User Test --------------------------------------------
+    /* -------------------------------------------- User Test Manager --------------------------------------------
      * 
      * 
     */

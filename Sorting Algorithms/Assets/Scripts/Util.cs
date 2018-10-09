@@ -11,28 +11,32 @@ using UnityEngine;
 public class Util : MonoBehaviour {
     // Rules (numbers)
     public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100, NUMBER_OF_RULE_TYPES = 2;
+
     // Instructions
     public static readonly int NO_INSTRUCTION = -1, INIT_STATE = -2;
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
     public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", PERFORMED_INST = "Performed";
+    
     // Checking instruction (strings)
     public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
+    
     // Rules (cases)
     public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", NO_DUPLICATES = "No duplicates", ALL_SAME = "All same";
+
     // Algorithms
-    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
+    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort", BUCKET_SORT = "Bucket sort";
+
     // Object types
-    public static readonly string SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder";
+    public static readonly string SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
+    
     // Other switch cases
     public const string INIT = "Init", UPDATE_BLACKBOARD = "Update blackboard";
 
     // Colors used
     public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
     public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan;
-
-    public static readonly ArrayList exeptionsForAlgorithm = new ArrayList() { INSERTION_SORT };
 
 
     /* Creates a list of objects

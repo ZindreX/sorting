@@ -23,10 +23,10 @@ public class BubbleSortManager : AlgorithmManagerBase {
         // Get the next two instructions
         BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)userTestManager.GetInstruction(instNr);
 
-        // Find the Sorting elements
+        // Find the sorting elements for this instruction
         BubbleSortElement s1 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
         BubbleSortElement s2 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
-
+            
         // Hand the instructions out
         s1.ElementInstruction = bubbleInstruction;
         s2.ElementInstruction = bubbleInstruction;
@@ -79,9 +79,8 @@ public class BubbleSortManager : AlgorithmManagerBase {
         }
         else
         {
-            //if (instruction.NextHolderID == Util.NO_INSTRUCTION) // skipping until next move // TODO: FIX
-            Debug.LogError("FIX");
-            return true;
+            if (instruction.ElementInstruction == Util.COMPARE_START_INST || instruction.ElementInstruction == Util.COMPARE_END_INST) // skipping until next move // TODO: FIX
+                return true;
         }
         return false;
     }

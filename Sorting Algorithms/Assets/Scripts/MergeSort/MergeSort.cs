@@ -239,11 +239,6 @@ public class MergeSort : Algorithm {
     }
     #endregion
 
-    // 
-    private void CreateMergeHolder()
-    {
-
-    }
 
 
     private Dictionary<int, Dictionary<string, GameObject[]>> allSplits = new Dictionary<int, Dictionary<string, GameObject[]>>();

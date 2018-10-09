@@ -124,7 +124,7 @@ public class BubbleSort : Algorithm {
     }
     #endregion
 
-    #region Bubble Sort: All Moves Test
+    #region Bubble Sort: User Test
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list)
     {
         int N = list.Length, round = 0;
@@ -162,12 +162,27 @@ public class BubbleSort : Algorithm {
 
     private BubbleSortInstruction MakeInstruction(InstructionBase inst1, InstructionBase inst2, string instruction, bool isCompare, bool isSorted)
     {
-        int seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
-        int seID2 = ((BubbleSortInstruction)inst1).SortingElementID2;
-        int value1 = ((BubbleSortInstruction)inst1).Value1;
-        int value2 = ((BubbleSortInstruction)inst1).Value2;
-        int hID1 = ((BubbleSortInstruction)inst1).HolderID1;
-        int hID2 = ((BubbleSortInstruction)inst1).HolderID2;
+        int seID1, seID2, hID1, hID2, value1, value2;
+        if (inst1.ElementInstruction == Util.INIT_INSTRUCTION)
+        {
+            seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
+            seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
+            hID1 = ((BubbleSortInstruction)inst1).HolderID1;
+            hID2 = ((BubbleSortInstruction)inst2).HolderID1;
+            value1 = ((BubbleSortInstruction)inst1).Value1;
+            value2 = ((BubbleSortInstruction)inst2).Value1;
+        }
+        else
+        {
+            //if (((BubbleSortInstruction)inst1).                       // TODO: fix instructions for bubblesort -- bool isMain ?
+            seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
+            seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
+            hID1 = ((BubbleSortInstruction)inst1).HolderID1;
+            hID2 = ((BubbleSortInstruction)inst2).HolderID1;
+            value1 = ((BubbleSortInstruction)inst1).Value1;
+            value2 = ((BubbleSortInstruction)inst2).Value1;
+        }
+
         return new BubbleSortInstruction(seID1, seID2, hID1, hID2, value1, value2, instruction, isCompare, isSorted);
     }
 

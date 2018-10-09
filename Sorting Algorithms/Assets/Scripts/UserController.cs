@@ -5,6 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class UserController : MonoBehaviour {
 
+    /* -------------------------------------------- User Control --------------------------------------------
+     * 
+     * 
+    */
+
     // User control variables (movement)
     [SerializeField]
     private float movementSpeed = 15f, mouseSensitivity = 3f;
@@ -111,6 +116,11 @@ public class UserController : MonoBehaviour {
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.PRO);
     }
 
+
+    private void PerformAlgorithmControlVR()
+    {
+
+    }
 
 
 }

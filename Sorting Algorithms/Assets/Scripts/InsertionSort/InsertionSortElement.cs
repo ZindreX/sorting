@@ -41,7 +41,10 @@ public class InsertionSortElement : SortingElementBase {
                 case Util.PIVOT_END_INST: status = "Move down from pivot holder"; break;
                 case Util.COMPARE_START_INST: status = "Comparing with pivot"; break;
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
-                case Util.SWITCH_INST: status = "Move to " + nextID; break;
+                case Util.SWITCH_INST:
+                    status = "Move to " + nextID;
+                    intermediateMove = true; // Too easy for the user?
+                    break;
                 case Util.PERFORMED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
@@ -60,33 +63,35 @@ public class InsertionSortElement : SortingElementBase {
                 isSorted = true;
             else
                 isSorted = false;
-
-            //Debug.Log(IsCorrectlyPlaced()); // TODO: FIX 1st element > 2nd element --> shouldn't be green until moved to 2nd holder
         }
     }
 
     protected override string IsCorrectlyPlaced()
     {
         if (CanValidate())
-        {
-            Debug.Log(instruction);
+        {   
             switch (instruction)
             {
-                case Util.INIT_INSTRUCTION: return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
-                case Util.PIVOT_START_INST: return (currentStandingOn.HolderID == insertionSortInstruction.HolderID
-                        || ((InsertionSortHolder)currentStandingOn).IsPivotHolder) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-                case Util.PIVOT_END_INST: return (((InsertionSortHolder)currentStandingOn).IsPivotHolder
-                        || currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-                case Util.COMPARE_START_INST: break;
-                case Util.COMPARE_END_INST: return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                case Util.INIT_INSTRUCTION:
+                    return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+                case Util.PIVOT_START_INST:
+                    return (currentStandingOn.HolderID == insertionSortInstruction.HolderID || ((InsertionSortHolder)currentStandingOn).IsPivotHolder) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                case Util.PIVOT_END_INST:
+                    return (((InsertionSortHolder)currentStandingOn).IsPivotHolder || currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                case Util.COMPARE_START_INST:
+                    break;
+                case Util.COMPARE_END_INST:
+                    return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
                 case Util.SWITCH_INST:
-                    if (insertionSortInstruction.HolderID == currentStandingOn.HolderID && insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION && IsSorted)
+                    if (intermediateMove && currentStandingOn.HolderID == insertionSortInstruction.HolderID) //insertionSortInstruction.HolderID == currentStandingOn.HolderID && insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION && IsSorted)
                     {
-                        Debug.Log("Intermediate");
-                        return Util.MOVE_INTERMEDIATE;
+                        return Util.CORRECT_HOLDER; //Util.MOVE_INTERMEDIATE;
                     }
-                    else if (insertionSortInstruction.NextHolderID == currentStandingOn.HolderID)
+                    else if (intermediateMove && insertionSortInstruction.NextHolderID == currentStandingOn.HolderID)
+                    {
+                        intermediateMove = false;
                         return Util.CORRECT_HOLDER;
+                    }
                     else
                         return Util.WRONG_HOLDER;
                 case Util.PERFORMED_INST:

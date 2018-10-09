@@ -88,7 +88,6 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
-
     #region Insertion Sort: All Moves Tutorial (Visuals)
     public override IEnumerator Tutorial(GameObject[] list)
     {

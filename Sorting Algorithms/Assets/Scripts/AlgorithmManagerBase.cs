@@ -9,6 +9,11 @@ using UnityEngine;
 [RequireComponent(typeof(ScoreManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
 
+    /* -------------------------------------------- The main unit for the algorithm --------------------------------------------
+     * 
+     * 
+    */
+
     // Algorithm settings
     [SerializeField]
     private int numberOfElements = 8;
