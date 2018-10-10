@@ -146,9 +146,14 @@ public class BubbleSort : Algorithm {
                     // Switch their positions
                     allMoves.Add(round++, MakeInstruction(list[j], list[j + 1], Util.SWITCH_INST, true, false));
 
+                    int holder1 = ((BubbleSortInstruction)list[j]).HolderID1;
+                    int holder2 = ((BubbleSortInstruction)list[j + 1]).HolderID1;
                     InstructionBase temp = list[j];
                     list[j] = list[j + 1];
                     list[j + 1] = temp;
+                    // Update holderID
+                    ((BubbleSortInstruction)list[j]).HolderID1 = holder1;
+                    ((BubbleSortInstruction)list[j + 1]).HolderID1 = holder2;
                 }
                 allMoves.Add(round++, MakeInstruction(list[j], list[j + 1], Util.COMPARE_END_INST, false, false));
             }
@@ -163,26 +168,12 @@ public class BubbleSort : Algorithm {
     private BubbleSortInstruction MakeInstruction(InstructionBase inst1, InstructionBase inst2, string instruction, bool isCompare, bool isSorted)
     {
         int seID1, seID2, hID1, hID2, value1, value2;
-        if (inst1.ElementInstruction == Util.INIT_INSTRUCTION)
-        {
-            seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
-            seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
-            hID1 = ((BubbleSortInstruction)inst1).HolderID1;
-            hID2 = ((BubbleSortInstruction)inst2).HolderID1;
-            value1 = ((BubbleSortInstruction)inst1).Value1;
-            value2 = ((BubbleSortInstruction)inst2).Value1;
-        }
-        else
-        {
-            //if (((BubbleSortInstruction)inst1).                       // TODO: fix instructions for bubblesort -- bool isMain ?
-            seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
-            seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
-            hID1 = ((BubbleSortInstruction)inst1).HolderID1;
-            hID2 = ((BubbleSortInstruction)inst2).HolderID1;
-            value1 = ((BubbleSortInstruction)inst1).Value1;
-            value2 = ((BubbleSortInstruction)inst2).Value1;
-        }
-
+        seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
+        seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
+        hID1 = ((BubbleSortInstruction)inst1).HolderID1;
+        hID2 = ((BubbleSortInstruction)inst2).HolderID1;
+        value1 = ((BubbleSortInstruction)inst1).Value1;
+        value2 = ((BubbleSortInstruction)inst2).Value1;
         return new BubbleSortInstruction(seID1, seID2, hID1, hID2, value1, value2, instruction, isCompare, isSorted);
     }
 

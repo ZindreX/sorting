@@ -10,14 +10,15 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
     */
 
     private int currentInstructionNr = 0, errorCount = 0;
-    private bool readyForNext;
+    private int readyForNext, algorithmMovesNeeded; // bool readyForNext;
     private Dictionary<int, InstructionBase> instructions;
 
-    public void InitUserTest(Dictionary<int, InstructionBase> instructions)
+    public void InitUserTest(Dictionary<int, InstructionBase> instructions, int algorithmMovesNeeded)
     {
         this.instructions = instructions;
-        readyForNext = true;
-        currentInstructionNr = 0;
+        this.algorithmMovesNeeded = algorithmMovesNeeded;
+        readyForNext = algorithmMovesNeeded; // true
+        currentInstructionNr = -1;
         errorCount = 0;
     }
 
@@ -49,10 +50,16 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
         errorCount++;
     }
 
-    public bool ReadyForNext
+    public int ReadyForNext
     {
         get { return readyForNext; }
         set { readyForNext = value; }
+    }
+
+    public int AlgorithmMovesNeeded
+    {
+        get { return algorithmMovesNeeded; }
+        set { algorithmMovesNeeded = value; }
     }
 
     public int CurrentInstructionNr

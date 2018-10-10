@@ -95,8 +95,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     {
                         // Dont do anything while moving element
                     }
-                    else if (userTestManager.ReadyForNext)
+                    else if (userTestManager.ReadyForNext == userTestManager.AlgorithmMovesNeeded)
                     {
+                        // Reset
+                        userTestManager.ReadyForNext = 0;
+
                         // Checking if all sorting elements are sorted
                         if (elementManager.AllSorted())
                             algorithm.IsSortingComplete = true;
@@ -104,7 +107,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         {
                             // Still some elements not sorted, so go on to next round
                             userTestManager.IncrementToNextMove();
-                            userTestManager.ReadyForNext = PrepareNextInstruction(userTestManager.CurrentInstructionNr);
+                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.CurrentInstructionNr);
                         }
                     }
                     blackboard.SetResultText(userTestManager.FillInBlackboard());
@@ -213,7 +216,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         Dictionary<int, InstructionBase> instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
         
         // Initialize user test
-        userTestManager.InitUserTest(instructions);
+        userTestManager.InitUserTest(instructions, MovesNeeded);
 
         // Set start time
         scoreManager.SetStartTime();
@@ -229,11 +232,14 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Returns the instance of the algorithm being runned 
     protected abstract Algorithm InstanceOfAlgorithm { get; }
 
+    // Moves needed to progress to next instruction
+    protected abstract int MovesNeeded { get; }
+
     // Prepares the next instruction based on the algorithm being runned
-    protected abstract bool PrepareNextInstruction(int instructionNr);
+    protected abstract int PrepareNextInstruction(int instructionNr);
 
     // TODO: Display stuff on the blackboard if help enabled
-    protected abstract bool SkipOrHelp(InstructionBase instruction);
+    protected abstract int SkipOrHelp(InstructionBase instruction);
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
     protected abstract HolderBase GetCorrectHolder(int index);

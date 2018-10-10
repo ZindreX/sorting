@@ -18,7 +18,12 @@ public class InsertionSortManager : AlgorithmManagerBase {
         get { return insertionSort; }
     }
 
-    protected override bool PrepareNextInstruction(int instNr)
+    protected override int MovesNeeded
+    {
+        get { return 1; }
+    }
+
+    protected override int PrepareNextInstruction(int instNr)
     {
         // Get the next instruction
         InsertionSortInstruction instruction = (InsertionSortInstruction)userTestManager.GetInstruction(instNr);
@@ -37,7 +42,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         return SkipOrHelp(instruction);
     }
 
-    protected override bool SkipOrHelp(InstructionBase instruction)
+    protected override int SkipOrHelp(InstructionBase instruction)
     {
         // Display help on blackboard
         if (false) // help enabled
@@ -47,9 +52,9 @@ public class InsertionSortManager : AlgorithmManagerBase {
         else
         {
             if (((InsertionSortInstruction)instruction).NextHolderID == Util.NO_INSTRUCTION) // skipping until next (user) move
-                return true;
+                return 1;
         }
-        return false;
+        return 0;
     }
 
     protected override HolderBase GetCorrectHolder(int index)

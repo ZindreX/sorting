@@ -36,7 +36,7 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
                 case Util.COMPARE_START_INST: status = "Comparing with " + bubbleSortInstruction.GetValueFor(sortingElementID, true); break;
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
-                case Util.SWITCH_INST: status = "Move to " + bubbleSortInstruction.SwitchToHolder(sortingElementID); break;
+                case Util.SWITCH_INST: status = "Move to " + nextID; break;
                 case Util.PERFORMED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }

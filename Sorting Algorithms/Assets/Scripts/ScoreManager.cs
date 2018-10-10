@@ -68,7 +68,7 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
     // Sets when User Test ends
     public void SetEndTime()
     {
-        if (endTime != 0 &&  GetComponent<Algorithm>().IsSortingComplete)
+        if (endTime == 0 && GetComponent<Algorithm>().IsSortingComplete)
         {
             endTime = Time.deltaTime;
             timeSpent = endTime - startTime;

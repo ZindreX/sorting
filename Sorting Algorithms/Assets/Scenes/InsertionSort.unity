@@ -278,7 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62fadf70b7651144a7035dbbfd5fb5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfElements: 8
+  numberOfElements: 3
   isTutorial: 0
   helpEnabled: 0
   noDuplicates: 0

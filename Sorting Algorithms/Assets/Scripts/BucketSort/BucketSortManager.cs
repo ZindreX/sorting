@@ -30,6 +30,11 @@ public class BucketSortManager : AlgorithmManagerBase {
         get { return bucketSort; }
     }
 
+    protected override int MovesNeeded
+    {
+        get { return 1; }
+    }
+
     protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
         throw new System.NotImplementedException();
@@ -46,12 +51,12 @@ public class BucketSortManager : AlgorithmManagerBase {
         throw new System.NotImplementedException();
     }
 
-    protected override bool PrepareNextInstruction(int instructionNr)
+    protected override int PrepareNextInstruction(int instructionNr)
     {
         throw new System.NotImplementedException();
     }
 
-    protected override bool SkipOrHelp(InstructionBase instruction)
+    protected override int SkipOrHelp(InstructionBase instruction)
     {
         throw new System.NotImplementedException();
     }

@@ -156,7 +156,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                     // Check if ready for next round
                     if (nextMove)
                     {
-                        parent.GetComponent<UserTestManager>().ReadyForNext = true;
+                        parent.GetComponent<UserTestManager>().ReadyForNext += 1;
                         nextMove = false;
                     }
                 }

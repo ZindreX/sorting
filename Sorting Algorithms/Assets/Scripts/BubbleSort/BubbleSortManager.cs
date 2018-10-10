@@ -18,7 +18,12 @@ public class BubbleSortManager : AlgorithmManagerBase {
         get { return bubbleSort; }
     }
 
-    protected override bool PrepareNextInstruction(int instNr)
+    protected override int MovesNeeded
+    {
+        get { return 2; }
+    }
+
+    protected override int PrepareNextInstruction(int instNr)
     {
         // Get the next two instructions
         BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)userTestManager.GetInstruction(instNr);
@@ -38,6 +43,21 @@ public class BubbleSortManager : AlgorithmManagerBase {
         Debug.Log("Round " + instNr + ": " + userTestManager.GetInstruction(instNr).DebugInfo());
 
         return SkipOrHelp(bubbleInstruction);
+    }
+
+    protected override int SkipOrHelp(InstructionBase instruction)
+    {
+        // Display help on blackboard
+        if (false) // help enabled
+        {
+
+        }
+        else
+        {
+            if (instruction.ElementInstruction == Util.COMPARE_START_INST || instruction.ElementInstruction == Util.COMPARE_END_INST) // skipping until next user move
+                return 2;
+        }
+        return 0;
     }
 
     protected override HolderBase GetCorrectHolder(int index) // todo: override only in insertion sort etc?
@@ -70,18 +90,4 @@ public class BubbleSortManager : AlgorithmManagerBase {
         return pseudoCode;
     }
 
-    protected override bool SkipOrHelp(InstructionBase instruction)
-    {
-        // Display help on blackboard
-        if (false) // help enabled
-        {
-
-        }
-        else
-        {
-            if (instruction.ElementInstruction == Util.COMPARE_START_INST || instruction.ElementInstruction == Util.COMPARE_END_INST) // skipping until next move // TODO: FIX
-                return true;
-        }
-        return false;
-    }
 }

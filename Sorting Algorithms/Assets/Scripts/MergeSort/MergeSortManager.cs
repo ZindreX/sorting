@@ -18,7 +18,12 @@ public class MergeSortManager : AlgorithmManagerBase {
         get { return mergeSort; }
     }
 
-    protected override bool PrepareNextInstruction(int instructionNr)
+    protected override int MovesNeeded
+    {
+        get { return 1; }
+    }
+
+    protected override int PrepareNextInstruction(int instructionNr)
     {
         MergeSortInstruction mergeSortInstruction = (MergeSortInstruction)userTestManager.GetInstruction(instructionNr);
         Debug.Log("FIX");
@@ -27,7 +32,7 @@ public class MergeSortManager : AlgorithmManagerBase {
         return SkipOrHelp(mergeSortInstruction);
     }
 
-    protected override bool SkipOrHelp(InstructionBase instruction)
+    protected override int SkipOrHelp(InstructionBase instruction)
     {
         // Display help on blackboard
         if (false) // help enabled
@@ -38,9 +43,9 @@ public class MergeSortManager : AlgorithmManagerBase {
         {
             //if (instruction.NextHolderID == Util.NO_INSTRUCTION) // skipping until next move // TODO: FIX
             Debug.LogError("FIX");
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
 
     protected override HolderBase GetCorrectHolder(int index)

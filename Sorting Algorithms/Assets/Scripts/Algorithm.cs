@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Algorithm : MonoBehaviour, IAlgorithmAble
-{
+public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
+
+
     [SerializeField]
     protected float seconds = 1f;
 

@@ -5,6 +5,7 @@ public class BubbleSortInstruction : InstructionBase {
     /* -------------------------------------------- Instruction class for user test --------------------------------------------
      * Sorting element 1: sortindElementID1 + holderID1 + value1 
      * Sorting element 2: sortindElementID2 + holderID2 + value2
+     * [ Sorting Element 1 ] [ Sorting Element 2 ]
      * 
     */
 
@@ -34,6 +35,7 @@ public class BubbleSortInstruction : InstructionBase {
     public int HolderID1
     {
         get { return holderID1; }
+        set { holderID1 = value; }
     }
 
     public int HolderID2
@@ -71,6 +73,13 @@ public class BubbleSortInstruction : InstructionBase {
 
     public override string DebugInfo()
     {
-        return "[" + value1 + "] <--> [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID1 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction; 
+        switch (instruction)
+        {
+            case Util.COMPARE_START_INST: return "[" + value1 + "] ? [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID2 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.SWITCH_INST: return "[" + value1 + "] <--> [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID2 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.COMPARE_END_INST: return "[" + value1 + "] | [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID2 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            default: return instruction + " has no case.";
+        }
+        
     }
 }
