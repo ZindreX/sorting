@@ -36,8 +36,11 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
                 case Util.COMPARE_START_INST: status = "Comparing with " + bubbleSortInstruction.GetValueFor(sortingElementID, true); break;
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
-                case Util.SWITCH_INST: status = "Move to " + nextID; break;
-                case Util.PERFORMED_INST: status = "Performed"; break;
+                case Util.SWITCH_INST:
+                    status = "Move to " + nextID;
+                    //intermediateMove = true;
+                    break;
+                case Util.EXECUTED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
@@ -46,11 +49,17 @@ public class BubbleSortElement : SortingElementBase {
             else
                 isCompare = false;
 
-            if (bubbleSortInstruction.IsSorted)
+            if (IsSortedAchieved())
                 isSorted = true;
             else
                 isSorted = false;
         }
+    }
+    
+    // Since two elements share instructions, usually the 2nd element is sorted, but in the final instruction both are
+    public bool IsSortedAchieved()
+    {
+        return bubbleSortInstruction.IsSorted && (bubbleSortInstruction.SortingElementID2 == sortingElementID || !parent.GetComponent<UserTestManager>().HasInstructions());
     }
 
     protected override string IsCorrectlyPlaced()
@@ -73,7 +82,7 @@ public class BubbleSortElement : SortingElementBase {
                            || bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID)
                            ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
-                case Util.PERFORMED_INST:
+                case Util.EXECUTED_INST:
                     return (bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;

@@ -70,16 +70,14 @@ public class BubbleSortInstruction : InstructionBase {
         return (sortingElementID == SortingElementID1) ? value1 : value2;
     }
 
-
     public override string DebugInfo()
     {
         switch (instruction)
         {
-            case Util.COMPARE_START_INST: return "[" + value1 + "] ? [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID2 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
-            case Util.SWITCH_INST: return "[" + value1 + "] <--> [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID2 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
-            case Util.COMPARE_END_INST: return "[" + value1 + "] | [" + value2 + "], sID1=" + sortingElementID1 + ", sID2=" + SortingElementID2 + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.COMPARE_START_INST: return "[" + value1 + "] ? [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] ? [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.SWITCH_INST: return "[" + value1 + "] <--> [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] <--> [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.COMPARE_END_INST: return "[" + value1 + "] | [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] | [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
             default: return instruction + " has no case.";
         }
-        
     }
 }

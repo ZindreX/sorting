@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class UserController : MonoBehaviour {
+public class UserControllerBase : MonoBehaviour {
 
     /* -------------------------------------------- User Control --------------------------------------------
      * 
@@ -22,22 +22,13 @@ public class UserController : MonoBehaviour {
 
     private Rigidbody rb;
 
-    [SerializeField]
-    private GameObject AMObject;
-    private AlgorithmManagerBase am;
-
-    void Awake()
+    protected virtual void Awake()
     {
-        am = AMObject.GetComponent(typeof(AlgorithmManagerBase)) as AlgorithmManagerBase;        
+        rb = GetComponent<Rigidbody>();    
     }
 
-    // Use this for initialization
-    void Start () {
-        rb = GetComponent<Rigidbody>();
-	}
-	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
         // Apply movement
         PerformMovement();
 
@@ -46,7 +37,7 @@ public class UserController : MonoBehaviour {
 
         // Algorithm control
         PerformAlgorithmControl();
-	}
+    }
 
     /* ---------------------------------------------------------------------------------------------------------------
     * Movement control
@@ -88,39 +79,13 @@ public class UserController : MonoBehaviour {
         }
     }
 
-    private void PerformAlgorithmControl()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-            am.InstantiateSetup();
-        else if (Input.GetKeyDown(KeyCode.U))
-            am.DestroyAndReset();
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            if (am.IsTutorial)
-                am.PerformAlgorithmTutorial();
-            else
-            {
-                if (am.GetComponent<ScoreManager>().DifficultyLevel == null)
-                {
-                    am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
-                }
-                am.PerformAlgorithmUserTest();
-
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.F1))
-            am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.BEGINNER);
-        else if (Input.GetKeyDown(KeyCode.F2))
-            am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
-        else if (Input.GetKeyDown(KeyCode.F3))
-            am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.PRO);
-    }
-
-
-    private void PerformAlgorithmControlVR()
+    protected virtual void PerformAlgorithmControl()
     {
 
     }
 
+    protected virtual void PerformAlgorithmControlVR()
+    {
 
+    }
 }

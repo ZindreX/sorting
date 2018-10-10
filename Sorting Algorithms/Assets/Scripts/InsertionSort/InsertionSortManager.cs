@@ -23,23 +23,23 @@ public class InsertionSortManager : AlgorithmManagerBase {
         get { return 1; }
     }
 
-    protected override int PrepareNextInstruction(int instNr)
+    protected override int PrepareNextInstruction(InstructionBase instruction)
     {
         // Get the next instruction
-        InsertionSortInstruction instruction = (InsertionSortInstruction)userTestManager.GetInstruction(instNr);
+        InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
 
         // Get the Sorting element
-        InsertionSortElement sortingElement = elementManager.GetSortingElement(instruction.SortingElementID).GetComponent<InsertionSortElement>();
+        InsertionSortElement sortingElement = elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
 
         // Hands out the next instruction
-        sortingElement.ElementInstruction = instruction;
+        sortingElement.ElementInstruction = insertionSortInstruction;
 
         // Give this sorting element permission to give feedback to progress to next intstruction
         sortingElement.NextMove = true;
 
-        Debug.Log("Round " + instNr + ": " + userTestManager.GetInstruction(instNr).DebugInfo());
+        Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + insertionSortInstruction.DebugInfo());
 
-        return SkipOrHelp(instruction);
+        return SkipOrHelp(insertionSortInstruction);
     }
 
     protected override int SkipOrHelp(InstructionBase instruction)

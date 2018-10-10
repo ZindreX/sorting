@@ -51,7 +51,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         throw new System.NotImplementedException();
     }
 
-    protected override int PrepareNextInstruction(int instructionNr)
+    protected override int PrepareNextInstruction(InstructionBase instruction)
     {
         throw new System.NotImplementedException();
     }

@@ -16,7 +16,7 @@ public class Util : MonoBehaviour {
     public static readonly int NO_INSTRUCTION = -1, INIT_STATE = -2;
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
-    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", PERFORMED_INST = "Performed";
+    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed";
     
     // Checking instruction (strings)
     public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";

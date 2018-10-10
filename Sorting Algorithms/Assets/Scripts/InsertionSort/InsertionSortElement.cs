@@ -45,7 +45,7 @@ public class InsertionSortElement : SortingElementBase {
                     status = "Move to " + nextID;
                     intermediateMove = true; // Too easy for the user?
                     break;
-                case Util.PERFORMED_INST: status = "Performed"; break;
+                case Util.EXECUTED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
@@ -94,7 +94,7 @@ public class InsertionSortElement : SortingElementBase {
                     }
                     else
                         return Util.WRONG_HOLDER;
-                case Util.PERFORMED_INST:
+                case Util.EXECUTED_INST:
                     if (insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION)
                         return (currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
                     return (currentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;

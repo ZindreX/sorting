@@ -191,11 +191,11 @@ public class InsertionSort : Algorithm {
         // Create pivot holder
         CreatePivotHolder();
 
-        Dictionary<int, InstructionBase> allMoves = new Dictionary<int, InstructionBase>();
+        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
 
         InsertionSortInstruction compareElement;
 
-        int i = 1, move = 1;
+        int i = 1, instructionNr = 0;
         while (i < sortingElements.Length)
         {
             int temp1 = ((InsertionSortInstruction)sortingElements[i]).HolderID; // pivot: temp1 -> temp2*
@@ -203,8 +203,7 @@ public class InsertionSort : Algorithm {
             sortingElements[i] = pivot;
 
             // Add this move (Pivot moved in pivot position)
-            allMoves.Add(move, pivot);
-            move++;
+            instructions.Add(instructionNr++, pivot);
 
             int j = i - 1;
             while (true)
@@ -213,14 +212,12 @@ public class InsertionSort : Algorithm {
                 compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_INSTRUCTION, Util.COMPARE_START_INST, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
                 sortingElements[j] = compareElement;
                 //
-                allMoves.Add(move, compareElement);
-                move++;
+                instructions.Add(instructionNr++, compareElement);
 
                 // Pivot larger than compare element, place compare element
                 if (pivot.Value >= compareElement.Value)
                 {
-                    allMoves.Add(move, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_INSTRUCTION, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
-                    move++;
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_INSTRUCTION, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
                     break;
                 }
 
@@ -231,8 +228,7 @@ public class InsertionSort : Algorithm {
                 j -= 1;
 
                 // Add this move (compare element switched to pivot/next position)
-                allMoves.Add(move, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, Util.SWITCH_INST, compareElement.Value, false, false, true));
-                move++;
+                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, Util.SWITCH_INST, compareElement.Value, false, false, true));
 
                 // temp2 is open spot, temp1 will be given to next compare element or place pivot there
                 temp1 = temp2;
@@ -245,10 +241,9 @@ public class InsertionSort : Algorithm {
             i += 1;
 
             // Add this move (pivot sorted)
-            allMoves.Add(move, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, Util.PIVOT_END_INST, pivot.Value, false, false, true));
-            move += 1;
+            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, Util.PIVOT_END_INST, pivot.Value, false, false, true));
         }
-        return allMoves;
+        return instructions;
     }
     #endregion
 

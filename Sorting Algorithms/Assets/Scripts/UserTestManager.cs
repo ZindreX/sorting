@@ -18,20 +18,20 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
         this.instructions = instructions;
         this.algorithmMovesNeeded = algorithmMovesNeeded;
         readyForNext = algorithmMovesNeeded; // true
-        currentInstructionNr = -1;
+        currentInstructionNr = 0;
         errorCount = 0;
     }
 
     public bool HasInstructions()
     {
         if (instructions != null)
-            return (instructions.Count != 0);
+            return instructions.Count != 0 && currentInstructionNr < instructions.Count;
         return false;
     }
 
-    public InstructionBase GetInstruction(int index)
+    public InstructionBase GetInstruction()
     {
-        return instructions[index];
+        return instructions[currentInstructionNr];
     }
 
     public int ErrorCount
@@ -39,23 +39,31 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
         get { return errorCount; }
     }
 
-    public void IncrementToNextMove()
+    // Increasing instruction counter as long there is one
+    public void IncrementToNextInstruction()
     {
         if (currentInstructionNr < instructions.Count)
             currentInstructionNr++;
     }
 
+    // Error counting
     public void IncrementError()
     {
         errorCount++;
     }
 
+    /* Checking whether a new instruction can be given
+     * > Changed to int counting instead of bool, because of bubblesort instruction changed*
+    */
     public int ReadyForNext
     {
         get { return readyForNext; }
         set { readyForNext = value; }
     }
 
+    /* The number of moves needed before handing out a new instruction
+     * > Usually 1, but for some there might be more (like bubblesort with 2 element switching per instruction) 
+    */
     public int AlgorithmMovesNeeded
     {
         get { return algorithmMovesNeeded; }

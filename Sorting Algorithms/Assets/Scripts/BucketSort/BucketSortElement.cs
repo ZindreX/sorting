@@ -38,7 +38,7 @@ public class BucketSortElement : InsertionSortElement {
                     status = "Move to " + nextID;
                     intermediateMove = true; // Too easy for the user?
                     break;
-                case Util.PERFORMED_INST: status = "Performed"; break;
+                case Util.EXECUTED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 

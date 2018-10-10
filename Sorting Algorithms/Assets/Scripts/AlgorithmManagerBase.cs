@@ -97,6 +97,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     }
                     else if (userTestManager.ReadyForNext == userTestManager.AlgorithmMovesNeeded)
                     {
+                        Debug.Log("Next intstruction!");
                         // Reset
                         userTestManager.ReadyForNext = 0;
 
@@ -106,8 +107,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         else
                         {
                             // Still some elements not sorted, so go on to next round
-                            userTestManager.IncrementToNextMove();
-                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.CurrentInstructionNr);
+                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
+                            userTestManager.IncrementToNextInstruction();
                         }
                     }
                     blackboard.SetResultText(userTestManager.FillInBlackboard());
@@ -200,8 +201,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void PerformAlgorithmTutorial()
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
-        //StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
-        ((BucketSort)algorithm).BucketSortStandard(elementManager.SortingElements, numberOfElements);
+        StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
+        //((BucketSort)algorithm).BucketSortStandard(elementManager.SortingElements, numberOfElements);
     }
 
     /* --------------------------------------- User Test ---------------------------------------
@@ -221,7 +222,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         // Set start time
         scoreManager.SetStartTime();
 
-        //Check(allStates); // Debugging
+        //Check(instructions); // Debugging
     }
 
 
@@ -236,7 +237,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected abstract int MovesNeeded { get; }
 
     // Prepares the next instruction based on the algorithm being runned
-    protected abstract int PrepareNextInstruction(int instructionNr);
+    protected abstract int PrepareNextInstruction(InstructionBase instruction);
 
     // TODO: Display stuff on the blackboard if help enabled
     protected abstract int SkipOrHelp(InstructionBase instruction);

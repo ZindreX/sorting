@@ -23,10 +23,10 @@ public class BubbleSortManager : AlgorithmManagerBase {
         get { return 2; }
     }
 
-    protected override int PrepareNextInstruction(int instNr)
+    protected override int PrepareNextInstruction(InstructionBase instruction)
     {
         // Get the next two instructions
-        BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)userTestManager.GetInstruction(instNr);
+        BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)instruction;
 
         // Find the sorting elements for this instruction
         BubbleSortElement s1 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
@@ -36,11 +36,11 @@ public class BubbleSortManager : AlgorithmManagerBase {
         s1.ElementInstruction = bubbleInstruction;
         s2.ElementInstruction = bubbleInstruction;
 
-        // Give next move permission (TODO: move to sorting element instead?)
+        // Give next move permission
         s1.NextMove = true;
         s2.NextMove = true;
 
-        Debug.Log("Round " + instNr + ": " + userTestManager.GetInstruction(instNr).DebugInfo());
+        Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bubbleInstruction.DebugInfo());
 
         return SkipOrHelp(bubbleInstruction);
     }

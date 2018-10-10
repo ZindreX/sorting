@@ -19,7 +19,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     // User test
     protected bool moving = false, standingInCorrectHolder = true, intermediateMove = false, nextMove = false;
 
-    private GameObject parent;
+    protected GameObject parent;
     protected HolderBase currentStandingOn;
 
     // Debugging
@@ -131,6 +131,8 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             if (validatedUserMove < userMove)
             {
                 string validation = IsCorrectlyPlaced();
+                Debug.Log("Is correctly placed: " + validation);
+
                 switch (validation)
                 {
                     case Util.INIT_OK:
@@ -150,8 +152,8 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                 // Mark instruction as executed if correct
                 if (standingInCorrectHolder)
                 {
-                    ElementInstruction.Status = Util.PERFORMED_INST;
-                    status = Util.PERFORMED_INST; // Debugging
+                    ElementInstruction.Status = Util.EXECUTED_INST;
+                    status = Util.EXECUTED_INST; // Debugging
 
                     // Check if ready for next round
                     if (nextMove)
@@ -219,11 +221,13 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
     // --------------------------------------- Implemented in subclass ---------------------------------------
 
+    // Check whether the sorting element is placed in the correct holder, based on instruction given
     protected abstract string IsCorrectlyPlaced();
 
     // Updating the state of this SortingElement from the instruction that just was given
     protected abstract void UpdateSortingElementState();
 
+    // Get & set instruction
     public abstract InstructionBase ElementInstruction { get; set; } // TODO: Fix
 
 }

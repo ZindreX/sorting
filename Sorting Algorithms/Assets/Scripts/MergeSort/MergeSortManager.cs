@@ -23,9 +23,9 @@ public class MergeSortManager : AlgorithmManagerBase {
         get { return 1; }
     }
 
-    protected override int PrepareNextInstruction(int instructionNr)
+    protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        MergeSortInstruction mergeSortInstruction = (MergeSortInstruction)userTestManager.GetInstruction(instructionNr);
+        MergeSortInstruction mergeSortInstruction = (MergeSortInstruction)instruction;
         Debug.Log("FIX");
 
 

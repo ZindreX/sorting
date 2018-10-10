@@ -23,7 +23,7 @@ public class BubbleSort : Algorithm {
 
     public override void ResetSetup()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Nothing to reset (?)");
     }
 
     #region Bubble Sort 1
@@ -127,9 +127,9 @@ public class BubbleSort : Algorithm {
     #region Bubble Sort: User Test
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list)
     {
-        int N = list.Length, round = 0;
+        int N = list.Length, instructionNr = 0;
 
-        Dictionary<int, InstructionBase> allMoves = new Dictionary<int, InstructionBase>();
+        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
 
         for (int i = 0; i < N; i++)
         {
@@ -138,13 +138,13 @@ public class BubbleSort : Algorithm {
                 // Choose sorting elements to compare
                 BubbleSortInstruction comparison = MakeInstruction(list[j], list[j + 1], Util.COMPARE_START_INST, true, false);
 
-                // Add this round
-                allMoves.Add(round++, comparison);
+                // Add this instruction
+                instructions.Add(instructionNr++, comparison);
 
                 if (comparison.Value1 > comparison.Value2)
                 {
                     // Switch their positions
-                    allMoves.Add(round++, MakeInstruction(list[j], list[j + 1], Util.SWITCH_INST, true, false));
+                    instructions.Add(instructionNr++, MakeInstruction(list[j], list[j + 1], Util.SWITCH_INST, true, false));
 
                     int holder1 = ((BubbleSortInstruction)list[j]).HolderID1;
                     int holder2 = ((BubbleSortInstruction)list[j + 1]).HolderID1;
@@ -155,25 +155,25 @@ public class BubbleSort : Algorithm {
                     ((BubbleSortInstruction)list[j]).HolderID1 = holder1;
                     ((BubbleSortInstruction)list[j + 1]).HolderID1 = holder2;
                 }
-                allMoves.Add(round++, MakeInstruction(list[j], list[j + 1], Util.COMPARE_END_INST, false, false));
+                // Add this instruction
+                instructions.Add(instructionNr++, MakeInstruction(list[j], list[j + 1], Util.COMPARE_END_INST, false, false));
             }
             list[N - i - 1].IsSorted = true;
-            allMoves[allMoves.Count - i - 1].IsSorted = true; ;
+            instructions[instructions.Count - i - 1].IsSorted = true;
         }
-        return allMoves;
+        return instructions;
     }
     #endregion
 
 
     private BubbleSortInstruction MakeInstruction(InstructionBase inst1, InstructionBase inst2, string instruction, bool isCompare, bool isSorted)
     {
-        int seID1, seID2, hID1, hID2, value1, value2;
-        seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
-        seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
-        hID1 = ((BubbleSortInstruction)inst1).HolderID1;
-        hID2 = ((BubbleSortInstruction)inst2).HolderID1;
-        value1 = ((BubbleSortInstruction)inst1).Value1;
-        value2 = ((BubbleSortInstruction)inst2).Value1;
+        int seID1 = ((BubbleSortInstruction)inst1).SortingElementID1;
+        int seID2 = ((BubbleSortInstruction)inst2).SortingElementID1;
+        int hID1 = ((BubbleSortInstruction)inst1).HolderID1;
+        int hID2 = ((BubbleSortInstruction)inst2).HolderID1;
+        int value1 = ((BubbleSortInstruction)inst1).Value1;
+        int value2 = ((BubbleSortInstruction)inst2).Value1;
         return new BubbleSortInstruction(seID1, seID2, hID1, hID2, value1, value2, instruction, isCompare, isSorted);
     }
 
