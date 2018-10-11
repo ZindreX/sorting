@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 65187005933342046}
   m_Layer: 0
   m_Name: LeftArm
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 65268589015979520}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4212944843945570}
   - component: {fileID: 54482424036184932}
-  - component: {fileID: 114106025809737454}
+  - component: {fileID: 114489183471402368}
   m_Layer: 0
   m_Name: UserAlgorithm
   m_TagString: Player
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 65922041923677960}
   m_Layer: 0
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 65315473484924854}
   m_Layer: 0
   m_Name: RightLeg
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 65110999321049404}
   m_Layer: 0
   m_Name: LeftLeg
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 65999723220140006}
   m_Layer: 0
   m_Name: RightArm
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -239,8 +239,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1396290735455064}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.42, y: 0.08, z: 23.01}
+  m_LocalRotation: {x: 0.000051634852, y: -0.18955176, z: 0.00096845074, w: 0.9818703}
+  m_LocalPosition: {x: 2.3174176, y: -0.009925127, z: -3.7277296}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4405126144376872}
@@ -272,7 +272,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1376616769171912}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.42696333, y: 0, z: 0, w: 0.9042689}
   m_LocalPosition: {x: 0, y: 3.88, z: 0.589}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -884,7 +884,7 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1376616769171912}
   m_Enabled: 1
---- !u!114 &114106025809737454
+--- !u!114 &114489183471402368
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -892,12 +892,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1396290735455064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f919b459de407441ad681e48f9f0678, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b1c15a3d2978ee46b1094414fa8cb88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 15
   mouseSensitivity: 3
   cam: {fileID: 20793796626688050}
+  AMObject: {fileID: 0}
 --- !u!135 &135103768377076716
 SphereCollider:
   m_ObjectHideFlags: 1

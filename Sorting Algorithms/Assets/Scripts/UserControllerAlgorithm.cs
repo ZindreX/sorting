@@ -10,6 +10,7 @@ public class UserControllerAlgorithm : UserControllerBase {
 
     protected override void Awake()
     {
+        base.Awake();
         am = AMObject.GetComponent(typeof(AlgorithmManagerBase)) as AlgorithmManagerBase;
     }
 

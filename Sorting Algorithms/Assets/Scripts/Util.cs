@@ -25,11 +25,13 @@ public class Util : MonoBehaviour {
     // Rules (cases)
     public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", NO_DUPLICATES = "No duplicates", ALL_SAME = "All same";
 
+    public const string MAIN_MENU = "Main menu";
+
     // Algorithms
     public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort", BUCKET_SORT = "Bucket sort";
 
     // Object types
-    public static readonly string SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
+    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
     
     // Other switch cases
     public const string INIT = "Init", UPDATE_BLACKBOARD = "Update blackboard";
@@ -86,6 +88,21 @@ public class Util : MonoBehaviour {
     public static string ModifyPluralString(string singular, int number)
     {
         return (number > 1) ? singular + "s" : singular;
+    }
+
+    public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)
+    {
+        switch (sceneBuildIndex)
+        {
+            case 0: return MAIN_MENU;
+            case 1: return BUBBLE_SORT;
+            case 2: return INSERTION_SORT;
+            case 3: return MERGE_SORT;
+            case 4: return QUICK_SORT;
+            case 5: return BUCKET_SORT;
+            default: return "Empty";
+
+        }
     }
 
 }

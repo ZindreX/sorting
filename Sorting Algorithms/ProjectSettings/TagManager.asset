@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Holder
   - SortingElement
+  - Portal
   layers:
   - Default
   - TransparentFX
