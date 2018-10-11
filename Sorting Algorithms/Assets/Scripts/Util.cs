@@ -22,9 +22,10 @@ public class Util : MonoBehaviour {
     // Checking instruction (strings)
     public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
-    
+
     // Rules (cases)
-    public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", NO_DUPLICATES = "No duplicates", ALL_SAME = "All same";
+    public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates";
+    public const string TUTORIAL = "Tutorial", USER_TEST = "User test", HELP_ENABLED = "Help enabled";
 
     // Rooms
     public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room";

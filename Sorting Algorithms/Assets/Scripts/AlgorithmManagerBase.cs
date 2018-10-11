@@ -131,9 +131,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private void InitRules()
     {
         if (noDuplicates)
-            rules[0] = Util.NO_DUPLICATES;
-        else if (allSame)
-            rules[0] = Util.ALL_SAME; // just for a test
+            rules[0] = Util.DUPLICATES;
 
         if (worstCase)
             rules[1] = Util.WORST_CASE;
