@@ -14,6 +14,7 @@ public class Util : MonoBehaviour {
 
     // Instructions
     public static readonly int NO_INSTRUCTION = -1, INIT_STATE = -2;
+
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
     public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed";
@@ -25,7 +26,11 @@ public class Util : MonoBehaviour {
     // Rules (cases)
     public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", NO_DUPLICATES = "No duplicates", ALL_SAME = "All same";
 
-    public const string MAIN_MENU = "Main menu";
+    // Rooms
+    public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room";
+
+    // Buttons
+    public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal";
 
     // Algorithms
     public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort", BUCKET_SORT = "Bucket sort";
@@ -39,6 +44,7 @@ public class Util : MonoBehaviour {
     // Colors used
     public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
     public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan;
+
 
 
     /* Creates a list of objects
@@ -95,12 +101,13 @@ public class Util : MonoBehaviour {
         switch (sceneBuildIndex)
         {
             case 0: return MAIN_MENU;
-            case 1: return BUBBLE_SORT;
-            case 2: return INSERTION_SORT;
-            case 3: return MERGE_SORT;
-            case 4: return QUICK_SORT;
-            case 5: return BUCKET_SORT;
-            default: return "Empty";
+            case 1: return TUTORIAL_ROOM;
+            case 2: return BUBBLE_SORT;
+            case 3: return INSERTION_SORT;
+            case 4: return MERGE_SORT;
+            case 5: return QUICK_SORT;
+            case 6: return BUCKET_SORT;
+            default: return "X";
 
         }
     }
