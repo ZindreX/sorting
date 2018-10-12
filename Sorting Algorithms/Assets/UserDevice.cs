@@ -8,7 +8,7 @@ public class UserDevice : MonoBehaviour {
      * > Can switch between tutorial and user test
      * > Can change rules all: number of elements, duplicates, best-/worst case
      *            > tutorial : speed
-     *            > user test: help enabled, difficulty
+     *            > user test: (help enabled) ~> difficulty
      * > Can teleport between rooms (algorithms)
      * > Quit game
     */
@@ -19,7 +19,10 @@ public class UserDevice : MonoBehaviour {
     [SerializeField]
     private GameObject[] buttonPositions1, buttonPositions2;
 
-    private UserDeviceButton[] alternativeButtons;
+    [SerializeField]
+    private GameObject positions1, positons2, positions3;
+
+    private UserDeviceButtonBase[] alternativeButtons;
 
     // Algorithm settings
     private int numberOfElements = 8;
@@ -31,15 +34,40 @@ public class UserDevice : MonoBehaviour {
         options = CreateOptions();
     }
 
+
+    private void SetAlternativeButtons(string buttonMode)
+    {
+        switch (buttonMode)
+        {
+            case Util.TUTORIAL:
+
+                break;
+            case Util.USER_TEST: break;
+            case Util.RULE_BUTTONS: break;
+            case Util.QUIT: break;
+        }
+    }
+
+    // Set up tutorial buttons
+
+
+
+
+
+
+
+
+
+
     private Dictionary<int, Dictionary<string, bool>> CreateOptions()
     {
         Dictionary<int, Dictionary<string, bool>> options = new Dictionary<int, Dictionary<string, bool>>();
-        options.Add(0, CreateValue(Util.TUTORIAL, true));
+        //options.Add(0, CreateValue(Util.TUTORIAL, true));
         options.Add(1, CreateValue(Util.HELP_ENABLED, false));
         options.Add(2, CreateValue(Util.DUPLICATES, true));
         //options.Add(3, CreateValue("Case", false)); // Best- / worst case
         options.Add(4, CreateValue(Util.BEST_CASE, false));
-        options.Add(5, CreateValue(Util.USER_TEST, false));
+        //options.Add(5, CreateValue(Util.USER_TEST, false));
         options.Add(6, CreateValue("", false));
         options.Add(7, CreateValue(Util.WORST_CASE, false));
         return options;
@@ -75,7 +103,7 @@ public class UserDevice : MonoBehaviour {
         switch (buttonMode)
         {
             case Util.ON_OR_OFF:
-                for (int x=0; x < alternativeButtons.Length; x++)
+                for (int x=0; x < options.Count; x++)
                 {
 
                 }

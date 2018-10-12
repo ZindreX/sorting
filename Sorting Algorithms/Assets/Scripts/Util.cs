@@ -31,7 +31,7 @@ public class Util : MonoBehaviour {
     public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room";
 
     // Buttons
-    public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal";
+    public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal", QUIT = "Quit";
 
     // Algorithms
     public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort", BUCKET_SORT = "Bucket sort";
