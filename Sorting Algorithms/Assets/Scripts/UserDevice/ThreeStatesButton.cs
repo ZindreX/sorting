@@ -30,9 +30,9 @@ public class ThreeStatesButton : UserDeviceButtonBase {
 
         switch (currentState)
         {
-            case 0: 
-            case 1:
-            case 2:
+            case 0: break;
+            case 1: break;
+            case 2: break;
         }
     }
 }
