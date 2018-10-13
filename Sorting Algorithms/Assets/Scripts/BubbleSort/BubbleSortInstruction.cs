@@ -7,6 +7,11 @@ public class BubbleSortInstruction : InstructionBase {
      * Sorting element 2: sortindElementID2 + holderID2 + value2
      * [ Sorting Element 1 ] [ Sorting Element 2 ]
      * 
+     * > Instructions   : element value status                      : note
+     * - Compare_start  : mix                                       : compares the values
+     * - Compare_end    : sorting element 1 is the smallest element : evaluation/switching is complete
+     * - Switch_inst    : sorting element 2 is the smalled element  : switching in process
+     * 
     */
 
     private int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
@@ -58,6 +63,12 @@ public class BubbleSortInstruction : InstructionBase {
         return (sortingElementID == SortingElementID1) ? holderID2 : holderID1;
     }
 
+    // Checks whether the parameter ID is the 1st element in the instruction
+    public bool IsMain(int sortingElementID)
+    {
+        return SortingElementID1 == sortingElementID;
+    }
+
     public int GetHolderFor(int sortingElementID)
     {
         return (sortingElementID == SortingElementID1) ? holderID1 : holderID2;
@@ -76,7 +87,7 @@ public class BubbleSortInstruction : InstructionBase {
         {
             case Util.COMPARE_START_INST: return "[" + value1 + "] ? [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] ? [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
             case Util.SWITCH_INST: return "[" + value1 + "] <--> [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] <--> [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
-            case Util.COMPARE_END_INST: return "[" + value1 + "] | [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] | [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.COMPARE_END_INST: return "[" + value1 + "] < [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] | [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
             default: return instruction + " has no case.";
         }
     }

@@ -97,7 +97,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     }
                     else if (userTestManager.ReadyForNext == userTestManager.AlgorithmMovesNeeded)
                     {
-                        Debug.Log("Next intstruction!");
+                        //Debug.Log("Next intstruction!");
                         // Reset
                         userTestManager.ReadyForNext = 0;
 

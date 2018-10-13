@@ -125,9 +125,9 @@ public class BubbleSort : Algorithm {
     #endregion
 
     #region Bubble Sort: User Test
-    public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list)
+    public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
-        int N = list.Length, instructionNr = 0;
+        int N = sortingElements.Length, instructionNr = 0;
 
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
 
@@ -136,7 +136,7 @@ public class BubbleSort : Algorithm {
             for (int j = 0; j < N - i - 1; j++)
             {
                 // Choose sorting elements to compare
-                BubbleSortInstruction comparison = MakeInstruction(list[j], list[j + 1], Util.COMPARE_START_INST, true, false);
+                BubbleSortInstruction comparison = MakeInstruction(sortingElements[j], sortingElements[j + 1], Util.COMPARE_START_INST, true, false);
 
                 // Add this instruction
                 instructions.Add(instructionNr++, comparison);
@@ -144,27 +144,45 @@ public class BubbleSort : Algorithm {
                 if (comparison.Value1 > comparison.Value2)
                 {
                     // Switch their positions
-                    instructions.Add(instructionNr++, MakeInstruction(list[j], list[j + 1], Util.SWITCH_INST, true, false));
+                    instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], Util.SWITCH_INST, true, false));
 
-                    int holder1 = ((BubbleSortInstruction)list[j]).HolderID1;
-                    int holder2 = ((BubbleSortInstruction)list[j + 1]).HolderID1;
-                    InstructionBase temp = list[j];
-                    list[j] = list[j + 1];
-                    list[j + 1] = temp;
+                    int holder1 = ((BubbleSortInstruction)sortingElements[j]).HolderID1;
+                    int holder2 = ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1;
+                    InstructionBase temp = sortingElements[j];
+                    sortingElements[j] = sortingElements[j + 1];
+                    sortingElements[j + 1] = temp;
+
                     // Update holderID
-                    ((BubbleSortInstruction)list[j]).HolderID1 = holder1;
-                    ((BubbleSortInstruction)list[j + 1]).HolderID1 = holder2;
+                    ((BubbleSortInstruction)sortingElements[j]).HolderID1 = holder1;
+                    ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1 = holder2;
                 }
                 // Add this instruction
-                instructions.Add(instructionNr++, MakeInstruction(list[j], list[j + 1], Util.COMPARE_END_INST, false, false));
+                instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], Util.COMPARE_END_INST, false, false));
             }
-            list[N - i - 1].IsSorted = true;
+            sortingElements[N - i - 1].IsSorted = true;
             instructions[instructions.Count - i - 1].IsSorted = true;
+            DebugCheck(sortingElements, instructions);
         }
         return instructions;
     }
     #endregion
 
+    private void DebugCheck(InstructionBase[] elements, Dictionary<int, InstructionBase> dict)
+    {
+        string test1 = "", test2 = "";
+        for (int x=0; x < elements.Length; x++)
+        {
+            test1 += "[" + ((BubbleSortInstruction)elements[x]).Value1 + "|" + ((BubbleSortInstruction)elements[x]).IsSorted + "] ";
+        }
+        Debug.Log(test1);
+        for (int x=0; x < dict.Count; x++)
+        {
+            //test2 += "[" + ((BubbleSortInstruction)dict[x]).Value1 + "|" + dict[x].IsSorted + "|" + ((BubbleSortInstruction)dict[x]).Value2 + "] ";
+            test2 += dict[x].DebugInfo() + "\n";
+        }
+        Debug.Log(test2 + "\n");
+        
+    }
 
     private BubbleSortInstruction MakeInstruction(InstructionBase inst1, InstructionBase inst2, string instruction, bool isCompare, bool isSorted)
     {

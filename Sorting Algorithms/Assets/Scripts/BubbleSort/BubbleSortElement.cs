@@ -20,6 +20,8 @@ public class BubbleSortElement : SortingElementBase {
 
     protected override void UpdateSortingElementState()
     {
+        Debug.Log("Sorting ID: " + sortingElementID + "[" + value + "] received instruction");
+
         if (bubbleSortInstruction != null)
         {
             // Debugging
@@ -49,7 +51,7 @@ public class BubbleSortElement : SortingElementBase {
             else
                 isCompare = false;
 
-            if (IsSortedAchieved())
+            if (bubbleSortInstruction.IsSorted && bubbleSortInstruction.SortingElementID2 == sortingElementID) //IsSortedAchieved())
                 isSorted = true;
             else
                 isSorted = false;
@@ -68,14 +70,19 @@ public class BubbleSortElement : SortingElementBase {
         {
             switch (instruction)
             {
-                case Util.INIT_INSTRUCTION: return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+                case Util.INIT_INSTRUCTION:
+                    return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+
                 case Util.COMPARE_START_INST: break;
+
                 case Util.COMPARE_END_INST:
-                    // Check if this sorting element's value is larger than the other, in that case they should have switched    ::::: TODO: switch larger than sign``````????
-                    if (bubbleSortInstruction.GetValueFor(sortingElementID, false) > bubbleSortInstruction.GetValueFor(sortingElementID, true))
-                        return (currentStandingOn.HolderID == bubbleSortInstruction.SwitchToHolder(sortingElementID)) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-                    // else they should stay where they stood
-                    return (currentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                    if (CheckPosition())
+                    {
+                        if (sortingElementID == bubbleSortInstruction.SortingElementID2)
+                            isSorted = true;
+                        return Util.CORRECT_HOLDER;
+                    }
+                    return Util.WRONG_HOLDER;
 
                 case Util.SWITCH_INST:
                     return (currentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)
@@ -91,4 +98,9 @@ public class BubbleSortElement : SortingElementBase {
         return Util.CANNOT_VALIDATE_ERROR;
     }
 
+    private bool CheckPosition()
+    {
+        return sortingElementID == bubbleSortInstruction.SortingElementID1 && currentStandingOn.HolderID == bubbleSortInstruction.HolderID1 ||
+               sortingElementID == bubbleSortInstruction.SortingElementID2 && currentStandingOn.HolderID == bubbleSortInstruction.HolderID2;
+    }
 }

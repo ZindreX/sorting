@@ -74,14 +74,19 @@ public class InsertionSortElement : SortingElementBase {
             {
                 case Util.INIT_INSTRUCTION:
                     return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+
                 case Util.PIVOT_START_INST:
                     return (currentStandingOn.HolderID == insertionSortInstruction.HolderID || ((InsertionSortHolder)currentStandingOn).IsPivotHolder) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+
                 case Util.PIVOT_END_INST:
                     return (((InsertionSortHolder)currentStandingOn).IsPivotHolder || currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+
                 case Util.COMPARE_START_INST:
                     break;
+
                 case Util.COMPARE_END_INST:
                     return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+
                 case Util.SWITCH_INST:
                     if (intermediateMove && currentStandingOn.HolderID == insertionSortInstruction.HolderID) //insertionSortInstruction.HolderID == currentStandingOn.HolderID && insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION && IsSorted)
                     {
@@ -94,10 +99,12 @@ public class InsertionSortElement : SortingElementBase {
                     }
                     else
                         return Util.WRONG_HOLDER;
+
                 case Util.EXECUTED_INST:
                     if (insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION)
                         return (currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
                     return (currentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }
         }

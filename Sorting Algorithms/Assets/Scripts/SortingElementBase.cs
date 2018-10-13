@@ -131,7 +131,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             if (validatedUserMove < userMove)
             {
                 string validation = IsCorrectlyPlaced();
-                Debug.Log("Is correctly placed: " + validation);
+                //Debug.Log("Is correctly placed: " + validation);
 
                 switch (validation)
                 {
@@ -154,6 +154,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                 {
                     ElementInstruction.Status = Util.EXECUTED_INST;
                     status = Util.EXECUTED_INST; // Debugging
+
 
                     // Check if ready for next round
                     if (nextMove)
