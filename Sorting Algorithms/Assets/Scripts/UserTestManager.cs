@@ -18,7 +18,7 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
         this.instructions = instructions;
         this.algorithmMovesNeeded = algorithmMovesNeeded;
         readyForNext = algorithmMovesNeeded; // true
-        currentInstructionNr = 0;
+        currentInstructionNr = -1;
         errorCount = 0;
     }
 
@@ -27,6 +27,11 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
         if (instructions != null)
             return instructions.Count != 0 && currentInstructionNr < instructions.Count;
         return false;
+    }
+
+    public bool LastInstruction()
+    {
+        return currentInstructionNr == (instructions.Count - 1);
     }
 
     public InstructionBase GetInstruction()
