@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82aa6fc0e1a954985d311d4bf81135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfElements: 3
+  numberOfElements: 8
   isTutorial: 0
   helpEnabled: 0
   noDuplicates: 0

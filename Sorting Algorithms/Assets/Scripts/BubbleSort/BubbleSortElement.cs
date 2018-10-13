@@ -20,8 +20,6 @@ public class BubbleSortElement : SortingElementBase {
 
     protected override void UpdateSortingElementState()
     {
-        Debug.Log("Sorting ID: " + sortingElementID + "[" + value + "] received instruction");
-
         if (bubbleSortInstruction != null)
         {
             // Debugging
@@ -51,7 +49,7 @@ public class BubbleSortElement : SortingElementBase {
             else
                 isCompare = false;
 
-            if (bubbleSortInstruction.IsSorted && bubbleSortInstruction.SortingElementID2 == sortingElementID) //IsSortedAchieved())
+            if (IsSortedAchieved())
                 isSorted = true;
             else
                 isSorted = false;
@@ -61,7 +59,7 @@ public class BubbleSortElement : SortingElementBase {
     // Since two elements share instructions, usually the 2nd element is sorted, but in the final instruction both are
     public bool IsSortedAchieved()
     {
-        return bubbleSortInstruction.IsSorted && (bubbleSortInstruction.SortingElementID2 == sortingElementID || !parent.GetComponent<UserTestManager>().HasInstructions());
+        return bubbleSortInstruction.IsSorted && (bubbleSortInstruction.SortingElementID2 == sortingElementID || parent.GetComponent<UserTestManager>().LastInstruction());
     }
 
     protected override string IsCorrectlyPlaced()

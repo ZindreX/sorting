@@ -97,7 +97,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     }
                     else if (userTestManager.ReadyForNext == userTestManager.AlgorithmMovesNeeded)
                     {
-                        //Debug.Log("Next intstruction!");
                         // Reset
                         userTestManager.ReadyForNext = 0;
 
@@ -107,8 +106,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         else
                         {
                             // Still some elements not sorted, so go on to next round
-                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                             userTestManager.IncrementToNextInstruction();
+                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                         }
                     }
                     blackboard.SetResultText(userTestManager.FillInBlackboard());

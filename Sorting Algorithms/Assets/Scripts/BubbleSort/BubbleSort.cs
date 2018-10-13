@@ -159,9 +159,8 @@ public class BubbleSort : Algorithm {
                 // Add this instruction
                 instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], Util.COMPARE_END_INST, false, false));
             }
-            sortingElements[N - i - 1].IsSorted = true;
-            instructions[instructions.Count - i - 1].IsSorted = true;
-            DebugCheck(sortingElements, instructions);
+            //sortingElements[N - i - 1].IsSorted = true;
+            instructions[instructions.Count - 1].IsSorted = true;
         }
         return instructions;
     }
