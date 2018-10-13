@@ -10,7 +10,16 @@ using UnityEngine;
 public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     /* -------------------------------------------- The main unit for the algorithm --------------------------------------------
-     * 
+     * Working algorithms   :
+     * ----------------------------------------------------------------------
+     *    Algorithm name    |   Standard    |   Tutorial    |   User Test   |   
+     * ----------------------------------------------------------------------
+     *    Bubble Sort       |     Yes       |     Yes       |       Yes     |
+     *    Insertion Sort    |     Yes       |     Yes       |       Yes     |
+     *    Merge Sort        |     Yes       |     No        |       No      |
+     *    Quick Sort        |      No       |     No        |       No      |
+     *    Bucket Sort       |      No       |     No        |       No      |
+     * ----------------------------------------------------------------------
      * 
     */
 
