@@ -13,7 +13,7 @@ public class Util : MonoBehaviour {
     public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100, NUMBER_OF_RULE_TYPES = 2;
 
     // Instructions
-    public static readonly int NO_INSTRUCTION = -1, INIT_STATE = -2;
+    public static readonly int NO_DESTINATION = -1, INIT_STATE = -2;
 
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
@@ -95,6 +95,11 @@ public class Util : MonoBehaviour {
     public static string ModifyPluralString(string singular, int number)
     {
         return (number > 1) ? singular + "s" : singular;
+    }
+
+    public static string TranslateNextHolder(int nextHolderID)
+    {
+        return (nextHolderID == NO_DESTINATION) ? "N/A" : nextHolderID.ToString();
     }
 
     public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)

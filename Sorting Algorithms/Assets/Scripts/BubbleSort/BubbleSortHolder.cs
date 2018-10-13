@@ -13,8 +13,8 @@ public class BubbleSortHolder : HolderBase {
                 parent.GetComponent<UserTestManager>().IncrementError();
             hasPermission = false;
         }
-        else if (CurrentHolding.IntermediateMove)
-            CurrentColor = Util.TEST_COLOR;
+        //else if (CurrentHolding.IntermediateMove)
+        //    CurrentColor = Util.TEST_COLOR;
         else if (currentHolding.IsCompare)
             CurrentColor = Util.COMPARE_COLOR;
         else if (currentHolding.IsSorted)

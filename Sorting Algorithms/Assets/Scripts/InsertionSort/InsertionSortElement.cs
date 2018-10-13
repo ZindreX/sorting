@@ -88,9 +88,9 @@ public class InsertionSortElement : SortingElementBase {
                     return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 case Util.SWITCH_INST:
-                    if (intermediateMove && currentStandingOn.HolderID == insertionSortInstruction.HolderID) //insertionSortInstruction.HolderID == currentStandingOn.HolderID && insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION && IsSorted)
+                    if (intermediateMove && currentStandingOn.HolderID == insertionSortInstruction.HolderID)
                     {
-                        return Util.CORRECT_HOLDER; //Util.MOVE_INTERMEDIATE;
+                        return Util.CORRECT_HOLDER;
                     }
                     else if (intermediateMove && insertionSortInstruction.NextHolderID == currentStandingOn.HolderID)
                     {
@@ -101,7 +101,7 @@ public class InsertionSortElement : SortingElementBase {
                         return Util.WRONG_HOLDER;
 
                 case Util.EXECUTED_INST:
-                    if (insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION)
+                    if (insertionSortInstruction.NextHolderID != Util.NO_DESTINATION)
                         return (currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
                     return (currentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 

@@ -29,16 +29,13 @@ public class BubbleSortManager : AlgorithmManagerBase {
         BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)instruction;
 
         // Find the sorting elements for this instruction
-        BubbleSortElement s1 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
-        BubbleSortElement s2 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
-            
+        BubbleSortElement bubbleSortElement = elementManager.GetSortingElement(bubbleInstruction.SortingElementID).GetComponent<BubbleSortElement>();
+
         // Hand the instructions out
-        s1.ElementInstruction = bubbleInstruction;
-        s2.ElementInstruction = bubbleInstruction;
+        bubbleSortElement.ElementInstruction = bubbleInstruction;
 
         // Give next move permission
-        s1.NextMove = true;
-        s2.NextMove = true;
+        bubbleSortElement.NextMove = true;
 
         Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bubbleInstruction.DebugInfo());
 
@@ -55,7 +52,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
         else
         {
             if (instruction.ElementInstruction == Util.COMPARE_START_INST || instruction.ElementInstruction == Util.COMPARE_END_INST) // skipping until next user move
-                return 2;
+                return 1;
         }
         return 0;
     }
@@ -77,7 +74,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
             int value = element.Value;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_INSTRUCTION, holderID, Util.NO_INSTRUCTION, value, Util.NO_INSTRUCTION, Util.INIT_INSTRUCTION, isCompare, isSorted);
+            elementStates[i] = new BubbleSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, value, Util.INIT_INSTRUCTION, isCompare, isSorted);
         }
         return elementStates;
     }

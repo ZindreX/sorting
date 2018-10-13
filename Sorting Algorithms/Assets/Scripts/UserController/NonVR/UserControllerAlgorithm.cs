@@ -40,6 +40,9 @@ public class UserControllerAlgorithm : UserControllerBase {
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
         else if (Input.GetKeyDown(KeyCode.F3))
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.PRO);
+        //else if (Input.GetKeyDown(KeyCode.Q)) 
+        //else if (Input.GetKeyDown(KeyCode.E))
+        //    am.MovePointer = true;
     }
 
     protected override void PerformAlgorithmControlVR()

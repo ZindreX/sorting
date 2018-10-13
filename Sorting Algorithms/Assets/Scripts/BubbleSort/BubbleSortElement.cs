@@ -9,7 +9,7 @@ public class BubbleSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        ElementInstruction = new BubbleSortInstruction(sortingElementID, Util.NO_INSTRUCTION, sortingElementID, Util.NO_INSTRUCTION, value, Util.NO_INSTRUCTION, Util.INIT_INSTRUCTION, false, false);
+        ElementInstruction = new BubbleSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, value, Util.INIT_INSTRUCTION, false, false);
     }
 
     public override InstructionBase ElementInstruction
@@ -20,27 +20,22 @@ public class BubbleSortElement : SortingElementBase {
 
     protected override void UpdateSortingElementState()
     {
-        Debug.Log("Sorting ID: " + sortingElementID + "[" + value + "] received instruction");
-
         if (bubbleSortInstruction != null)
         {
             // Debugging
             instruction = bubbleSortInstruction.ElementInstruction;
 
-            hID = bubbleSortInstruction.GetHolderFor(sortingElementID);
-            if (bubbleSortInstruction.ElementInstruction == Util.SWITCH_INST)
-                nextID = bubbleSortInstruction.SwitchToHolder(sortingElementID);
-            else
-                nextID = bubbleSortInstruction.GetHolderFor(sortingElementID);
+            hID = bubbleSortInstruction.HolderID;
+            nextID = bubbleSortInstruction.NextHolderID;
             
             switch (instruction)
             {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-                case Util.COMPARE_START_INST: status = "Comparing with " + bubbleSortInstruction.GetValueFor(sortingElementID, true); break;
+                case Util.COMPARE_START_INST: status = "Comparing"; break;
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
                 case Util.SWITCH_INST:
                     status = "Move to " + nextID;
-                    //intermediateMove = true;
+                    intermediateMove = true;
                     break;
                 case Util.EXECUTED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
@@ -51,17 +46,11 @@ public class BubbleSortElement : SortingElementBase {
             else
                 isCompare = false;
 
-            if (bubbleSortInstruction.IsSorted && bubbleSortInstruction.SortingElementID2 == sortingElementID) //IsSortedAchieved())
+            if (bubbleSortInstruction.IsSorted)
                 isSorted = true;
             else
                 isSorted = false;
         }
-    }
-    
-    // Since two elements share instructions, usually the 2nd element is sorted, but in the final instruction both are
-    public bool IsSortedAchieved()
-    {
-        return bubbleSortInstruction.IsSorted && (bubbleSortInstruction.SortingElementID2 == sortingElementID || !parent.GetComponent<UserTestManager>().HasInstructions());
     }
 
     protected override string IsCorrectlyPlaced()
@@ -76,31 +65,30 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.COMPARE_START_INST: break;
 
                 case Util.COMPARE_END_INST:
-                    if (CheckPosition())
-                    {
-                        if (sortingElementID == bubbleSortInstruction.SortingElementID2)
-                            isSorted = true;
-                        return Util.CORRECT_HOLDER;
-                    }
-                    return Util.WRONG_HOLDER;
+                    intermediateMove = false;
+                    return (currentStandingOn.HolderID == bubbleSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 case Util.SWITCH_INST:
-                    return (currentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)
-                           || bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID)
-                           ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                    if (intermediateMove && currentStandingOn.HolderID == bubbleSortInstruction.HolderID)
+                    {
+                        return Util.CORRECT_HOLDER;
+                    }
+                    else if (intermediateMove && bubbleSortInstruction.NextHolderID == currentStandingOn.HolderID)
+                    {
+                        intermediateMove = false;
+                        return Util.CORRECT_HOLDER;
+                    }
+                    else
+                        return Util.WRONG_HOLDER;
 
                 case Util.EXECUTED_INST:
-                    return (bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                    if (bubbleSortInstruction.NextHolderID != Util.NO_DESTINATION)
+                        return (currentStandingOn.HolderID == bubbleSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                    return (currentStandingOn.HolderID == bubbleSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }
         }
         return Util.CANNOT_VALIDATE_ERROR;
-    }
-
-    private bool CheckPosition()
-    {
-        return sortingElementID == bubbleSortInstruction.SortingElementID1 && currentStandingOn.HolderID == bubbleSortInstruction.HolderID1 ||
-               sortingElementID == bubbleSortInstruction.SortingElementID2 && currentStandingOn.HolderID == bubbleSortInstruction.HolderID2;
     }
 }

@@ -61,7 +61,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         blackboard.SetTitleLabel(algorithmName);
     }
@@ -97,8 +97,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     }
                     else if (userTestManager.ReadyForNext == userTestManager.AlgorithmMovesNeeded)
                     {
-                        //Debug.Log("Next intstruction!");
-                        // Reset
                         userTestManager.ReadyForNext = 0;
 
                         // Checking if all sorting elements are sorted
@@ -107,6 +105,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         else
                         {
                             // Still some elements not sorted, so go on to next round
+                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
+                            userTestManager.IncrementToNextInstruction();
                             userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                             userTestManager.IncrementToNextInstruction();
                         }
@@ -170,7 +170,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         get { return algorithm.GetAlgorithmName(); }
     }
-    
+
     public int NumberOfElements
     {
         get { return numberOfElements; }
@@ -210,10 +210,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void PerformAlgorithmUserTest()
     {
         Debug.Log(">>> Performing " + algorithmName + " user test.");
-        
+
         // Getting instructions for this sample of sorting elements
         Dictionary<int, InstructionBase> instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
-        
+
         // Initialize user test
         userTestManager.InitUserTest(instructions, MovesNeeded);
 
@@ -222,6 +222,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         //Check(instructions); // Debugging
     }
+
+    //protected bool movePointer = false;
+    //public bool MovePointer
+    //{
+    //    set { movePointer = value; }
+    //}
 
 
 
