@@ -10,9 +10,14 @@ public class Bucket : MonoBehaviour, IChild {
      * 
     */
 
+    [SerializeField]
+    private MeshRenderer innerBucket;
+
+    [SerializeField]
+    private TextMesh text;
 
     private static int BUCKET_NR = 0, BUCKET_SIZE = 10; // change size internal based on how many buckets exists? max - max/2 - max/3 etc.
-
+    private static float COLOR_CHANGE_TIMER = 1f;
     private int bucketID;
     private GameObject parent;
 
@@ -24,18 +29,8 @@ public class Bucket : MonoBehaviour, IChild {
         bucketID = BUCKET_NR++;
         bucketCapacity = CreateBucketCapacity();
         currentHolding = new List<SortingElementBase>();
+        text.text = bucketID.ToString();
     }
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
 
     public GameObject Parent
     {
@@ -46,6 +41,11 @@ public class Bucket : MonoBehaviour, IChild {
     public string MyRole()
     {
         return Util.BUCKET_TAG + BUCKET_NR;
+    }
+
+    public List<SortingElementBase> CurrenHolding
+    {
+        get { return currentHolding; }
     }
 
     public static int BucketSize(int numberOfBuckets, int maxValue)
@@ -68,10 +68,16 @@ public class Bucket : MonoBehaviour, IChild {
 
     private void AddSortingElementToBucket(SortingElementBase sortingElement)
     {
-        if (ValidateSortingElement(sortingElement))
-        {
-            currentHolding.Add(sortingElement);
-        }
+        currentHolding.Add(sortingElement);
+        StartCoroutine(ChangeColor(Util.SORTED_COLOR));
+    }
+
+    public IEnumerator ChangeColor(Color color)
+    {
+        Color prevColor = innerBucket.material.color;
+        innerBucket.material.color = color;
+        yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
+        innerBucket.material.color = prevColor;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -85,10 +91,12 @@ public class Bucket : MonoBehaviour, IChild {
                 if (ValidateSortingElement(sortingElement))
                 {
                     // Do animation (color -> green -> color)
+                    AddSortingElementToBucket(sortingElement);
                 }
                 else
                 {
                     // Can't be put into this bucket
+                    ChangeColor(Util.ERROR_COLOR);
                 }
 
             }

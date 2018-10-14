@@ -65,17 +65,18 @@ public class InsertionSort : Algorithm {
     }
 
 
+    // Buggy as f...? tokidoki freeze editor
     #region Insertion Sort: Standard (No visuals)
-    public static SortingElementBase[] InsertionSortStandard(SortingElementBase[] list, bool reverse)
+    public static GameObject[] InsertionSortStandard(GameObject[] list, bool reverse)
     {
         int i = 1;
         while (i < list.Length)
         {
-            SortingElementBase pivot = list[i];
+            GameObject pivot = list[i];
             int j = i - 1;
             while (j >= 0)
             {
-                if (reverse && pivot.Value > list[j].Value || pivot.Value < list[j].Value)
+                if (reverse && pivot.GetComponent<SortingElementBase>().Value > list[j].GetComponent<SortingElementBase>().Value || pivot.GetComponent<SortingElementBase>().Value < list[j].GetComponent<SortingElementBase>().Value)
                 {
                     list[j + 1] = list[j];
                     j -= 1;
@@ -209,7 +210,7 @@ public class InsertionSort : Algorithm {
             while (true)
             {
                 // Choose a new compare element
-                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_INSTRUCTION, Util.COMPARE_START_INST, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
+                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, Util.COMPARE_START_INST, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
                 sortingElements[j] = compareElement;
                 //
                 instructions.Add(instructionNr++, compareElement);
@@ -217,7 +218,7 @@ public class InsertionSort : Algorithm {
                 // Pivot larger than compare element, place compare element
                 if (pivot.Value >= compareElement.Value)
                 {
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_INSTRUCTION, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_DESTINATION, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
                     break;
                 }
 

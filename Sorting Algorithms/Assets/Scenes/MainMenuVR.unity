@@ -163,7 +163,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -218,7 +218,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -335,7 +335,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4679788398132580, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -436,7 +436,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -560,7 +560,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -611,7 +611,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -666,7 +666,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 1
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -759,7 +759,7 @@ Prefab:
     - target: {fileID: 114546747231118118, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 2}
       propertyPath: sceneBuildIndex
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4679788398132580, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y

@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 23762141814430042}
   - component: {fileID: 54468815750720256}
   - component: {fileID: 65750154077242578}
+  - component: {fileID: 114925186756060462}
   - component: {fileID: 114963105575435102}
   m_Layer: 0
   m_Name: BucketSortElement
@@ -635,6 +636,28 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
+--- !u!114 &114925186756060462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1486772700085944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6947d806197c78a42b7db28a397153a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instruction: 
+  status: 
+  hID: 0
+  nextID: 0
+  surfaceTexts:
+  - {fileID: 102334327259728626}
+  - {fileID: 102885443524242848}
+  - {fileID: 102308491371541394}
+  - {fileID: 102586916863441662}
+  - {fileID: 102112005758562410}
+  - {fileID: 102761877793115828}
 --- !u!114 &114963105575435102
 MonoBehaviour:
   m_ObjectHideFlags: 1

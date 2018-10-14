@@ -11,7 +11,7 @@ public class Portal : MonoBehaviour {
      * 
     */
 
-    private static int LARGEST_BUILD_INDEX = 5;
+    private static int LARGEST_BUILD_INDEX = 7;
 
     [SerializeField]
     private int sceneBuildIndex;
@@ -41,7 +41,7 @@ public class Portal : MonoBehaviour {
             if (sceneBuildIndex <= LARGEST_BUILD_INDEX)
                 LoadLevel();
             else
-                Debug.Log("Scene '" + sceneBuildIndex + "' not implemented, or not added yet.");
+                Debug.Log("Scene '" + sceneBuildIndex + "' not implemented, or not added yet.\nIf added, check LARGEST_BUILD_INDEX");
         }
     }
 

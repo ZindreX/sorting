@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BucketSortElement : InsertionSortElement {
+public class BucketSortElement : SortingElementBase {
 
     private BucketSortInstruction bucketSortInstruction;
+    private bool isPivot;
    
     protected override void Awake()
     {
         base.Awake();
-        //ElementInstruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_INSTRUCTION, Util.INIT_INSTRUCTION, value, false, false);)
+        ElementInstruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, value, false, false, false);
     }
 
     public override InstructionBase ElementInstruction

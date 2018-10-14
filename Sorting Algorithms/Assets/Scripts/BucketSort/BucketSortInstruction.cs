@@ -12,7 +12,6 @@ public class BucketSortInstruction : InsertionSortInstruction {
         this.bucketID = bucketID;
     }
 
-
     public override string DebugInfo()
     {
         throw new System.NotImplementedException();

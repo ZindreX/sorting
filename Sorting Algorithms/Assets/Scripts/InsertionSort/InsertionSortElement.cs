@@ -101,7 +101,7 @@ public class InsertionSortElement : SortingElementBase {
                         return Util.WRONG_HOLDER;
 
                 case Util.EXECUTED_INST:
-                    if (insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION)
+                    if (insertionSortInstruction.NextHolderID != Util.NO_DESTINATION)
                         return (currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
                     return (currentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 

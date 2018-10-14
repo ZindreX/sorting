@@ -51,7 +51,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
         else
         {
-            if (((InsertionSortInstruction)instruction).NextHolderID == Util.NO_INSTRUCTION) // skipping until next (user) move
+            if (((InsertionSortInstruction)instruction).NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
                 return 1;
         }
         return 0;
@@ -76,7 +76,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
             bool isPivot = element.IsPivot;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new InsertionSortInstruction(sortingElementID, holderID, Util.NO_INSTRUCTION, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
+            elementStates[i] = new InsertionSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
         }
         return elementStates;
     }

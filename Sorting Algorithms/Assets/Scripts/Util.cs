@@ -13,7 +13,7 @@ public class Util : MonoBehaviour {
     public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100, NUMBER_OF_RULE_TYPES = 2;
 
     // Instructions
-    public static readonly int NO_INSTRUCTION = -1, INIT_STATE = -2;
+    public static readonly int NO_DESTINATION = -1, INIT_STATE = -2;
 
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
@@ -28,13 +28,14 @@ public class Util : MonoBehaviour {
     public const string TUTORIAL = "Tutorial", USER_TEST = "User test", HELP_ENABLED = "Help enabled";
 
     // Rooms
-    public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room";
+    public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
 
     // Buttons
     public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal", QUIT = "Quit";
 
     // Algorithms
-    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort", BUCKET_SORT = "Bucket sort";
+    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
+    public const string BUCKET_SORT = "Bucket sort";
 
     // Object types
     public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
@@ -108,6 +109,7 @@ public class Util : MonoBehaviour {
             case 4: return MERGE_SORT;
             case 5: return QUICK_SORT;
             case 6: return BUCKET_SORT;
+            case 7: return VR_TEST_ROOM;
             default: return "X";
 
         }

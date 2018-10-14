@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BubbleSortHolder : HolderBase {
 
-    protected override void UpdateColorOfHolder()
-    {
+    protected override void UpdateColorOfHolder() {
         if (!currentHolding.StandingInCorrectHolder)
         {
             CurrentColor = Util.ERROR_COLOR;

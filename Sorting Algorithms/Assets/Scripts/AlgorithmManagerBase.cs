@@ -18,7 +18,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      *    Insertion Sort    |     Yes       |     Yes       |       Yes     |
      *    Merge Sort        |     Yes       |     No        |       No      |
      *    Quick Sort        |      No       |     No        |       No      |
-     *    Bucket Sort       |      No       |     No        |       No      |
+     *    Bucket Sort       |     Yes       |     No        |       No      |
      * ----------------------------------------------------------------------
      * 
     */
@@ -208,7 +208,14 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
         StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
-        //((BucketSort)algorithm).BucketSortStandard(elementManager.SortingElements, numberOfElements);
+        
+        //GameObject[] result = BucketSort.BucketSortStandard(elementManager.SortingElements, 10);
+        //string t = "";
+        //foreach (GameObject obj in result)
+        //{
+        //    t += obj.GetComponent<BucketSortElement>().Value + ", ";
+        //}
+        //Debug.Log("Result: " + t);
     }
 
     /* --------------------------------------- User Test ---------------------------------------

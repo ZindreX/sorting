@@ -107,7 +107,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     {
         foreach (TextMesh textMesh in surfaceTexts)
         {
-            textMesh.GetComponent<TextMesh>().text = text;
+            textMesh.text = text;
         }
     }
 

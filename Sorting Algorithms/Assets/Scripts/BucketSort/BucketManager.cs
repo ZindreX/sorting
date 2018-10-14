@@ -7,6 +7,9 @@ public class BucketManager : MonoBehaviour, IManager {
     [SerializeField]
     private GameObject bucketPrefab;
 
+    [SerializeField]
+    private GameObject firstBucketPosition;
+
     private GameObject[] buckets;
 
     void Awake()
@@ -14,23 +17,30 @@ public class BucketManager : MonoBehaviour, IManager {
         buckets = new GameObject[GetComponent<BucketSortManager>().NumberOfBuckets];
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public Vector3 FirstBucketPosition
+    {
+        get { return firstBucketPosition.transform.position; }
+    }
 
     public void CreateObjects(int numberOfElements, Vector3[] positions)
     {
-        throw new System.NotImplementedException();
+        buckets = Util.CreateObjects(bucketPrefab, numberOfElements, positions, gameObject);
     }
 
     public void DestroyObjects()
     {
-        throw new System.NotImplementedException();
+        Util.DestroyObjects(buckets);
     }
+
+    public GameObject[] Buckets
+    {
+        get { return buckets; }
+    }
+
+    public Bucket GetBucket(int index)
+    {
+        return buckets[index].GetComponent<Bucket>();
+    }
+
+
 }

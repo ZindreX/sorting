@@ -56,7 +56,7 @@ public class InsertionSortInstruction : InstructionBase {
 
     private string TranslateNextHolder()
     {
-        return (nextHolderID == Util.NO_INSTRUCTION) ? "N/A" : nextHolderID.ToString();
+        return (nextHolderID == Util.NO_DESTINATION) ? "N/A" : nextHolderID.ToString();
     }
 
 }

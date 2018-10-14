@@ -9,7 +9,7 @@ public class BubbleSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        ElementInstruction = new BubbleSortInstruction(sortingElementID, Util.NO_INSTRUCTION, sortingElementID, Util.NO_INSTRUCTION, value, Util.NO_INSTRUCTION, Util.INIT_INSTRUCTION, false, false);
+        ElementInstruction = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, sortingElementID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, false, false);
     }
 
     public override InstructionBase ElementInstruction
