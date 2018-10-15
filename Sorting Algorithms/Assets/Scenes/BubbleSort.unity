@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2068fcafa233edf4f96570e015102994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sortingElementPrefab: {fileID: 1486772700085944, guid: afbc5bf0bda2fb241b9251bcd685e4c6,
+  sortingElementPrefab: {fileID: 1486772700085944, guid: e7dbda0a446fc304898977405d305bd2,
     type: 2}
 --- !u!114 &817656495
 MonoBehaviour:

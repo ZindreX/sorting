@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2068fcafa233edf4f96570e015102994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sortingElementPrefab: {fileID: 1486772700085944, guid: 1966695a7e8834d4997c4cc867a1beec,
+  sortingElementPrefab: {fileID: 1486772700085944, guid: a4db40194eff05a468e50aeb61a114c5,
     type: 2}
 --- !u!114 &119957887
 MonoBehaviour:
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfElements: 8
-  isTutorial: 1
+  isTutorial: 0
   helpEnabled: 0
   noDuplicates: 0
   allSame: 0
@@ -292,7 +292,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &534669902
 GameObject:
@@ -455,7 +455,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4291157209024066, guid: 9d983d65f118aeb45b75ab4277170a3d, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d983d65f118aeb45b75ab4277170a3d, type: 2}

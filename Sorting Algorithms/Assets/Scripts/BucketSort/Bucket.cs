@@ -10,15 +10,17 @@ public class Bucket : MonoBehaviour, IChild {
      * 
     */
 
+    public static int BUCKET_NR = 0, BUCKET_SIZE = 10; // change size internal based on how many buckets exists? max - max/2 - max/3 etc.
+
     [SerializeField]
     private MeshRenderer innerBucket;
 
     [SerializeField]
     private TextMesh text;
 
-    private static int BUCKET_NR = 0, BUCKET_SIZE = 10; // change size internal based on how many buckets exists? max - max/2 - max/3 etc.
-    private static float COLOR_CHANGE_TIMER = 1f;
+    private static float COLOR_CHANGE_TIMER = 0.25f;
     private int bucketID;
+    private bool displayElements = false;
     private GameObject parent;
 
     private int[] bucketCapacity;
@@ -30,6 +32,7 @@ public class Bucket : MonoBehaviour, IChild {
         bucketCapacity = CreateBucketCapacity();
         currentHolding = new List<SortingElementBase>();
         text.text = bucketID.ToString();
+        displayElements = false;
     }
 
     public GameObject Parent
@@ -46,6 +49,12 @@ public class Bucket : MonoBehaviour, IChild {
     public List<SortingElementBase> CurrenHolding
     {
         get { return currentHolding; }
+        set { currentHolding = value; }
+    }
+
+    public bool DisplayElements
+    {
+        set { displayElements = value; }
     }
 
     public static int BucketSize(int numberOfBuckets, int maxValue)
@@ -70,11 +79,46 @@ public class Bucket : MonoBehaviour, IChild {
     {
         currentHolding.Add(sortingElement);
         StartCoroutine(ChangeColor(Util.SORTED_COLOR));
+
+        // Make invisible
+        sortingElement.gameObject.active = false;
+        //StartCoroutine(ElementIntoBucket(sortingElement));
+    }
+
+    //public static readonly float ENTER_BUCKET_TIME = 0.1f;
+    //private IEnumerator ElementIntoBucket(SortingElementBase sortingElement)
+    //{
+    //    yield return new WaitForSeconds(ENTER_BUCKET_TIME);
+    //    sortingElement.gameObject.active = false;
+    //}
+
+    public SortingElementBase GetElementForDisplay(int index)
+    {
+        if (index < currentHolding.Count)
+        {
+            return currentHolding[index];
+        }
+        return null;
+    }
+
+    public SortingElementBase RemoveSoringElement()
+    {
+        if (currentHolding.Count > 0)
+        {
+            SortingElementBase element = currentHolding[0];
+            currentHolding.RemoveAt(0);
+            return element;
+        }
+        return null;
     }
 
     public IEnumerator ChangeColor(Color color)
     {
         Color prevColor = innerBucket.material.color;
+        innerBucket.material.color = color;
+        yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
+        innerBucket.material.color = prevColor;
+        yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
         innerBucket.material.color = color;
         yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
         innerBucket.material.color = prevColor;
@@ -88,7 +132,7 @@ public class Bucket : MonoBehaviour, IChild {
 
             if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial)
             {
-                if (ValidateSortingElement(sortingElement))
+                if (!displayElements && ValidateSortingElement(sortingElement))
                 {
                     // Do animation (color -> green -> color)
                     AddSortingElementToBucket(sortingElement);

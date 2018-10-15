@@ -52,7 +52,7 @@ public class Util : MonoBehaviour {
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 
     */
-    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, GameObject parent)
+    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, float spreadDist, GameObject parent)
     {
         GameObject[] objects = new GameObject[numberOfElements];
         GameObject element;
@@ -60,7 +60,7 @@ public class Util : MonoBehaviour {
         for (int x = 0; x < numberOfElements; x++)
         {
             if (pos.Length == 1)
-                element = Instantiate(prefab, pos[0] + new Vector3(x, 0f, 0f), Quaternion.identity);
+                element = Instantiate(prefab, pos[0] + new Vector3(x * spreadDist, 0f, 0f), Quaternion.identity);
             else
                 element = Instantiate(prefab, pos[x], Quaternion.identity);
 

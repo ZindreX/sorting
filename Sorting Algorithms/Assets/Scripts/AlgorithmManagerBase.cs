@@ -9,17 +9,17 @@ using UnityEngine;
 [RequireComponent(typeof(ScoreManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
 
-    /* -------------------------------------------- The main unit for the algorithm --------------------------------------------
-     * Working algorithms   :
-     * ----------------------------------------------------------------------
-     *    Algorithm name    |   Standard    |   Tutorial    |   User Test   |   
-     * ----------------------------------------------------------------------
-     *    Bubble Sort       |     Yes       |     Yes       |       Yes     |
-     *    Insertion Sort    |     Yes       |     Yes       |       Yes     |
-     *    Merge Sort        |     Yes       |     No        |       No      |
-     *    Quick Sort        |      No       |     No        |       No      |
-     *    Bucket Sort       |     Yes       |     No        |       No      |
-     * ----------------------------------------------------------------------
+    /* -------------------------------------------- The main unit for the algorithm ----------------------------------------------------
+     * >>> Status of algorithms:
+     * ---------------------------------------------------------------------------------------------------------------------------------
+     *    Algorithm name    |   Standard    |   Tutorial    |   User Test   |                   Comment
+     * ---------------------------------------------------------------------------------------------------------------------------------
+     *    Bubble Sort       |     Yes       |     Yes       |       Yes     | Works, but maybe add more algorithm details to blackboard
+     *    Insertion Sort    |     Yes       |     Yes       |       Yes     | +1
+     *    Merge Sort        |     Yes       |     No        |       No      | Tutorial not completed yet, user test not started
+     *    Quick Sort        |      No       |     No        |       No      | -
+     *    Bucket Sort       |     Yes       |     Yes*      |       No      | Tutorial works, but inner sorting in bucket not displayed.
+     * ---------------------------------------------------------------------------------------------------------------------------------
      * 
     */
 
@@ -156,6 +156,14 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         holderManager.CreateObjects(numberOfElements, null);
         HolderPositions = holderManager.GetHolderPositions();
         elementManager.CreateObjects(numberOfElements, HolderPositions);
+        // Disable Drag if tutorial
+        if (isTutorial)
+        {
+            for (int x=0; x < elementManager.SortingElements.Length; x++)
+            {
+                elementManager.GetSortingElement(x).GetComponent<Drag>().enabled = false; // not working
+            }
+        }
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------

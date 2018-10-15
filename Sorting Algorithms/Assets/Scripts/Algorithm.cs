@@ -8,7 +8,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     [SerializeField]
     protected float seconds = 1f;
 
-    protected int pivotValue, compareToValue;
+    protected int pivotValue, compareValue;
 
     protected bool isSortingComplete = false, isReadyForNextMove = false;
 
@@ -25,14 +25,14 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     }
 
     // For visuals on the blackboard
-    public string GetComparison()
+    public virtual string GetComparison()
     {
-        if (pivotValue < compareToValue)
-            return pivotValue + " < " + compareToValue;
-        else if (pivotValue > compareToValue)
-            return pivotValue + " > " + compareToValue;
+        if (pivotValue < compareValue)
+            return pivotValue + " < " + compareValue;
+        else if (pivotValue > compareValue)
+            return pivotValue + " > " + compareValue;
         else
-            return pivotValue + " = " + compareToValue;
+            return pivotValue + " = " + compareValue;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------

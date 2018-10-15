@@ -92,12 +92,12 @@ public class BubbleSort : Algorithm {
 
                 // Get their values
                 pivotValue = p1.Value;
-                compareToValue = p2.Value;
+                compareValue = p2.Value;
 
                 // Update blackboard
                 yield return new WaitForSeconds(seconds * 2);
 
-                if (pivotValue > compareToValue)
+                if (pivotValue > compareValue)
                 {
                     // Switch their positions
                     GameObject temp = list[j];

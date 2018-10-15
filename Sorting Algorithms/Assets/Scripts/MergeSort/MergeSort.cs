@@ -278,7 +278,7 @@ public class MergeSort : Algorithm {
             }
 
             // Create two new holders to split the input list
-            extraHolders[split] = Util.CreateObjects(holderPrefab, 2, new Vector3[] { leftPos, rightPos }, GetComponent<AlgorithmManagerBase>().gameObject);
+            extraHolders[split] = Util.CreateObjects(holderPrefab, 2, new Vector3[] { leftPos, rightPos }, 0f, GetComponent<AlgorithmManagerBase>().gameObject);
 
             // Start splitting list in to two equal* size lists
             // Find the size of each list

@@ -11,6 +11,7 @@ public class BucketManager : MonoBehaviour, IManager {
     private GameObject firstBucketPosition;
 
     private GameObject[] buckets;
+    private bool containsBuckets = false;
 
     void Awake()
     {
@@ -22,14 +23,17 @@ public class BucketManager : MonoBehaviour, IManager {
         get { return firstBucketPosition.transform.position; }
     }
 
-    public void CreateObjects(int numberOfElements, Vector3[] positions)
+    public void CreateObjects(int numberOfElements, Vector3[] position)
     {
-        buckets = Util.CreateObjects(bucketPrefab, numberOfElements, positions, gameObject);
+        buckets = Util.CreateObjects(bucketPrefab, numberOfElements, position, 2f, gameObject);
+        containsBuckets = true;
     }
 
     public void DestroyObjects()
     {
         Util.DestroyObjects(buckets);
+        containsBuckets = false;
+        Bucket.BUCKET_NR = 0;
     }
 
     public GameObject[] Buckets

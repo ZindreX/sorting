@@ -89,6 +89,29 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
+    #region Insertion Sort: Standard (No visuals)
+    public static List<SortingElementBase> InsertionSortStandard2(List<SortingElementBase> list, bool reverse)
+    {
+        int i = 1;
+        while (i < list.Count)
+        {
+            SortingElementBase pivot = list[i];
+            int j = i - 1;
+            while (j >= 0)
+            {
+                if (reverse && pivot.Value > list[j].Value || pivot.Value < list[j].Value)
+                {
+                    list[j + 1] = list[j];
+                    j -= 1;
+                }
+            }
+            list[j + 1] = pivot;
+            i += 1;
+        }
+        return list;
+    }
+    #endregion
+
     #region Insertion Sort: All Moves Tutorial (Visuals)
     public override IEnumerator Tutorial(GameObject[] list)
     {
@@ -122,8 +145,8 @@ public class InsertionSort : Algorithm {
             // Start comparing until find the correct position is found
             // Set first values here to display on blackboard
             pivotValue = pivot.Value;
-            compareToValue = list[j].GetComponent<InsertionSortElement>().Value;
-            while (pivotValue < compareToValue)
+            compareValue = list[j].GetComponent<InsertionSortElement>().Value;
+            while (pivotValue < compareValue)
             {
                 // Pivot is smaller, start moving compare element
                 // Prepare the element to compare with
@@ -145,7 +168,7 @@ public class InsertionSort : Algorithm {
                 // Check if there are more elements to compare the pivot with
                 if (j >= 0)
                     // More elements to evaluate
-                    compareToValue = list[j].GetComponent<InsertionSortElement>().Value;
+                    compareValue = list[j].GetComponent<InsertionSortElement>().Value;
                 else
                 {
                     // Make sure that the last compare element is marked as sorted
@@ -160,7 +183,7 @@ public class InsertionSort : Algorithm {
                 yield return new WaitForSeconds(seconds);
             }
             // Make sure the 1st element is marked sorted in the first round
-            if (i == 1 && pivotValue >= compareToValue)
+            if (i == 1 && pivotValue >= compareValue)
             {
                 InsertionSortElement firstSortingElement = list[0].GetComponent<InsertionSortElement>();
                 firstSortingElement.IsSorted = true;

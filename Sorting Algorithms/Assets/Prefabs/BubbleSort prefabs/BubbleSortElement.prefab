@@ -70,12 +70,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4445457620290920}
+  - component: {fileID: 114446053471322992}
+  - component: {fileID: 114963105575435102}
   - component: {fileID: 33179666926000228}
   - component: {fileID: 23762141814430042}
   - component: {fileID: 54468815750720256}
   - component: {fileID: 65750154077242578}
-  - component: {fileID: 114188941520014474}
-  - component: {fileID: 114963105575435102}
   m_Layer: 0
   m_Name: BubbleSortElement
   m_TagString: SortingElement
@@ -636,7 +636,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
---- !u!114 &114188941520014474
+--- !u!114 &114446053471322992
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}

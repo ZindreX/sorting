@@ -70,13 +70,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4445457620290920}
+  - component: {fileID: 114963105575435102}
   - component: {fileID: 33179666926000228}
   - component: {fileID: 23762141814430042}
   - component: {fileID: 54468815750720256}
   - component: {fileID: 65750154077242578}
-  - component: {fileID: 114963105575435102}
   m_Layer: 0
-  m_Name: SortingElement
+  m_Name: SortingElementOld
   m_TagString: SortingElement
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -45,9 +45,9 @@ public class ElementManager : MonoBehaviour, IManager {
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
         }
 
-        // Hotfix (sorting element currentHolding / prevHolding problem)
         for (int x = 0; x < sortingElements.Length; x++)
         {
+            // Hotfix (sorting element currentHolding / prevHolding problem)
             sortingElements[x].GetComponent<SortingElementBase>().PlaceManuallySortingElementOn(GetComponent<HolderManager>().Holders[x].GetComponent<HolderBase>());
         }
     }

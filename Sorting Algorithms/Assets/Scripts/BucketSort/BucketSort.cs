@@ -5,13 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(BucketManager))]
 public class BucketSort : Algorithm {
 
-    private Dictionary<int, string> pseudoCode;
+    public const string CHOOSE_BUCKET = "Choose bucket", PUT_BACK_TO_HOLDER = "Put back to holder", NONE = "None";
 
+    private string status = "";
+
+    private Dictionary<int, string> pseudoCode;
     private BucketManager bucketManager;
 
     void Awake()
     {
         bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
+        status = NONE;
     }
 
     public override Dictionary<int, string> PseudoCode
@@ -28,6 +32,24 @@ public class BucketSort : Algorithm {
     public override void ResetSetup()
     {
         Debug.Log("Nothing to reset?");
+    }
+
+    // For visuals on the blackboard
+    public override string GetComparison()
+    {
+        switch (status)
+        {
+            case CHOOSE_BUCKET:
+                int bucketID = BucketIndex(pivotValue, GetComponent<BucketSortManager>().NumberOfBuckets);
+                return pivotValue + " into bucket " + bucketID;
+
+            case PUT_BACK_TO_HOLDER:
+                return pivotValue + " to holder " + compareValue;
+
+            case NONE: return "";
+            default: return "Nothing";
+        }
+
     }
 
     #region Bucket Sort: Standard 1
@@ -83,7 +105,7 @@ public class BucketSort : Algorithm {
         int[] numberOfElementsPerBucket = new int[numberOfBuckets];
         for (int i=0; i < sortingElements.Length; i++)
         {
-            numberOfElementsPerBucket[BucketIndex(sortingElements[i], numberOfBuckets)] += 1;
+            numberOfElementsPerBucket[BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets)] += 1;
         }
 
         // Create empty lists (buckets)
@@ -97,7 +119,7 @@ public class BucketSort : Algorithm {
         int[] counters = numberOfElementsPerBucket;
         for (int i = 0; i < sortingElements.Length; i++)
         {
-            int index = BucketIndex(sortingElements[i], numberOfBuckets);
+            int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets);
             int placeIn = numberOfElementsPerBucket[index] - counters[index];
             counters[index]--;
             buckets[index][placeIn] = sortingElements[i];
@@ -125,9 +147,9 @@ public class BucketSort : Algorithm {
         return sortingElements;
     }
 
-    private static int BucketIndex(GameObject obj, int numberOfBuckets)
+    private static int BucketIndex(int value, int numberOfBuckets)
     {
-        return obj.GetComponent<SortingElementBase>().Value * numberOfBuckets / Util.MAX_VALUE;
+        return value * numberOfBuckets / Util.MAX_VALUE;
     }
 
     #endregion
@@ -149,9 +171,14 @@ public class BucketSort : Algorithm {
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
-        bucketManager.CreateObjects(GetComponent<BucketSortManager>().NumberOfBuckets, pos);
+        int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
+        bucketManager.CreateObjects(numberOfBuckets, pos);
         yield return new WaitForSeconds(seconds);
 
+        // Buckets
+        GameObject[] buckets = bucketManager.Buckets;
+
+        status = CHOOSE_BUCKET;
         // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
@@ -159,31 +186,58 @@ public class BucketSort : Algorithm {
             GameObject element = sortingElements[i];
 
             // Get bucket
-            Bucket bucket = bucketManager.GetBucket(element.GetComponent<SortingElementBase>().Value - minValue);
+            pivotValue = element.GetComponent<SortingElementBase>().Value;
+            Bucket bucket = buckets[BucketIndex(pivotValue, numberOfBuckets)].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
 
             // Move element above the bucket and put it inside
             element.transform.position = bucket.transform.position + new Vector3(0f, 2f, 0f);
             yield return new WaitForSeconds(seconds);
         }
 
-        // Put elements back into list
-        int k = 0;
-        GameObject[] buckets = bucketManager.Buckets;
-        Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
-        for (int i = 0; i < buckets.Length; i++)
+        status = NONE;
+
+        // Display elements
+        for (int x=0; x < numberOfBuckets; x++)
         {
-            List<SortingElementBase> bucketElements = buckets[i].GetComponent<Bucket>().CurrenHolding;
-            if (bucketElements.Count > 0)
+            Bucket bucket = buckets[x].GetComponent<Bucket>();
+            bucket.DisplayElements = true;
+            // Sort bucket *** TODO: go to insertion sort scene
+            //bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding, false);
+
+            int numberOfElementsInBucket = bucket.CurrenHolding.Count;
+            for (int y=0; y < numberOfElementsInBucket; y++)
             {
-                for (int j = 0; j < bucketElements.Count; j++)
-                {
-                    sortingElements[k] = bucketElements[j].gameObject;
-                    sortingElements[k].transform.position = holderPos[k] + new Vector3(0f, 2f, 0f);
-                    k++;
-                    yield return new WaitForSeconds(seconds);
-                }
+                SortingElementBase element = bucket.GetElementForDisplay(y);
+                element.gameObject.active = true;
+                element.transform.position += new Vector3(0f, 2f, 0f);
+                yield return new WaitForSeconds(seconds);
             }
         }
+
+        // Put elements back into list
+        status = PUT_BACK_TO_HOLDER;
+        int k = 0;
+        // Holder positions (where the sorting elements initialized)
+        Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
+        for (int i = 0; i < numberOfBuckets; i++)
+        {
+            Bucket bucket = buckets[i].GetComponent<Bucket>();
+            int numberOfElementsInBucket = bucket.CurrenHolding.Count;
+            for (int j = 0; j < numberOfElementsInBucket; j++)
+            {
+                sortingElements[k] = bucket.RemoveSoringElement().gameObject;
+                
+                // Display on blackboard
+                pivotValue = sortingElements[k].GetComponent<SortingElementBase>().Value;
+                compareValue = k;
+
+                sortingElements[k].transform.position = holderPos[k] + new Vector3(0f, 2f, 0f);
+                sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
+                k++;
+                yield return new WaitForSeconds(seconds);
+            }
+        }
+        status = NONE;
     }
     #endregion
 
