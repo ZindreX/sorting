@@ -70,7 +70,7 @@ public class InsertionSort : Algorithm {
     {
         // Instantiate
         Vector3 pos;
-        if (GetComponent<AlgorithmManagerBase>().IsTutorial)
+        if (GetComponent<AlgorithmManagerBase>().IsTutorial())
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + tutorialHeight1;
         else
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + userTestHeight;
@@ -324,6 +324,8 @@ public class InsertionSort : Algorithm {
         return instructions;
     }
     #endregion
+
+
 
 
     // ----------------------------- Help functions -----------------------------

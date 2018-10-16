@@ -82,4 +82,8 @@ public class BubbleSortManager : AlgorithmManagerBase {
         return elementStates;
     }
 
+    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
+    {
+        throw new System.NotImplementedException();
+    }
 }

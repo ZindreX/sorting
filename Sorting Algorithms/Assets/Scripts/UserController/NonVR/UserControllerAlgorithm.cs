@@ -22,7 +22,9 @@ public class UserControllerAlgorithm : UserControllerBase {
             am.DestroyAndReset();
         else if (Input.GetKeyDown(KeyCode.T))
         {
-            if (am.IsTutorial)
+            if (am.IsTutorialStep())
+                am.PerformAlgorithmTutorialStep();
+            else if (am.IsTutorial())
                 am.PerformAlgorithmTutorial();
             else
             {
@@ -31,7 +33,6 @@ public class UserControllerAlgorithm : UserControllerBase {
                     am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
                 }
                 am.PerformAlgorithmUserTest();
-
             }
         }
         else if (Input.GetKeyDown(KeyCode.F1))
@@ -40,6 +41,16 @@ public class UserControllerAlgorithm : UserControllerBase {
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
         else if (Input.GetKeyDown(KeyCode.F3))
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.PRO);
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            am.PlayerIncremented(false);
+            am.PlayerMove = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            am.PlayerIncremented(true);
+            am.PlayerMove = true;
+        }
     }
 
     protected override void PerformAlgorithmControlVR()

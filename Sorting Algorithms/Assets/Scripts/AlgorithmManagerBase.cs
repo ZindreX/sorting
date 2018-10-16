@@ -28,12 +28,24 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private int numberOfElements = 8;
 
     // Settings
+    //[SerializeField]
+    //private bool isTutorial = true;
     [SerializeField]
-    private bool isTutorial = true, helpEnabled = false, noDuplicates = false, allSame = false, worstCase = false, bestCase = false;
-    private string algorithmName;
+    private bool helpEnabled = false, noDuplicates = false, worstCase = false, bestCase = false;
+
+    [SerializeField]
+    private string teachingMode = Util.TUTORIAL_STEP;
+
+    private string algorithmName; 
     private string[] rules = new string[Util.NUMBER_OF_RULE_TYPES];
 
     private Vector3[] holderPositions;
+
+    // Tutorial step by step
+    private bool playerMove = false, playerIncremented = false;
+    private int instructionNr = 0;
+    private Dictionary<int, InstructionBase> instructions;
+
 
     [SerializeField]
     private GameObject blackboardObj;
@@ -55,7 +67,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
             // *** Objects ***
             blackboard = blackboardObj.GetComponent(typeof(Blackboard)) as Blackboard;
-            blackboard.InitializeBlackboard(isTutorial);
+            blackboard.InitializeBlackboard(teachingMode);
 
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
@@ -79,7 +91,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         if (algorithm.IsSortingComplete)
         {
-            if (!isTutorial && scoreManager.TimeSpent == 0)
+            if (IsUserTest() && scoreManager.TimeSpent == 0)
             {
                 scoreManager.SetEndTime();
                 scoreManager.CalculateScore();
@@ -89,7 +101,15 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         }
         else
         {
-            if (isTutorial)
+            if (IsTutorialStep())
+            {
+                if (playerMove)
+                {
+                    playerMove = false;
+                    StartCoroutine(ExecuteOrder(instructions[instructionNr], playerIncremented));
+                }
+            }
+            else if (IsTutorial())
             {
                 blackboard.SetResultText(algorithm.GetComparison());
             }
@@ -128,7 +148,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Check if valid is possible to perform - TODO: Fix elsewhere so this isn't needed
     private bool IsValidSetup()
     {
-        return (!worstCase && !bestCase) || (worstCase != bestCase) && (!noDuplicates && !allSame) || (noDuplicates != allSame);
+        return (!worstCase && !bestCase) || (worstCase != bestCase);
     }
 
     /* --------------------------------------- Creation with rules ---------------------------------------
@@ -156,7 +176,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         HolderPositions = holderManager.GetHolderPositions();
         elementManager.CreateObjects(numberOfElements, HolderPositions);
         // Disable Drag if tutorial
-        if (isTutorial)
+        if (IsTutorial())
         {
             for (int x=0; x < elementManager.SortingElements.Length; x++)
             {
@@ -196,11 +216,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         get { return numberOfElements; }
     }
 
-    public bool IsTutorial
-    {
-        get { return isTutorial; }
-    }
-
     public bool HelpEnabled
     {
         get { return helpEnabled; }
@@ -211,6 +226,41 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         get { return holderPositions; }
         set { holderPositions = value; }
     }
+
+    public bool PlayerMove
+    {
+        set { playerMove = value; }
+    }
+
+    public void PlayerIncremented(bool increment)
+    {
+        playerIncremented = increment;
+        if (increment && instructionNr < instructions.Count)
+            instructionNr++;
+        else if (!increment && instructionNr > 0)
+            instructionNr--;
+        else
+            Debug.Log("Can't do that step");
+    }
+
+    //
+
+    public bool IsTutorial()
+    {
+        return teachingMode == Util.TUTORIAL || teachingMode == Util.TUTORIAL_STEP;
+    }
+
+    public bool IsTutorialStep()
+    {
+        return teachingMode == Util.TUTORIAL_STEP;
+    }
+
+    public bool IsUserTest()
+    {
+        return teachingMode == Util.USER_TEST;
+    }
+
+
 
     /* --------------------------------------- Tutorial ---------------------------------------
      * 
@@ -223,6 +273,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         //Debug.Log(DebugCheckGameObjects(InsertionSort.InsertionSortStandard(elementManager.SortingElements)));
         //Debug.Log(DebugCheckGameObjects(BucketSort.BucketSortStandard2(elementManager.SortingElements, numberOfElements)));
+    }
+
+    public void PerformAlgorithmTutorialStep()
+    {
+        // Getting instructions for this sample of sorting elements
+        instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
     }
 
     /* --------------------------------------- User Test ---------------------------------------
@@ -246,8 +302,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     }
 
 
-
-
     // --------------------------------------- To be implemented in subclasses ---------------------------------------
 
     // Returns the instance of the algorithm being runned 
@@ -267,6 +321,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     protected abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
+
+    // Step by step tutorial
+    protected abstract IEnumerator ExecuteOrder(InstructionBase instruction, bool increment);
 
 
 

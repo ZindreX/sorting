@@ -31,7 +31,7 @@ public class BucketSortHolder : InsertionSortHolder {
             currentHolding = collision.collider.GetComponent<BucketSortElement>();
 
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial)
+            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {
                 if (currentHolding.IsCompare)
                     CurrentColor = Util.COMPARE_COLOR;

@@ -129,4 +129,9 @@ public class BucketSortManager : AlgorithmManagerBase {
             }
         }
     }
+
+    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
+    {
+        throw new System.NotImplementedException();
+    }
 }

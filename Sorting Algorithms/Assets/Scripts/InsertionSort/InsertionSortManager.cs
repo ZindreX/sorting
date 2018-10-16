@@ -80,4 +80,46 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
         return elementStates;
     }
+
+    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
+    {
+        InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
+        InsertionSortElement sortingElement = elementManager.GetSortingElement(inst.SortingElementID).GetComponent<InsertionSortElement>();
+        sortingElement.IsPivot = inst.IsPivot;
+        sortingElement.IsCompare = inst.IsCompare;
+        sortingElement.IsSorted = inst.IsSorted;
+
+        HolderBase moveToHolder = null;
+        if (sortingElement.CurrentStandingOn.HolderID == inst.HolderID)
+            moveToHolder = GetCorrectHolder(inst.NextHolderID);
+        else
+            moveToHolder = GetCorrectHolder(inst.HolderID);
+
+        Debug.Log("Moving from holder " + sortingElement.CurrentStandingOn.HolderID + " to holder " + moveToHolder.HolderID);
+        switch (inst.ElementInstruction)
+        {
+            case Util.INIT_INSTRUCTION:
+                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
+                yield return new WaitForSeconds(insertionSort.Seconds);
+                break;
+            case Util.PIVOT_START_INST:
+                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
+                yield return new WaitForSeconds(insertionSort.Seconds);
+                break;
+            case Util.PIVOT_END_INST:
+                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
+                yield return new WaitForSeconds(insertionSort.Seconds);
+                break;
+            case Util.COMPARE_START_INST:
+                break;
+            case Util.COMPARE_END_INST:
+                break;
+            case Util.SWITCH_INST:
+                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
+                yield return new WaitForSeconds(insertionSort.Seconds);
+                break;
+            case Util.EXECUTED_INST:
+                break;
+        }
+    }
 }

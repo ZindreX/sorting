@@ -32,7 +32,7 @@ public class MergeSortHolder : HolderBase {
             currentHolding = collision.collider.GetComponent<MergeSortElement>();
 
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial)
+            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {
                 if (currentHolding.IsSorted)
                     CurrentColor = Util.SORTED_COLOR;

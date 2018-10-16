@@ -40,31 +40,36 @@ public class Blackboard : MonoBehaviour {
     }
 
     // Sets up the blackboard before a Tutorial or User Test
-    public void InitializeBlackboard(bool tutorial)
+    public void InitializeBlackboard(string teachingMode)
     {
-        if (tutorial)
+        switch (teachingMode)
         {
-            // Status label
-            labels[STATUS_LABEL].transform.position = gameObject.transform.position + new Vector3(0f, -1.63f, 0f);
-            // Status text
-            texts[STATUS_TEXT].transform.position = gameObject.transform.position + new Vector3(0f, -3.4f, 0f);
-            // Split label
-            labels[SPLIT_LABEL].GetComponentInChildren<MeshRenderer>().enabled = false;
-            // Score label
-            labels[SCORE_LABEL].GetComponentInChildren<MeshRenderer>().enabled = false;
-            // Score text
-            texts[SCORE_TEXT].GetComponentInChildren<MeshRenderer>().enabled = false;
-        }
-        else
-        {
-            // Result label
-            labels[STATUS_LABEL].transform.position = gameObject.transform.position + new Vector3(-2.69f, -1.63f, 0f);
-            // Result text
-            texts[STATUS_TEXT].transform.position = gameObject.transform.position + new Vector3(-2.69f, -3.4f, 0f);
-            // Score label
-            labels[SCORE_LABEL].transform.position = gameObject.transform.position + new Vector3(2.69f, -1.63f, 0f);
-            // Score text
-            texts[SCORE_TEXT].transform.position = gameObject.transform.position + new Vector3(2.69f, -3.4f, 0f);
+            case Util.TUTORIAL:
+                // Status label
+                labels[STATUS_LABEL].transform.position = gameObject.transform.position + new Vector3(0f, -1.63f, 0f);
+                // Status text
+                texts[STATUS_TEXT].transform.position = gameObject.transform.position + new Vector3(0f, -3.4f, 0f);
+                // Split label
+                labels[SPLIT_LABEL].GetComponentInChildren<MeshRenderer>().enabled = false;
+                // Score label
+                labels[SCORE_LABEL].GetComponentInChildren<MeshRenderer>().enabled = false;
+                // Score text
+                texts[SCORE_TEXT].GetComponentInChildren<MeshRenderer>().enabled = false;
+                break;
+
+            case Util.TUTORIAL_STEP:
+                break;
+
+            case Util.USER_TEST:
+                // Result label
+                labels[STATUS_LABEL].transform.position = gameObject.transform.position + new Vector3(-2.69f, -1.63f, 0f);
+                // Result text
+                texts[STATUS_TEXT].transform.position = gameObject.transform.position + new Vector3(-2.69f, -3.4f, 0f);
+                // Score label
+                labels[SCORE_LABEL].transform.position = gameObject.transform.position + new Vector3(2.69f, -1.63f, 0f);
+                // Score text
+                texts[SCORE_TEXT].transform.position = gameObject.transform.position + new Vector3(2.69f, -3.4f, 0f);
+                break;
         }
     }
 }

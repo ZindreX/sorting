@@ -127,7 +127,7 @@ public class Bucket : MonoBehaviour, IChild {
         {
             SortingElementBase sortingElement = collision.collider.GetComponent<SortingElementBase>();
 
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial)
+            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {
                 if (!displayElements && ValidateSortingElement(sortingElement))
                 {

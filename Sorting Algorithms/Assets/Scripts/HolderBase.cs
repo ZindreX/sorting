@@ -25,7 +25,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
     void Update()
     {
-        if (!parent.GetComponent<AlgorithmManagerBase>().IsTutorial)
+        if (parent.GetComponent<AlgorithmManagerBase>().IsUserTest())
         {
             // Always checking the status of the sorting element this holder is holding, and changing color thereafter
             if (isValidSortingElement(currentHolding))
@@ -81,7 +81,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
         {
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial)
+            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {
 
             }

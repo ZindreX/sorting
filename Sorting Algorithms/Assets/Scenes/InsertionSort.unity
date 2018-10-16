@@ -198,12 +198,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfElements: 8
-  isTutorial: 1
   helpEnabled: 0
   noDuplicates: 0
-  allSame: 0
   worstCase: 0
   bestCase: 0
+  teachingMode: Tutorial step
   blackboardObj: {fileID: 1321425735}
 --- !u!4 &119957890
 Transform:
