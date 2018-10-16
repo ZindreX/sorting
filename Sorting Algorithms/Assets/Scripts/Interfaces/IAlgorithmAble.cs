@@ -6,7 +6,6 @@ public interface IAlgorithmAble {
 
     string GetAlgorithmName();
     void ResetSetup();
-    Dictionary<int, string> PseudoCode { get; set; }
 
     IEnumerator Tutorial(GameObject[] list);
     Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);

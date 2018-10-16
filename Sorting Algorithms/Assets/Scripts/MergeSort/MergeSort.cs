@@ -33,12 +33,6 @@ public class MergeSort : Algorithm {
         return Util.MERGE_SORT;
     }
 
-    public override Dictionary<int, string> PseudoCode
-    {
-        get { return pseudoCode; }
-        set { pseudoCode = value; }
-    }
-
     public override void ResetSetup()
     {
         for (int x=0; x < extraHolders.Count; x++)

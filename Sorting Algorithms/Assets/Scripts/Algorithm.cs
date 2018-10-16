@@ -4,9 +4,11 @@ using UnityEngine;
 
 public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
-
     [SerializeField]
     protected float seconds = 1f;
+
+    [SerializeField]
+    protected GameObject pseudoCodeViewerObj;
 
     protected int pivotValue, compareValue;
 
@@ -43,7 +45,8 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
     public abstract string GetAlgorithmName();
     public abstract void ResetSetup();
-    public abstract Dictionary<int, string> PseudoCode { get; set; }
+
+    //protected abstract string GetPseudoCode(int codeLine);
 
     public abstract IEnumerator Tutorial(GameObject[] list);
     public abstract Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);

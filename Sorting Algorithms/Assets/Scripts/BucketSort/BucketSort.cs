@@ -18,12 +18,6 @@ public class BucketSort : Algorithm {
         status = NONE;
     }
 
-    public override Dictionary<int, string> PseudoCode
-    {
-        get { return pseudoCode; }
-        set { pseudoCode = value; }
-    }
-
     public override string GetAlgorithmName()
     {
         return Util.BUCKET_SORT;

@@ -82,12 +82,4 @@ public class BubbleSortManager : AlgorithmManagerBase {
         return elementStates;
     }
 
-    protected override Dictionary<int, string> CreatePseudoCode()
-    {
-        Dictionary<int, string> pseudoCode = new Dictionary<int, string>();
-        // TODO: fill in
-
-        return pseudoCode;
-    }
-
 }

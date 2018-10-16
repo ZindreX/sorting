@@ -14,12 +14,6 @@ public class QuickSort : Algorithm {
         return Util.QUICK_SORT;
     }
 
-    public override Dictionary<int, string> PseudoCode
-    {
-        get { return pseudoCode; }
-        set { pseudoCode = value; }
-    }
-
     public override void ResetSetup()
     {
         throw new System.NotImplementedException();

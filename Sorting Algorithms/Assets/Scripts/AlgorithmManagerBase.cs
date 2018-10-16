@@ -15,7 +15,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      *    Algorithm name    |   Standard    |   Tutorial    |   User Test   |                   Comment
      * ---------------------------------------------------------------------------------------------------------------------------------
      *    Bubble Sort       |     Yes       |     Yes       |       Yes     | Works, but maybe add more algorithm details to blackboard
-     *    Insertion Sort    |     Yes       |     Yes       |       Yes     | +1
+     *    Insertion Sort    |     Yes       |     Yes       |       Yes     | Almost done --> create a new tutorial (step by step)
      *    Merge Sort        |     Yes       |     No        |       No      | Tutorial not completed yet, user test not started
      *    Quick Sort        |      No       |     No        |       No      | -
      *    Bucket Sort       |     Yes       |     Yes*      |       No      | Tutorial works, but inner sorting in bucket not displayed.
@@ -55,7 +55,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
             // *** Objects ***
             blackboard = blackboardObj.GetComponent(typeof(Blackboard)) as Blackboard;
-            //blackboard.InitializeBlackboard(isTutorial);
+            blackboard.InitializeBlackboard(isTutorial);
 
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
@@ -64,10 +64,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
             // Setup algorithm in their respective <Algorithm name>Manager
             algorithm = InstanceOfAlgorithm;
-            algorithm.PseudoCode = CreatePseudoCode();
             algorithmName = algorithm.GetAlgorithmName();
-
-            blackboard.CreatePseudoCodeSetup(algorithm.PseudoCode, blackboard.transform.position + new Vector3(-2.5f, 3.5f, 0f)); // test pseudo code on blackboard
         }
     }
 
@@ -271,8 +268,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     protected abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
 
-    // Gather the pseudo code, which can be used on blackboard
-    protected abstract Dictionary<int, string> CreatePseudoCode();
 
 
 

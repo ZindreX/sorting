@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PseudoCodeViewer))]
 public class InsertionSort : Algorithm {
 
     /* --------------------------------------------------- Insertion Sort --------------------------------------------------- 
@@ -17,13 +18,12 @@ public class InsertionSort : Algorithm {
     private Vector3 tutorialHeight1 = new Vector3(0f, 1f, 0f), tutorialHeight2;
     private Vector3 userTestHeight = new Vector3(0f, 1.5f, 0f);
 
-    private Dictionary<int, string> pseudoCode;
-    private Blackboard blackboard;
+    private PseudoCodeViewer pseudoCodeViewer;
 
     private void Awake()
     {
         tutorialHeight2 = tutorialHeight1 + new Vector3(0f, 0.2f, 0f);
-        blackboard = GetComponent<AlgorithmManagerBase>().GetBlackBoard;
+        pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
     }
 
     public override string GetAlgorithmName()
@@ -36,12 +36,30 @@ public class InsertionSort : Algorithm {
         get { return pivotHolder; }
     }
 
-    public override Dictionary<int, string> PseudoCode
+    protected string PseudoCode(int lineNr, int i, int j, int numberOfElements)
     {
-        get { return pseudoCode; }
-        set { pseudoCode = value; }
+        switch (lineNr)
+        {
+            case 0: return "InsertionSort( List<int> list )";
+            case 1: return "i = 1";
+            case 2: return "while ( " + i + " < " + numberOfElements + " )";
+            case 3: return "    " + j + " = " + i  + " - 1";
+            case 4: return "    while ( " + j + " > 0 and " + pivotValue + " < " + compareValue + " )";
+            case 5: return "        swap " + pivotValue + " and " + compareValue;
+            case 6: return "        " + j + " = " + (j + 1) + " - 1";
+            case 7: return "    end while";
+            case 8: return "    " + i + " = " + (i - 1) + " + 1";
+            case 9: return "end while";
+            default: return "X";
+        }
     }
 
+    protected IEnumerator HighlightText(int lineNr, string text)
+    {
+        pseudoCodeViewer.SetCodeLine(lineNr, text, Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.ChangeColorOfText(lineNr, Util.BLACKBOARD_COLOR);
+    }
 
     public override void ResetSetup()
     {
@@ -56,6 +74,7 @@ public class InsertionSort : Algorithm {
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + tutorialHeight1;
         else
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + userTestHeight;
+
         pivotHolderClone = Instantiate(pivotHolderPrefab, pos, Quaternion.identity);
         pivotHolder = pivotHolderClone.GetComponent<InsertionSortHolder>();
         // Mark as pivotholder
@@ -111,19 +130,23 @@ public class InsertionSort : Algorithm {
     {
         // Create pivot holder
         CreatePivotHolder();
-
         Vector3 temp = new Vector3();
-        int i = 1;
-        HighLightPart(0);
+
+        int i = 1, listLength = list.Length;
+        // Display pseudocode (set i)
+        StartCoroutine(HighlightText(1, PseudoCode(1, i, Util.NO_VALUE, listLength)));
         yield return new WaitForSeconds(seconds);
 
-        while (i < list.Length)
+        while (i < listLength)
         {
+            // Display pseudocode (1st while)
+            StartCoroutine(HighlightText(2, PseudoCode(2, i, Util.NO_VALUE, listLength)));
+            yield return new WaitForSeconds(seconds);
+
             // Get pivot
             GameObject pivotObj = list[i];
             InsertionSortElement pivot = list[i].GetComponent<InsertionSortElement>();
             pivot.IsPivot = true;
-            HighLightPart(0);
 
             // Get pivot's initial position
             temp = pivot.transform.position;
@@ -140,10 +163,19 @@ public class InsertionSort : Algorithm {
             // Get index of first element to the left of the pivot and compare
             int j = i - 1;
 
+            // Display pseudocode (set j)
+            StartCoroutine(HighlightText(3, PseudoCode(3, i, j, listLength)));
+            yield return new WaitForSeconds(seconds);
+
             // Start comparing until find the correct position is found
             // Set first values here to display on blackboard
             pivotValue = pivot.Value;
             compareValue = list[j].GetComponent<InsertionSortElement>().Value;
+
+            // Display pseudocode (2nd while)
+            StartCoroutine(HighlightText(4, PseudoCode(4, i, j, listLength)));
+            yield return new WaitForSeconds(seconds);
+
             while (pivotValue < compareValue)
             {
                 // Pivot is smaller, start moving compare element
@@ -159,18 +191,36 @@ public class InsertionSort : Algorithm {
                 // Updating list
                 list[j + 1] = compareObj;
 
+                // Display pseudocode (swap)
+                StartCoroutine(HighlightText(5, PseudoCode(5, i, j, listLength)));
+                yield return new WaitForSeconds(seconds);
+
                 // Preparing for next step
                 temp = temp2;
                 j -= 1;
 
+                // Display pseudocode (decrement j)
+                StartCoroutine(HighlightText(6, PseudoCode(6, i, j, listLength)));
+                yield return new WaitForSeconds(seconds);
+
                 // Check if there are more elements to compare the pivot with
                 if (j >= 0)
+                {
                     // More elements to evaluate
                     compareValue = list[j].GetComponent<InsertionSortElement>().Value;
+
+                    // Display pseudocode (2nd while new compare value)
+                    StartCoroutine(HighlightText(4, PseudoCode(4, i, j, listLength)));
+                    yield return new WaitForSeconds(seconds);
+                }
                 else
                 {
                     // Make sure that the last compare element is marked as sorted
                     compare.IsSorted = true; //list[j + 1].GetComponent<SortingElement>().IsSorted = true;
+
+                    // Display pseudocode (end 2nd while)
+                    StartCoroutine(HighlightText(7, PseudoCode(7, i, j, listLength)));
+                    yield return new WaitForSeconds(seconds);
                     break;
                 }
                 // Move pivot out and place it ontop of pivot holder (above holder it check whether it's put the element)
@@ -195,8 +245,14 @@ public class InsertionSort : Algorithm {
             // Return pivot object to list, and increment 'i'
             list[j + 1] = pivotObj;
             i += 1;
-            yield return new WaitForSeconds(seconds);
+
+            // Display pseudocode (increment i)
+            StartCoroutine(HighlightText(8, PseudoCode(8, i, j, listLength)));
         }
+        // Display pseudocode (end 1st while)
+        StartCoroutine(HighlightText(9, PseudoCode(9, i, Util.NO_VALUE, listLength)));
+        yield return new WaitForSeconds(seconds);
+
         // Mark the last element sorted
         list[list.Length - 1].GetComponent<InsertionSortElement>().IsSorted = true;
 
@@ -204,15 +260,6 @@ public class InsertionSort : Algorithm {
         PivotHolderVisible(false);
         IsSortingComplete = true;
     }
-
-    private void HighLightPart(int part)
-    {
-        if (part > 0)
-            blackboard.HighLightPseudoCodePart(part - 1, blackboard.StandardColor);
-
-        blackboard.HighLightPseudoCodePart(part, Util.HIGHLIGHT_COLOR);
-    }
-
     #endregion
 
     #region Insertion Sort: All Moves (Debug log: OK!)

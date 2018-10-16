@@ -53,12 +53,6 @@ public class BucketSortManager : AlgorithmManagerBase {
         return elementStates;
     }
 
-    protected override Dictionary<int, string> CreatePseudoCode()
-    {
-        Dictionary<int, string> pseudoCode = new Dictionary<int, string>();
-        return pseudoCode;
-    }
-
     protected override HolderBase GetCorrectHolder(int index)
     {
         return holderManager.GetHolder(index);

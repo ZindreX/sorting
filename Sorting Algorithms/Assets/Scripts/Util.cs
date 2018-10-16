@@ -47,6 +47,7 @@ public class Util : MonoBehaviour {
     // Colors used
     public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
     public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
+    public static Color BLACKBOARD_COLOR = Color.white;
 
 
 

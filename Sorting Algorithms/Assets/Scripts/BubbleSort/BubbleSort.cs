@@ -15,12 +15,6 @@ public class BubbleSort : Algorithm {
         return Util.BUBBLE_SORT;
     }
 
-    public override Dictionary<int, string> PseudoCode
-    {
-        get { return pseudoCode; }
-        set { pseudoCode = value; }
-    }
-
     public override void ResetSetup()
     {
         Debug.Log("Nothing to reset (?)");

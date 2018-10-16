@@ -80,20 +80,4 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
         return elementStates;
     }
-
-    // Add instructions for later use on blackboard (?)
-    protected override Dictionary<int, string> CreatePseudoCode()
-    {
-        Dictionary<int, string> pseudoCode = new Dictionary<int, string>();
-        pseudoCode.Add(0, "i <- 1");
-        pseudoCode.Add(1, "while (i < length(list))");
-        pseudoCode.Add(2, "   j <- i - 1");
-        pseudoCode.Add(3, "   while (j > 0 and list[i] < list[j])");
-        pseudoCode.Add(4, "       swap list[i] and list[j]");
-        pseudoCode.Add(5, "       j -= 1");
-        pseudoCode.Add(6, "   end while");
-        pseudoCode.Add(7, "   i += 1");
-        pseudoCode.Add(8, "end while");
-        return pseudoCode;
-    }
 }
