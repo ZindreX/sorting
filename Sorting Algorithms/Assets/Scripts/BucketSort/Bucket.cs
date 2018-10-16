@@ -41,6 +41,11 @@ public class Bucket : MonoBehaviour, IChild {
         set { parent = value; }
     }
 
+    public int BucketID
+    {
+        get { return bucketID; }
+    }
+
     public string MyRole()
     {
         return Util.BUCKET_TAG + BUCKET_NR;
@@ -75,22 +80,14 @@ public class Bucket : MonoBehaviour, IChild {
         return (element.Value >= bucketCapacity[0] && element.Value < bucketCapacity[1]) ? true : false;
     }
 
-    private void AddSortingElementToBucket(SortingElementBase sortingElement)
+    public void AddSortingElementToBucket(SortingElementBase sortingElement)
     {
         currentHolding.Add(sortingElement);
         StartCoroutine(ChangeColor(Util.SORTED_COLOR));
 
         // Make invisible
         sortingElement.gameObject.active = false;
-        //StartCoroutine(ElementIntoBucket(sortingElement));
     }
-
-    //public static readonly float ENTER_BUCKET_TIME = 0.1f;
-    //private IEnumerator ElementIntoBucket(SortingElementBase sortingElement)
-    //{
-    //    yield return new WaitForSeconds(ENTER_BUCKET_TIME);
-    //    sortingElement.gameObject.active = false;
-    //}
 
     public SortingElementBase GetElementForDisplay(int index)
     {

@@ -16,6 +16,21 @@ public class Blackboard : MonoBehaviour {
     [SerializeField]
     private TextMesh[] labels, texts;
 
+    [SerializeField]
+    private Font font;
+
+    private Color standardColor = Color.white;
+
+    void Awake()
+    {
+        //font = Resources.Load("Roboto-bold") as Font;
+    }
+
+    public Color StandardColor
+    {
+        get { return standardColor; }
+    }
+
     public void SetTitleLabel(string title)
     {
         labels[TITLE_LABEL].text = title;
@@ -58,5 +73,37 @@ public class Blackboard : MonoBehaviour {
             // Score text
             texts[SCORE_TEXT].transform.position = gameObject.transform.position + new Vector3(2.69f, -3.4f, 0f);
         }
+    }
+
+
+    private Dictionary<int, TextMesh> pseudoCodeParts;
+    public void CreatePseudoCodeSetup(Dictionary<int, string> pseudoCode, Vector3 startPos)
+    {
+        for (int x = 0; x < labels.Length; x++)
+        {
+            labels[x].text = "";
+        }
+        foreach (TextMesh text in texts)
+        {
+            text.text = "";
+        }
+
+        pseudoCodeParts = new Dictionary<int, TextMesh>();
+        for (int x=0; x < pseudoCode.Count; x++)
+        {
+            GameObject temp = new GameObject("PseudoCodePart " + x);
+            temp.transform.position = startPos + new Vector3(0f, -x, 0f);
+            TextMesh textMesh = temp.AddComponent<TextMesh>();
+            //textMesh.font = font;
+            temp.transform.localScale += new Vector3(-0.5f, -0.5f, -0.5f);
+
+            textMesh.text = pseudoCode[x];
+            pseudoCodeParts.Add(x, textMesh);
+        }
+    }
+
+    public void HighLightPseudoCodePart(int part, Color color)
+    {
+        pseudoCodeParts[part].color = color;
     }
 }

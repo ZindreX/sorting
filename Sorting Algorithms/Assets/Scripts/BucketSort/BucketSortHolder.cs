@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BucketSortHolder : HolderBase {
+public class BucketSortHolder : InsertionSortHolder {
 
     protected override void UpdateColorOfHolder()
     {

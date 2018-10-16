@@ -2,8 +2,8 @@
 
 public class InsertionSortInstruction : InstructionBase {
 
-    private int sortingElementID, value, holderID, nextHolderID;
-    private bool isPivot;
+    protected int sortingElementID, value, holderID, nextHolderID;
+    protected bool isPivot;
 
     public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, string instruction, int value, bool isPivot, bool isCompare, bool isSorted)
         : base(instruction, isCompare, isSorted)
@@ -51,12 +51,7 @@ public class InsertionSortInstruction : InstructionBase {
     // Debug checker
     public override string DebugInfo()
     {
-        return "[" + value + "]: " + holderID + " -> " + TranslateNextHolder() + ", P=" + isPivot + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
-    }
-
-    private string TranslateNextHolder()
-    {
-        return (nextHolderID == Util.NO_DESTINATION) ? "N/A" : nextHolderID.ToString();
+        return "[" + value + "]: " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + ", P=" + isPivot + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
     }
 
 }

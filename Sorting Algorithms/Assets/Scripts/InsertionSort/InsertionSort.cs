@@ -18,10 +18,12 @@ public class InsertionSort : Algorithm {
     private Vector3 userTestHeight = new Vector3(0f, 1.5f, 0f);
 
     private Dictionary<int, string> pseudoCode;
+    private Blackboard blackboard;
 
     private void Awake()
     {
         tutorialHeight2 = tutorialHeight1 + new Vector3(0f, 0.2f, 0f);
+        blackboard = GetComponent<AlgorithmManagerBase>().GetBlackBoard;
     }
 
     public override string GetAlgorithmName()
@@ -64,23 +66,18 @@ public class InsertionSort : Algorithm {
         PivotHolderVisible(true);
     }
 
-
-    // Buggy as f...? tokidoki freeze editor
     #region Insertion Sort: Standard (No visuals)
-    public static GameObject[] InsertionSortStandard(GameObject[] list, bool reverse)
+    public static GameObject[] InsertionSortStandard(GameObject[] list)
     {
         int i = 1;
         while (i < list.Length)
         {
             GameObject pivot = list[i];
             int j = i - 1;
-            while (j >= 0)
+            while (j >= 0 && pivot.GetComponent<SortingElementBase>().Value < list[j].GetComponent<SortingElementBase>().Value)
             {
-                if (reverse && pivot.GetComponent<SortingElementBase>().Value > list[j].GetComponent<SortingElementBase>().Value || pivot.GetComponent<SortingElementBase>().Value < list[j].GetComponent<SortingElementBase>().Value)
-                {
-                    list[j + 1] = list[j];
-                    j -= 1;
-                }
+                list[j + 1] = list[j];
+                j -= 1;
             }
             list[j + 1] = pivot;
             i += 1;
@@ -89,21 +86,18 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
-    #region Insertion Sort: Standard (No visuals)
-    public static List<SortingElementBase> InsertionSortStandard2(List<SortingElementBase> list, bool reverse)
+    #region Insertion Sort: Standard 2 (No visuals)
+    public static List<SortingElementBase> InsertionSortStandard2(List<SortingElementBase> list)
     {
         int i = 1;
         while (i < list.Count)
         {
             SortingElementBase pivot = list[i];
             int j = i - 1;
-            while (j >= 0)
+            while (j >= 0 && pivot.Value < list[j].Value)
             {
-                if (reverse && pivot.Value > list[j].Value || pivot.Value < list[j].Value)
-                {
-                    list[j + 1] = list[j];
-                    j -= 1;
-                }
+                list[j + 1] = list[j];
+                j -= 1;
             }
             list[j + 1] = pivot;
             i += 1;
@@ -120,12 +114,16 @@ public class InsertionSort : Algorithm {
 
         Vector3 temp = new Vector3();
         int i = 1;
+        HighLightPart(0);
+        yield return new WaitForSeconds(seconds);
+
         while (i < list.Length)
         {
             // Get pivot
             GameObject pivotObj = list[i];
             InsertionSortElement pivot = list[i].GetComponent<InsertionSortElement>();
             pivot.IsPivot = true;
+            HighLightPart(0);
 
             // Get pivot's initial position
             temp = pivot.transform.position;
@@ -206,6 +204,15 @@ public class InsertionSort : Algorithm {
         PivotHolderVisible(false);
         IsSortingComplete = true;
     }
+
+    private void HighLightPart(int part)
+    {
+        if (part > 0)
+            blackboard.HighLightPseudoCodePart(part - 1, blackboard.StandardColor);
+
+        blackboard.HighLightPseudoCodePart(part, Util.HIGHLIGHT_COLOR);
+    }
+
     #endregion
 
     #region Insertion Sort: All Moves (Debug log: OK!)

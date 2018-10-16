@@ -27,7 +27,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     [SerializeField]
     protected string instruction, status;
     [SerializeField]
-    protected int hID, nextID;
+    protected int hID, nextHolderID;
     #endregion
 
     [SerializeField]

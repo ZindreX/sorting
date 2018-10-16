@@ -97,15 +97,16 @@ public class BucketSort : Algorithm {
     }
     #endregion
 
-    // Not complete, insertion sort freezes
     #region Bucket Sort: Standard 2
     public static GameObject[] BucketSortStandard2(GameObject[] sortingElements, int numberOfBuckets)
     {
-        // Find number of elements per bucket
-        int[] numberOfElementsPerBucket = new int[numberOfBuckets];
+        // Find number of elements per bucket, + counter for later use
+        int[] numberOfElementsPerBucket = new int[numberOfBuckets], counters = new int[numberOfBuckets];
         for (int i=0; i < sortingElements.Length; i++)
         {
-            numberOfElementsPerBucket[BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets)] += 1;
+            int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets);
+            numberOfElementsPerBucket[index] += 1;
+            counters[index] += 1;
         }
 
         // Create empty lists (buckets)
@@ -116,7 +117,6 @@ public class BucketSort : Algorithm {
         }
 
         // Add elements to buckets
-        int[] counters = numberOfElementsPerBucket;
         for (int i = 0; i < sortingElements.Length; i++)
         {
             int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets);
@@ -126,14 +126,15 @@ public class BucketSort : Algorithm {
         }
 
         // Sort each bucket by using Insertion Sort
-        for (int i=0; i < buckets.Count; i++)
+        for (int i=0; i < numberOfBuckets; i++)
         {
-            buckets[i] = InsertionSort.InsertionSortStandard(buckets[i], false);
+            if (numberOfElementsPerBucket[i] > 0)
+                buckets[i] = InsertionSort.InsertionSortStandard(buckets[i]);
         }
 
         // Put elements back into list
         int k = 0;
-        for (int i = 0; i < buckets.Count; i++)
+        for (int i = 0; i < numberOfBuckets; i++)
         {
             if (buckets[i].Length > 0)
             {
@@ -154,20 +155,19 @@ public class BucketSort : Algorithm {
 
     #endregion
 
-
     #region Bucket Sort: Tutorial (Visual)
     public override IEnumerator Tutorial(GameObject[] sortingElements)
     {
         // Find min-/ max values
-        int minValue = Util.MAX_VALUE, maxValue = 0;
-        for (int i = 0; i < sortingElements.Length; i++)
-        {
-            int value = sortingElements[i].GetComponent<BucketSortElement>().Value;
-            if (value > maxValue)
-                maxValue = value;
-            if (value < minValue)
-                minValue = value;
-        }
+        //int minValue = Util.MAX_VALUE, maxValue = 0;
+        //for (int i = 0; i < sortingElements.Length; i++)
+        //{
+        //    int value = sortingElements[i].GetComponent<BucketSortElement>().Value;
+        //    if (value > maxValue)
+        //        maxValue = value;
+        //    if (value < minValue)
+        //        minValue = value;
+        //}
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
@@ -202,7 +202,7 @@ public class BucketSort : Algorithm {
             Bucket bucket = buckets[x].GetComponent<Bucket>();
             bucket.DisplayElements = true;
             // Sort bucket *** TODO: go to insertion sort scene
-            //bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding, false);
+            bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
 
             int numberOfElementsInBucket = bucket.CurrenHolding.Count;
             for (int y=0; y < numberOfElementsInBucket; y++)
@@ -238,13 +238,56 @@ public class BucketSort : Algorithm {
             }
         }
         status = NONE;
+        IsSortingComplete = true;
     }
     #endregion
 
+
     #region Bucket Sort: User Test
-    public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list)
+    public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
-        throw new System.NotImplementedException();
+        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
+        int instructionNr = 0;
+
+        // Create buckets
+        Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
+        int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
+        bucketManager.CreateObjects(numberOfBuckets, pos);
+
+        // Buckets
+        GameObject[] buckets = bucketManager.Buckets;
+
+        // Move sorting elements to the correct bucket instructions
+        for (int i = 0; i < sortingElements.Length; i++)
+        {
+            // Get element
+            BucketSortInstruction element = (BucketSortInstruction)sortingElements[i];
+
+            // Get bucket
+            int bucketIndex = BucketIndex(element.Value, numberOfBuckets);
+
+            // Move element above the bucket and put it inside
+            instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, element.HolderID, Util.NO_DESTINATION, bucketIndex, Util.MOVE_TO_BUCKET_INST, element.Value, false, false, false));
+        }
+
+        // Move player into insertion sort room, and let them do the sorting or skip ?
+        instructions.Add(instructionNr++, new BucketSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.PHASING_INST, Util.NO_VALUE, false, false, false));
+
+        // Put elements back into list
+        int k = 0;
+        // Holder positions (where the sorting elements initialized)
+        Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
+        for (int i = 0; i < numberOfBuckets; i++)
+        {
+            Bucket bucket = buckets[i].GetComponent<Bucket>();
+            int numberOfElementsInBucket = bucket.CurrenHolding.Count;
+            for (int j = 0; j < numberOfElementsInBucket; j++)
+            {
+                BucketSortElement element = (BucketSortElement)bucket.GetElementForDisplay(j);
+                instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, bucket.BucketID, k++, Util.NO_DESTINATION, Util.MOVE_BACK_INST, element.Value, false, false, true));
+            }
+        }
+        return instructions;
     }
     #endregion
 }

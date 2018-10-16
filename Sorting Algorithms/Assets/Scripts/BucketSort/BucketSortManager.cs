@@ -37,7 +37,20 @@ public class BucketSortManager : AlgorithmManagerBase {
 
     protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
-        throw new System.NotImplementedException();
+        BucketSortInstruction[] elementStates = new BucketSortInstruction[sortingElements.Length];
+
+        for (int i = 0; i < sortingElements.Length; i++)
+        {
+            BucketSortElement element = sortingElements[i].GetComponent<BucketSortElement>();
+            int sortingElementID = element.SortingElementID;
+            int holderID = element.CurrentStandingOn.HolderID;
+            int value = element.Value;
+            bool isPivot = element.IsPivot;
+            bool isCompare = element.IsCompare;
+            bool isSorted = element.IsSorted;
+            elementStates[i] = new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
+        }
+        return elementStates;
     }
 
     protected override Dictionary<int, string> CreatePseudoCode()
@@ -48,17 +61,78 @@ public class BucketSortManager : AlgorithmManagerBase {
 
     protected override HolderBase GetCorrectHolder(int index)
     {
-        throw new System.NotImplementedException();
+        return holderManager.GetHolder(index);
     }
 
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        throw new System.NotImplementedException();
+        // Get the next instruction
+        BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
+
+        if (bucketSortInstruction.ElementInstruction == Util.PHASING_INST)
+        {
+            // Phase into Insertion Sort (?)
+            AutoSort();
+            StartCoroutine(PutElementsForDisplay());
+        }
+        else
+        {
+            // Get the Sorting element
+            BucketSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<BucketSortElement>();
+
+            // Hands out the next instruction
+            sortingElement.ElementInstruction = bucketSortInstruction;
+
+            // Give this sorting element permission to give feedback to progress to next intstruction
+            sortingElement.NextMove = true;
+
+            Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bucketSortInstruction.DebugInfo());
+        }
+        return SkipOrHelp(bucketSortInstruction);
     }
 
     protected override int SkipOrHelp(InstructionBase instruction)
     {
-        throw new System.NotImplementedException();
+        BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
+        // Display help on blackboard
+        if (false) // help enabled
+        {
+
+        }
+        else
+        {
+            if (bucketSortInstruction.NextHolderID == Util.NO_DESTINATION && bucketSortInstruction.BucketID == Util.NO_DESTINATION) // skipping until next (user) move
+                return 1;
+        }
+        return 0;
     }
 
+    private void AutoSort()
+    {
+        for (int x=0; x < numberOfBuckets; x++)
+        {
+            Bucket bucket = bucketManager.GetBucket(x);
+            bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
+        }
+    }
+
+    private IEnumerator PutElementsForDisplay()
+    {
+        for (int x=0; x < numberOfBuckets; x++)
+        {
+            Bucket bucket = bucketManager.GetBucket(x);
+            bucket.DisplayElements = true;
+
+            int numberOfElements = bucket.CurrenHolding.Count;
+            if (numberOfElements > 0)
+            {
+                for (int y=0; y < numberOfElements; y++)
+                {
+                    SortingElementBase element = bucket.RemoveSoringElement();
+                    element.transform.position = new Vector3(0f, 2f, 0f);
+                    yield return new WaitForSeconds(bucketSort.Seconds);
+                }
+            }
+        }
+    }
 }

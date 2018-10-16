@@ -12,8 +12,13 @@ public class BucketSortInstruction : InsertionSortInstruction {
         this.bucketID = bucketID;
     }
 
+    public int BucketID
+    {
+        get { return bucketID; }
+    }
+
     public override string DebugInfo()
     {
-        throw new System.NotImplementedException();
+        return "[" + value + "]: " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + " / " + bucketID + ", P=" + isPivot + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
     }
 }

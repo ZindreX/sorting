@@ -27,9 +27,9 @@ public class BubbleSortElement : SortingElementBase {
 
             hID = bubbleSortInstruction.GetHolderFor(sortingElementID);
             if (bubbleSortInstruction.ElementInstruction == Util.SWITCH_INST)
-                nextID = bubbleSortInstruction.SwitchToHolder(sortingElementID);
+                nextHolderID = bubbleSortInstruction.SwitchToHolder(sortingElementID);
             else
-                nextID = bubbleSortInstruction.GetHolderFor(sortingElementID);
+                nextHolderID = bubbleSortInstruction.GetHolderFor(sortingElementID);
             
             switch (instruction)
             {
@@ -37,7 +37,7 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.COMPARE_START_INST: status = "Comparing with " + bubbleSortInstruction.GetValueFor(sortingElementID, true); break;
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
                 case Util.SWITCH_INST:
-                    status = "Move to " + nextID;
+                    status = "Move to " + nextHolderID;
                     //intermediateMove = true;
                     break;
                 case Util.EXECUTED_INST: status = "Performed"; break;

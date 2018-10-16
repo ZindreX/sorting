@@ -55,7 +55,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
             // *** Objects ***
             blackboard = blackboardObj.GetComponent(typeof(Blackboard)) as Blackboard;
-            blackboard.InitializeBlackboard(isTutorial);
+            //blackboard.InitializeBlackboard(isTutorial);
 
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
@@ -66,6 +66,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             algorithm = InstanceOfAlgorithm;
             algorithm.PseudoCode = CreatePseudoCode();
             algorithmName = algorithm.GetAlgorithmName();
+
+            blackboard.CreatePseudoCodeSetup(algorithm.PseudoCode, blackboard.transform.position + new Vector3(-2.5f, 3.5f, 0f)); // test pseudo code on blackboard
         }
     }
 
@@ -182,6 +184,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // --------------------------------------- Getters and setters ---------------------------------------
 
+    public Blackboard GetBlackBoard
+    {
+        get { return blackboard; }
+    }
+
     protected string GetAlgorithmName
     {
         get { return algorithm.GetAlgorithmName(); }
@@ -216,14 +223,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
         StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
-        
-        //GameObject[] result = BucketSort.BucketSortStandard(elementManager.SortingElements, 10);
-        //string t = "";
-        //foreach (GameObject obj in result)
-        //{
-        //    t += obj.GetComponent<BucketSortElement>().Value + ", ";
-        //}
-        //Debug.Log("Result: " + t);
+
+        //Debug.Log(DebugCheckGameObjects(InsertionSort.InsertionSortStandard(elementManager.SortingElements)));
+        //Debug.Log(DebugCheckGameObjects(BucketSort.BucketSortStandard2(elementManager.SortingElements, numberOfElements)));
     }
 
     /* --------------------------------------- User Test ---------------------------------------
@@ -243,7 +245,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         // Set start time
         scoreManager.SetStartTime();
 
-        //Check(instructions); // Debugging
+        //DebugCheckInstructions(instructions); // Debugging
     }
 
 
@@ -266,22 +268,32 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
     protected abstract HolderBase GetCorrectHolder(int index);
 
-    //
+    // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     protected abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
 
-    //
+    // Gather the pseudo code, which can be used on blackboard
     protected abstract Dictionary<int, string> CreatePseudoCode();
 
 
 
     // --------------------------------------- Debugging ---------------------------------------
 
-    private void Check(Dictionary<int, InstructionBase> dict)
+    private void DebugCheckInstructions(Dictionary<int, InstructionBase> dict)
     {
         for (int x = 0; x < dict.Count; x++)
         {
             Debug.Log(dict[x].DebugInfo());
         }
         Debug.Log("");
+    }
+
+    private string DebugCheckGameObjects(GameObject[] list)
+    {
+        string result = "";
+        foreach (GameObject obj in list)
+        {
+            result += obj.GetComponent<SortingElementBase>().Value + ", ";
+        }
+        return result;
     }
 }

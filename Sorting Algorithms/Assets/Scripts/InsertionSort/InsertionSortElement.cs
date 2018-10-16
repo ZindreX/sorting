@@ -32,7 +32,7 @@ public class InsertionSortElement : SortingElementBase {
             // Debugging
             instruction = insertionSortInstruction.ElementInstruction;
             hID = insertionSortInstruction.HolderID;
-            nextID = insertionSortInstruction.NextHolderID;
+            nextHolderID = insertionSortInstruction.NextHolderID;
 
             switch (instruction)
             {
@@ -42,7 +42,7 @@ public class InsertionSortElement : SortingElementBase {
                 case Util.COMPARE_START_INST: status = "Comparing with pivot"; break;
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
                 case Util.SWITCH_INST:
-                    status = "Move to " + nextID;
+                    status = "Move to " + nextHolderID;
                     intermediateMove = true; // Too easy for the user?
                     break;
                 case Util.EXECUTED_INST: status = "Performed"; break;

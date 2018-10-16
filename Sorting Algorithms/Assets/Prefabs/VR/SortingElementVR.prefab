@@ -70,14 +70,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4445457620290920}
-  - component: {fileID: 114476339068440478}
-  - component: {fileID: 114963105575435102}
   - component: {fileID: 33179666926000228}
   - component: {fileID: 23762141814430042}
   - component: {fileID: 54468815750720256}
   - component: {fileID: 65750154077242578}
+  - component: {fileID: 114701562250785372}
   m_Layer: 0
-  m_Name: BucketSortElement
+  m_Name: SortingElementVR
   m_TagString: SortingElement
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,7 +153,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1486772700085944}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.3742847, y: 0.2999961, z: 24.174515}
+  m_LocalPosition: {x: 0, y: 1.942, z: 1.763}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 4476268445805368}
@@ -496,7 +495,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!65 &65750154077242578
 BoxCollider:
@@ -636,7 +635,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
---- !u!114 &114476339068440478
+--- !u!114 &114701562250785372
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -644,29 +643,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1486772700085944}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6947d806197c78a42b7db28a397153a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 02d61468f8b77ae4b92c344bc9a600fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instruction: 
-  status: 
-  hID: 0
-  nextHolderID: 0
-  surfaceTexts:
-  - {fileID: 102334327259728626}
-  - {fileID: 102885443524242848}
-  - {fileID: 102308491371541394}
-  - {fileID: 102586916863441662}
-  - {fileID: 102112005758562410}
-  - {fileID: 102761877793115828}
---- !u!114 &114963105575435102
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1486772700085944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7867fa4de41f334abfaaa431c656529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 20793796626688050, guid: e4150389fc3aa9d44994f22169f81b9d, type: 2}
+  m_allowOffhandGrab: 1
+  m_snapPosition: 0
+  m_snapOrientation: 0
+  m_snapOffset: {fileID: 0}
+  m_grabPoints: []

@@ -18,6 +18,11 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
         set { isSortingComplete = value; }
     }
 
+    public float Seconds
+    {
+        get { return seconds; }
+    }
+
     public bool IsReadyForNextMove
     {
         get { return isReadyForNextMove; }
