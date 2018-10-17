@@ -48,14 +48,9 @@ public class BucketSortManager : AlgorithmManagerBase {
             bool isPivot = element.IsPivot;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
+            elementStates[i] = new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
         }
         return elementStates;
-    }
-
-    protected override HolderBase GetCorrectHolder(int index)
-    {
-        return holderManager.GetHolder(index);
     }
 
     protected override int PrepareNextInstruction(InstructionBase instruction)
@@ -130,8 +125,4 @@ public class BucketSortManager : AlgorithmManagerBase {
         }
     }
 
-    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
-    {
-        throw new System.NotImplementedException();
-    }
 }

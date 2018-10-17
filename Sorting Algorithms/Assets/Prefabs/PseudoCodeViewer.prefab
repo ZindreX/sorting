@@ -222,7 +222,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1551877460249772}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 7.16, z: 11.44}
+  m_LocalPosition: {x: -0.01, y: 5.19, z: 10.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4230485868932590}
@@ -814,7 +814,7 @@ TextMesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1120887019137880}
-  m_Text: "\twhile ( j > 0 and list[ i ] < list[ j ] )"
+  m_Text: "\twhile ( j >= 0 and list[ i ] < list[ j ] )"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1

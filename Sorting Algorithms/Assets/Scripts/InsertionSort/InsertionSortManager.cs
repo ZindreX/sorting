@@ -57,7 +57,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         return 0;
     }
 
-    protected override HolderBase GetCorrectHolder(int index)
+    public override HolderBase GetCorrectHolder(int index)
     {
         HolderBase getHolder = holderManager.GetHolder(index);
         return (getHolder != null) ? getHolder : insertionSort.PivotHolder;
@@ -76,50 +76,8 @@ public class InsertionSortManager : AlgorithmManagerBase {
             bool isPivot = element.IsPivot;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new InsertionSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
+            elementStates[i] = new InsertionSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, isPivot, isCompare, isSorted);
         }
         return elementStates;
-    }
-
-    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
-    {
-        InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
-        InsertionSortElement sortingElement = elementManager.GetSortingElement(inst.SortingElementID).GetComponent<InsertionSortElement>();
-        sortingElement.IsPivot = inst.IsPivot;
-        sortingElement.IsCompare = inst.IsCompare;
-        sortingElement.IsSorted = inst.IsSorted;
-
-        HolderBase moveToHolder = null;
-        if (sortingElement.CurrentStandingOn.HolderID == inst.HolderID)
-            moveToHolder = GetCorrectHolder(inst.NextHolderID);
-        else
-            moveToHolder = GetCorrectHolder(inst.HolderID);
-
-        Debug.Log("Moving from holder " + sortingElement.CurrentStandingOn.HolderID + " to holder " + moveToHolder.HolderID);
-        switch (inst.ElementInstruction)
-        {
-            case Util.INIT_INSTRUCTION:
-                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
-                yield return new WaitForSeconds(insertionSort.Seconds);
-                break;
-            case Util.PIVOT_START_INST:
-                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
-                yield return new WaitForSeconds(insertionSort.Seconds);
-                break;
-            case Util.PIVOT_END_INST:
-                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
-                yield return new WaitForSeconds(insertionSort.Seconds);
-                break;
-            case Util.COMPARE_START_INST:
-                break;
-            case Util.COMPARE_END_INST:
-                break;
-            case Util.SWITCH_INST:
-                sortingElement.transform.position = moveToHolder.transform.position + new Vector3(0f, 1f, 0f);
-                yield return new WaitForSeconds(insertionSort.Seconds);
-                break;
-            case Util.EXECUTED_INST:
-                break;
-        }
     }
 }

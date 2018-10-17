@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(HolderManager))]
 [RequireComponent(typeof(ElementManager))]
 [RequireComponent(typeof(UserTestManager))]
+[RequireComponent(typeof(TutorialStep))]
 [RequireComponent(typeof(Algorithm))]
 [RequireComponent(typeof(ScoreManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
@@ -41,12 +42,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     private Vector3[] holderPositions;
 
-    // Tutorial step by step
-    private bool playerMove = false, playerIncremented = false;
-    private int instructionNr = 0;
-    private Dictionary<int, InstructionBase> instructions;
-
-
     [SerializeField]
     private GameObject blackboardObj;
 
@@ -55,6 +50,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected HolderManager holderManager;
     protected ElementManager elementManager;
     protected UserTestManager userTestManager;
+    protected TutorialStep tutorialStep;
     protected Algorithm algorithm;
     protected ScoreManager scoreManager;
 
@@ -72,6 +68,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
             userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
+            tutorialStep = GetComponent(typeof(TutorialStep)) as TutorialStep;
             scoreManager = GetComponent(typeof(ScoreManager)) as ScoreManager;
 
             // Setup algorithm in their respective <Algorithm name>Manager
@@ -103,10 +100,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         {
             if (IsTutorialStep())
             {
-                if (playerMove)
+                if (tutorialStep.PlayerMove)
                 {
-                    playerMove = false;
-                    StartCoroutine(ExecuteOrder(instructions[instructionNr], playerIncremented));
+                    tutorialStep.PlayerMove = false;
+                    //StartCoroutine(algorithm.ExecuteOrder(tutorialStep.GetInstruction(), tutorialStep.CurrentInstructionNr));
+                    ((InsertionSort)algorithm).ExecuteOrder3(tutorialStep.GetStep(), tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
                 }
             }
             else if (IsTutorial())
@@ -227,20 +225,15 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         set { holderPositions = value; }
     }
 
-    public bool PlayerMove
+    // Returns the holder (might change, since insertion sort is the only with some modifications) ***
+    public virtual HolderBase GetCorrectHolder(int index)
     {
-        set { playerMove = value; }
+        return holderManager.GetHolder(index);
     }
 
-    public void PlayerIncremented(bool increment)
+    public void PlayerStepByStepInput(bool increment)
     {
-        playerIncremented = increment;
-        if (increment && instructionNr < instructions.Count)
-            instructionNr++;
-        else if (!increment && instructionNr > 0)
-            instructionNr--;
-        else
-            Debug.Log("Can't do that step");
+        tutorialStep.NotifyUserInput(increment);
     }
 
     //
@@ -278,7 +271,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void PerformAlgorithmTutorialStep()
     {
         // Getting instructions for this sample of sorting elements
-        instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
+        tutorialStep.Init(algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements)));
     }
 
     /* --------------------------------------- User Test ---------------------------------------
@@ -316,14 +309,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // TODO: Display stuff on the blackboard if help enabled
     protected abstract int SkipOrHelp(InstructionBase instruction);
 
-    // Returns the holder (might change, since insertion sort is the only with some modifications) ***
-    protected abstract HolderBase GetCorrectHolder(int index);
-
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     protected abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
 
     // Step by step tutorial
-    protected abstract IEnumerator ExecuteOrder(InstructionBase instruction, bool increment);
+    //protected abstract IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr);
 
 
 

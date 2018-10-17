@@ -60,11 +60,6 @@ public class BubbleSortManager : AlgorithmManagerBase {
         return 0;
     }
 
-    protected override HolderBase GetCorrectHolder(int index) // todo: override only in insertion sort etc?
-    {
-        return holderManager.GetHolder(index);
-    }
-
     protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
         BubbleSortInstruction[] elementStates = new BubbleSortInstruction[sortingElements.Length];
@@ -80,10 +75,5 @@ public class BubbleSortManager : AlgorithmManagerBase {
             elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, isCompare, isSorted);
         }
         return elementStates;
-    }
-
-    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
-    {
-        throw new System.NotImplementedException();
     }
 }

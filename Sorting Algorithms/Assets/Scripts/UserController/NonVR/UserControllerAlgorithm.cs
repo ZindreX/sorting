@@ -41,15 +41,14 @@ public class UserControllerAlgorithm : UserControllerBase {
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
         else if (Input.GetKeyDown(KeyCode.F3))
             am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.PRO);
+
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            am.PlayerIncremented(false);
-            am.PlayerMove = true;
+            am.PlayerStepByStepInput(false);
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            am.PlayerIncremented(true);
-            am.PlayerMove = true;
+            am.PlayerStepByStepInput(true);
         }
     }
 

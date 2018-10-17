@@ -2,10 +2,10 @@
 
 public class InsertionSortInstruction : InstructionBase {
 
-    protected int sortingElementID, value, holderID, nextHolderID;
+    protected int sortingElementID, value, holderID, nextHolderID, i, j;
     protected bool isPivot;
 
-    public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, string instruction, int value, bool isPivot, bool isCompare, bool isSorted)
+    public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, string instruction, int value, bool isPivot, bool isCompare, bool isSorted)
         : base(instruction, isCompare, isSorted)
     {
         this.sortingElementID = sortingElementID;
@@ -13,6 +13,9 @@ public class InsertionSortInstruction : InstructionBase {
         this.holderID = holderID;
         this.nextHolderID = nextHolderID; // -1: not going anywhere
         this.isPivot = isPivot;
+        // For step by step tutorial
+        this.i = i;
+        this.j = j;
     }
 
     public int SortingElementID
@@ -46,6 +49,16 @@ public class InsertionSortInstruction : InstructionBase {
     {
         get { return isPivot; }
         set { isPivot = value; }
+    }
+
+    public int I
+    {
+        get { return i; }
+    }
+
+    public int J
+    {
+        get { return j; }
     }
 
     // Debug checker

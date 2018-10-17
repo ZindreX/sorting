@@ -261,11 +261,11 @@ public class BucketSort : Algorithm {
             int bucketIndex = BucketIndex(element.Value, numberOfBuckets);
 
             // Move element above the bucket and put it inside
-            instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, element.HolderID, Util.NO_DESTINATION, bucketIndex, Util.MOVE_TO_BUCKET_INST, element.Value, false, false, false));
+            instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, element.HolderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, bucketIndex, Util.MOVE_TO_BUCKET_INST, element.Value, false, false, false));
         }
 
         // Move player into insertion sort room, and let them do the sorting or skip ?
-        instructions.Add(instructionNr++, new BucketSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.PHASING_INST, Util.NO_VALUE, false, false, false));
+        instructions.Add(instructionNr++, new BucketSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.PHASING_INST, Util.NO_VALUE, false, false, false));
 
         // Put elements back into list
         int k = 0;
@@ -278,10 +278,17 @@ public class BucketSort : Algorithm {
             for (int j = 0; j < numberOfElementsInBucket; j++)
             {
                 BucketSortElement element = (BucketSortElement)bucket.GetElementForDisplay(j);
-                instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, bucket.BucketID, k++, Util.NO_DESTINATION, Util.MOVE_BACK_INST, element.Value, false, false, true));
+                instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, bucket.BucketID, k++, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.MOVE_BACK_INST, element.Value, false, false, true));
             }
         }
         return instructions;
     }
     #endregion
+
+
+    public override IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr)
+    {
+        throw new System.NotImplementedException();
+    }
+
 }

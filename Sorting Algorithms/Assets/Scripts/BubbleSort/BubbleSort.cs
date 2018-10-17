@@ -188,4 +188,9 @@ public class BubbleSort : Algorithm {
         return new BubbleSortInstruction(seID1, seID2, hID1, hID2, value1, value2, instruction, isCompare, isSorted);
     }
 
+    public override IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr)
+    {
+        throw new System.NotImplementedException();
+    }
+
 }

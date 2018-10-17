@@ -558,4 +558,9 @@ public class MergeSort : Algorithm {
     }
     #endregion
 
+
+    public override IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr)
+    {
+        throw new System.NotImplementedException();
+    }
 }

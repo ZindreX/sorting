@@ -48,7 +48,7 @@ public class MergeSortManager : AlgorithmManagerBase {
         return 0;
     }
 
-    protected override HolderBase GetCorrectHolder(int index)
+    public override HolderBase GetCorrectHolder(int index)
     {
         MergeSortHolder holder = (MergeSortHolder)holderManager.GetHolder(index);
         return (holder != null) ? holder : mergeSort.GetExtraHolder(index).GetComponent<MergeSortHolder>();
@@ -71,8 +71,4 @@ public class MergeSortManager : AlgorithmManagerBase {
         return elementStates;
     }
 
-    protected override IEnumerator ExecuteOrder(InstructionBase instruction, bool increment)
-    {
-        throw new System.NotImplementedException();
-    }
 }

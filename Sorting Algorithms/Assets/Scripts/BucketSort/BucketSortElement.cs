@@ -12,7 +12,7 @@ public class BucketSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        ElementInstruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, value, false, false, false);
+        ElementInstruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, false, false, false);
     }
 
     public override InstructionBase ElementInstruction

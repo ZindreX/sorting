@@ -36,4 +36,9 @@ public class QuickSort : Algorithm {
     {
         throw new System.NotImplementedException();
     }
+
+    public override IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr)
+    {
+        throw new System.NotImplementedException();
+    }
 }

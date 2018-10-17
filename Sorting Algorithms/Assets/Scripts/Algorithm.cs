@@ -49,6 +49,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     //protected abstract string GetPseudoCode(int codeLine);
 
     public abstract IEnumerator Tutorial(GameObject[] list);
+    public abstract IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr);
     public abstract Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);
 }
 

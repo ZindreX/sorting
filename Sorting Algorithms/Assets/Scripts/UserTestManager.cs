@@ -2,53 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserTestManager : MonoBehaviour, IBlackboardAble {
+public class UserTestManager : UserAlgorithmControl, IBlackboardAble {
 
     /* -------------------------------------------- User Test Manager --------------------------------------------
      * 
      * 
     */
 
-    private int currentInstructionNr = 0, errorCount = 0;
-    private int readyForNext, algorithmMovesNeeded; // bool readyForNext;
-    private Dictionary<int, InstructionBase> instructions;
+    private int errorCount = 0;
+    private int readyForNext, algorithmMovesNeeded;
 
     public void InitUserTest(Dictionary<int, InstructionBase> instructions, int algorithmMovesNeeded)
     {
-        this.instructions = instructions;
+        base.Init(instructions);
         this.algorithmMovesNeeded = algorithmMovesNeeded;
-        readyForNext = algorithmMovesNeeded; // true
-        currentInstructionNr = -1;
+        readyForNext = algorithmMovesNeeded;
         errorCount = 0;
-    }
-
-    public bool HasInstructions()
-    {
-        if (instructions != null)
-            return instructions.Count != 0 && currentInstructionNr < instructions.Count;
-        return false;
-    }
-
-    public bool LastInstruction()
-    {
-        return currentInstructionNr == (instructions.Count - 1);
-    }
-
-    public InstructionBase GetInstruction()
-    {
-        return instructions[currentInstructionNr];
     }
 
     public int ErrorCount
     {
         get { return errorCount; }
-    }
-
-    // Increasing instruction counter as long there is one
-    public void IncrementToNextInstruction()
-    {
-        if (currentInstructionNr < instructions.Count)
-            currentInstructionNr++;
     }
 
     // Error counting
@@ -75,12 +49,14 @@ public class UserTestManager : MonoBehaviour, IBlackboardAble {
         set { algorithmMovesNeeded = value; }
     }
 
-    public int CurrentInstructionNr
+    public override void ResetState()
     {
-        get { return currentInstructionNr; }
+        base.ResetState();
+        errorCount = 0;
+        
     }
 
-    public string FillInBlackboard()
+    public override string FillInBlackboard()
     {
         return "\nInst. nr.: " + CurrentInstructionNr + "\n\n" + Util.ModifyPluralString("error", errorCount) + ": " + ErrorCount;
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PseudoCodeViewer))]
+[RequireComponent(typeof(InsertionSortManager))]
 public class InsertionSort : Algorithm {
 
     /* --------------------------------------------------- Insertion Sort --------------------------------------------------- 
@@ -19,11 +20,13 @@ public class InsertionSort : Algorithm {
     private Vector3 userTestHeight = new Vector3(0f, 1.5f, 0f);
 
     private PseudoCodeViewer pseudoCodeViewer;
+    private InsertionSortManager insertionSortManager;
 
     private void Awake()
     {
         tutorialHeight2 = tutorialHeight1 + new Vector3(0f, 0.2f, 0f);
         pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
+        insertionSortManager = GetComponent(typeof(InsertionSortManager)) as InsertionSortManager;
     }
 
     public override string GetAlgorithmName()
@@ -36,15 +39,15 @@ public class InsertionSort : Algorithm {
         get { return pivotHolder; }
     }
 
-    protected string PseudoCode(int lineNr, int i, int j, int numberOfElements)
+    protected string PseudoCode(int lineNr, int i, int j, bool increment)
     {
         switch (lineNr)
         {
             case 0: return "InsertionSort( List<int> list )";
             case 1: return "i = 1";
-            case 2: return "while ( " + i + " < " + numberOfElements + " )";
+            case 2: return "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().NumberOfElements + " )";
             case 3: return "    " + j + " = " + i  + " - 1";
-            case 4: return "    while ( " + j + " > 0 and " + pivotValue + " < " + compareValue + " )";
+            case 4: return "    while ( " + j + " >= 0 and " + pivotValue + " < " + compareValue + " )";
             case 5: return "        swap " + pivotValue + " and " + compareValue;
             case 6: return "        " + j + " = " + (j + 1) + " - 1";
             case 7: return "    end while";
@@ -134,13 +137,13 @@ public class InsertionSort : Algorithm {
 
         int i = 1, listLength = list.Length;
         // Display pseudocode (set i)
-        StartCoroutine(HighlightText(1, PseudoCode(1, i, Util.NO_VALUE, listLength)));
+        StartCoroutine(HighlightText(1, PseudoCode(1, i, Util.NO_VALUE, true)));
         yield return new WaitForSeconds(seconds);
 
         while (i < listLength)
         {
             // Display pseudocode (1st while)
-            StartCoroutine(HighlightText(2, PseudoCode(2, i, Util.NO_VALUE, listLength)));
+            StartCoroutine(HighlightText(2, PseudoCode(2, i, Util.NO_VALUE, true)));
             yield return new WaitForSeconds(seconds);
 
             // Get pivot
@@ -164,7 +167,7 @@ public class InsertionSort : Algorithm {
             int j = i - 1;
 
             // Display pseudocode (set j)
-            StartCoroutine(HighlightText(3, PseudoCode(3, i, j, listLength)));
+            StartCoroutine(HighlightText(3, PseudoCode(3, i, j, true)));
             yield return new WaitForSeconds(seconds);
 
             // Start comparing until find the correct position is found
@@ -173,7 +176,7 @@ public class InsertionSort : Algorithm {
             compareValue = list[j].GetComponent<InsertionSortElement>().Value;
 
             // Display pseudocode (2nd while)
-            StartCoroutine(HighlightText(4, PseudoCode(4, i, j, listLength)));
+            StartCoroutine(HighlightText(4, PseudoCode(4, i, j, true)));
             yield return new WaitForSeconds(seconds);
 
             while (pivotValue < compareValue)
@@ -192,7 +195,7 @@ public class InsertionSort : Algorithm {
                 list[j + 1] = compareObj;
 
                 // Display pseudocode (swap)
-                StartCoroutine(HighlightText(5, PseudoCode(5, i, j, listLength)));
+                StartCoroutine(HighlightText(5, PseudoCode(5, i, j, true)));
                 yield return new WaitForSeconds(seconds);
 
                 // Preparing for next step
@@ -200,7 +203,7 @@ public class InsertionSort : Algorithm {
                 j -= 1;
 
                 // Display pseudocode (decrement j)
-                StartCoroutine(HighlightText(6, PseudoCode(6, i, j, listLength)));
+                StartCoroutine(HighlightText(6, PseudoCode(6, i, j, true)));
                 yield return new WaitForSeconds(seconds);
 
                 // Check if there are more elements to compare the pivot with
@@ -210,7 +213,7 @@ public class InsertionSort : Algorithm {
                     compareValue = list[j].GetComponent<InsertionSortElement>().Value;
 
                     // Display pseudocode (2nd while new compare value)
-                    StartCoroutine(HighlightText(4, PseudoCode(4, i, j, listLength)));
+                    StartCoroutine(HighlightText(4, PseudoCode(4, i, j, true)));
                     yield return new WaitForSeconds(seconds);
                 }
                 else
@@ -219,7 +222,7 @@ public class InsertionSort : Algorithm {
                     compare.IsSorted = true; //list[j + 1].GetComponent<SortingElement>().IsSorted = true;
 
                     // Display pseudocode (end 2nd while)
-                    StartCoroutine(HighlightText(7, PseudoCode(7, i, j, listLength)));
+                    StartCoroutine(HighlightText(7, PseudoCode(7, i, j, true)));
                     yield return new WaitForSeconds(seconds);
                     break;
                 }
@@ -247,10 +250,10 @@ public class InsertionSort : Algorithm {
             i += 1;
 
             // Display pseudocode (increment i)
-            StartCoroutine(HighlightText(8, PseudoCode(8, i, j, listLength)));
+            StartCoroutine(HighlightText(8, PseudoCode(8, i, j, true)));
         }
         // Display pseudocode (end 1st while)
-        StartCoroutine(HighlightText(9, PseudoCode(9, i, Util.NO_VALUE, listLength)));
+        StartCoroutine(HighlightText(9, PseudoCode(9, i, Util.NO_VALUE, true)));
         yield return new WaitForSeconds(seconds);
 
         // Mark the last element sorted
@@ -262,8 +265,124 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
-    #region Insertion Sort: All Moves (Debug log: OK!)
-    // ElementState[] deep copy of our list we want to sort
+
+    private Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
+    private List<int> prevHighlight = new List<int>();
+
+    public override IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr)
+    {
+        yield return new WaitForSeconds(seconds);
+    }
+
+    public void ExecuteOrder3(InstructionBase instruction, int instructionNr, bool increment)
+    {
+        // Gather information from instruction
+        InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
+        Debug.Log("Debug: " + inst.DebugInfo() + "\n");
+
+        // Change internal state of sorting element
+        InsertionSortElement sortingElement = GetComponent<ElementManager>().GetSortingElement(inst.SortingElementID).GetComponent<InsertionSortElement>();
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_COLOR);
+        }
+
+        // Gather part of code to highlight
+        int i = inst.I, j = inst.J;
+        List<int> lineOfCode = new List<int>();
+        switch (inst.ElementInstruction)
+        {
+            case Util.PIVOT_START_INST:
+                if (increment)
+                    sortingElement.IsPivot = inst.IsPivot;   // Test, and maybe change to: = increment ?
+                else
+                    sortingElement.IsPivot = !inst.IsPivot;
+
+                pivotValue = sortingElement.Value;
+                lineOfCode.Add(2);
+                lineOfCode.Add(3);
+                break;
+
+            case Util.PIVOT_END_INST:
+                if (increment)
+                {
+                    sortingElement.IsPivot = inst.IsPivot;
+                    sortingElement.IsSorted = inst.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsPivot = !inst.IsPivot;
+                    sortingElement.IsSorted = !inst.IsSorted;
+                }
+
+                lineOfCode.Add(8);
+                break;
+
+            case Util.COMPARE_START_INST:
+                if (increment)
+                    sortingElement.IsCompare = inst.IsCompare;
+                else
+                    sortingElement.IsCompare = !inst.IsCompare;
+
+                lineOfCode.Add(4);
+                compareValue = sortingElement.Value;
+                break;
+
+            case Util.COMPARE_END_INST:
+                if (increment)
+                {
+                    sortingElement.IsCompare = inst.IsCompare;
+                    sortingElement.IsSorted = inst.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsCompare = !inst.IsCompare;
+                    sortingElement.IsSorted = !inst.IsSorted;
+                }
+                lineOfCode.Add(7);
+                break;
+
+            case Util.SWITCH_INST:
+                if (increment)
+                {
+                    sortingElement.IsCompare = inst.IsCompare;
+                    sortingElement.IsSorted = inst.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsCompare = !inst.IsCompare;
+                    sortingElement.IsSorted = !inst.IsSorted;
+                }
+                lineOfCode.Add(5);
+                lineOfCode.Add(6);
+                break;
+        }
+
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), Util.HIGHLIGHT_COLOR);
+        }
+
+        // Move sorting element
+        switch (inst.ElementInstruction)
+        {
+            case Util.PIVOT_START_INST:
+            case Util.SWITCH_INST:
+            case Util.PIVOT_END_INST:
+                if (increment)
+                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.NextHolderID).transform.position + aboveHolder;
+                else
+                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.HolderID).transform.position + aboveHolder;
+                break;
+        }
+    }
+
+    #region Insertion Sort: User Test / Tutorial step by step
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
         // Create pivot holder
@@ -273,29 +392,30 @@ public class InsertionSort : Algorithm {
 
         InsertionSortInstruction compareElement;
 
-        int i = 1, instructionNr = 0;
-        while (i < sortingElements.Length)
+        int i = 1, instructionNr = 0; // Line 1
+        while (i < sortingElements.Length) // Line 2
         {
+            int j = i - 1; // Line 3
+
             int temp1 = ((InsertionSortInstruction)sortingElements[i]).HolderID; // pivot: temp1 -> temp2*
-            InsertionSortInstruction pivot = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[i]).SortingElementID, temp1, pivotHolder.HolderID, Util.PIVOT_START_INST, ((InsertionSortInstruction)sortingElements[i]).Value, true, false, false);
+            InsertionSortInstruction pivot = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[i]).SortingElementID, temp1, pivotHolder.HolderID, i, j, Util.PIVOT_START_INST, ((InsertionSortInstruction)sortingElements[i]).Value, true, false, false);
             sortingElements[i] = pivot;
 
             // Add this move (Pivot moved in pivot position)
             instructions.Add(instructionNr++, pivot);
 
-            int j = i - 1;
             while (true)
             {
-                // Choose a new compare element
-                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, Util.COMPARE_START_INST, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
+                // Choose a new compare element // Line 4
+                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_START_INST, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
                 sortingElements[j] = compareElement;
-                //
                 instructions.Add(instructionNr++, compareElement);
 
                 // Pivot larger than compare element, place compare element
                 if (pivot.Value >= compareElement.Value)
                 {
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_DESTINATION, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    // Line 7
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
                     break;
                 }
 
@@ -303,28 +423,31 @@ public class InsertionSort : Algorithm {
                 int temp2 = compareElement.HolderID;
                 sortingElements[j + 1] = compareElement;
                 sortingElements[j] = pivot;
-                j -= 1;
+                j -= 1; // Line 6
 
-                // Add this move (compare element switched to pivot/next position)
-                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, Util.SWITCH_INST, compareElement.Value, false, false, true));
+                // Add this move (compare element switched to pivot/next position) // Line 5
+                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, compareElement.Value, false, false, true));
 
                 // temp2 is open spot, temp1 will be given to next compare element or place pivot there
                 temp1 = temp2;
 
                 if (j < 0)
-                    break;
+                {
+                    // Added *** Test: user test
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    break; // Line 7
+                }
             }
 
             sortingElements[j + 1] = pivot;
-            i += 1;
+            i += 1; // Line 8
 
             // Add this move (pivot sorted)
-            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, Util.PIVOT_END_INST, pivot.Value, false, false, true));
+            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, pivot.Value, false, false, true));
         }
         return instructions;
     }
     #endregion
-
 
 
 
