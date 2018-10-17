@@ -26,17 +26,17 @@ public class Blackboard : MonoBehaviour {
 
     public void SetTitleLabel(string title)
     {
-        labels[TITLE_LABEL].text = title;
+        //labels[TITLE_LABEL].text = title;
     }
 
     public void SetResultText(string result)
     {
-        texts[STATUS_TEXT].text = result;
+        //texts[STATUS_TEXT].text = result;
     }
 
     public void SetScoreText(string score)
     {
-        texts[SCORE_TEXT].text = score;
+        //texts[SCORE_TEXT].text = score;
     }
 
     // Sets up the blackboard before a Tutorial or User Test
