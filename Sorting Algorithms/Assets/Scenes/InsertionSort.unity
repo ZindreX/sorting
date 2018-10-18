@@ -214,7 +214,7 @@ MonoBehaviour:
   noDuplicates: 0
   worstCase: 0
   bestCase: 0
-  teachingMode: Tutorial step
+  teachingMode: User test
   blackboardObj: {fileID: 1471599844}
 --- !u!4 &119957890
 Transform:
@@ -240,6 +240,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ea60232ca694484786cf94f65ef870b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!102 &148669726 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 102016141335994624, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+    type: 2}
+  m_PrefabInternal: {fileID: 603758692}
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,6 +395,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.size
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4033269110534164, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f, type: 2}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -426,13 +436,44 @@ Prefab:
       propertyPath: m_Name
       value: AlgorithmRoom
       objectReference: {fileID: 0}
-    - target: {fileID: 4621621270262672, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 6.04
-      objectReference: {fileID: 0}
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.data[5]
+      value: 
+      objectReference: {fileID: 148669726}
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.data[0]
+      value: 
+      objectReference: {fileID: 1435770401}
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.data[1]
+      value: 
+      objectReference: {fileID: 1493350833}
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.data[2]
+      value: 
+      objectReference: {fileID: 781400240}
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.data[3]
+      value: 
+      objectReference: {fileID: 1481306458}
+    - target: {fileID: 114043614163341002, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: labels.Array.data[4]
+      value: 
+      objectReference: {fileID: 1882166968}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f, type: 2}
   m_IsPrefabAsset: 0
+--- !u!102 &781400240 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 102528970970620370, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+    type: 2}
+  m_PrefabInternal: {fileID: 603758692}
 --- !u!1001 &1098608027
 Prefab:
   m_ObjectHideFlags: 0
@@ -485,8 +526,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1958104421897700, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
     type: 2}
   m_PrefabInternal: {fileID: 603758692}
+--- !u!102 &1435770401 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 102094912602599444, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+    type: 2}
+  m_PrefabInternal: {fileID: 603758692}
 --- !u!1 &1471599844 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1741128081355362, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+    type: 2}
+  m_PrefabInternal: {fileID: 603758692}
+--- !u!102 &1481306458 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 102712431707378524, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+    type: 2}
+  m_PrefabInternal: {fileID: 603758692}
+--- !u!102 &1493350833 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 102755440079333154, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+    type: 2}
+  m_PrefabInternal: {fileID: 603758692}
+--- !u!102 &1882166968 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 102129225796012788, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
     type: 2}
   m_PrefabInternal: {fileID: 603758692}

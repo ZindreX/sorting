@@ -63,7 +63,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
             // *** Objects ***
             blackboard = blackboardObj.GetComponent(typeof(Blackboard)) as Blackboard;
-            //blackboard.InitializeBlackboard(teachingMode);
 
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
@@ -80,7 +79,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        blackboard.SetTitleLabel(algorithmName);
+        blackboard.ChangeText(0, algorithmName);
     }
 
     // Update is called once per frame
@@ -92,9 +91,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             {
                 scoreManager.SetEndTime();
                 scoreManager.CalculateScore();
-                blackboard.SetScoreText(scoreManager.FillInBlackboard());
+                blackboard.ChangeText(3, scoreManager.FillInBlackboard());
             }
-            blackboard.SetResultText("Sorting Completed!");
+            blackboard.ChangeText(1, "Sorting Completed!");
         }
         else
         {
@@ -109,7 +108,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             }
             else if (IsTutorial())
             {
-                blackboard.SetResultText(algorithm.GetComparison());
+                //blackboard.SetResultText(algorithm.GetComparison());
             }
             else // User test
             {
@@ -136,8 +135,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                             userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                         }
                     }
-                    blackboard.SetResultText(userTestManager.FillInBlackboard());
-                    blackboard.SetScoreText(scoreManager.FillInBlackboard());
+                    blackboard.ChangeText(4, userTestManager.FillInBlackboard());
+                    blackboard.ChangeText(3, scoreManager.FillInBlackboard());
                 }
             }
         }
