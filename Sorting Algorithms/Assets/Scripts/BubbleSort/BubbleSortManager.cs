@@ -54,7 +54,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
         }
         else
         {
-            if (instruction.ElementInstruction == Util.COMPARE_START_INST || instruction.ElementInstruction == Util.COMPARE_END_INST) // skipping until next user move
+            if (Util.skipAbleInstructions.Contains(instruction.ElementInstruction)) // skipping until next user move
                 return 2;
         }
         return 0;
@@ -72,7 +72,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
             int value = element.Value;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.INIT_INSTRUCTION, isCompare, isSorted);
+            elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, isCompare, isSorted);
         }
         return elementStates;
     }

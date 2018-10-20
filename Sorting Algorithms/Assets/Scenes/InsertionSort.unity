@@ -195,7 +195,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seconds: 1
-  pseudoCodeViewerObj: {fileID: 1148345941}
   pivotHolderPrefab: {fileID: 1946392530152884, guid: c4715b4d9cf47da429328980c8d6edec,
     type: 2}
 --- !u!114 &119957889
@@ -214,8 +213,9 @@ MonoBehaviour:
   noDuplicates: 0
   worstCase: 0
   bestCase: 0
-  teachingMode: User test
+  teachingMode: Tutorial step
   blackboardObj: {fileID: 1471599844}
+  pseudoCodeViewerObj: {fileID: 1148345941}
 --- !u!4 &119957890
 Transform:
   m_ObjectHideFlags: 0

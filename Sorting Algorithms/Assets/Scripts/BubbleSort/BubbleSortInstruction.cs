@@ -15,8 +15,9 @@ public class BubbleSortInstruction : InstructionBase {
     */
 
     private int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
+    private int i, j;
 
-    public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, string instruction, bool isCompare, bool isSorted)
+    public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, int i, int j, string instruction, bool isCompare, bool isSorted)
         : base(instruction, isCompare, isSorted)
     {
         sortingElementID1 = seID1;
@@ -25,6 +26,8 @@ public class BubbleSortInstruction : InstructionBase {
         holderID2 = hID2;
         this.value1 = value1;
         this.value2 = value2;
+        this.i = i;
+        this.j = j;
     }
 
     public int SortingElementID1
@@ -56,6 +59,16 @@ public class BubbleSortInstruction : InstructionBase {
     public int Value2
     {
         get { return value2; }
+    }
+
+    public int I
+    {
+        get { return i; }
+    }
+
+    public int J
+    {
+        get { return j; }
     }
 
     public int SwitchToHolder(int sortingElementID)

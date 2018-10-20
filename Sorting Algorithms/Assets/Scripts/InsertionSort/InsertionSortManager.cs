@@ -45,9 +45,9 @@ public class InsertionSortManager : AlgorithmManagerBase {
     protected override int SkipOrHelp(InstructionBase instruction)
     {
         // Display help on blackboard
-        if (false) // help enabled
+        if (HelpEnabled) // help enabled
         {
-
+            
         }
         else
         {

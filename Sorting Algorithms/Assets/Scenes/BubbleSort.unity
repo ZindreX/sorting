@@ -1815,8 +1815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff01745a44766ba4287183f76428c09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seconds: 0.1
-  pseudoCodeViewerObj: {fileID: 0}
+  seconds: 0.5
 --- !u!114 &817656497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1833,8 +1832,9 @@ MonoBehaviour:
   noDuplicates: 0
   worstCase: 0
   bestCase: 0
-  teachingMode: Tutorial step
+  teachingMode: Tutorial
   blackboardObj: {fileID: 1144394554}
+  pseudoCodeViewerObj: {fileID: 1995354673}
 --- !u!4 &817656498
 Transform:
   m_ObjectHideFlags: 0
@@ -2562,12 +2562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28b26d3d3056354bbde36ea59254d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labels:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   texts: []
-  font: {fileID: 0}
 --- !u!1 &1214049592
 GameObject:
   m_ObjectHideFlags: 0
@@ -4098,7 +4093,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2046074826}
-  m_Text: n = len ( list )
+  m_Text: n = len( list )
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1

@@ -32,4 +32,12 @@ public class PseudoCodeViewer : MonoBehaviour {
         return index >= 0 && index < codeLines.Length;
     }
 
+    public void CLEAN_HIGHTLIGHT(int start, int end)
+    {
+        for (int x=start; x <= end; x++)
+        {
+            ChangeColorOfText(x, Util.BLACKBOARD_TEXT_COLOR);
+        }
+    }
+
 }

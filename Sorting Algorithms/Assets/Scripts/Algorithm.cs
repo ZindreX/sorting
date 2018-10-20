@@ -7,12 +7,11 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     [SerializeField]
     protected float seconds = 1f;
 
-    [SerializeField]
-    protected GameObject pseudoCodeViewerObj;
-
     protected int pivotValue, compareValue;
-
     protected bool isSortingComplete = false, isReadyForNextMove = false;
+
+    protected Vector3 aboveHolder = new Vector3(0f, 0.1f, 0f); // y: 0.5f ?
+    protected List<int> prevHighlight = new List<int>();
 
     public bool IsSortingComplete
     {
@@ -48,8 +47,13 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     //protected abstract string GetPseudoCode(int codeLine);
 
+    // first instruction line of code
+    public abstract int FirstInstructionCodeLine();
+    // final instruction line of code
+    public abstract int FinalInstructionCodeLine();
+
     public abstract IEnumerator Tutorial(GameObject[] list);
-    public abstract IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr);
+    public abstract void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment);
     public abstract Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);
 }
 

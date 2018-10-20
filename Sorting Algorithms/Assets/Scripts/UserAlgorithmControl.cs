@@ -49,7 +49,7 @@ public abstract class UserAlgorithmControl : MonoBehaviour, IBlackboardAble {
     // Increasing instruction counter as long there is one
     public bool IncrementToNextInstruction()
     {
-        if (currentInstructionNr < instructions.Count)
+        if (currentInstructionNr < instructions.Count - 1)
         {
             currentInstructionNr++;
             return true;

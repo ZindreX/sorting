@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PseudoCodeViewer))]
 [RequireComponent(typeof(InsertionSortManager))]
 public class InsertionSort : Algorithm {
 
@@ -15,17 +14,17 @@ public class InsertionSort : Algorithm {
     [SerializeField]
     private GameObject pivotHolderPrefab;
     private GameObject pivotHolderClone; // TODO: change to Holder
+
     private InsertionSortHolder pivotHolder;
+
     private Vector3 tutorialHeight1 = new Vector3(0f, 1f, 0f), tutorialHeight2;
     private Vector3 userTestHeight = new Vector3(0f, 1.5f, 0f);
 
-    private PseudoCodeViewer pseudoCodeViewer;
     private InsertionSortManager insertionSortManager;
 
     private void Awake()
     {
         tutorialHeight2 = tutorialHeight1 + new Vector3(0f, 0.2f, 0f);
-        pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
         insertionSortManager = GetComponent(typeof(InsertionSortManager)) as InsertionSortManager;
     }
 
@@ -39,7 +38,7 @@ public class InsertionSort : Algorithm {
         get { return pivotHolder; }
     }
 
-    protected string PseudoCode(int lineNr, int i, int j, bool increment)
+    private string PseudoCode(int lineNr, int i, int j, bool increment)
     {
         switch (lineNr)
         {
@@ -57,11 +56,14 @@ public class InsertionSort : Algorithm {
         }
     }
 
-    protected IEnumerator HighlightText(int lineNr, string text)
+    public override int FirstInstructionCodeLine()
     {
-        pseudoCodeViewer.SetCodeLine(lineNr, text, Util.HIGHLIGHT_COLOR);
-        yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.ChangeColorOfText(lineNr, Util.BLACKBOARD_COLOR);
+        return 1;
+    }
+
+    public override int FinalInstructionCodeLine()
+    {
+        return 9;
     }
 
     public override void ResetSetup()
@@ -137,13 +139,13 @@ public class InsertionSort : Algorithm {
 
         int i = 1, listLength = list.Length;
         // Display pseudocode (set i)
-        StartCoroutine(HighlightText(1, PseudoCode(1, i, Util.NO_VALUE, true)));
+        StartCoroutine(insertionSortManager.HighlightText(1, PseudoCode(1, i, Util.NO_VALUE, true)));
         yield return new WaitForSeconds(seconds);
 
         while (i < listLength)
         {
             // Display pseudocode (1st while)
-            StartCoroutine(HighlightText(2, PseudoCode(2, i, Util.NO_VALUE, true)));
+            StartCoroutine(insertionSortManager.HighlightText(2, PseudoCode(2, i, Util.NO_VALUE, true)));
             yield return new WaitForSeconds(seconds);
 
             // Get pivot
@@ -167,7 +169,7 @@ public class InsertionSort : Algorithm {
             int j = i - 1;
 
             // Display pseudocode (set j)
-            StartCoroutine(HighlightText(3, PseudoCode(3, i, j, true)));
+            StartCoroutine(insertionSortManager.HighlightText(3, PseudoCode(3, i, j, true)));
             yield return new WaitForSeconds(seconds);
 
             // Start comparing until find the correct position is found
@@ -176,7 +178,7 @@ public class InsertionSort : Algorithm {
             compareValue = list[j].GetComponent<InsertionSortElement>().Value;
 
             // Display pseudocode (2nd while)
-            StartCoroutine(HighlightText(4, PseudoCode(4, i, j, true)));
+            StartCoroutine(insertionSortManager.HighlightText(4, PseudoCode(4, i, j, true)));
             yield return new WaitForSeconds(seconds);
 
             while (pivotValue < compareValue)
@@ -195,7 +197,7 @@ public class InsertionSort : Algorithm {
                 list[j + 1] = compareObj;
 
                 // Display pseudocode (swap)
-                StartCoroutine(HighlightText(5, PseudoCode(5, i, j, true)));
+                StartCoroutine(insertionSortManager.HighlightText(5, PseudoCode(5, i, j, true)));
                 yield return new WaitForSeconds(seconds);
 
                 // Preparing for next step
@@ -203,7 +205,7 @@ public class InsertionSort : Algorithm {
                 j -= 1;
 
                 // Display pseudocode (decrement j)
-                StartCoroutine(HighlightText(6, PseudoCode(6, i, j, true)));
+                StartCoroutine(insertionSortManager.HighlightText(6, PseudoCode(6, i, j, true)));
                 yield return new WaitForSeconds(seconds);
 
                 // Check if there are more elements to compare the pivot with
@@ -213,7 +215,7 @@ public class InsertionSort : Algorithm {
                     compareValue = list[j].GetComponent<InsertionSortElement>().Value;
 
                     // Display pseudocode (2nd while new compare value)
-                    StartCoroutine(HighlightText(4, PseudoCode(4, i, j, true)));
+                    StartCoroutine(insertionSortManager.HighlightText(4, PseudoCode(4, i, j, true)));
                     yield return new WaitForSeconds(seconds);
                 }
                 else
@@ -222,7 +224,7 @@ public class InsertionSort : Algorithm {
                     compare.IsSorted = true; //list[j + 1].GetComponent<SortingElement>().IsSorted = true;
 
                     // Display pseudocode (end 2nd while)
-                    StartCoroutine(HighlightText(7, PseudoCode(7, i, j, true)));
+                    StartCoroutine(insertionSortManager.HighlightText(7, PseudoCode(7, i, j, true)));
                     yield return new WaitForSeconds(seconds);
                     break;
                 }
@@ -250,10 +252,10 @@ public class InsertionSort : Algorithm {
             i += 1;
 
             // Display pseudocode (increment i)
-            StartCoroutine(HighlightText(8, PseudoCode(8, i, j, true)));
+            StartCoroutine(insertionSortManager.HighlightText(8, PseudoCode(8, i, j, true)));
         }
         // Display pseudocode (end 1st while)
-        StartCoroutine(HighlightText(9, PseudoCode(9, i, Util.NO_VALUE, true)));
+        StartCoroutine(insertionSortManager.HighlightText(9, PseudoCode(9, i, Util.NO_VALUE, true)));
         yield return new WaitForSeconds(seconds);
 
         // Mark the last element sorted
@@ -266,15 +268,8 @@ public class InsertionSort : Algorithm {
     #endregion
 
 
-    private Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
-    private List<int> prevHighlight = new List<int>();
-
-    public override IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr)
-    {
-        yield return new WaitForSeconds(seconds);
-    }
-
-    public void ExecuteOrder3(InstructionBase instruction, int instructionNr, bool increment)
+    #region Execute order from user
+    public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
         // Gather information from instruction
         InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
@@ -286,7 +281,7 @@ public class InsertionSort : Algorithm {
         // Remove highlight from previous instruction
         for (int x = 0; x < prevHighlight.Count; x++)
         {
-            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_COLOR);
+            insertionSortManager.GetPseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
         }
 
         // Gather part of code to highlight
@@ -359,13 +354,12 @@ public class InsertionSort : Algorithm {
                 lineOfCode.Add(6);
                 break;
         }
-
         prevHighlight = lineOfCode;
 
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), Util.HIGHLIGHT_COLOR);
+            insertionSortManager.GetPseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), Util.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
@@ -381,6 +375,8 @@ public class InsertionSort : Algorithm {
                 break;
         }
     }
+    #endregion
+
 
     #region Insertion Sort: User Test / Tutorial step by step
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
@@ -388,11 +384,15 @@ public class InsertionSort : Algorithm {
         // Create pivot holder
         CreatePivotHolder();
 
+        // Instructions for user test + pseudo code
+        int instructionNr = 0;
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
+        // Add the first instruction which will be used for Pseudo code
+        instructions.Add(instructionNr++, new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FIRST_INSTRUCTION, Util.NO_VALUE, false, false, false));
 
         InsertionSortInstruction compareElement;
 
-        int i = 1, instructionNr = 0; // Line 1
+        int i = 1; // Line 1
         while (i < sortingElements.Length) // Line 2
         {
             int j = i - 1; // Line 3
@@ -445,6 +445,8 @@ public class InsertionSort : Algorithm {
             // Add this move (pivot sorted)
             instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, pivot.Value, false, false, true));
         }
+        // Add the final instruction which will be used for Pseudo code
+        instructions.Add(instructionNr, new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FINAL_INSTRUCTION, Util.NO_VALUE, false, false, false));
         return instructions;
     }
     #endregion
