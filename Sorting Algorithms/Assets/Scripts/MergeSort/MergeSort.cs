@@ -41,8 +41,8 @@ public class MergeSort : Algorithm {
             case 1: return "i = 1";
             case 2: return "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().NumberOfElements + " )";
             case 3: return "    " + j + " = " + i + " - 1";
-            case 4: return "    while ( " + j + " >= 0 and " + pivotValue + " < " + compareValue + " )";
-            case 5: return "        swap " + pivotValue + " and " + compareValue;
+            case 4: return "    while ( " + j + " >= 0 and " + value1 + " < " + value2 + " )";
+            case 5: return "        swap " + value1 + " and " + value2;
             case 6: return "        " + j + " = " + (j + 1) + " - 1";
             case 7: return "    end while";
             case 8: return "    " + i + " = " + (i - 1) + " + 1";

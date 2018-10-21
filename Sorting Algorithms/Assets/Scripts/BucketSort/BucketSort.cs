@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BucketManager))]
+[RequireComponent(typeof(BucketSortManager))]
 public class BucketSort : Algorithm {
 
     public const string CHOOSE_BUCKET = "Choose bucket", PUT_BACK_TO_HOLDER = "Put back to holder", NONE = "None";
@@ -11,11 +12,13 @@ public class BucketSort : Algorithm {
 
     private Dictionary<int, string> pseudoCode;
     private BucketManager bucketManager;
+    private BucketSortManager bucketSortManager;
 
     void Awake()
     {
         bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
         status = NONE;
+        bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
     }
 
     public override string GetAlgorithmName()
@@ -23,20 +26,19 @@ public class BucketSort : Algorithm {
         return Util.BUCKET_SORT;
     }
 
-    private string PseudoCode(int lineNr, int i, int j, bool increment)
+    private string PseudoCode(int lineNr, int i, bool increment)
     {
         switch (lineNr)
         {
-            case 0: return "InsertionSort( List<int> list )";
-            case 1: return "i = 1";
-            case 2: return "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().NumberOfElements + " )";
-            case 3: return "    " + j + " = " + i + " - 1";
-            case 4: return "    while ( " + j + " >= 0 and " + pivotValue + " < " + compareValue + " )";
-            case 5: return "        swap " + pivotValue + " and " + compareValue;
-            case 6: return "        " + j + " = " + (j + 1) + " - 1";
-            case 7: return "    end while";
-            case 8: return "    " + i + " = " + (i - 1) + " + 1";
-            case 9: return "end while";
+            case 0: return "BucketSort( list, n):";
+            case 1: return "buckets = new array of n empty lists";
+            case 2: return "for i=" + i + " to " + (GetComponent<AlgorithmManagerBase>().NumberOfElements - 1) + ":";
+            case 3: return "    " + value2 + " = " + value1 * bucketSortManager.NumberOfBuckets / Util.MAX_VALUE;
+            case 4: return "    buckets[ " + value2 + " ] = " + value1;
+            case 5: return "end for";
+            case 6: return "for i=" + i + " to " + (bucketSortManager.NumberOfBuckets - 1) + ":";
+            case 7: return "    Sortbucket( buckets[ " + i + " ] ):";
+            case 8: return "end for";
             default: return "X";
         }
     }
@@ -48,7 +50,7 @@ public class BucketSort : Algorithm {
 
     public override int FinalInstructionCodeLine()
     {
-        return 9;
+        return 8;
     }
 
     public override void ResetSetup()
@@ -62,11 +64,11 @@ public class BucketSort : Algorithm {
         switch (status)
         {
             case CHOOSE_BUCKET:
-                int bucketID = BucketIndex(pivotValue, GetComponent<BucketSortManager>().NumberOfBuckets);
-                return pivotValue + " into bucket " + bucketID;
+                int bucketID = BucketIndex(value1, GetComponent<BucketSortManager>().NumberOfBuckets);
+                return value1 + " into bucket " + bucketID;
 
             case PUT_BACK_TO_HOLDER:
-                return pivotValue + " to holder " + compareValue;
+                return value1 + " to holder " + value2;
 
             case NONE: return "";
             default: return "Nothing";
@@ -172,7 +174,7 @@ public class BucketSort : Algorithm {
 
     private static int BucketIndex(int value, int numberOfBuckets)
     {
-        return value * numberOfBuckets / Util.MAX_VALUE;
+        return value * numberOfBuckets / Util.MAX_VALUE; // max + 1 ~?
     }
 
     #endregion
@@ -180,17 +182,6 @@ public class BucketSort : Algorithm {
     #region Bucket Sort: Tutorial (Visual)
     public override IEnumerator Tutorial(GameObject[] sortingElements)
     {
-        // Find min-/ max values
-        //int minValue = Util.MAX_VALUE, maxValue = 0;
-        //for (int i = 0; i < sortingElements.Length; i++)
-        //{
-        //    int value = sortingElements[i].GetComponent<BucketSortElement>().Value;
-        //    if (value > maxValue)
-        //        maxValue = value;
-        //    if (value < minValue)
-        //        minValue = value;
-        //}
-
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
         int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
@@ -208,8 +199,8 @@ public class BucketSort : Algorithm {
             GameObject element = sortingElements[i];
 
             // Get bucket
-            pivotValue = element.GetComponent<SortingElementBase>().Value;
-            Bucket bucket = buckets[BucketIndex(pivotValue, numberOfBuckets)].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
+            value1 = element.GetComponent<SortingElementBase>().Value;
+            Bucket bucket = buckets[BucketIndex(value1, numberOfBuckets)].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
 
             // Move element above the bucket and put it inside
             element.transform.position = bucket.transform.position + new Vector3(0f, 2f, 0f);
@@ -250,8 +241,8 @@ public class BucketSort : Algorithm {
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
                 
                 // Display on blackboard
-                pivotValue = sortingElements[k].GetComponent<SortingElementBase>().Value;
-                compareValue = k;
+                value1 = sortingElements[k].GetComponent<SortingElementBase>().Value;
+                value2 = k;
 
                 sortingElements[k].transform.position = holderPos[k] + new Vector3(0f, 2f, 0f);
                 sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;

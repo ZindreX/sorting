@@ -7,7 +7,8 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     [SerializeField]
     protected float seconds = 1f;
 
-    protected int pivotValue, compareValue;
+    // value1 <- pivot value, value2 <- compare value (usually)
+    protected int value1, value2;
     protected bool isSortingComplete = false, isReadyForNextMove = false;
 
     protected Vector3 aboveHolder = new Vector3(0f, 0.1f, 0f); // y: 0.5f ?
@@ -33,12 +34,12 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     // For visuals on the blackboard
     public virtual string GetComparison()
     {
-        if (pivotValue < compareValue)
-            return pivotValue + " < " + compareValue;
-        else if (pivotValue > compareValue)
-            return pivotValue + " > " + compareValue;
+        if (value1 < value2)
+            return value1 + " < " + value2;
+        else if (value1 > value2)
+            return value1 + " > " + value2;
         else
-            return pivotValue + " = " + compareValue;
+            return value1 + " = " + value2;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
@@ -51,6 +52,8 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     public abstract int FirstInstructionCodeLine();
     // final instruction line of code
     public abstract int FinalInstructionCodeLine();
+
+    //public abstract void FillInPseudoCode(TextMesh[] texts);
 
     public abstract IEnumerator Tutorial(GameObject[] list);
     public abstract void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment);

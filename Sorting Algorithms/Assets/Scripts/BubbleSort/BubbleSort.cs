@@ -12,6 +12,7 @@ public class BubbleSort : Algorithm {
     private Dictionary<int, string> pseudoCode;
 
     private BubbleSortManager bubbleSortManager;
+    private List<string> pseudoCodeLines;
 
     void Awake()
     {
@@ -32,13 +33,32 @@ public class BubbleSort : Algorithm {
             case 1: return "n = " + n;
             case 2: return "for i=" + i + " to " + (n - 1) + ":";
             case 3: return "    for j=" + j + " to " + (n - i - 1) + ":";
-            case 4: return "        if ( " + pivotValue + " > " + compareValue + " ):";
-            case 5: return "            swap " + pivotValue + " and " + compareValue;
+            case 4: return "        if ( " + value1 + " > " + value2 + " ):";
+            case 5: return "            swap " + value1 + " and " + value2;
             case 6: return "        end if";
             case 7: return "    end for";
             case 8: return "end for";
             default: return "X";
         }
+    }
+
+    protected void InitializePseudoCode()
+    {
+        pseudoCodeLines = new List<string>();
+        pseudoCodeLines.Add("BubbleSort( list ):");
+        pseudoCodeLines.Add("    n = len( list )");
+        pseudoCodeLines.Add("    for i=0 to n-1:");
+        pseudoCodeLines.Add("        for j=0 to n-i-1:");
+        pseudoCodeLines.Add("            if ( list[ j ] > list[ j + 1 ] ):");
+        pseudoCodeLines.Add("                swap list[ j ] and list[ j + 1 ]");
+        pseudoCodeLines.Add("            end if");
+        pseudoCodeLines.Add("        end for");
+        pseudoCodeLines.Add("    end for");
+    }
+
+    public TextMesh[] GetPseudoCode()
+    {
+
     }
 
     public override int FirstInstructionCodeLine()
@@ -131,14 +151,14 @@ public class BubbleSort : Algorithm {
                 p2.transform.position += aboveHolder;
 
                 // Get their values
-                pivotValue = p1.Value;
-                compareValue = p2.Value;
+                value1 = p1.Value;
+                value2 = p2.Value;
 
                 // Display pseudocode (list length)
                 StartCoroutine(bubbleSortManager.HighlightText(4, PseudoCode(4, i, j, true)));
                 yield return new WaitForSeconds(seconds * 2);
 
-                if (pivotValue > compareValue)
+                if (value1 > value2)
                 {
                     // Display pseudocode (swap)
                     StartCoroutine(bubbleSortManager.HighlightText(5, PseudoCode(5, i, j, true)));
@@ -278,8 +298,8 @@ public class BubbleSort : Algorithm {
                 }
 
                 lineOfCode.Add(4);
-                pivotValue = se1.Value;
-                compareValue = se2.Value;
+                value1 = se1.Value;
+                value2 = se2.Value;
                 break;
 
             case Util.SWITCH_INST:
