@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PseudoCodeViewer))]
 public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     [SerializeField]
@@ -13,6 +14,17 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     protected Vector3 aboveHolder = new Vector3(0f, 0.1f, 0f); // y: 0.5f ?
     protected List<int> prevHighlight = new List<int>();
+
+
+    [SerializeField]
+    protected GameObject pseudoCodeViewerObj;
+    protected PseudoCodeViewer pseudoCodeViewer;
+
+    protected virtual void Awake()
+    {
+        pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
+        pseudoCodeViewer.SetAlgorithm(this);
+    }
 
     public bool IsSortingComplete
     {
@@ -53,7 +65,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     // final instruction line of code
     public abstract int FinalInstructionCodeLine();
 
-    //public abstract void FillInPseudoCode(TextMesh[] texts);
+    //public List<string> GetPseudoCode() { return new List<string>(); } // change later
 
     public abstract IEnumerator Tutorial(GameObject[] list);
     public abstract void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment);

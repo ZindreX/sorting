@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Blackboard))]
-[RequireComponent(typeof(PseudoCodeViewer))]
 [RequireComponent(typeof(HolderManager))]
 [RequireComponent(typeof(ElementManager))]
 [RequireComponent(typeof(UserTestManager))]
@@ -47,12 +46,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     [SerializeField]
     private GameObject blackboardObj;
 
-    [SerializeField]
-    protected GameObject pseudoCodeViewerObj;
-
     // Base object instances
     protected Blackboard blackboard;
-    protected PseudoCodeViewer pseudoCodeViewer;
     protected HolderManager holderManager;
     protected ElementManager elementManager;
     protected UserTestManager userTestManager;
@@ -69,7 +64,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
             // *** Objects ***
             blackboard = blackboardObj.GetComponent(typeof(Blackboard)) as Blackboard;
-            pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
 
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
@@ -115,13 +109,13 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     if (instruction.ElementInstruction == Util.FIRST_INSTRUCTION || instruction.ElementInstruction == Util.FINAL_INSTRUCTION)
                     {
                         tutorialStep.FirstOrFinal = true;
-                        PseudoCodeFirstFinal(instruction.ElementInstruction, Util.HIGHLIGHT_COLOR);
+                        //PseudoCodeFirstFinal(instruction.ElementInstruction, Util.HIGHLIGHT_COLOR);
                     }
                     else if (tutorialStep.FirstOrFinal)
                     {
                         tutorialStep.FirstOrFinal = false;
-                        PseudoCodeFirstFinal(Util.FIRST_INSTRUCTION, Util.BLACKBOARD_TEXT_COLOR);
-                        PseudoCodeFirstFinal(Util.FINAL_INSTRUCTION, Util.BLACKBOARD_TEXT_COLOR);
+                        //PseudoCodeFirstFinal(Util.FIRST_INSTRUCTION, Util.BLACKBOARD_TEXT_COLOR);
+                        //PseudoCodeFirstFinal(Util.FINAL_INSTRUCTION, Util.BLACKBOARD_TEXT_COLOR);
                     }
 
                     if (instruction.ElementInstruction != Util.FIRST_INSTRUCTION && instruction.ElementInstruction != Util.FINAL_INSTRUCTION)
@@ -225,11 +219,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         get { return blackboard; }
     }
 
-    public PseudoCodeViewer GetPseudoCodeViewer
-    {
-        get { return pseudoCodeViewer; }
-    }
-
     protected string GetAlgorithmName
     {
         get { return algorithm.GetAlgorithmName(); }
@@ -279,30 +268,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         return teachingMode == Util.USER_TEST;
     }
 
-    //
 
-    public IEnumerator HighlightText(int lineNr, string text)
-    {
-        pseudoCodeViewer.SetCodeLine(lineNr, text, Util.HIGHLIGHT_COLOR);
-        yield return new WaitForSeconds(algorithm.Seconds);
-        pseudoCodeViewer.ChangeColorOfText(lineNr, Util.BLACKBOARD_TEXT_COLOR);
-    }
-
-    private void PseudoCodeFirstFinal(string instruction, Color color)
-    {
-        switch (instruction)
-        {
-            case Util.FIRST_INSTRUCTION:
-                pseudoCodeViewer.CLEAN_HIGHTLIGHT(algorithm.FirstInstructionCodeLine() + 1, algorithm.FinalInstructionCodeLine());
-                pseudoCodeViewer.ChangeColorOfText(algorithm.FirstInstructionCodeLine(), color);
-                break;
-
-            case Util.FINAL_INSTRUCTION:
-                pseudoCodeViewer.CLEAN_HIGHTLIGHT(0, algorithm.FinalInstructionCodeLine() - 1);
-                pseudoCodeViewer.ChangeColorOfText(algorithm.FinalInstructionCodeLine(), color);
-                break;
-        }
-    }
 
 
     /* --------------------------------------- Tutorial ---------------------------------------

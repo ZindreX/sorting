@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seconds: 1
+  pseudoCodeViewerObj: {fileID: 1148345941}
   pivotHolderPrefab: {fileID: 1946392530152884, guid: c4715b4d9cf47da429328980c8d6edec,
     type: 2}
 --- !u!114 &119957889
@@ -213,9 +214,8 @@ MonoBehaviour:
   noDuplicates: 0
   worstCase: 0
   bestCase: 0
-  teachingMode: Tutorial step
+  teachingMode: User test
   blackboardObj: {fileID: 1471599844}
-  pseudoCodeViewerObj: {fileID: 1148345941}
 --- !u!4 &119957890
 Transform:
   m_ObjectHideFlags: 0
@@ -466,6 +466,12 @@ Prefab:
       propertyPath: labels.Array.data[4]
       value: 
       objectReference: {fileID: 1882166968}
+    - target: {fileID: 114775980529088306, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f,
+        type: 2}
+      propertyPath: font
+      value: 
+      objectReference: {fileID: 12800000, guid: 73cf5ab324c2ee44c8d849d7f0365485,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f9b0c41a28d43a4484f9b1a35d5d29f, type: 2}
   m_IsPrefabAsset: 0

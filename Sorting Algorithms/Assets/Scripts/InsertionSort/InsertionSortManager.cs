@@ -23,8 +23,12 @@ public class InsertionSortManager : AlgorithmManagerBase {
         get { return 1; }
     }
 
+    private List<string> skipInst = new List<string>() { Util.FIRST_INSTRUCTION, Util.FINAL_INSTRUCTION };
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
+        if (skipInst.Contains(instruction.ElementInstruction))
+            return 1;
+
         // Get the next instruction
         InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
 

@@ -14,9 +14,11 @@ public class BubbleSort : Algorithm {
     private BubbleSortManager bubbleSortManager;
     private List<string> pseudoCodeLines;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         bubbleSortManager = GetComponent(typeof(BubbleSortManager)) as BubbleSortManager;
+        //InitializePseudoCode();
     }
 
     public override string GetAlgorithmName()
@@ -56,9 +58,19 @@ public class BubbleSort : Algorithm {
         pseudoCodeLines.Add("    end for");
     }
 
-    public TextMesh[] GetPseudoCode()
+    public List<string> PseudoCodeLines()
     {
-
+        List<string> pseudoCodeLines = new List<string>();
+        pseudoCodeLines.Add("BubbleSort( list ):");
+        pseudoCodeLines.Add("    n = len( list )");
+        pseudoCodeLines.Add("    for i=0 to n-1:");
+        pseudoCodeLines.Add("        for j=0 to n-i-1:");
+        pseudoCodeLines.Add("            if ( list[ j ] > list[ j + 1 ] ):");
+        pseudoCodeLines.Add("                swap list[ j ] and list[ j + 1 ]");
+        pseudoCodeLines.Add("            end if");
+        pseudoCodeLines.Add("        end for");
+        pseudoCodeLines.Add("    end for");
+        return pseudoCodeLines;
     }
 
     public override int FirstInstructionCodeLine()
@@ -126,7 +138,7 @@ public class BubbleSort : Algorithm {
         int N = list.Length, i = 0, j = 0;
 
         // Display pseudocode (list length)
-        StartCoroutine(bubbleSortManager.HighlightText(1, PseudoCode(1, i, j, true)));
+        StartCoroutine(pseudoCodeViewer.HighlightText(1, PseudoCode(1, i, j, true)));
         yield return new WaitForSeconds(seconds);
 
         for (i=0; i < N; i++)
@@ -134,8 +146,8 @@ public class BubbleSort : Algorithm {
             for (j = 0; j < N - i - 1; j++)
             {
                 // Display pseudocode (update for-loops)
-                StartCoroutine(bubbleSortManager.HighlightText(2, PseudoCode(2, i, j, true)));
-                StartCoroutine(bubbleSortManager.HighlightText(3, PseudoCode(3, i, j, true)));
+                StartCoroutine(pseudoCodeViewer.HighlightText(2, PseudoCode(2, i, j, true)));
+                StartCoroutine(pseudoCodeViewer.HighlightText(3, PseudoCode(3, i, j, true)));
                 yield return new WaitForSeconds(seconds);
 
                 // Choose sorting elements to compare
@@ -155,13 +167,13 @@ public class BubbleSort : Algorithm {
                 value2 = p2.Value;
 
                 // Display pseudocode (list length)
-                StartCoroutine(bubbleSortManager.HighlightText(4, PseudoCode(4, i, j, true)));
+                StartCoroutine(pseudoCodeViewer.HighlightText(4, PseudoCode(4, i, j, true)));
                 yield return new WaitForSeconds(seconds * 2);
 
                 if (value1 > value2)
                 {
                     // Display pseudocode (swap)
-                    StartCoroutine(bubbleSortManager.HighlightText(5, PseudoCode(5, i, j, true)));
+                    StartCoroutine(pseudoCodeViewer.HighlightText(5, PseudoCode(5, i, j, true)));
                     yield return new WaitForSeconds(seconds);
 
                     // Switch their positions
@@ -176,7 +188,7 @@ public class BubbleSort : Algorithm {
                     //yield return new WaitForSeconds(seconds);
                 }
                 // Display pseudocode (comparison/if end)
-                StartCoroutine(bubbleSortManager.HighlightText(6, PseudoCode(6, i, j, true)));
+                StartCoroutine(pseudoCodeViewer.HighlightText(6, PseudoCode(6, i, j, true)));
                 yield return new WaitForSeconds(seconds);
 
                 p1.IsCompare = false;
@@ -185,7 +197,7 @@ public class BubbleSort : Algorithm {
                 p2.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
             }
             // Display pseudocode (end 2nd for-loop)
-            StartCoroutine(bubbleSortManager.HighlightText(7, PseudoCode(7, i, j, true)));
+            StartCoroutine(pseudoCodeViewer.HighlightText(7, PseudoCode(7, i, j, true)));
             yield return new WaitForSeconds(seconds);
 
             list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
@@ -195,7 +207,7 @@ public class BubbleSort : Algorithm {
         isSortingComplete = true;
 
         // Display pseudocode (end 1st for-loop)
-        StartCoroutine(bubbleSortManager.HighlightText(8, PseudoCode(8, i, j, true)));
+        StartCoroutine(pseudoCodeViewer.HighlightText(8, PseudoCode(8, i, j, true)));
         yield return new WaitForSeconds(seconds);
     }
     #endregion
@@ -272,7 +284,7 @@ public class BubbleSort : Algorithm {
         // Remove highlight from previous instruction
         for (int x = 0; x < prevHighlight.Count; x++)
         {
-            bubbleSortManager.GetPseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
         }
 
         // Gather part of code to highlight
@@ -350,7 +362,7 @@ public class BubbleSort : Algorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            bubbleSortManager.GetPseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), Util.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), Util.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
