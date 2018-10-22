@@ -9,12 +9,11 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     protected float seconds = 1f;
 
     // value1 <- pivot value, value2 <- compare value (usually)
-    protected int value1, value2;
+    protected int value1 = Util.INIT_STATE, value2 = Util.INIT_STATE - 1;
     protected bool isSortingComplete = false, isReadyForNextMove = false;
 
-    protected Vector3 aboveHolder = new Vector3(0f, 0.1f, 0f); // y: 0.5f ?
+    protected Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
     protected List<int> prevHighlight = new List<int>();
-
 
     [SerializeField]
     protected GameObject pseudoCodeViewerObj;
@@ -23,7 +22,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     protected virtual void Awake()
     {
         pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
-        pseudoCodeViewer.SetAlgorithm(this);
+        pseudoCodeViewer.SetAlgorithm(this); // just pass seconds maybe?
     }
 
     public bool IsSortingComplete
@@ -58,8 +57,9 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     public abstract string GetAlgorithmName();
     public abstract void ResetSetup();
 
-    //protected abstract string GetPseudoCode(int codeLine);
 
+    // Collects one line of code at a time and rewrites it into pseudocode | another methods must be created aswell *depends on the algorithm
+    public abstract string CollectLine(int lineNr);
     // first instruction line of code
     public abstract int FirstInstructionCodeLine();
     // final instruction line of code

@@ -103,20 +103,29 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                 if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
                 {
                     tutorialStep.PlayerMove = false;
-                    //StartCoroutine(algorithm.ExecuteOrder(tutorialStep.GetInstruction(), tutorialStep.CurrentInstructionNr));
                     InstructionBase instruction = tutorialStep.GetStep();
 
-                    if (instruction.ElementInstruction == Util.FIRST_INSTRUCTION || instruction.ElementInstruction == Util.FINAL_INSTRUCTION)
-                    {
-                        tutorialStep.FirstOrFinal = true;
-                        //PseudoCodeFirstFinal(instruction.ElementInstruction, Util.HIGHLIGHT_COLOR);
-                    }
-                    else if (tutorialStep.FirstOrFinal)
-                    {
-                        tutorialStep.FirstOrFinal = false;
-                        //PseudoCodeFirstFinal(Util.FIRST_INSTRUCTION, Util.BLACKBOARD_TEXT_COLOR);
-                        //PseudoCodeFirstFinal(Util.FINAL_INSTRUCTION, Util.BLACKBOARD_TEXT_COLOR);
-                    }
+                    //if (instruction.ElementInstruction == Util.FIRST_INSTRUCTION) // fix later
+                    //{
+                    //    tutorialStep.FirstInstruction = true;
+                    //    algorithm.FirstInstruction(Util.HIGHLIGHT_COLOR);
+                    //}
+                    //else if (tutorialStep.FirstInstruction)
+                    //{
+                    //    tutorialStep.FirstInstruction = false;
+                    //    algorithm.FirstInstruction(Util.BLACKBOARD_TEXT_COLOR);
+                    //}
+                    
+                    //if (instruction.ElementInstruction == Util.FINAL_INSTRUCTION)
+                    //{
+                    //    tutorialStep.FinalInstruction = true;
+                    //    algorithm.FinalInstruction(Util.HIGHLIGHT_COLOR);
+                    //}
+                    //else if (tutorialStep.FinalInstruction)
+                    //{
+                    //    tutorialStep.FinalInstruction = false;
+                    //    algorithm.FinalInstruction(Util.BLACKBOARD_TEXT_COLOR);
+                    //}
 
                     if (instruction.ElementInstruction != Util.FIRST_INSTRUCTION && instruction.ElementInstruction != Util.FINAL_INSTRUCTION)
                         algorithm.ExecuteOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);

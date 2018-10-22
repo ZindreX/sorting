@@ -14,22 +14,14 @@ public class QuickSort : Algorithm {
         return Util.QUICK_SORT;
     }
 
+    public override string CollectLine(int lineNr)
+    {
+        throw new System.NotImplementedException();
+    }
+
     private string PseudoCode(int lineNr, int i, int j, bool increment)
     {
-        switch (lineNr)
-        {
-            case 0: return "InsertionSort( List<int> list )";
-            case 1: return "i = 1";
-            case 2: return "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().NumberOfElements + " )";
-            case 3: return "    " + j + " = " + i + " - 1";
-            case 4: return "    while ( " + j + " >= 0 and " + value1 + " < " + value2 + " )";
-            case 5: return "        swap " + value1 + " and " + value2;
-            case 6: return "        " + j + " = " + (j + 1) + " - 1";
-            case 7: return "    end while";
-            case 8: return "    " + i + " = " + (i - 1) + " + 1";
-            case 9: return "end while";
-            default: return "X";
-        }
+        throw new System.NotImplementedException();
     }
 
     public override int FirstInstructionCodeLine()

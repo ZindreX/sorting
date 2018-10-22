@@ -1,9 +1,9 @@
 ﻿/* **************************************** Stuff to do later *****************************************
  * > Clean up instruction
- *  - split into more groups (inheritage), ID's, I/J
+ *  - split into more groups (inheritage), ID's, I/J ?
  * 
  * > PseudoCode
- *  - make it easier to replace text/ alignment etc. (started)
+ *  - copy pseudocode at the beginning to the fixed pseudocode viewer
  *  - clean up
  * 
  * > User Test

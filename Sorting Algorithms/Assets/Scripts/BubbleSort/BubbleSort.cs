@@ -26,51 +26,36 @@ public class BubbleSort : Algorithm {
         return Util.BUBBLE_SORT;
     }
 
+    public override string CollectLine(int lineNr)
+    {
+        string temp = PseudoCode(lineNr, 0, 0, true);
+        switch (lineNr)
+        {
+            case 0: case 6: case 7: case 8: return temp;
+            case 1: return temp.Replace(GetComponent<AlgorithmManagerBase>().NumberOfElements.ToString(), "len( list )");
+            case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().NumberOfElements - 1).ToString(), "n-1");
+            case 3: return temp.Replace((GetComponent<AlgorithmManagerBase>().NumberOfElements - 1).ToString(), "n-i-1");
+            case 4: case 5: return temp.Replace(Util.INIT_STATE.ToString(), "list[ j ]").Replace((Util.INIT_STATE - 1).ToString(), "list[ j + 1 ]");
+            default: return "lineNr " + lineNr + " not found!";
+        }
+    }
+
     private string PseudoCode(int lineNr, int i, int j, bool increment)
     {
         int n = GetComponent<AlgorithmManagerBase>().NumberOfElements;
         switch (lineNr)
         {
-            case 0: return "BubbleSort ( list ):";
-            case 1: return "n = " + n;
-            case 2: return "for i=" + i + " to " + (n - 1) + ":";
-            case 3: return "    for j=" + j + " to " + (n - i - 1) + ":";
-            case 4: return "        if ( " + value1 + " > " + value2 + " ):";
-            case 5: return "            swap " + value1 + " and " + value2;
-            case 6: return "        end if";
-            case 7: return "    end for";
-            case 8: return "end for";
-            default: return "X";
+            case 0: return "BubbleSort( list ):"; // add case for this line(?): BubbleSort(4, 1, 10, ... etc.)
+            case 1: return string.Format("  n = {0}", n); //"n = " + n;
+            case 2: return string.Format("  for i={0} to {1}:", i, (n-1)); //"for i=" + i + " to " + (n - 1) + ":";
+            case 3: return string.Format("      for j={0} to {1}:", j, (n-i-1)); // "    for j=" + j + " to " + (n - i - 1) + ":";
+            case 4: return string.Format("          if ( {0} > {1} ):", value1, value2); //"          if ( " + value1 + " > " + value2 + " ):";
+            case 5: return string.Format("              swap {0} and {1}", value1, value2); //"            swap " + value1 + " and " + value2;
+            case 6: return "            end if";
+            case 7: return "        end for";
+            case 8: return "    end for";
+            default: return "lineNr " + lineNr + " not found!";
         }
-    }
-
-    protected void InitializePseudoCode()
-    {
-        pseudoCodeLines = new List<string>();
-        pseudoCodeLines.Add("BubbleSort( list ):");
-        pseudoCodeLines.Add("    n = len( list )");
-        pseudoCodeLines.Add("    for i=0 to n-1:");
-        pseudoCodeLines.Add("        for j=0 to n-i-1:");
-        pseudoCodeLines.Add("            if ( list[ j ] > list[ j + 1 ] ):");
-        pseudoCodeLines.Add("                swap list[ j ] and list[ j + 1 ]");
-        pseudoCodeLines.Add("            end if");
-        pseudoCodeLines.Add("        end for");
-        pseudoCodeLines.Add("    end for");
-    }
-
-    public List<string> PseudoCodeLines()
-    {
-        List<string> pseudoCodeLines = new List<string>();
-        pseudoCodeLines.Add("BubbleSort( list ):");
-        pseudoCodeLines.Add("    n = len( list )");
-        pseudoCodeLines.Add("    for i=0 to n-1:");
-        pseudoCodeLines.Add("        for j=0 to n-i-1:");
-        pseudoCodeLines.Add("            if ( list[ j ] > list[ j + 1 ] ):");
-        pseudoCodeLines.Add("                swap list[ j ] and list[ j + 1 ]");
-        pseudoCodeLines.Add("            end if");
-        pseudoCodeLines.Add("        end for");
-        pseudoCodeLines.Add("    end for");
-        return pseudoCodeLines;
     }
 
     public override int FirstInstructionCodeLine()

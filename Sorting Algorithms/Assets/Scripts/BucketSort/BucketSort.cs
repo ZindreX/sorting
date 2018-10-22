@@ -14,11 +14,12 @@ public class BucketSort : Algorithm {
     private BucketManager bucketManager;
     private BucketSortManager bucketSortManager;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
-        status = NONE;
         bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
+        status = NONE;
     }
 
     public override string GetAlgorithmName()
@@ -26,19 +27,35 @@ public class BucketSort : Algorithm {
         return Util.BUCKET_SORT;
     }
 
+    // Change back ???
+    public override string CollectLine(int lineNr)
+    {
+        string temp = PseudoCode(lineNr, 0, true);
+        switch (lineNr)
+        {
+            case 0: case 1: case 5: case 8: return temp;
+            case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().NumberOfElements - 1).ToString(), "(len( list ) - 1)");
+            case 3: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ] * n / max_value");
+            case 4: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ]");
+            case 6: return temp.Replace((bucketSortManager.NumberOfBuckets - 1).ToString(), "n-1");
+            case 7: return temp.Replace("0", "i");
+            default: return "lineNr " + lineNr + " not found!";
+        }
+    }
+
     private string PseudoCode(int lineNr, int i, bool increment)
     {
         switch (lineNr)
         {
             case 0: return "BucketSort( list, n):";
-            case 1: return "buckets = new array of n empty lists";
-            case 2: return "for i=" + i + " to " + (GetComponent<AlgorithmManagerBase>().NumberOfElements - 1) + ":";
-            case 3: return "    " + value2 + " = " + value1 * bucketSortManager.NumberOfBuckets / Util.MAX_VALUE;
-            case 4: return "    buckets[ " + value2 + " ] = " + value1;
-            case 5: return "end for";
-            case 6: return "for i=" + i + " to " + (bucketSortManager.NumberOfBuckets - 1) + ":";
-            case 7: return "    Sortbucket( buckets[ " + i + " ] ):";
-            case 8: return "end for";
+            case 1: return "    buckets = new array of n empty lists";
+            case 2: return string.Format("        for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().NumberOfElements - 1));
+            case 3: return string.Format("            {0} = {1} * {2} / {3}", value2, value1, bucketSortManager.NumberOfBuckets, Util.MAX_VALUE);
+            case 4: return string.Format("            buckets[ {0} ] = {1}", value2, value1);
+            case 5: return "        end for";
+            case 6: return string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1));
+            case 7: return string.Format("        Sortbucket( buckets[ {0} ] ):", i);
+            case 8: return "    end for";
             default: return "X";
         }
     }

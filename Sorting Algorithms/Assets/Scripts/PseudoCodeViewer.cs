@@ -6,11 +6,17 @@ public class PseudoCodeViewer : MonoBehaviour {
 
     public static readonly float SPACE_BETWEEN_CODE_LINES = 0.7f;
 
-    [SerializeField]
+    //[SerializeField]
     private TextMesh[] codeLines;
 
     [SerializeField]
+    private TextMesh test;
+
+    [SerializeField]
     private Font font;
+
+    [SerializeField]
+    private Material material;
 
     private float seconds;
 
@@ -22,36 +28,40 @@ public class PseudoCodeViewer : MonoBehaviour {
         seconds = algorithm.Seconds;
 
         // If pseudo code added, put it to display
-        //List<string> pseudoCode = ((BubbleSort)algorithm).PseudoCodeLines();
-
-        //if (pseudoCode != null)
-          //  PseudoCodeSetup(pseudoCode);
+        PseudoCodeSetup();
     }
 
-    private void PseudoCodeSetup(List<string> pseudoCode)
+    private void PseudoCodeSetup()
     {
-        codeLines = new TextMesh[pseudoCode.Count];
+        int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;
+        codeLines = new TextMesh[numberOfLines];
 
-        for (int x = 0; x < pseudoCode.Count; x++)
+        for (int x = 0; x < numberOfLines; x++)
         {
+            // Create gameobject and add it to this gameobject
             GameObject codeLine = new GameObject("Line" + x);
-            codeLine.transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
-            codeLine.AddComponent<TextMesh>();
-            codeLine.GetComponent<TextMesh>().text = pseudoCode[x];
-            codeLine.GetComponent<TextMesh>().font = font;
-            codeLines[x] = codeLine.GetComponent<TextMesh>();
+            codeLine.transform.parent = gameObject.transform;
+            
+            // Change transformation position and scale
+            codeLine.transform.position = transform.position + new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), -0.1f);
+            codeLine.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-            Instantiate(codeLine, gameObject.transform.position + new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), 0f), Quaternion.identity);
+            // Change material and font
+            codeLine.AddComponent<MeshRenderer>();
+            codeLine.GetComponent<MeshRenderer>().material = test.GetComponent<MeshRenderer>().material; //material;
+            codeLine.AddComponent<TextMesh>();
+            codeLine.GetComponent<TextMesh>().font = test.font; //font;
+
+            // Get line of code from algorithm
+            codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x); // ***
+            codeLines[x] = codeLine.GetComponent<TextMesh>();
         }
     }
-
 
     public TextMesh CodeLine(int index)
     {
         return codeLines[index];
     }
-
-
 
     public void SetCodeLine(int index, string text, Color color)
     {

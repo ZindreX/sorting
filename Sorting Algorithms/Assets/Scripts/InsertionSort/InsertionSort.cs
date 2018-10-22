@@ -39,6 +39,24 @@ public class InsertionSort : Algorithm {
         get { return pivotHolder; }
     }
 
+    public override string CollectLine(int lineNr)
+    {
+        switch (lineNr)
+        {
+            case 0: return "InsertionSort( list ):";
+            case 1: return "i = 1";
+            case 2: return "while ( i < len( list )):";
+            case 3: return "    j = i - 1";
+            case 4: return "    while ( j >= 0 and list[ i ] < list[ j ]):";
+            case 5: return "        swap list[ i ] and list[ j ]";
+            case 6: return "        j -= 1";
+            case 7: return "    end while";
+            case 8: return "    i += 1";
+            case 9: return "end while";
+            default: return "X";
+        }
+    }
+
     private string PseudoCode(int lineNr, int i, int j, bool increment)
     {
         switch (lineNr)

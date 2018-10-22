@@ -11,7 +11,7 @@ public class TutorialStep : UserAlgorithmControl, IBlackboardAble
     */
 
     // Tutorial step by step
-    private bool playerMove = false, playerIncremented = false, isValidStep = false, firstOrFinal = false;
+    private bool playerMove = false, playerIncremented = false, isValidStep = false, firstInstruction = false, finalInstruction = false;
 
 
     public bool PlayerMove
@@ -29,10 +29,17 @@ public class TutorialStep : UserAlgorithmControl, IBlackboardAble
     {
         get { return isValidStep; }
     }
-    public bool FirstOrFinal
+
+    public bool FirstInstruction
     {
-        get { return firstOrFinal; }
-        set { firstOrFinal = value; }
+        get { return firstInstruction; }
+        set { firstInstruction = value; }
+    }
+
+    public bool FinalInstruction
+    {
+        get { return finalInstruction; }
+        set { finalInstruction = value; }
     }
 
     public void NotifyUserInput(bool increment)
