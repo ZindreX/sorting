@@ -6,13 +6,9 @@ public class ViveControllerInput : MonoBehaviour {
 
     private Valve.VR.SteamVR_TrackedObject trackedObj;
 
-    //private Valve.VR.SteamVR_Controller Controller
-    //{
 
-    //}
-
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }
