@@ -53,6 +53,17 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
             return value1 + " = " + value2;
     }
 
+    public Vector3 AboveHolder
+    {   
+        set { aboveHolder = value; }
+    }
+
+    // Reach to line of code which are not mentioned in instructions
+    public void HighllightPseudoLine(int lineNr, Color color)
+    {
+        pseudoCodeViewer.ChangeColorOfText(lineNr, color);
+    }
+
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
     public abstract string GetAlgorithmName();
     public abstract void ResetSetup();
@@ -60,6 +71,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     // Collects one line of code at a time and rewrites it into pseudocode | another methods must be created aswell *depends on the algorithm
     public abstract string CollectLine(int lineNr);
+
     // first instruction line of code
     public abstract int FirstInstructionCodeLine();
     // final instruction line of code

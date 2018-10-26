@@ -18,7 +18,6 @@ public class BubbleSort : Algorithm {
     {
         base.Awake();
         bubbleSortManager = GetComponent(typeof(BubbleSortManager)) as BubbleSortManager;
-        //InitializePseudoCode();
     }
 
     public override string GetAlgorithmName()
@@ -51,9 +50,9 @@ public class BubbleSort : Algorithm {
             case 3: return string.Format("      for j={0} to {1}:", j, (n-i-1)); // "    for j=" + j + " to " + (n - i - 1) + ":";
             case 4: return string.Format("          if ( {0} > {1} ):", value1, value2); //"          if ( " + value1 + " > " + value2 + " ):";
             case 5: return string.Format("              swap {0} and {1}", value1, value2); //"            swap " + value1 + " and " + value2;
-            case 6: return "            end if";
-            case 7: return "        end for";
-            case 8: return "    end for";
+            case 6: return "          end if";
+            case 7: return "      end for";
+            case 8: return "  end for";
             default: return "lineNr " + lineNr + " not found!";
         }
     }
@@ -250,7 +249,6 @@ public class BubbleSort : Algorithm {
     }
     #endregion
 
-
     #region Execute order from user
     public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
@@ -323,15 +321,15 @@ public class BubbleSort : Algorithm {
                 {
                     se1.IsCompare = inst.IsCompare;
                     se2.IsCompare = inst.IsCompare;
-                    se1.IsSorted = inst.IsSorted;
-                    se2.IsSorted = inst.IsSorted; // ***
+                    if (inst.IsSorted)
+                        se2.IsSorted = inst.IsSorted; // ***
                 }
                 else
                 {
                     se1.IsCompare = !inst.IsCompare;
                     se2.IsCompare = !inst.IsCompare;
-                    se1.IsSorted = !inst.IsSorted;
-                    se2.IsSorted = !inst.IsSorted;
+                    if (inst.IsSorted)
+                        se2.IsSorted = !inst.IsSorted;
                 }
 
                 lineOfCode.Add(6);
@@ -353,6 +351,16 @@ public class BubbleSort : Algorithm {
         // Move sorting element
         switch (inst.ElementInstruction)
         {
+            case Util.COMPARE_START_INST:
+                if (se1.CurrentStandingOn != null && se2.CurrentStandingOn != null)
+                {
+                    se1.CurrentStandingOn.CurrentColor = Util.COMPARE_COLOR;
+                    se2.CurrentStandingOn.CurrentColor = Util.COMPARE_COLOR;
+                }
+                else
+                    Debug.Log("Too fast!?");
+                break;
+
             case Util.SWITCH_INST:
                 if (increment)
                 {
@@ -364,6 +372,19 @@ public class BubbleSort : Algorithm {
                     se1.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID1).transform.position + aboveHolder;
                     se2.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID2).transform.position + aboveHolder;
                 }
+                break;
+
+            case Util.COMPARE_END_INST:
+                if (se1.CurrentStandingOn != null && se2.CurrentStandingOn != null)
+                {
+                    se1.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
+                    if (!se2.IsSorted)
+                        se2.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
+                    else
+                        se2.CurrentStandingOn.CurrentColor = Util.SORTED_COLOR;
+                }
+                else
+                    Debug.Log("Too fast!?");
                 break;
         }
     }

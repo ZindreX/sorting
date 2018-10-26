@@ -74,6 +74,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             // Setup algorithm in their respective <Algorithm name>Manager
             algorithm = InstanceOfAlgorithm;
             algorithmName = algorithm.GetAlgorithmName();
+            SetAboveHolderForTeachingMode();
         }
     }
 
@@ -105,27 +106,27 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     tutorialStep.PlayerMove = false;
                     InstructionBase instruction = tutorialStep.GetStep();
 
-                    //if (instruction.ElementInstruction == Util.FIRST_INSTRUCTION) // fix later
-                    //{
-                    //    tutorialStep.FirstInstruction = true;
-                    //    algorithm.FirstInstruction(Util.HIGHLIGHT_COLOR);
-                    //}
-                    //else if (tutorialStep.FirstInstruction)
-                    //{
-                    //    tutorialStep.FirstInstruction = false;
-                    //    algorithm.FirstInstruction(Util.BLACKBOARD_TEXT_COLOR);
-                    //}
-                    
-                    //if (instruction.ElementInstruction == Util.FINAL_INSTRUCTION)
-                    //{
-                    //    tutorialStep.FinalInstruction = true;
-                    //    algorithm.FinalInstruction(Util.HIGHLIGHT_COLOR);
-                    //}
-                    //else if (tutorialStep.FinalInstruction)
-                    //{
-                    //    tutorialStep.FinalInstruction = false;
-                    //    algorithm.FinalInstruction(Util.BLACKBOARD_TEXT_COLOR);
-                    //}
+                    if (instruction.ElementInstruction == Util.FIRST_INSTRUCTION)
+                    {
+                        tutorialStep.FirstInstruction = true;
+                        algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
+                    }
+                    else if (tutorialStep.FirstInstruction)
+                    {
+                        tutorialStep.FirstInstruction = false;
+                        algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
+                    }
+
+                    if (instruction.ElementInstruction == Util.FINAL_INSTRUCTION)
+                    {
+                        tutorialStep.FinalInstruction = true;
+                        algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
+                    }
+                    else if (tutorialStep.FinalInstruction)
+                    {
+                        tutorialStep.FinalInstruction = false;
+                        algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
+                    }
 
                     if (instruction.ElementInstruction != Util.FIRST_INSTRUCTION && instruction.ElementInstruction != Util.FINAL_INSTRUCTION)
                         algorithm.ExecuteOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
@@ -260,7 +261,18 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         tutorialStep.NotifyUserInput(increment);
     }
 
-    //
+    // **
+
+    public void SetAboveHolderForTeachingMode()
+    {
+        switch (teachingMode)
+        {
+            case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.1f, 0f); break;
+            case Util.TUTORIAL_STEP: algorithm.AboveHolder = new Vector3(0f, 0.5f, 0f); break;
+            case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.5f, 0f); break;
+            default: Debug.Log("Teaching mode '" + teachingMode + "' hasnt't defined aboveHolder variable"); break;
+        }
+    }
 
     public bool IsTutorial()
     {
