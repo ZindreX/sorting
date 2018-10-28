@@ -36,12 +36,12 @@ public class MergeSort : Algorithm {
 
     public override string CollectLine(int lineNr)
     {
-        throw new System.NotImplementedException();
+        return "早く";
     }
 
     private string PseudoCode(int lineNr, int i, int j, bool increment)
     {
-        return null;
+        return "Meh";
     }
 
     public override int FirstInstructionCodeLine()
@@ -258,12 +258,13 @@ public class MergeSort : Algorithm {
 
     private Dictionary<int, Dictionary<string, GameObject[]>> allSplits = new Dictionary<int, Dictionary<string, GameObject[]>>();
     private Dictionary<int, GameObject[]> extraHolders = new Dictionary<int, GameObject[]>();
-    private int split = -1;
+    private int split, counter = 0;
     private static readonly string LEFT = "Left", RIGHT = "Right";
 
     #region Merge Sort: All Moves Tutorial TODO: implement
     public override IEnumerator Tutorial(GameObject[] list)
     {
+        split = FindNumberOfSplits(list.Length, 0);
         return MS(list, 0, list.Length);
         //return MergeSortTutorial(list, 0);
     }
@@ -410,16 +411,24 @@ public class MergeSort : Algorithm {
                 yield return new WaitForSeconds(seconds);
             }
 
-            Debug.Log("Starting merge sort on left: [" + l + " -> " + m + "]");
+            Debug.Log("Starting MergeSort on left: [" + l + " -> " + m + "]");
             StartCoroutine(MS(arr, l, m));
+            
+            Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Test");
 
 
-            Debug.Log("Starting merge sort on right: [" + (m+1) + " -> " + r + "]");
+            Debug.Log("Starting MergeSort on right: [" + (m+1) + " -> " + r + "]");
             StartCoroutine(MS(arr, m + 1, r));
 
+            if (counter == split)
+            {
+                Debug.Log("Starting merge: [" + l + " -> " + m + " -> " + r + "]");
+                StartCoroutine(M(arr, l, m, r));
+            }
+            else
+                counter++;
             
-            Debug.Log("Starting merge: [" + l + " -> " + m + " -> " + r + "]");
-            StartCoroutine(M(arr, l, m, r));
+
         }
         yield return new WaitForSeconds(seconds * 4);
     }

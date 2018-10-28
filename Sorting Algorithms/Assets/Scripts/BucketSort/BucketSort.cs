@@ -16,10 +16,10 @@ public class BucketSort : Algorithm {
 
     protected override void Awake()
     {
-        base.Awake();
         bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
         bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
         status = NONE;
+        base.Awake();
     }
 
     public override string GetAlgorithmName()
@@ -27,7 +27,6 @@ public class BucketSort : Algorithm {
         return Util.BUCKET_SORT;
     }
 
-    // Change back ???
     public override string CollectLine(int lineNr)
     {
         string temp = PseudoCode(lineNr, 0, true);
@@ -271,7 +270,6 @@ public class BucketSort : Algorithm {
         IsSortingComplete = true;
     }
     #endregion
-
 
     #region Bucket Sort: User Test
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)

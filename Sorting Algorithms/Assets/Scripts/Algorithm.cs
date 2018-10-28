@@ -69,7 +69,10 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     public abstract void ResetSetup();
 
 
-    // Collects one line of code at a time and rewrites it into pseudocode | another methods must be created aswell *depends on the algorithm
+    /* Collects one line of code at a time and rewrites it into pseudocode
+     * > a method called PseudoCode(...) must be created aswell (this is where the pseudocode will be placed
+     * 
+    */
     public abstract string CollectLine(int lineNr);
 
     // first instruction line of code

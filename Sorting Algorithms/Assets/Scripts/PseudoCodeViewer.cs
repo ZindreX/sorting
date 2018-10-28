@@ -13,10 +13,8 @@ public class PseudoCodeViewer : MonoBehaviour {
     private TextMesh test;
 
     [SerializeField]
-    private Font font;
+    private GameObject[] pseudoPos;
 
-    [SerializeField]
-    private Material material;
 
     private float seconds;
 
@@ -38,23 +36,28 @@ public class PseudoCodeViewer : MonoBehaviour {
 
         for (int x = 0; x < numberOfLines; x++)
         {
-            // Create gameobject and add it to this gameobject
-            GameObject codeLine = new GameObject("Line" + x);
-            codeLine.transform.parent = gameObject.transform;
-            
-            // Change transformation position and scale
-            codeLine.transform.position = transform.position + new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), -0.1f);
-            codeLine.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            for (int y=0; y < pseudoPos.Length; y++)
+            {
+                // Create gameobject and add it to this gameobject
+                GameObject codeLine = new GameObject("Line" + x);
+                codeLine.transform.parent = gameObject.transform;
 
-            // Change material and font
-            codeLine.AddComponent<MeshRenderer>();
-            codeLine.GetComponent<MeshRenderer>().material = test.GetComponent<MeshRenderer>().material; //material;
-            codeLine.AddComponent<TextMesh>();
-            codeLine.GetComponent<TextMesh>().font = test.font; //font;
+                // Change transformation position and scale //new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), -0.1f);
+                Vector3 pos = pseudoPos[y].transform.position;
+                codeLine.transform.position = new Vector3(pos.x, pos.y - (x * SPACE_BETWEEN_CODE_LINES), pos.z);
+                codeLine.transform.eulerAngles = new Vector3(pseudoPos[y].transform.eulerAngles.x, pseudoPos[y].transform.eulerAngles.y, pseudoPos[y].transform.eulerAngles.z);
+                codeLine.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-            // Get line of code from algorithm
-            codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x); // ***
-            codeLines[x] = codeLine.GetComponent<TextMesh>();
+                // Change material and font
+                codeLine.AddComponent<MeshRenderer>();
+                codeLine.GetComponent<MeshRenderer>().material = test.GetComponent<MeshRenderer>().material; //material;
+                codeLine.AddComponent<TextMesh>();
+                codeLine.GetComponent<TextMesh>().font = test.font; //font;
+
+                // Get line of code from algorithm
+                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x); // ***
+                codeLines[x] = codeLine.GetComponent<TextMesh>();
+            }
         }
     }
 

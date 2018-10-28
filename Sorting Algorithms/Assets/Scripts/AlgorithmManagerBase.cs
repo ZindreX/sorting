@@ -16,11 +16,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      * ---------------------------------------------------------------------------------------------------------------------------------
      *    Algorithm name    |   Standard    |   Tutorial    |   User Test   |                   Comment
      * ---------------------------------------------------------------------------------------------------------------------------------
-     *    Bubble Sort       |     Yes       |     Yes       |       Yes     | Works, but maybe add more algorithm details to blackboard
-     *    Insertion Sort    |     Yes       |     Yes       |       Yes     | Almost done --> create a new tutorial (step by step)
+     *    Bubble Sort       |     Yes       |     Yes       |       Yes     | Complete, but needs more testing for bugs
+     *    Insertion Sort    |     Yes       |     Yes       |       Yes     | Complete, but needs more testing for bugs
      *    Merge Sort        |     Yes       |     No        |       No      | Tutorial not completed yet, user test not started
      *    Quick Sort        |      No       |     No        |       No      | -
-     *    Bucket Sort       |     Yes       |     Yes*      |       No      | Tutorial works, but inner sorting in bucket not displayed.
+     *    Bucket Sort       |     Yes       |     Yes*      |       No      | Implement user test + get stuff up on the blackboard
      * ---------------------------------------------------------------------------------------------------------------------------------
      * 
     */
