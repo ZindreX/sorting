@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Blackboard))]
 [RequireComponent(typeof(HolderManager))]
 [RequireComponent(typeof(ElementManager))]
 [RequireComponent(typeof(UserTestManager))]
 [RequireComponent(typeof(TutorialStep))]
 [RequireComponent(typeof(Algorithm))]
 [RequireComponent(typeof(ScoreManager))]
+[RequireComponent(typeof(DisplayUnitManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     /* -------------------------------------------- The main unit for the algorithm ----------------------------------------------------
@@ -35,19 +35,39 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     [SerializeField]
     private bool helpEnabled = false, noDuplicates = false, worstCase = false, bestCase = false;
 
-    [SerializeField]
-    private string teachingMode = Util.TUTORIAL_STEP;
 
-    private string algorithmName; 
+    // Drop down in editor for teaching mode
+    [SerializeField]
+    private TeachingMode teachingMode;
+    private enum TeachingMode
+    {
+        Tutorial,
+        TutorialStep,
+        UserTest
+    };
+    private string teachingModeString;
+
+    // Drop down in editor for difficulty
+    [SerializeField]
+    private DifficultyLevel difficultyLevel;
+    private enum DifficultyLevel
+    {
+        Beginner,
+        Intermediate,
+        Examination,
+    }
+    private string difficultyLevelString;
+
+    private string algorithmName;
     private string[] rules = new string[Util.NUMBER_OF_RULE_TYPES];
 
     private Vector3[] holderPositions;
 
     [SerializeField]
-    private GameObject blackboardObj;
+    private GameObject displayUnitManagerObj;
 
     // Base object instances
-    protected Blackboard blackboard;
+    protected DisplayUnitManager displayUnitManager;
     protected HolderManager holderManager;
     protected ElementManager elementManager;
     protected UserTestManager userTestManager;
@@ -59,11 +79,15 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         if (IsValidSetup())
         {
+            // *** Mode and difficulty *** (drop down menu in editor)
+            teachingModeString = ConvertMode(teachingMode);
+            difficultyLevelString = ConvertDifficulty(difficultyLevel);
+
             // ***  Rules ***
             InitRules();
 
             // *** Objects ***
-            blackboard = blackboardObj.GetComponent(typeof(Blackboard)) as Blackboard;
+            displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
 
             holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
@@ -74,14 +98,18 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             // Setup algorithm in their respective <Algorithm name>Manager
             algorithm = InstanceOfAlgorithm;
             algorithmName = algorithm.GetAlgorithmName();
+            algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
+            algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
+
             SetAboveHolderForTeachingMode();
         }
     }
 
+
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-        blackboard.ChangeText(0, algorithmName);
+        displayUnitManager.BlackBoard.ChangeText(0, algorithmName);
     }
 
     // Update is called once per frame
@@ -93,9 +121,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             {
                 scoreManager.SetEndTime();
                 scoreManager.CalculateScore();
-                blackboard.ChangeText(3, scoreManager.FillInBlackboard());
+                displayUnitManager.BlackBoard.ChangeText(3, scoreManager.FillInBlackboard());
+                displayUnitManager.BlackBoard.ChangeText(4, userTestManager.GetExaminationResult());
             }
-            blackboard.ChangeText(1, "Sorting Completed!");
+            displayUnitManager.BlackBoard.ChangeText(1, "Sorting Completed!");
         }
         else
         {
@@ -161,8 +190,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                             userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                         }
                     }
-                    blackboard.ChangeText(4, userTestManager.FillInBlackboard());
-                    blackboard.ChangeText(3, scoreManager.FillInBlackboard());
+                    displayUnitManager.BlackBoard.ChangeText(4, userTestManager.FillInBlackboard());
+                    displayUnitManager.BlackBoard.ChangeText(3, scoreManager.FillInBlackboard());
                 }
             }
         }
@@ -201,7 +230,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         // Disable Drag if tutorial
         if (IsTutorial())
         {
-            for (int x=0; x < elementManager.SortingElements.Length; x++)
+            for (int x = 0; x < elementManager.SortingElements.Length; x++)
             {
                 elementManager.GetSortingElement(x).GetComponent<Drag>().enabled = false; // not working
             }
@@ -224,16 +253,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // --------------------------------------- Getters and setters ---------------------------------------
 
-    public Blackboard GetBlackBoard
-    {
-        get { return blackboard; }
-    }
-
     protected string GetAlgorithmName
     {
         get { return algorithm.GetAlgorithmName(); }
     }
-    
+
     public int NumberOfElements
     {
         get { return numberOfElements; }
@@ -261,11 +285,72 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         tutorialStep.NotifyUserInput(increment);
     }
 
+    public void SetDifficulty(string difficultyLevel)
+    {
+        difficultyLevelString = difficultyLevel;
+        scoreManager.DifficultyLevel = difficultyLevel;
+        switch (difficultyLevel)
+        {
+            case Util.BEGINNER: scoreManager.DifficultyMultiplier = 1; break;
+            case Util.INTERMEDIATE: scoreManager.DifficultyMultiplier = 2; break;
+            case Util.EXAMINATION: scoreManager.DifficultyMultiplier = 3; break;
+            default: Debug.LogError("Difficulty '" + difficultyLevel + "' not implemented."); break;
+        }
+    }
+
+    private string ConvertMode(TeachingMode value)
+    {
+        switch ((int)value)
+        {
+            case 0: return Util.TUTORIAL;
+            case 1: return Util.TUTORIAL_STEP;
+            case 2: return Util.USER_TEST;
+            default: return "Cannot convert '" + value + "'";
+        }
+    }
+
+    private TeachingMode ConvertMode(string value)
+    {
+        switch (value)
+        {
+            case Util.TUTORIAL: return TeachingMode.Tutorial;
+            case Util.TUTORIAL_STEP: return TeachingMode.TutorialStep;
+            case Util.USER_TEST: return TeachingMode.UserTest;
+            default:
+                Debug.Log("Value '" + value + "' not valid, setting to Tutorial");
+                return TeachingMode.Tutorial;
+        }
+    }
+
+    private string ConvertDifficulty(DifficultyLevel value)
+    {
+        switch ((int)value)
+        {
+            case 0: return Util.BEGINNER;
+            case 1: return Util.INTERMEDIATE;
+            case 2: return Util.EXAMINATION;
+            default: return "Cannot convert '" + value + "'";
+        }
+    }
+
+    private DifficultyLevel ConvertDifficulty(string value)
+    {
+        switch (value)
+        {
+            case Util.BEGINNER: return DifficultyLevel.Beginner;
+            case Util.INTERMEDIATE: return DifficultyLevel.Intermediate;
+            case Util.EXAMINATION: return DifficultyLevel.Examination;
+            default:
+                Debug.Log("Value not valid, setting to beginner level");
+                return DifficultyLevel.Beginner;
+        }
+    }
+
     // **
 
     public void SetAboveHolderForTeachingMode()
     {
-        switch (teachingMode)
+        switch (teachingModeString)
         {
             case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.1f, 0f); break;
             case Util.TUTORIAL_STEP: algorithm.AboveHolder = new Vector3(0f, 0.5f, 0f); break;
@@ -276,17 +361,17 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     public bool IsTutorial()
     {
-        return teachingMode == Util.TUTORIAL || teachingMode == Util.TUTORIAL_STEP;
+        return teachingModeString == Util.TUTORIAL || teachingModeString == Util.TUTORIAL_STEP;
     }
 
     public bool IsTutorialStep()
     {
-        return teachingMode == Util.TUTORIAL_STEP;
+        return teachingModeString == Util.TUTORIAL_STEP;
     }
 
     public bool IsUserTest()
     {
-        return teachingMode == Util.USER_TEST;
+        return teachingModeString == Util.USER_TEST;
     }
 
 
@@ -300,9 +385,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
         StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
-
-        //Debug.Log(DebugCheckGameObjects(InsertionSort.InsertionSortStandard(elementManager.SortingElements)));
-        //Debug.Log(DebugCheckGameObjects(BucketSort.BucketSortStandard2(elementManager.SortingElements, numberOfElements)));
     }
 
     public void PerformAlgorithmTutorialStep()
@@ -321,7 +403,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         
         // Getting instructions for this sample of sorting elements
         Dictionary<int, InstructionBase> instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
-        
+
         // Initialize user test
         userTestManager.InitUserTest(instructions, MovesNeeded);
 
@@ -343,15 +425,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Prepares the next instruction based on the algorithm being runned
     protected abstract int PrepareNextInstruction(InstructionBase instruction);
 
-    // TODO: Display stuff on the blackboard if help enabled
-    protected abstract int SkipOrHelp(InstructionBase instruction);
-
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     protected abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
-
-    // Step by step tutorial
-    //protected abstract IEnumerator ExecuteOrder(InstructionBase instruction, int instructionNr);
-
 
 
 

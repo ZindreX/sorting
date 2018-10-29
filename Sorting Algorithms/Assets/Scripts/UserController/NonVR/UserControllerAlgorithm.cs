@@ -30,17 +30,17 @@ public class UserControllerAlgorithm : UserControllerBase {
             {
                 if (am.GetComponent<ScoreManager>().DifficultyLevel == null)
                 {
-                    am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
+                    am.SetDifficulty(Util.INTERMEDIATE);
                 }
                 am.PerformAlgorithmUserTest();
             }
         }
         else if (Input.GetKeyDown(KeyCode.F1))
-            am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.BEGINNER);
+            am.SetDifficulty(Util.BEGINNER);
         else if (Input.GetKeyDown(KeyCode.F2))
-            am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.INTERMEDIATE);
+            am.SetDifficulty(Util.INTERMEDIATE);
         else if (Input.GetKeyDown(KeyCode.F3))
-            am.GetComponent<ScoreManager>().SetDifficulty(ScoreManager.PRO);
+            am.SetDifficulty(Util.EXAMINATION);
 
         else if (Input.GetKeyDown(KeyCode.Q))
         {

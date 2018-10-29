@@ -9,26 +9,46 @@ public class UserTestManager : UserAlgorithmControl, IBlackboardAble {
      * 
     */
 
-    private int errorCount = 0;
+    private int totalErrorCount = 0;
     private int readyForNext, algorithmMovesNeeded;
+    private Dictionary<string, int> errorLog;
 
     public void InitUserTest(Dictionary<int, InstructionBase> instructions, int algorithmMovesNeeded)
     {
         base.Init(instructions);
         this.algorithmMovesNeeded = algorithmMovesNeeded;
         readyForNext = algorithmMovesNeeded;
-        errorCount = 0;
+        totalErrorCount = 0;
+        errorLog = new Dictionary<string, int>();
     }
 
-    public int ErrorCount
+    public int TotalErrorCount
     {
-        get { return errorCount; }
+        get { return totalErrorCount; }
+    }
+
+    public string GetExaminationResult()
+    {
+        string result = "Results from User Test:\n";
+
+        // Add errors with some explanation | for now just the instruction ID
+        result += "Errors:\n";
+        foreach (KeyValuePair<string, int> entry in errorLog)
+        {
+            result += entry.Key + ": " + entry.Value + "\n";
+        }
+        return result;
     }
 
     // Error counting
-    public void IncrementError()
+    public void ReportError(string instructionID)
     {
-        errorCount++;
+        totalErrorCount++;
+        if (errorLog.ContainsKey(instructionID))
+            errorLog[instructionID] += 1;
+        else
+            errorLog.Add(instructionID, 1);
+
     }
 
     /* Checking whether a new instruction can be given
@@ -52,13 +72,13 @@ public class UserTestManager : UserAlgorithmControl, IBlackboardAble {
     public override void ResetState()
     {
         base.ResetState();
-        errorCount = 0;
-        
+        totalErrorCount = 0;
+        errorLog = new Dictionary<string, int>();
     }
 
     public override string FillInBlackboard()
     {
-        return "\nInst. nr.: " + CurrentInstructionNr + "\n\n" + Util.ModifyPluralString("error", errorCount) + ": " + ErrorCount;
+        return "\nInst. nr.: " + CurrentInstructionNr + "\n\n" + Util.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount;
     }
 
 }

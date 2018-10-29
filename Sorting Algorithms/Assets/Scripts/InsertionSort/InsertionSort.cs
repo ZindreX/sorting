@@ -286,7 +286,6 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
-
     #region Execute order from user
     public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
@@ -396,6 +395,71 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
+    #region Execute order from user
+    public void UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    {
+        // Gather information from instruction
+        InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
+        InsertionSortElement sortingElement = null;
+        if (gotSortingElement)
+            sortingElement = GetComponent<ElementManager>().GetSortingElement(inst.SortingElementID).GetComponent<InsertionSortElement>();
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
+        }
+
+        // Gather part of code to highlight
+        int i = inst.I, j = inst.J;
+        List<int> lineOfCode = new List<int>();
+        switch (inst.ElementInstruction)
+        {
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode.Add(1);
+                break;
+
+            case Util.PIVOT_START_INST:
+                if (gotSortingElement)
+                    value1 = sortingElement.Value;
+
+                lineOfCode.Add(2);
+                lineOfCode.Add(3);
+                break;
+
+            case Util.PIVOT_END_INST:
+                lineOfCode.Add(8);
+                break;
+
+            case Util.COMPARE_START_INST:
+                if (gotSortingElement)
+                    value2 = sortingElement.Value;
+
+                lineOfCode.Add(4);
+                break;
+
+            case Util.COMPARE_END_INST:
+                lineOfCode.Add(7);
+                break;
+
+            case Util.SWITCH_INST:
+                lineOfCode.Add(5);
+                lineOfCode.Add(6);
+                break;
+
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode.Add(9);
+                break;
+        }
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), Util.HIGHLIGHT_COLOR);
+        }
+    }
+    #endregion
 
     #region Insertion Sort: User Test / Tutorial step by step
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)

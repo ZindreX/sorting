@@ -42,6 +42,9 @@ public class Util : MonoBehaviour {
     public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
     public const string BUCKET_SORT = "Bucket sort";
 
+    // Difficulty
+    public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", EXAMINATION = "Examination";
+
     // Object types
     public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
     

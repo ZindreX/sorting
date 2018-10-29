@@ -10,8 +10,7 @@ public class BucketSortHolder : InsertionSortHolder {
         {
             CurrentColor = Util.ERROR_COLOR;
             if (hasPermission)
-                parent.GetComponent<UserTestManager>().IncrementError();
-            hasPermission = false;
+                parent.GetComponent<UserTestManager>().ReportError(currentHolding.GetComponent<SortingElementBase>().ElementInstruction.ElementInstruction);
         }
         else if (CurrentHolding.IntermediateMove)
             CurrentColor = Util.TEST_COLOR;

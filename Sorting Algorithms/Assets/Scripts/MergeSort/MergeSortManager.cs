@@ -29,11 +29,6 @@ public class MergeSortManager : AlgorithmManagerBase {
         Debug.Log("FIX");
 
 
-        return SkipOrHelp(mergeSortInstruction);
-    }
-
-    protected override int SkipOrHelp(InstructionBase instruction)
-    {
         // Display help on blackboard
         if (false) // help enabled
         {
@@ -47,6 +42,8 @@ public class MergeSortManager : AlgorithmManagerBase {
         }
         return 0;
     }
+
+
 
     public override HolderBase GetCorrectHolder(int index)
     {

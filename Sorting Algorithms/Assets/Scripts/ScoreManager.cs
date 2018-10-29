@@ -12,7 +12,6 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
 
     public readonly int SCORE_PER_STREAK = 10, SUBSTRACTION_PER_ERROR = 2;
     public readonly float SCORE_UPDATE = 0.1f;
-    public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", PRO = "Pro";
 
     private float startTime, endTime, timeSpent;
     private int streakScore, totalScore, currentStreak, longestStreak, difficultyMultiplier;
@@ -26,11 +25,13 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
     public string DifficultyLevel
     {
         get { return difficultyLevel; }
+        set { difficultyLevel = value; }
     }
 
     public int DifficultyMultiplier
     {
         get { return difficultyMultiplier; }
+        set { difficultyMultiplier = value; }
     }
 
     public int CalculateScore()
@@ -80,18 +81,6 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
         get { return timeSpent; }
     }
 
-    public void SetDifficulty(string difficultyLevel)
-    {
-        this.difficultyLevel = difficultyLevel;
-        switch (difficultyLevel)
-        {
-            case BEGINNER: difficultyMultiplier = 1; break;
-            case INTERMEDIATE: difficultyMultiplier = 2; break;
-            case PRO: difficultyMultiplier = 3; break;
-            default: Debug.LogError("Difficulty '" + difficultyLevel + "' not implemented."); break;
-        }
-    }
-
     public void IncrementStreak()
     {
         currentStreak++;
@@ -112,13 +101,14 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
         streakScore = 0;
     }
 
+    // Drop this function ?
     private int GetReduction()
     {
         // Do reduction to score
         switch (difficultyLevel)
         {
-            case BEGINNER: return 0; // No punishment
-            case INTERMEDIATE: case PRO: return (SUBSTRACTION_PER_ERROR * GetComponent<UserTestManager>().ErrorCount) * difficultyMultiplier;
+            case Util.BEGINNER: return 0; // No punishment
+            case Util.INTERMEDIATE: case Util.EXAMINATION: return (SUBSTRACTION_PER_ERROR * GetComponent<UserTestManager>().TotalErrorCount) * difficultyMultiplier;
             default:
                 Debug.LogError("Difficulty level '" + difficultyLevel + "' not implemented.");
                 return 0;

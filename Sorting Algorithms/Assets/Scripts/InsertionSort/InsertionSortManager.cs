@@ -26,39 +26,39 @@ public class InsertionSortManager : AlgorithmManagerBase {
     private List<string> skipInst = new List<string>() { Util.FIRST_INSTRUCTION, Util.FINAL_INSTRUCTION };
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        if (skipInst.Contains(instruction.ElementInstruction))
-            return 1;
+        //if (skipInst.Contains(instruction.ElementInstruction))
+        //    return 1;
+
 
         // Get the next instruction
         InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
-
-        // Get the Sorting element
-        InsertionSortElement sortingElement = elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
-
-        // Hands out the next instruction
-        sortingElement.ElementInstruction = insertionSortInstruction;
-
-        // Give this sorting element permission to give feedback to progress to next intstruction
-        sortingElement.NextMove = true;
-
         Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + insertionSortInstruction.DebugInfo());
+        bool gotSortingElement = !skipInst.Contains(instruction.ElementInstruction);
 
-        return SkipOrHelp(insertionSortInstruction);
-    }
+        if (gotSortingElement)
+        {
+            // Get the Sorting element
+            InsertionSortElement sortingElement = elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
 
-    protected override int SkipOrHelp(InstructionBase instruction)
-    {
+            // Hands out the next instruction
+            sortingElement.ElementInstruction = insertionSortInstruction;
+
+            // Give this sorting element permission to give feedback to progress to next intstruction
+            sortingElement.NextMove = true;
+        }
+
         // Display help on blackboard
-        if (HelpEnabled) // help enabled
+        if (HelpEnabled) // replace with teachingMode == Util.Beginner
         {
-            
+            ((InsertionSort)algorithm).UserTestDisplayHelp(instruction, gotSortingElement);
+            if (gotSortingElement)
+                return 0;
+            return 1;
         }
-        else
-        {
-            if (((InsertionSortInstruction)instruction).NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
+        else if (insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
                 return 1;
-        }
-        return 0;
+        else
+            return 0;
     }
 
     public override HolderBase GetCorrectHolder(int index)

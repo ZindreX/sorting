@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PseudoCodeViewer))]
 public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     [SerializeField]
@@ -15,14 +14,12 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     protected Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
     protected List<int> prevHighlight = new List<int>();
 
-    [SerializeField]
-    protected GameObject pseudoCodeViewerObj;
-    protected PseudoCodeViewer pseudoCodeViewer;
+    protected PseudoCodeViewer pseudoCodeViewer, pseudoCodeViewerFixed;
 
     protected virtual void Awake()
     {
-        pseudoCodeViewer = pseudoCodeViewerObj.GetComponent(typeof(PseudoCodeViewer)) as PseudoCodeViewer;
-        pseudoCodeViewer.SetAlgorithm(this); // just pass seconds maybe?
+        //displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
+        //displayUnitManager.Algorithm = this;
     }
 
     public bool IsSortingComplete
@@ -56,6 +53,18 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     public Vector3 AboveHolder
     {   
         set { aboveHolder = value; }
+    }
+
+    public PseudoCodeViewer PseudoCodeViewer
+    {
+        get { return pseudoCodeViewer; }
+        set { pseudoCodeViewer = value; pseudoCodeViewer.SetAlgorithm(this); }
+    }
+
+    public PseudoCodeViewer PseudoCodeViewerFixed
+    {
+        get { return pseudoCodeViewerFixed; }
+        set { pseudoCodeViewerFixed = value; pseudoCodeViewerFixed.SetAlgorithm(this); }
     }
 
     // Reach to line of code which are not mentioned in instructions

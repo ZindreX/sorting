@@ -10,6 +10,9 @@
  * 
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)
+ *  
+ * > Tutorial
+ *  - disable drag (non-vr), touch/grab (vr)
  * 
  * 
  * 

@@ -23,8 +23,12 @@ public class BubbleSortManager : AlgorithmManagerBase {
         get { return 2; }
     }
 
+    private List<string> skipInst = new List<string>() { Util.FIRST_INSTRUCTION, Util.UPDATE_LOOP_INST, Util.END_LOOP_INST, Util.FINAL_INSTRUCTION };
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
+        if (skipInst.Contains(instruction.ElementInstruction))
+            return 2;
+
         // Get the next two instructions
         BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)instruction;
 
@@ -42,12 +46,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
 
         Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bubbleInstruction.DebugInfo());
 
-        return SkipOrHelp(bubbleInstruction);
-    }
 
-    protected override int SkipOrHelp(InstructionBase instruction)
-    {
-        // Display help on blackboard
         if (false) // help enabled
         {
 

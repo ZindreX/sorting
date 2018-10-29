@@ -9,9 +9,9 @@ public interface IScore {
     void SetEndTime();
     float TimeSpent { get; }
 
-    // Sets the difficulty level (Beginner, Intermediate, Pro)
-    void SetDifficulty(string difficulty);
-    
+    int DifficultyMultiplier { get; set; }
+    string DifficultyLevel { get; set; }
+
     // Returns intermediate score / total score (sorting complete)
     int CalculateScore();
 

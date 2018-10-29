@@ -9,7 +9,7 @@ public class BubbleSortHolder : HolderBase {
         {
             CurrentColor = Util.ERROR_COLOR;
             if (hasPermission)
-                parent.GetComponent<UserTestManager>().IncrementError();
+                parent.GetComponent<UserTestManager>().ReportError(currentHolding.GetComponent<SortingElementBase>().ElementInstruction.ElementInstruction);
             hasPermission = false;
         }
         else if (CurrentHolding.IntermediateMove)

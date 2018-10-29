@@ -77,12 +77,7 @@ public class BucketSortManager : AlgorithmManagerBase {
 
             Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bucketSortInstruction.DebugInfo());
         }
-        return SkipOrHelp(bucketSortInstruction);
-    }
 
-    protected override int SkipOrHelp(InstructionBase instruction)
-    {
-        BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
         // Display help on blackboard
         if (false) // help enabled
         {
@@ -95,6 +90,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         }
         return 0;
     }
+
 
     private void AutoSort()
     {
