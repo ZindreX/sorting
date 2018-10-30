@@ -97,8 +97,8 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
 
     // --------------------------------------- Implemented in subclass ---------------------------------------
-
     protected abstract void UpdateColorOfHolder();
+
     protected abstract void OnCollisionEnter(Collision collision);
 
 

@@ -7,7 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(UserTestManager))]
 [RequireComponent(typeof(TutorialStep))]
 [RequireComponent(typeof(Algorithm))]
-[RequireComponent(typeof(ScoreManager))]
 [RequireComponent(typeof(DisplayUnitManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
 
@@ -45,7 +44,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         TutorialStep,
         UserTest
     };
-    private string teachingModeString;
 
     // Drop down in editor for difficulty
     [SerializeField]
@@ -56,10 +54,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         Intermediate,
         Examination,
     }
-    private string difficultyLevelString;
 
-    private string algorithmName;
+    private string algorithmName, difficultyLevelString, teachingModeString;
     private string[] rules = new string[Util.NUMBER_OF_RULE_TYPES];
+    private int titleIndex = 0, textIndex = 1;
 
     private Vector3[] holderPositions;
 
@@ -73,7 +71,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected UserTestManager userTestManager;
     protected TutorialStep tutorialStep;
     protected Algorithm algorithm;
-    protected ScoreManager scoreManager;
 
     protected virtual void Awake()
     {
@@ -93,7 +90,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
             userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
             tutorialStep = GetComponent(typeof(TutorialStep)) as TutorialStep;
-            scoreManager = GetComponent(typeof(ScoreManager)) as ScoreManager;
 
             // Setup algorithm in their respective <Algorithm name>Manager
             algorithm = InstanceOfAlgorithm;
@@ -109,7 +105,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        displayUnitManager.BlackBoard.ChangeText(0, algorithmName);
+        displayUnitManager.BlackBoard.ChangeText(titleIndex, algorithmName);
+        displayUnitManager.BlackBoard.ChangeText(textIndex, teachingModeString);
     }
 
     // Update is called once per frame
@@ -117,14 +114,13 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         if (algorithm.IsSortingComplete)
         {
-            if (IsUserTest() && scoreManager.TimeSpent == 0)
+            if (IsUserTest() && userTestManager.TimeSpent == 0)
             {
-                scoreManager.SetEndTime();
-                scoreManager.CalculateScore();
-                displayUnitManager.BlackBoard.ChangeText(3, scoreManager.FillInBlackboard());
-                displayUnitManager.BlackBoard.ChangeText(4, userTestManager.GetExaminationResult());
+                userTestManager.SetEndTime();
+                userTestManager.CalculateScore();
+                displayUnitManager.BlackBoard.ChangeText(textIndex, userTestManager.GetExaminationResult());
             }
-            displayUnitManager.BlackBoard.ChangeText(1, "Sorting Completed!");
+            displayUnitManager.BlackBoard.ChangeText(titleIndex, "Sorting Completed!");
         }
         else
         {
@@ -175,7 +171,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     {
                         // Dont do anything while moving element
                     }
-                    else if (userTestManager.ReadyForNext == userTestManager.AlgorithmMovesNeeded)
+                    else if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
                     {
                         // Reset
                         userTestManager.ReadyForNext = 0;
@@ -190,8 +186,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                             userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                         }
                     }
-                    displayUnitManager.BlackBoard.ChangeText(4, userTestManager.FillInBlackboard());
-                    displayUnitManager.BlackBoard.ChangeText(3, scoreManager.FillInBlackboard());
+                    displayUnitManager.BlackBoard.ChangeText(textIndex, userTestManager.FillInBlackboard());
                 }
             }
         }
@@ -288,12 +283,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void SetDifficulty(string difficultyLevel)
     {
         difficultyLevelString = difficultyLevel;
-        scoreManager.DifficultyLevel = difficultyLevel;
+        userTestManager.DifficultyLevel = difficultyLevel;
         switch (difficultyLevel)
         {
-            case Util.BEGINNER: scoreManager.DifficultyMultiplier = 1; break;
-            case Util.INTERMEDIATE: scoreManager.DifficultyMultiplier = 2; break;
-            case Util.EXAMINATION: scoreManager.DifficultyMultiplier = 3; break;
+            case Util.BEGINNER: userTestManager.DifficultyMultiplier = 1; break;
+            case Util.INTERMEDIATE: userTestManager.DifficultyMultiplier = 2; break;
+            case Util.EXAMINATION: userTestManager.DifficultyMultiplier = 3; break;
             default: Debug.LogError("Difficulty '" + difficultyLevel + "' not implemented."); break;
         }
     }
@@ -405,12 +400,23 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         Dictionary<int, InstructionBase> instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
 
         // Initialize user test
-        userTestManager.InitUserTest(instructions, MovesNeeded);
+        userTestManager.InitUserTest(instructions, MovesNeeded, FindNumberOfUserAction(instructions));
 
         // Set start time
-        scoreManager.SetStartTime();
+        userTestManager.SetStartTime();
 
         //DebugCheckInstructions(instructions); // Debugging
+    }
+
+    private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
+    {
+        int count = 0;
+        for (int x=0; x < instructions.Count; x++)
+        {
+            if (!algorithm.SkipAbleInstructions.Contains(instructions[x].ElementInstruction))
+                count++;
+        }
+        return count;
     }
 
 

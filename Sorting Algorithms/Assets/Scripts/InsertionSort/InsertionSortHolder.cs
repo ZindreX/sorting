@@ -27,7 +27,6 @@ public class InsertionSortHolder : HolderBase
             if (hasPermission)
                 parent.GetComponent<UserTestManager>().ReportError(currentHolding.GetComponent<SortingElementBase>().ElementInstruction.ElementInstruction);
             hasPermission = false;
-            Debug.Log("Correctly given error?");
         }
         else if (CurrentHolding.IntermediateMove)
             CurrentColor = Util.STANDARD_COLOR;

@@ -10,6 +10,8 @@
  * 
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)
+ *  - count number of instructions user actually has to do and edit what'll be printed on blackboard
+ *  - change back to bool for 'userActionToProceed' ? keep incase?
  *  
  * > Tutorial
  *  - disable drag (non-vr), touch/grab (vr)

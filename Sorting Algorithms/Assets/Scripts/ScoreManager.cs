@@ -118,7 +118,7 @@ public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
     public string FillInBlackboard()
     {
         //return "Streak: " + streakScore + "   (x" + difficultyMultiplier + ")\n\nTotal Score: " + totalScore;
-        return "Streak: " + currentStreak + " (" + longestStreak + ")\n\nTotal Score: " + totalScore;
+        return "Streak: " + currentStreak + " (" + longestStreak + ")\nTotal Score: " + totalScore;
     }
 
     public void ResetScore()

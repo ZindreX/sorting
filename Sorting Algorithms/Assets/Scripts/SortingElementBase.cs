@@ -127,6 +127,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             userMove++;
             holder.HasPermission = true;
 
+            Debug.Log("Can validate: " + (validatedUserMove < userMove) + " : " + validatedUserMove + " < " + userMove);
             // Validates the move and notifies whether we're ready to go to next instrution
             if (validatedUserMove < userMove)
             {
@@ -138,14 +139,17 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                     case Util.INIT_OK:
                         standingInCorrectHolder = true;
                         break;
+
                     case Util.CORRECT_HOLDER:
                         standingInCorrectHolder = true;
                         parent.GetComponent<ScoreManager>().IncrementStreak();
                         break;
+
                     case Util.INIT_ERROR: case Util.WRONG_HOLDER:
                         standingInCorrectHolder = false;
                         parent.GetComponent<ScoreManager>().Mistake();
                         break;
+
                     default: Debug.LogError("Add '" + validation + "' case, or ignore"); break;
                 }
 

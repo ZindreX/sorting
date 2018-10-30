@@ -16,8 +16,8 @@ public class Util : MonoBehaviour {
     public static readonly int NO_DESTINATION = -1, INIT_STATE = -2, NO_VALUE = -3;
 
     // Instructions (strings)
-    public const string INIT_INSTRUCTION = "Initialization", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
-    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed";
+    public const string INIT_INSTRUCTION = "Init instruction", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
+    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";
     public const string MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop";
     public const string END_LOOP_INST = "End of loop";

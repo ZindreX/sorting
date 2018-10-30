@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff01745a44766ba4287183f76428c09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seconds: 0.4
+  seconds: 0.5
 --- !u!114 &817656497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,11 +396,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfElements: 8
-  helpEnabled: 1
+  helpEnabled: 0
   noDuplicates: 0
   worstCase: 0
   bestCase: 0
-  teachingMode: 1
+  teachingMode: 0
   difficultyLevel: 0
   displayUnitManagerObj: {fileID: 1036859930}
 --- !u!4 &817656498

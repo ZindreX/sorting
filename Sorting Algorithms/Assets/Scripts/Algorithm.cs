@@ -13,6 +13,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     protected Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
     protected List<int> prevHighlight = new List<int>();
+    protected List<string> skipAbleInstructions = new List<string>();
 
     protected PseudoCodeViewer pseudoCodeViewer, pseudoCodeViewerFixed;
 
@@ -20,6 +21,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     {
         //displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
         //displayUnitManager.Algorithm = this;
+        AddSkipAbleInstructions();
     }
 
     public bool IsSortingComplete
@@ -72,6 +74,22 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     {
         pseudoCodeViewer.ChangeColorOfText(lineNr, color);
     }
+
+    // Skipable instruction list
+    public List<string> SkipAbleInstructions
+    {
+        get { return skipAbleInstructions; }
+    }
+
+    // Instructions which the user don't need to perform any actions to proceed
+    public virtual void AddSkipAbleInstructions()
+    {
+        skipAbleInstructions.Add(Util.FIRST_INSTRUCTION);
+        skipAbleInstructions.Add(Util.UPDATE_LOOP_INST);
+        skipAbleInstructions.Add(Util.END_LOOP_INST);
+        skipAbleInstructions.Add(Util.FINAL_INSTRUCTION);
+    }
+
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
     public abstract string GetAlgorithmName();

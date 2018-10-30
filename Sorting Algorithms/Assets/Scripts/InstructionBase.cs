@@ -14,7 +14,7 @@ public abstract class InstructionBase {
     public InstructionBase(string instruction, bool isCompare, bool isSorted)
     {
         this.instruction = instruction;
-        status = "Not performed";
+        status = Util.NOT_EXECUTED;
         this.isCompare = isCompare;
         this.isSorted = isSorted;
     }
@@ -42,6 +42,12 @@ public abstract class InstructionBase {
         get { return isSorted; }
         set { isSorted = value; }
     }
+
+    public bool HasBeenExecuted()
+    {
+        return status == Util.EXECUTED_INST;
+    }
+
 
     // Debug checker
     public abstract string DebugInfo();
