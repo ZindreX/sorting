@@ -19,7 +19,7 @@ public abstract class InstructionBase {
         this.isSorted = isSorted;
     }
 
-    public string ElementInstruction
+    public string Instruction
     {
         get { return instruction; }
         set { instruction = value; }

@@ -44,12 +44,27 @@ public class UserControllerAlgorithm : UserControllerBase {
 
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            am.PlayerStepByStepInput(false);
+            if (am.IsTutorialStep())
+                am.PlayerStepByStepInput(false);
+            else if (am.IsUserTest())
+            {
+                switch (am.Algorithm.GetAlgorithmName())
+                {
+                    case Util.INSERTION_SORT: ((InsertionSort)am.Algorithm).MovePivotHolder(false); break;
+                }
+            }
         }
         else if (Input.GetKeyDown(KeyCode.E))
-        {
-            am.PlayerStepByStepInput(true);
-        }
+            if (am.IsTutorialStep())
+                am.PlayerStepByStepInput(true);
+            else if (am.IsUserTest())
+            {
+                switch (am.Algorithm.GetAlgorithmName())
+                {
+                    case Util.INSERTION_SORT: ((InsertionSort)am.Algorithm).MovePivotHolder(true); break;
+                }
+            }
+
     }
 
     protected override void PerformAlgorithmControlVR()

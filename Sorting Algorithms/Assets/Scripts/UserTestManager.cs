@@ -156,7 +156,7 @@ public class UserTestManager : UserAlgorithmControl, IBlackboardAble {
         {
             foreach (KeyValuePair<string, int> entry in errorLog)
             {
-                result += entry.Key + ": " + entry.Value + "\n";
+                result += Util.TranslateInstructionForExamination(entry.Key) + ": " + entry.Value + "\n";
             }
         }
         else
@@ -165,8 +165,10 @@ public class UserTestManager : UserAlgorithmControl, IBlackboardAble {
     }
 
     // Error counting
-    public void ReportError(string instructionID)
+    public void ReportError(int sortingElementID)
     {
+        string instructionID = instructions[currentInstructionNr].Instruction; //GetComponent<ElementManager>().GetSortingElement(sortingElementID).GetComponent<SortingElementBase>().Instruction.Instruction;
+        //Debug.LogError("What went wrong: " + Util.TranslateInstructionForExamination(instructionID));
         totalErrorCount++;
         if (errorLog.ContainsKey(instructionID))
             errorLog[instructionID] += 1;

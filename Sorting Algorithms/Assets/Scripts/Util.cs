@@ -22,6 +22,9 @@ public class Util : MonoBehaviour {
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop";
     public const string END_LOOP_INST = "End of loop";
 
+    // Skip words
+    public static readonly string SKIP_NO_ELEMENT = "Skip no element", SKIP_NO_DESTINATION = "Skip no destination";
+
     // Checking instruction (strings)
     public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
@@ -128,6 +131,20 @@ public class Util : MonoBehaviour {
             case 7: return VR_TEST_ROOM;
             default: return "X";
 
+        }
+    }
+
+    public static string TranslateInstructionForExamination(string instruction)
+    {
+        switch (instruction)
+        {
+            case INIT_INSTRUCTION: return "Wrong non-sorted element moved";
+            case PIVOT_START_INST: return "Wrong pivot chosen";
+            case PIVOT_END_INST: return "Pivot placed wrong";
+            //case COMPARE_START_INST: return "";
+            case COMPARE_END_INST: return "Moved sorted element to wrong holder";
+            case SWITCH_INST: return "Wrong element moved";
+            default: return "Examination error explanation not added (" + instruction + ")";
         }
     }
 

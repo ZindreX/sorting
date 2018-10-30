@@ -23,17 +23,12 @@ public class InsertionSortManager : AlgorithmManagerBase {
         get { return 1; }
     }
 
-    private List<string> skipInst = new List<string>() { Util.FIRST_INSTRUCTION, Util.FINAL_INSTRUCTION };
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        //if (skipInst.Contains(instruction.ElementInstruction))
-        //    return 1;
-
-
         // Get the next instruction
         InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
         Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + insertionSortInstruction.DebugInfo());
-        bool gotSortingElement = !skipInst.Contains(instruction.ElementInstruction);
+        bool gotSortingElement = !insertionSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
 
         if (gotSortingElement)
         {
@@ -41,10 +36,11 @@ public class InsertionSortManager : AlgorithmManagerBase {
             InsertionSortElement sortingElement = elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
 
             // Hands out the next instruction
-            sortingElement.ElementInstruction = insertionSortInstruction;
+            sortingElement.Instruction = insertionSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            sortingElement.NextMove = true;
+            if (instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction  == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
+                sortingElement.NextMove = true;
         }
 
         // Display help on blackboard
@@ -55,7 +51,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
                 return 0;
             return 1;
         }
-        else if (insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
+        else if (insertionSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction)) // insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
                 return 1;
         else
             return 0;

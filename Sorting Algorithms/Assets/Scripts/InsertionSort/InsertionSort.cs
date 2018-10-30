@@ -39,6 +39,16 @@ public class InsertionSort : Algorithm {
         get { return pivotHolder; }
     }
 
+    public override void AddSkipAbleInstructions()
+    {
+        base.AddSkipAbleInstructions();
+        skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FINAL_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.COMPARE_START_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.COMPARE_END_INST);
+    }
+
     public override string CollectLine(int lineNr)
     {
         switch (lineNr)
@@ -305,7 +315,7 @@ public class InsertionSort : Algorithm {
         // Gather part of code to highlight
         int i = inst.I, j = inst.J;
         List<int> lineOfCode = new List<int>();
-        switch (inst.ElementInstruction)
+        switch (inst.Instruction)
         {
             case Util.PIVOT_START_INST:
                 if (increment)
@@ -381,7 +391,7 @@ public class InsertionSort : Algorithm {
         }
 
         // Move sorting element
-        switch (inst.ElementInstruction)
+        switch (inst.Instruction)
         {
             case Util.PIVOT_START_INST:
             case Util.SWITCH_INST:
@@ -413,7 +423,7 @@ public class InsertionSort : Algorithm {
         // Gather part of code to highlight
         int i = inst.I, j = inst.J;
         List<int> lineOfCode = new List<int>();
-        switch (inst.ElementInstruction)
+        switch (inst.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
                 lineOfCode.Add(1);
@@ -541,5 +551,24 @@ public class InsertionSort : Algorithm {
     private void PivotHolderVisible(bool enable)
     {
         pivotHolderClone.GetComponentInChildren<MeshRenderer>().enabled = enable;
+    }
+
+    public void MovePivotHolder(bool increment)
+    {
+        if (increment && pivotHolder.PositionIndex < GetComponent<HolderManager>().Holders.Length - 1)
+        {
+            pivotHolder.transform.position += new Vector3(1f, 0f, 0f);
+            pivotHolder.PositionIndex++;
+            if (pivotHolder.CurrentHolding != null)
+                pivotHolder.CurrentHolding.transform.position += new Vector3(1f, 0f, 0f);
+        }
+        else if (!increment && pivotHolder.PositionIndex > 0)
+        {
+            pivotHolder.transform.position -= new Vector3(1f, 0f, 0f);
+            pivotHolder.PositionIndex--;
+            if (pivotHolder.CurrentHolding != null)
+                pivotHolder.CurrentHolding.transform.position -= new Vector3(1f, 0f, 0f);
+        }
+            
     }
 }

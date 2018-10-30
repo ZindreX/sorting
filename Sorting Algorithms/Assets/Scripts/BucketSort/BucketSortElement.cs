@@ -12,10 +12,10 @@ public class BucketSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        ElementInstruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, false, false, false);
+        Instruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, false, false, false);
     }
 
-    public override InstructionBase ElementInstruction
+    public override InstructionBase Instruction
     {
         get { return bucketSortInstruction; }
         set { bucketSortInstruction = (BucketSortInstruction)value; UpdateSortingElementState(); }
@@ -38,7 +38,7 @@ public class BucketSortElement : SortingElementBase {
         if (bucketSortInstruction != null)
         {
             // Debugging
-            instruction = bucketSortInstruction.ElementInstruction;
+            instruction = bucketSortInstruction.Instruction;
             hID = bucketSortInstruction.HolderID;
             nextHolderID = bucketSortInstruction.NextHolderID;
             nextBucketID = bucketSortInstruction.BucketID;

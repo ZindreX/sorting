@@ -26,7 +26,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
     private List<string> skipInst = new List<string>() { Util.FIRST_INSTRUCTION, Util.UPDATE_LOOP_INST, Util.END_LOOP_INST, Util.FINAL_INSTRUCTION };
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        if (skipInst.Contains(instruction.ElementInstruction))
+        if (skipInst.Contains(instruction.Instruction))
             return 2;
 
         // Get the next two instructions
@@ -37,8 +37,8 @@ public class BubbleSortManager : AlgorithmManagerBase {
         BubbleSortElement s2 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
             
         // Hand the instructions out
-        s1.ElementInstruction = bubbleInstruction;
-        s2.ElementInstruction = bubbleInstruction;
+        s1.Instruction = bubbleInstruction;
+        s2.Instruction = bubbleInstruction;
 
         // Give next move permission
         s1.NextMove = true;
@@ -53,7 +53,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
         }
         else
         {
-            if (Util.skipAbleInstructions.Contains(instruction.ElementInstruction)) // skipping until next user move
+            if (Util.skipAbleInstructions.Contains(instruction.Instruction)) // skipping until next user move
                 return 2;
         }
         return 0;

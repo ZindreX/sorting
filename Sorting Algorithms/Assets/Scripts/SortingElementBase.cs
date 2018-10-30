@@ -80,7 +80,8 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
     public bool NextMove
     {
-        set { nextMove = value; }
+        get { return nextMove; }
+        set { nextMove = value; Debug.Log("NextMove given to [" + this.value + "]"); }
     }
 
     public bool Moving
@@ -127,7 +128,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             userMove++;
             holder.HasPermission = true;
 
-            Debug.Log("Can validate: " + (validatedUserMove < userMove) + " : " + validatedUserMove + " < " + userMove);
+            //Debug.Log("Can validate: " + (validatedUserMove < userMove) + " : " + validatedUserMove + " < " + userMove);
             // Validates the move and notifies whether we're ready to go to next instrution
             if (validatedUserMove < userMove)
             {
@@ -156,15 +157,15 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                 // Mark instruction as executed if correct
                 if (standingInCorrectHolder)
                 {
-                    ElementInstruction.Status = Util.EXECUTED_INST;
+                    Instruction.Status = Util.EXECUTED_INST;
                     status = Util.EXECUTED_INST; // Debugging
 
 
                     // Check if ready for next round
-                    if (nextMove)
+                    if (NextMove)
                     {
                         parent.GetComponent<UserTestManager>().ReadyForNext += 1;
-                        nextMove = false;
+                        NextMove = false;
                     }
                 }
                 validatedUserMove++;
@@ -177,7 +178,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
     protected bool CanValidate()
     {
-        return ElementInstruction != null && currentStandingOn != null;
+        return Instruction != null && currentStandingOn != null;
     }
 
     // --------------------------------------- Mouse (will be replaced by VR stuff later) ---------------------------------------
@@ -233,6 +234,6 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     protected abstract void UpdateSortingElementState();
 
     // Get & set instruction
-    public abstract InstructionBase ElementInstruction { get; set; } // TODO: Fix
+    public abstract InstructionBase Instruction { get; set; }
 
 }

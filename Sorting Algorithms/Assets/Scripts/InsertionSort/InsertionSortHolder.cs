@@ -5,6 +5,7 @@ using UnityEngine;
 public class InsertionSortHolder : HolderBase
 {
     private bool isPivotHolder = false;
+    private int positionIndex = 1;
 
     public override string MyRole()
     {
@@ -19,13 +20,19 @@ public class InsertionSortHolder : HolderBase
         set { isPivotHolder = value; }
     }
 
+    public int PositionIndex
+    {
+        get { return positionIndex; }
+        set { positionIndex = value; }
+    }
+
     protected override void UpdateColorOfHolder()
     {
         if (!currentHolding.StandingInCorrectHolder)
         {
             CurrentColor = Util.ERROR_COLOR;
             if (hasPermission)
-                parent.GetComponent<UserTestManager>().ReportError(currentHolding.GetComponent<SortingElementBase>().ElementInstruction.ElementInstruction);
+                parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
             hasPermission = false;
         }
         else if (CurrentHolding.IntermediateMove)

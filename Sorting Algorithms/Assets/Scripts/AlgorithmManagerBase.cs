@@ -131,7 +131,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     tutorialStep.PlayerMove = false;
                     InstructionBase instruction = tutorialStep.GetStep();
 
-                    if (instruction.ElementInstruction == Util.FIRST_INSTRUCTION)
+                    if (instruction.Instruction == Util.FIRST_INSTRUCTION)
                     {
                         tutorialStep.FirstInstruction = true;
                         algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
@@ -142,7 +142,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
                     }
 
-                    if (instruction.ElementInstruction == Util.FINAL_INSTRUCTION)
+                    if (instruction.Instruction == Util.FINAL_INSTRUCTION)
                     {
                         tutorialStep.FinalInstruction = true;
                         algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
@@ -153,7 +153,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
                     }
 
-                    if (instruction.ElementInstruction != Util.FIRST_INSTRUCTION && instruction.ElementInstruction != Util.FINAL_INSTRUCTION)
+                    if (instruction.Instruction != Util.FIRST_INSTRUCTION && instruction.Instruction != Util.FINAL_INSTRUCTION)
                         algorithm.ExecuteOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
                 }
             }
@@ -248,6 +248,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // --------------------------------------- Getters and setters ---------------------------------------
 
+    public Algorithm Algorithm
+    {
+        get { return algorithm; }
+    }
+
     protected string GetAlgorithmName
     {
         get { return algorithm.GetAlgorithmName(); }
@@ -267,6 +272,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         get { return holderPositions; }
         set { holderPositions = value; }
+    }
+
+    public string TeachingModeString
+    {
+        get { return teachingModeString; }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
@@ -413,7 +423,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         int count = 0;
         for (int x=0; x < instructions.Count; x++)
         {
-            if (!algorithm.SkipAbleInstructions.Contains(instructions[x].ElementInstruction))
+            if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction))
                 count++;
         }
         return count;
