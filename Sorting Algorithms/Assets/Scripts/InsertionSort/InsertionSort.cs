@@ -17,8 +17,8 @@ public class InsertionSort : Algorithm {
 
     private InsertionSortHolder pivotHolder;
 
-    private Vector3 tutorialHeight1 = new Vector3(0f, 1f, 0f), tutorialHeight2;
-    private Vector3 userTestHeight = new Vector3(0f, 1.5f, 0f);
+    private Vector3 tutorialHeight1 = new Vector3(0f, 0.1f, 0f), tutorialHeight2;
+    private Vector3 userTestHeight = new Vector3(0f, 0.15f, 0f);
 
     private InsertionSortManager insertionSortManager;
 

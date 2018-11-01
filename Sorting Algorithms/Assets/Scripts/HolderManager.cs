@@ -42,7 +42,7 @@ public class HolderManager : MonoBehaviour, IManager {
 
         for (int x = 0; x < numberOfHolders; x++)
         {
-            holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3(x, 0f, 0f), Quaternion.identity);
+            holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3((x * 0.2f), 0f, 0f), Quaternion.identity);
             holders[x].GetComponent<HolderBase>().Parent = gameObject; // null(?): add C# script to holder / sorting elements
         }
         containsHolders = true;
