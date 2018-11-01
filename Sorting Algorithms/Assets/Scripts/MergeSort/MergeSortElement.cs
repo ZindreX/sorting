@@ -7,7 +7,7 @@ public class MergeSortElement : SortingElementBase {
     private MergeSortInstruction mergeSortInstruction;
 
 
-    public override InstructionBase ElementInstruction
+    public override InstructionBase Instruction
     {
         get { return mergeSortInstruction; }
         set { mergeSortInstruction = (MergeSortInstruction)value; UpdateSortingElementState(); }

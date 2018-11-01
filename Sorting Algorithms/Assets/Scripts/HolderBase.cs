@@ -35,7 +35,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
     private bool isValidSortingElement(SortingElementBase element)
     {
-        return element != null && element.ElementInstruction != null;
+        return element != null && element.Instruction != null;
     }
 
     public virtual string MyRole()

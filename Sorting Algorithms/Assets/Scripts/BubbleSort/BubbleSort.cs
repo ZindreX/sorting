@@ -258,7 +258,7 @@ public class BubbleSort : Algorithm {
 
         // Change internal state of following sorting elements
         BubbleSortElement se1 = null, se2 = null;
-        if (instruction.ElementInstruction != Util.UPDATE_LOOP_INST && instruction.ElementInstruction != Util.END_LOOP_INST)
+        if (instruction.Instruction != Util.UPDATE_LOOP_INST && instruction.Instruction != Util.END_LOOP_INST)
         {
             se1 = GetComponent<ElementManager>().GetSortingElement(inst.SortingElementID1).GetComponent<BubbleSortElement>();
             se2 = GetComponent<ElementManager>().GetSortingElement(inst.SortingElementID2).GetComponent<BubbleSortElement>();
@@ -273,7 +273,7 @@ public class BubbleSort : Algorithm {
         // Gather part of code to highlight
         int i = inst.I, j = inst.J;
         List<int> lineOfCode = new List<int>();
-        switch (inst.ElementInstruction)
+        switch (inst.Instruction)
         {
             case Util.UPDATE_LOOP_INST:
                 lineOfCode.Add(2);
@@ -349,7 +349,7 @@ public class BubbleSort : Algorithm {
         }
 
         // Move sorting element
-        switch (inst.ElementInstruction)
+        switch (inst.Instruction)
         {
             case Util.COMPARE_START_INST:
                 if (se1.CurrentStandingOn != null && se2.CurrentStandingOn != null)

@@ -58,7 +58,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         // Get the next instruction
         BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
 
-        if (bucketSortInstruction.ElementInstruction == Util.PHASING_INST)
+        if (bucketSortInstruction.Instruction == Util.PHASING_INST)
         {
             // Phase into Insertion Sort (?)
             AutoSort();
@@ -70,7 +70,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             BucketSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<BucketSortElement>();
 
             // Hands out the next instruction
-            sortingElement.ElementInstruction = bucketSortInstruction;
+            sortingElement.Instruction = bucketSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
             sortingElement.NextMove = true;

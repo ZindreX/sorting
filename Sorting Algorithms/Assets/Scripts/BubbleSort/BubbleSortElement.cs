@@ -9,10 +9,10 @@ public class BubbleSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        ElementInstruction = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, sortingElementID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, false, false);
+        Instruction = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, sortingElementID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, false, false);
     }
 
-    public override InstructionBase ElementInstruction
+    public override InstructionBase Instruction
     {
         get { return bubbleSortInstruction; }
         set { bubbleSortInstruction = (BubbleSortInstruction)value; UpdateSortingElementState(); }
@@ -23,10 +23,10 @@ public class BubbleSortElement : SortingElementBase {
         if (bubbleSortInstruction != null)
         {
             // Debugging
-            instruction = bubbleSortInstruction.ElementInstruction;
+            instruction = bubbleSortInstruction.Instruction;
 
             hID = bubbleSortInstruction.GetHolderFor(sortingElementID);
-            if (bubbleSortInstruction.ElementInstruction == Util.SWITCH_INST)
+            if (bubbleSortInstruction.Instruction == Util.SWITCH_INST)
                 nextHolderID = bubbleSortInstruction.SwitchToHolder(sortingElementID);
             else
                 nextHolderID = bubbleSortInstruction.GetHolderFor(sortingElementID);

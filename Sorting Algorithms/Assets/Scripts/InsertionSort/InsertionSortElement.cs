@@ -10,7 +10,7 @@ public class InsertionSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        ElementInstruction = new InsertionSortInstruction(sortingElementID, sortingElementID, Util.INIT_STATE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, false, false, false);
+        Instruction = new InsertionSortInstruction(sortingElementID, sortingElementID, Util.INIT_STATE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, false, false, false);
     }
 
     public bool IsPivot
@@ -19,7 +19,7 @@ public class InsertionSortElement : SortingElementBase {
         set { isPivot = value; }
     }
 
-    public override InstructionBase ElementInstruction
+    public override InstructionBase Instruction
     {
         get { return insertionSortInstruction; }
         set { insertionSortInstruction = (InsertionSortInstruction)value; UpdateSortingElementState(); }
@@ -30,7 +30,7 @@ public class InsertionSortElement : SortingElementBase {
         if (insertionSortInstruction != null)
         {
             // Debugging
-            instruction = insertionSortInstruction.ElementInstruction;
+            instruction = insertionSortInstruction.Instruction;
             hID = insertionSortInstruction.HolderID;
             nextHolderID = insertionSortInstruction.NextHolderID;
 
@@ -68,14 +68,11 @@ public class InsertionSortElement : SortingElementBase {
 
     protected override string IsCorrectlyPlaced()
     {
-        Debug.Log("IsCorrectlyPlaced()");
         if (CanValidate())
         {
-            Debug.Log("Can idd validate");
             if (!insertionSortInstruction.HasBeenExecuted())
             {
-                Debug.Log("Not executed");
-                switch (insertionSortInstruction.ElementInstruction)
+                switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:
                         return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
@@ -87,6 +84,7 @@ public class InsertionSortElement : SortingElementBase {
                         return (((InsertionSortHolder)currentStandingOn).IsPivotHolder || currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.COMPARE_START_INST:
+                        Debug.LogError("Wuuut?");
                         break;
 
                     case Util.COMPARE_END_INST:
@@ -110,8 +108,7 @@ public class InsertionSortElement : SortingElementBase {
             }
             else
             {
-                Debug.Log("Testing moving to wrong holder (already executed instruction)");
-                switch (insertionSortInstruction.ElementInstruction)
+                switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:
                         return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
@@ -129,7 +126,7 @@ public class InsertionSortElement : SortingElementBase {
                         return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.SWITCH_INST:
-                        return (intermediateMove && insertionSortInstruction.NextHolderID == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return (insertionSortInstruction.NextHolderID == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
                 }
