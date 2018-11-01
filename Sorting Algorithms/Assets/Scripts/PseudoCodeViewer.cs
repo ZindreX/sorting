@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PseudoCodeViewer : MonoBehaviour {
 
-    public static readonly float SPACE_BETWEEN_CODE_LINES = 0.7f;
+    public static readonly float SPACE_BETWEEN_CODE_LINES = 0.2f;
 
     //[SerializeField]
     private TextMesh[] codeLines;
