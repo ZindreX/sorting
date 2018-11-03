@@ -25,38 +25,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     */
 
     // Algorithm settings
-    [SerializeField]
     private int numberOfElements = 8;
-
-    // Settings
-    //[SerializeField]
-    //private bool isTutorial = true;
-    [SerializeField]
-    private bool helpEnabled = false, noDuplicates = false, worstCase = false, bestCase = false;
-
+    private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
+    private bool duplicates = true, helpEnabled = true;
 
     // Drop down in editor for teaching mode
-    [SerializeField]
-    private TeachingMode teachingMode;
-    private enum TeachingMode
-    {
-        Tutorial,
-        TutorialStep,
-        UserTest
-    };
-
-    // Drop down in editor for difficulty
-    [SerializeField]
-    private DifficultyLevel difficultyLevel;
-    private enum DifficultyLevel
-    {
-        Beginner,
-        Intermediate,
-        Examination,
-    }
-
     private string algorithmName, difficultyLevelString, teachingModeString;
-    private string[] rules = new string[Util.NUMBER_OF_RULE_TYPES];
     private int titleIndex = 0, textIndex = 1;
 
     private Vector3[] holderPositions;
@@ -74,31 +48,21 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     protected virtual void Awake()
     {
-        if (IsValidSetup())
-        {
-            // *** Mode and difficulty *** (drop down menu in editor)
-            teachingModeString = ConvertMode(teachingMode);
-            difficultyLevelString = ConvertDifficulty(difficultyLevel);
+        // *** Objects ***
+        displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
 
-            // ***  Rules ***
-            InitRules();
+        holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
+        elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
+        userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
+        tutorialStep = GetComponent(typeof(TutorialStep)) as TutorialStep;
 
-            // *** Objects ***
-            displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
+        // Setup algorithm in their respective <Algorithm name>Manager
+        algorithm = InstanceOfAlgorithm;
+        algorithmName = algorithm.GetAlgorithmName();
+        algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
+        algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
 
-            holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
-            elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
-            userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
-            tutorialStep = GetComponent(typeof(TutorialStep)) as TutorialStep;
-
-            // Setup algorithm in their respective <Algorithm name>Manager
-            algorithm = InstanceOfAlgorithm;
-            algorithmName = algorithm.GetAlgorithmName();
-            algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
-            algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
-
-            SetAboveHolderForTeachingMode();
-        }
+        SetAboveHolderForTeachingMode();
     }
 
 
@@ -192,27 +156,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         }
     }
 
-    // Check if valid is possible to perform - TODO: Fix elsewhere so this isn't needed
-    private bool IsValidSetup()
-    {
-        return (!worstCase && !bestCase) || (worstCase != bestCase);
-    }
-
-    /* --------------------------------------- Creation with rules ---------------------------------------
-     * rules[0]: duplicates etc.
-     * rules[1]: worst-/bestcase
-    */
-    private void InitRules()
-    {
-        if (noDuplicates)
-            rules[0] = Util.DUPLICATES;
-
-        if (worstCase)
-            rules[1] = Util.WORST_CASE;
-        else if (bestCase)
-            rules[1] = Util.BEST_CASE;
-    }
-
     /* --------------------------------------- Instatiate Setup ---------------------------------------
      * > Called from UserController
      * > Creates the holders and the sorting elements
@@ -222,6 +165,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         holderManager.CreateObjects(numberOfElements, null);
         HolderPositions = holderManager.GetHolderPositions();
         elementManager.CreateObjects(numberOfElements, HolderPositions);
+
         // Disable Drag if tutorial
         if (IsTutorial())
         {
@@ -229,6 +173,13 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             {
                 elementManager.GetSortingElement(x).GetComponent<Drag>().enabled = false; // not working
             }
+        }
+
+        switch (teachingMode)
+        {
+            case Util.TUTORIAL: PerformAlgorithmTutorial(); break;
+            case Util.STEP_BY_STEP: PerformAlgorithmTutorialStep(); break;
+            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
     }
 
@@ -261,11 +212,13 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public int NumberOfElements
     {
         get { return numberOfElements; }
+        set { numberOfElements = value; }
     }
 
     public bool HelpEnabled
     {
         get { return helpEnabled; }
+        set { helpEnabled = value; }
     }
 
     public Vector3[] HolderPositions
@@ -274,9 +227,25 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         set { holderPositions = value; }
     }
 
-    public string TeachingModeString
+    public string TeachingMode
     {
-        get { return teachingModeString; }
+        get { return teachingMode; }
+        set { teachingMode = value; }
+    }
+
+    public string Difficulty
+    {
+        set { difficulty = value; }
+    }
+
+    public string SortingCase
+    {
+        set { sortingCase = value; }
+    }
+
+    public bool Duplicates
+    {
+        set { duplicates = value; }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
@@ -290,67 +259,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         tutorialStep.NotifyUserInput(increment);
     }
 
-    public void SetDifficulty(string difficultyLevel)
-    {
-        difficultyLevelString = difficultyLevel;
-        userTestManager.DifficultyLevel = difficultyLevel;
-        switch (difficultyLevel)
-        {
-            case Util.BEGINNER: userTestManager.DifficultyMultiplier = 1; break;
-            case Util.INTERMEDIATE: userTestManager.DifficultyMultiplier = 2; break;
-            case Util.EXAMINATION: userTestManager.DifficultyMultiplier = 3; break;
-            default: Debug.LogError("Difficulty '" + difficultyLevel + "' not implemented."); break;
-        }
-    }
-
-    private string ConvertMode(TeachingMode value)
-    {
-        switch ((int)value)
-        {
-            case 0: return Util.TUTORIAL;
-            case 1: return Util.TUTORIAL_STEP;
-            case 2: return Util.USER_TEST;
-            default: return "Cannot convert '" + value + "'";
-        }
-    }
-
-    private TeachingMode ConvertMode(string value)
-    {
-        switch (value)
-        {
-            case Util.TUTORIAL: return TeachingMode.Tutorial;
-            case Util.TUTORIAL_STEP: return TeachingMode.TutorialStep;
-            case Util.USER_TEST: return TeachingMode.UserTest;
-            default:
-                Debug.Log("Value '" + value + "' not valid, setting to Tutorial");
-                return TeachingMode.Tutorial;
-        }
-    }
-
-    private string ConvertDifficulty(DifficultyLevel value)
-    {
-        switch ((int)value)
-        {
-            case 0: return Util.BEGINNER;
-            case 1: return Util.INTERMEDIATE;
-            case 2: return Util.EXAMINATION;
-            default: return "Cannot convert '" + value + "'";
-        }
-    }
-
-    private DifficultyLevel ConvertDifficulty(string value)
-    {
-        switch (value)
-        {
-            case Util.BEGINNER: return DifficultyLevel.Beginner;
-            case Util.INTERMEDIATE: return DifficultyLevel.Intermediate;
-            case Util.EXAMINATION: return DifficultyLevel.Examination;
-            default:
-                Debug.Log("Value not valid, setting to beginner level");
-                return DifficultyLevel.Beginner;
-        }
-    }
-
     // **
 
     public void SetAboveHolderForTeachingMode()
@@ -358,7 +266,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         switch (teachingModeString)
         {
             case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.1f, 0f); break;
-            case Util.TUTORIAL_STEP: algorithm.AboveHolder = new Vector3(0f, 0.5f, 0f); break;
+            case Util.STEP_BY_STEP: algorithm.AboveHolder = new Vector3(0f, 0.5f, 0f); break;
             case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.5f, 0f); break;
             default: Debug.Log("Teaching mode '" + teachingMode + "' hasnt't defined aboveHolder variable"); break;
         }
@@ -366,12 +274,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     public bool IsTutorial()
     {
-        return teachingModeString == Util.TUTORIAL || teachingModeString == Util.TUTORIAL_STEP;
+        return teachingModeString == Util.TUTORIAL || teachingModeString == Util.STEP_BY_STEP;
     }
 
     public bool IsTutorialStep()
     {
-        return teachingModeString == Util.TUTORIAL_STEP;
+        return teachingModeString == Util.STEP_BY_STEP;
     }
 
     public bool IsUserTest()

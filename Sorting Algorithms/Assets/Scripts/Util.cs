@@ -30,10 +30,10 @@ public class Util : MonoBehaviour {
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
 
     // Rules (cases)
-    public const string WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
+    public const string NONE = "None", WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
 
     // Teaching modes
-    public const string TUTORIAL = "Tutorial", TUTORIAL_STEP = "Tutorial step", USER_TEST = "User test";
+    public const string TUTORIAL = "Tutorial", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
 
     // Rooms
     public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";

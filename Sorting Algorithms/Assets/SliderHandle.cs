@@ -5,6 +5,9 @@ using UnityEngine;
 public class SliderHandle : MonoBehaviour {
 
     [SerializeField]
+    private Transform startpos, endPos;
+
+    [SerializeField]
     private int fromValue, toValue, interval;
     private int sliderLength;
 
