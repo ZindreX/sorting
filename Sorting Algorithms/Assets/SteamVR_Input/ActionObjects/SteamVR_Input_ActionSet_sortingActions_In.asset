@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e15994988468dc4595c2f04b70c56f1, type: 3}
+  m_Name: SteamVR_Input_ActionSet_sortingActions_In
+  m_EditorClassIdentifier: 
+  actionSet: {fileID: 0}
+  listDirection: 0
+  actions:
+  - {fileID: 11400000, guid: ba20737b4f5c0fb45951ae5989e9af4c, type: 2}
+  - {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
+  - {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
+  - {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  Teleport: {fileID: 11400000, guid: ba20737b4f5c0fb45951ae5989e9af4c, type: 2}
+  Grab: {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
+  Increment: {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
+  Decrement: {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}

@@ -71,7 +71,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4445457620290920}
   - component: {fileID: 114493305555253430}
-  - component: {fileID: 114963105575435102}
   - component: {fileID: 33179666926000228}
   - component: {fileID: 23762141814430042}
   - component: {fileID: 54468815750720256}
@@ -707,12 +706,34 @@ MonoBehaviour:
   snapAttachEaseInTime: 0.15
   onPickUp:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114493305555253430}
+        m_MethodName: set_Moving
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   onDetachFromHand:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114493305555253430}
+        m_MethodName: set_Moving
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   snapAttachEaseInCompleted: 0
@@ -731,18 +752,6 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
---- !u!114 &114963105575435102
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1486772700085944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7867fa4de41f334abfaaa431c656529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 20793796626688050, guid: e4150389fc3aa9d44994f22169f81b9d, type: 2}
 --- !u!114 &114968082341380962
 MonoBehaviour:
   m_ObjectHideFlags: 1

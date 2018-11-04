@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e31b1533e312d9448f62b705ae467fe, type: 3}
+  m_Name: __actions_sortingActions
+  m_EditorClassIdentifier: 
+  allActions:
+  - {fileID: 11400000, guid: ba20737b4f5c0fb45951ae5989e9af4c, type: 2}
+  - {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
+  - {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
+  - {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  - {fileID: 11400000, guid: 6cf806719c4008e468d386e4a241ffb3, type: 2}
+  nonVisualInActions:
+  - {fileID: 11400000, guid: ba20737b4f5c0fb45951ae5989e9af4c, type: 2}
+  - {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
+  - {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
+  - {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  visualActions: []
+  poseActions: []
+  skeletonActions: []
+  outActionArray:
+  - {fileID: 11400000, guid: 6cf806719c4008e468d386e4a241ffb3, type: 2}
+  fullPath: /actions/sortingActions
+  usage: leftright
+  inActions: {fileID: 11400000, guid: f4fd7592bfd2cd34a979ac41801097b5, type: 2}
+  outActions: {fileID: 11400000, guid: c44a01477195be444b20985d7b8e80d1, type: 2}

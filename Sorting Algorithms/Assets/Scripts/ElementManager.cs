@@ -41,7 +41,7 @@ public class ElementManager : MonoBehaviour, IManager {
         sortingElements = new GameObject[numberOfElements]; // Util.CreateObjects(sortingElementPrefab, numberOfElements, positions, gameObject);
         for (int x = 0; x < numberOfElements; x++)
         {
-            sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + new Vector3(0f, 0.4f, 0f), Quaternion.identity);
+            sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + Util.ABOVE_HOLDER_VR, Quaternion.identity);
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
         }
 
@@ -50,6 +50,8 @@ public class ElementManager : MonoBehaviour, IManager {
             // Hotfix (sorting element currentHolding / prevHolding problem)
             sortingElements[x].GetComponent<SortingElementBase>().PlaceManuallySortingElementOn(GetComponent<HolderManager>().Holders[x].GetComponent<HolderBase>());
         }
+
+        containsElements = true;
     }
 
     // Destroys all elements + reset

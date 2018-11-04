@@ -25,6 +25,10 @@
  * 
  * 
  * 
+ * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************
+ * 
+ * > Change 'moving' variable when picking up/releasing a sorting element
+ * 
  * 
  * 
  * 

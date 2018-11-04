@@ -196,13 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1855e87154f5df4caca433319f1237e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfElements: 8
-  helpEnabled: 0
-  noDuplicates: 0
-  worstCase: 0
-  bestCase: 0
-  teachingMode: 0
-  difficultyLevel: 0
   displayUnitManagerObj: {fileID: 653133743}
   numberOfBuckets: 10
 --- !u!114 &119957889

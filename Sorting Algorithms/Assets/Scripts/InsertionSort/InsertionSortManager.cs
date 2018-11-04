@@ -39,12 +39,12 @@ public class InsertionSortManager : AlgorithmManagerBase {
             sortingElement.Instruction = insertionSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction  == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
+            if (instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
                 sortingElement.NextMove = true;
         }
 
         // Display help on blackboard
-        if (HelpEnabled) // replace with teachingMode == Util.Beginner
+        if (false) //TeachingMode == Util.BEGINNER) // replace with teachingMode == Util.Beginner
         {
             ((InsertionSort)algorithm).UserTestDisplayHelp(instruction, gotSortingElement);
             if (gotSortingElement)
@@ -52,7 +52,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
             return 1;
         }
         else if (insertionSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction)) // insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
-                return 1;
+            return 1;
         else
             return 0;
     }

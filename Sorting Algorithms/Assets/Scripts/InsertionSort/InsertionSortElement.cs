@@ -68,13 +68,13 @@ public class InsertionSortElement : SortingElementBase {
 
     protected override string IsCorrectlyPlaced()
     {
-        Debug.Log("IsCorrectlyPlaced()");
+        //Debug.Log("IsCorrectlyPlaced()");
         if (CanValidate())
         {
-            Debug.Log("Can idd validate");
+            //Debug.Log("Can idd validate");
             if (!insertionSortInstruction.HasBeenExecuted())
             {
-                Debug.Log("Not executed");
+                //Debug.Log("Not executed");
                 switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:
@@ -110,7 +110,7 @@ public class InsertionSortElement : SortingElementBase {
             }
             else
             {
-                Debug.Log("Testing moving to wrong holder (already executed instruction)");
+                //Debug.Log("Testing moving to wrong holder (already executed instruction)");
                 switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:

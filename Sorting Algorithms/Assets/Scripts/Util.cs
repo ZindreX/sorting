@@ -62,6 +62,7 @@ public class Util : MonoBehaviour {
     public static List<string> skipAbleInstructions = new List<string>() { FIRST_INSTRUCTION, FINAL_INSTRUCTION, COMPARE_START_INST, COMPARE_END_INST,
     UPDATE_LOOP_INST };
 
+    public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f);
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 

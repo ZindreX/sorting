@@ -81,12 +81,13 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public bool NextMove
     {
         get { return nextMove; }
-        set { nextMove = value; Debug.Log("NextMove given to [" + this.value + "]"); }
+        set { nextMove = value; }// Debug.Log("NextMove given to [" + this.value + "]"); }
     }
 
     public bool Moving
     {
         get { return moving; }
+        set { moving = value; parent.GetComponent<ElementManager>().NotifyMovingElement(gameObject.GetComponent<SortingElementBase>(), value); }
     }
 
     public bool IntermediateMove
@@ -179,20 +180,6 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     protected bool CanValidate()
     {
         return Instruction != null && currentStandingOn != null;
-    }
-
-    // --------------------------------------- Mouse (will be replaced by VR stuff later) ---------------------------------------
-
-    private void OnMouseDown()
-    {
-        moving = true;
-        parent.GetComponent<ElementManager>().NotifyMovingElement(gameObject.GetComponent<SortingElementBase>(), true);
-    }
-
-    private void OnMouseUp()
-    {
-        moving = false;
-        parent.GetComponent<ElementManager>().NotifyMovingElement(gameObject.GetComponent<SortingElementBase>(), false);
     }
 
     //  --------------------------------------- Collision detection ---------------------------------------

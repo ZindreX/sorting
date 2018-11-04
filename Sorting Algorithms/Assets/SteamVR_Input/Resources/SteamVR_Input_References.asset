@@ -15,10 +15,12 @@ MonoBehaviour:
   - _default
   - platformer
   - buggy
+  - sortingActions
   actionSetObjects:
   - {fileID: 11400000, guid: 4ddd2636522fdf44282a43c14bf03e09, type: 2}
   - {fileID: 11400000, guid: 19d017b8dd9237644ba26d139a1cf95c, type: 2}
   - {fileID: 11400000, guid: a98d13b922d0abe42869ac853067455f, type: 2}
+  - {fileID: 11400000, guid: 4dd65d6f950c4e4488111d86313d1d06, type: 2}
   actionNames:
   - __actions_default_in_InteractUI
   - __actions_default_in_Teleport
@@ -35,6 +37,11 @@ MonoBehaviour:
   - __actions_buggy_in_Throttle
   - __actions_buggy_in_Brake
   - __actions_buggy_in_Reset
+  - __actions_sortingActions_in_Teleport
+  - __actions_sortingActions_in_Grab
+  - __actions_sortingActions_in_Increment
+  - __actions_sortingActions_in_Decrement
+  - __actions_sortingActions_out_Haptic
   actionObjects:
   - {fileID: 11400000, guid: 783cc28985a15a347ae7acc914aee028, type: 2}
   - {fileID: 11400000, guid: 8e492e209ad85ca4dbbd6a4b253290a8, type: 2}
@@ -51,3 +58,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 63860fd36c9150440a7c0510677f7cbe, type: 2}
   - {fileID: 11400000, guid: ff5253451ade763449e672c9fc846201, type: 2}
   - {fileID: 11400000, guid: 8ec5b5099e0fe9c4c97f233ff4fb536e, type: 2}
+  - {fileID: 11400000, guid: ba20737b4f5c0fb45951ae5989e9af4c, type: 2}
+  - {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
+  - {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
+  - {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  - {fileID: 11400000, guid: 6cf806719c4008e468d386e4a241ffb3, type: 2}
