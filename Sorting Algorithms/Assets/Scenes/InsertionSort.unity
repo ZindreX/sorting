@@ -5780,8 +5780,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a778e93635beb3542b003255d44b08e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionSet: {fileID: 11400000, guid: 4ddd2636522fdf44282a43c14bf03e09, type: 2}
-  a_grip: {fileID: 0}
+  incrementAction: {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
+  decrementAction: {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  interactUIAction: {fileID: 11400000, guid: 986ef205035d57d488a883605fcea670, type: 2}
 --- !u!4 &1856165312
 Transform:
   m_ObjectHideFlags: 0
@@ -5803,21 +5804,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1856165310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Script: {fileID: 11500000, guid: 27991c206a5e66147bb8ee3ef31c8bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateActionSetOnAttach: {fileID: 0}
-  hideHandOnAttach: 1
-  hideSkeletonOnAttach: 0
-  hideControllerOnAttach: 0
-  handAnimationOnPickup: 0
-  setRangeOfMotionOnPickup: -1
-  useHandObjectAttachmentPoint: 1
-  handFollowTransform: {fileID: 0}
-  handFollowTransformPosition: 1
-  handFollowTransformRotation: 1
-  highlightOnHover: 1
-  hideHighlight: []
+  actionSet: {fileID: 11400000, guid: 4dd65d6f950c4e4488111d86313d1d06, type: 2}
+  disableAllOtherActionSets: 0
+  activateOnStart: 1
+  deactivateOnDestroy: 1
 --- !u!1 &1862084492
 GameObject:
   m_ObjectHideFlags: 0

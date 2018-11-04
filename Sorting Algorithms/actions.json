@@ -80,6 +80,10 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/sortingActions/in/InteractUI",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/sortingActions/out/Haptic",
       "type": "vibration"
     }

@@ -41,6 +41,7 @@ MonoBehaviour:
   - __actions_sortingActions_in_Grab
   - __actions_sortingActions_in_Increment
   - __actions_sortingActions_in_Decrement
+  - __actions_sortingActions_in_InteractUI
   - __actions_sortingActions_out_Haptic
   actionObjects:
   - {fileID: 11400000, guid: 783cc28985a15a347ae7acc914aee028, type: 2}
@@ -62,4 +63,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
   - {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
   - {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  - {fileID: 11400000, guid: 986ef205035d57d488a883605fcea670, type: 2}
   - {fileID: 11400000, guid: 6cf806719c4008e468d386e4a241ffb3, type: 2}

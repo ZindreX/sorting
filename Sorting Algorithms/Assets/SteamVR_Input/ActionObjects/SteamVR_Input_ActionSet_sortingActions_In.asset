@@ -18,7 +18,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
   - {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
   - {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  - {fileID: 11400000, guid: 986ef205035d57d488a883605fcea670, type: 2}
   Teleport: {fileID: 11400000, guid: ba20737b4f5c0fb45951ae5989e9af4c, type: 2}
   Grab: {fileID: 11400000, guid: cb93c515ccee8dd4c95d158992ed5074, type: 2}
   Increment: {fileID: 11400000, guid: 0f433feaaaf5c7443927b985e47a246e, type: 2}
   Decrement: {fileID: 11400000, guid: d32b0199e5ed75742820f8c8d2b08a73, type: 2}
+  InteractUI: {fileID: 11400000, guid: 986ef205035d57d488a883605fcea670, type: 2}

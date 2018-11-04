@@ -55,6 +55,8 @@ namespace Valve.VR
         
         public static SteamVR_Action_Boolean __actions_sortingActions_in_Decrement;
         
+        public static SteamVR_Action_Boolean __actions_sortingActions_in_InteractUI;
+        
         public static SteamVR_Action_Vibration __actions_sortingActions_out_Haptic;
         
         public static void Dynamic_InitializeActions()
@@ -78,6 +80,7 @@ namespace Valve.VR
             SteamVR_Input.__actions_sortingActions_in_Grab.Initialize();
             SteamVR_Input.__actions_sortingActions_in_Increment.Initialize();
             SteamVR_Input.__actions_sortingActions_in_Decrement.Initialize();
+            SteamVR_Input.__actions_sortingActions_in_InteractUI.Initialize();
             SteamVR_Input.__actions_sortingActions_out_Haptic.Initialize();
         }
         
@@ -102,6 +105,7 @@ namespace Valve.VR
             Valve.VR.SteamVR_Input.__actions_sortingActions_in_Grab = ((SteamVR_Action_Boolean)(SteamVR_Input_References.GetAction("__actions_sortingActions_in_Grab")));
             Valve.VR.SteamVR_Input.__actions_sortingActions_in_Increment = ((SteamVR_Action_Boolean)(SteamVR_Input_References.GetAction("__actions_sortingActions_in_Increment")));
             Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement = ((SteamVR_Action_Boolean)(SteamVR_Input_References.GetAction("__actions_sortingActions_in_Decrement")));
+            Valve.VR.SteamVR_Input.__actions_sortingActions_in_InteractUI = ((SteamVR_Action_Boolean)(SteamVR_Input_References.GetAction("__actions_sortingActions_in_InteractUI")));
             Valve.VR.SteamVR_Input.__actions_sortingActions_out_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Input_References.GetAction("__actions_sortingActions_out_Haptic")));
             Valve.VR.SteamVR_Input.actions = new Valve.VR.SteamVR_Action[]
             {
@@ -124,6 +128,7 @@ namespace Valve.VR
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Grab,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Increment,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement,
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_InteractUI,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_out_Haptic};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.SteamVR_Action_In[]
             {
@@ -144,7 +149,8 @@ namespace Valve.VR
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Teleport,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Grab,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Increment,
-                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement};
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement,
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_InteractUI};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.SteamVR_Action_Out[]
             {
                     Valve.VR.SteamVR_Input.__actions_default_out_Haptic,
@@ -168,7 +174,8 @@ namespace Valve.VR
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Teleport,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Grab,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Increment,
-                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement};
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement,
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_InteractUI};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[]
             {
                     Valve.VR.SteamVR_Input.__actions_default_in_Squeeze,
@@ -198,7 +205,8 @@ namespace Valve.VR
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Teleport,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Grab,
                     Valve.VR.SteamVR_Input.__actions_sortingActions_in_Increment,
-                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement};
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_Decrement,
+                    Valve.VR.SteamVR_Input.__actions_sortingActions_in_InteractUI};
         }
     }
 }

@@ -2,44 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
-using Valve.VR.InteractionSystem;
 
 public class AlgorithmUserController : MonoBehaviour {
 
+    // https://www.youtube.com/watch?v=bn8eMxBcI70
 
-    [SteamVR_DefaultActionSet("default")]
-    public SteamVR_ActionSet actionSet;
+    [SteamVR_DefaultAction("Increment")]
+    public SteamVR_Action_Boolean incrementAction;
 
-    [SteamVR_DefaultAction("Grip", "default")]
-    public SteamVR_Action_Boolean a_grip;
+    [SteamVR_DefaultAction("Decrement")]
+    public SteamVR_Action_Boolean decrementAction;
 
-    private Interactable interactable;
+    [SteamVR_DefaultAction("InteractUI")]
+    public SteamVR_Action_Boolean interactUIAction;
 
-
-    private string teachingMode;
+    private string teachingMode; // create action sets instead
 
 	// Use this for initialization
 	void Start () {
 
-        interactable = GetComponent<Interactable>();
-        interactable.activateActionSetOnAttach = actionSet;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (interactable.attachedToHand)
+        if (SteamVR_Input.__actions_sortingActions_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
         {
-
-            SteamVR_Input_Sources hand = interactable.attachedToHand.handType;
-
-            Debug.Log("Gripping: " + a_grip.GetState(hand));
-
-            if (teachingMode == Util.USER_TEST)
-            {
-
-            }
-
+            Debug.Log("Incrementing");
         }
-	}
+
+        if (SteamVR_Input.__actions_sortingActions_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+        {
+            Debug.Log("Decrementing");
+        }
+
+        if (SteamVR_Input.__actions_sortingActions_in_InteractUI.GetStateDown(SteamVR_Input_Sources.Any))
+        {
+            Debug.Log("Opening menu");
+        }
+
+
+    }
 }
