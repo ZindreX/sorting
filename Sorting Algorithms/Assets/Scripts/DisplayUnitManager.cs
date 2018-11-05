@@ -5,7 +5,7 @@ using UnityEngine;
 public class DisplayUnitManager : MonoBehaviour {
 
     [SerializeField]
-    private GameObject LeftBlackboard, centerBlackboard, rightBlackboard;
+    private GameObject leftBlackboard, centerBlackboard, rightBlackboard;
 
     private Algorithm algorithm;
 
@@ -17,7 +17,7 @@ public class DisplayUnitManager : MonoBehaviour {
 
     public PseudoCodeViewer PseudoCodeViewerFixed
     {
-        get { return LeftBlackboard.GetComponent<PseudoCodeViewer>(); }
+        get { return leftBlackboard.GetComponent<PseudoCodeViewer>(); }
     }
 
     // Algorithm will control this blackboard
@@ -29,6 +29,13 @@ public class DisplayUnitManager : MonoBehaviour {
     public Blackboard BlackBoard
     {
         get { return rightBlackboard.GetComponent<Blackboard>(); }
+    }
+
+    public void ResetDisplays()
+    {
+        leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
+        centerBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
+        rightBlackboard.GetComponent<Blackboard>().EmptyContent();
     }
 
 

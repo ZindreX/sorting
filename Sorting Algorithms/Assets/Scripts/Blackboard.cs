@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blackboard : MonoBehaviour {
+public class Blackboard : MonoBehaviour, IDisplay {
 
     /* -------------------------------------------- Blackboard --------------------------------------------
      * 
@@ -20,4 +20,12 @@ public class Blackboard : MonoBehaviour {
             Debug.Log("Cant acces that line");
     }
 
+
+    public void EmptyContent()
+    {
+        foreach (TextMesh text in texts)
+        {
+            text.text = "";
+        }
+    }
 }

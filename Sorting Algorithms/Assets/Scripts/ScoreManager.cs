@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreManager : MonoBehaviour, IScore, IBlackboardAble {
+public class ScoreManager : MonoBehaviour, IScore {
 
     /* -------------------------------------------- Managing the score --------------------------------------------
      * > Increase streak for each correct move by the user

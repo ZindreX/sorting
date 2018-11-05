@@ -21,7 +21,6 @@ public class HolderManager : MonoBehaviour, IManager {
     void Awake()
     {
         firstHolderPosition = gameObject.transform.position;
-        holders = new GameObject[GetComponent<AlgorithmManagerBase>().NumberOfElements]; // ***
     }
 
     public GameObject[] Holders
@@ -40,6 +39,7 @@ public class HolderManager : MonoBehaviour, IManager {
         if (containsHolders)
             return;
 
+        holders = new GameObject[numberOfHolders]; // ***
         for (int x = 0; x < numberOfHolders; x++)
         {
             holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3((x * 0.2f), 0f, 0f), Quaternion.identity);

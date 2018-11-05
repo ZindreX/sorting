@@ -118,6 +118,11 @@ public class Util : MonoBehaviour {
         return (nextHolderID == NO_DESTINATION) ? "N/A" : nextHolderID.ToString();
     }
 
+    public static string EnabledToString(bool enabled)
+    {
+        return enabled ? "Enabled" : "Disabled";
+    }
+
     public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)
     {
         switch (sceneBuildIndex)

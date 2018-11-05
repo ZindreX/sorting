@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PseudoCodeViewer : MonoBehaviour {
+public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     public static readonly float SPACE_BETWEEN_CODE_LINES = 0.2f;
 
@@ -107,6 +107,14 @@ public class PseudoCodeViewer : MonoBehaviour {
                 CLEAN_HIGHTLIGHT(0, algorithm.FinalInstructionCodeLine() - 1);
                 ChangeColorOfText(algorithm.FinalInstructionCodeLine(), color);
                 break;
+        }
+    }
+
+    public void EmptyContent()
+    {
+        foreach (TextMesh line in codeLines)
+        {
+            line.text = "";
         }
     }
 }

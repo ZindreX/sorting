@@ -97,7 +97,7 @@ public class InsertionSort : Algorithm {
 
     public override void ResetSetup()
     {
-        Destroy(pivotHolder);
+        Destroy(pivotHolderClone);
     }
 
     public void CreatePivotHolder()

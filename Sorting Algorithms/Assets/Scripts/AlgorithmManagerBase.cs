@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(HolderManager))]
 [RequireComponent(typeof(ElementManager))]
@@ -27,7 +28,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Algorithm settings
     private int numberOfElements = 8;
     private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
-    private bool duplicates = true, helpEnabled = true;
+    private bool duplicates = true, helpEnabled = true, userStop = false;
 
     private string algorithmName;
     private int titleIndex = 0, textIndex = 1;
@@ -35,7 +36,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private Vector3[] holderPositions;
 
     [SerializeField]
-    private GameObject displayUnitManagerObj;
+    private GameObject displayUnitManagerObj, teleportToSettings;
 
     // Base object instances
     protected DisplayUnitManager displayUnitManager;
@@ -69,12 +70,15 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     void Start()
     {
         displayUnitManager.BlackBoard.ChangeText(titleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(textIndex, teachingMode);
+        displayUnitManager.BlackBoard.ChangeText(textIndex, "");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (userStop)
+            return;
+
         if (algorithm.IsSortingComplete)
         {
             if (IsUserTest() && userTestManager.TimeSpent == 0)
@@ -155,39 +159,30 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         }
     }
 
-    public void TestButton()
-    {
-        for (int x=0; x < holderManager.Holders.Length; x++)
-        {
-            holderManager.GetHolder(x).CurrentColor = Util.TEST_COLOR;
-        }
-    }
-
     /* --------------------------------------- Instatiate Setup ---------------------------------------
      * > Called from UserController
      * > Creates the holders and the sorting elements
     */
     public void InstantiateSetup()
     {
-        holderManager.CreateObjects(numberOfElements, null);
+        holderManager.CreateObjects(NumberOfElements, null);
         HolderPositions = holderManager.GetHolderPositions();
-        elementManager.CreateObjects(numberOfElements, HolderPositions);
+        elementManager.CreateObjects(NumberOfElements, HolderPositions);
 
-        // Disable Drag if tutorial
-        if (IsTutorial())
-        {
-            for (int x = 0; x < elementManager.SortingElements.Length; x++)
-            {
-                elementManager.GetSortingElement(x).GetComponent<Drag>().enabled = false; // not working
-            }
-        }
-
+        // Display on blackboard
+        displayUnitManager.BlackBoard.ChangeText(titleIndex, algorithmName);
+        displayUnitManager.BlackBoard.ChangeText(textIndex, teachingMode);
+        
         switch (teachingMode)
         {
             case Util.TUTORIAL: PerformAlgorithmTutorial(); break;
             case Util.STEP_BY_STEP: PerformAlgorithmTutorialStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
+        userStop = false;
+        teleportToSettings.GetComponent<TeleportPoint>().enabled = false;
+        teleportToSettings.active = false;
+
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -196,12 +191,16 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      */
     public void DestroyAndReset()
     {
+        userStop = true;
         holderManager.DestroyObjects();
         elementManager.DestroyObjects();
         if (algorithm.IsSortingComplete)
             algorithm.IsSortingComplete = false;
 
         algorithm.ResetSetup();
+        displayUnitManager.ResetDisplays();
+        teleportToSettings.GetComponent<TeleportPoint>().enabled = true;
+        teleportToSettings.active = true;
     }
 
     // --------------------------------------- Getters and setters ---------------------------------------
@@ -219,7 +218,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public int NumberOfElements
     {
         get { return numberOfElements; }
-        set { numberOfElements = value; }
+        set { numberOfElements = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Number of elements: " + value); }
     }
 
     public bool HelpEnabled
@@ -237,22 +236,22 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public string TeachingMode
     {
         get { return teachingMode; }
-        set { teachingMode = value; }
+        set { teachingMode = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Teaching mode: " + value); }
     }
 
     public string Difficulty
     {
-        set { difficulty = value; }
+        set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Difficulty: " + value); }
     }
 
     public string SortingCase
     {
-        set { sortingCase = value; }
+        set { sortingCase = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Case activated: " + value); }
     }
 
     public bool Duplicates
     {
-        set { duplicates = value; }
+        set { duplicates = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Duplicates: " + Util.EnabledToString(value)); }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
