@@ -62,6 +62,13 @@ public class MergeSort : Algorithm {
         }
     }
 
+    public override void Specials(string method, int number, bool activate)
+    {
+        switch (method)
+        {
+            case "Somemethod": FirstInstructionCodeLine(); break; // example: some void method
+        }
+    }
 
     // Tutorial & User test stuff
 

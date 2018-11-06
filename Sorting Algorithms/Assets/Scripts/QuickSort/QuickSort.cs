@@ -26,12 +26,20 @@ public class QuickSort : Algorithm {
 
     public override int FirstInstructionCodeLine()
     {
-        return 1;
+        return 0;
     }
 
     public override int FinalInstructionCodeLine()
     {
-        return 9;
+        return 0;
+    }
+
+    public override void Specials(string method, int number, bool activate)
+    {
+        switch (method)
+        {
+            case "Somemethod": FirstInstructionCodeLine(); break; // example: some void method
+        }
     }
 
     public override void ResetSetup()

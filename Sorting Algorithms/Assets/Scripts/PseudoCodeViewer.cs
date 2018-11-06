@@ -87,12 +87,6 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    public IEnumerator HighlightText(int lineNr, string text)
-    {
-        SetCodeLine(lineNr, text, Util.HIGHLIGHT_COLOR);
-        yield return new WaitForSeconds(seconds);
-        ChangeColorOfText(lineNr, Util.BLACKBOARD_TEXT_COLOR);
-    }
 
     private void PseudoCodeFirstFinal(string instruction, Color color)
     {

@@ -1,6 +1,6 @@
 ﻿
 
-public abstract class InstructionBase {
+public class InstructionBase {
 
     /* -------------------------------------------- Instruction class for user test --------------------------------------------
      * 
@@ -10,13 +10,17 @@ public abstract class InstructionBase {
 
     protected bool isCompare, isSorted;
     protected string instruction, status;
+    protected int i, j;
 
-    public InstructionBase(string instruction, bool isCompare, bool isSorted)
+    public InstructionBase(string instruction, int i, int j, bool isCompare, bool isSorted)
     {
         this.instruction = instruction;
         status = Util.NOT_EXECUTED;
         this.isCompare = isCompare;
         this.isSorted = isSorted;
+        // For step by step tutorial
+        this.i = i;
+        this.j = j;
     }
 
     public string Instruction
@@ -48,9 +52,21 @@ public abstract class InstructionBase {
         return status == Util.EXECUTED_INST;
     }
 
+    public int I
+    {
+        get { return i; }
+    }
+
+    public int J
+    {
+        get { return j; }
+    }
 
     // Debug checker
-    public abstract string DebugInfo();
+    public virtual string DebugInfo()
+    {
+        return "Instruction: " + instruction + ", i=" + i + "|j=" + j;
+    }
 
 
 }

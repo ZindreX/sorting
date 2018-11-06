@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayUnitManagerObj: {fileID: 653133743}
+  teleportToSettings: {fileID: 0}
   numberOfBuckets: 10
 --- !u!114 &119957889
 MonoBehaviour:

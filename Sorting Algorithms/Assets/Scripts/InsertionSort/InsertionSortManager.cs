@@ -26,12 +26,14 @@ public class InsertionSortManager : AlgorithmManagerBase {
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
         // Get the next instruction
-        InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
-        Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + insertionSortInstruction.DebugInfo());
+        //Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + insertionSortInstruction.DebugInfo());
+
         bool gotSortingElement = !insertionSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        bool noDestination = insertionSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
         if (gotSortingElement)
         {
+            InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
             // Get the Sorting element
             InsertionSortElement sortingElement = elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
 
@@ -44,14 +46,16 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
 
         // Display help on blackboard
-        if (false) //TeachingMode == Util.BEGINNER) // replace with teachingMode == Util.Beginner
+        if (Difficulty == Util.BEGINNER)
         {
-            ((InsertionSort)algorithm).UserTestDisplayHelp(instruction, gotSortingElement);
-            if (gotSortingElement)
+            beginnerWait = true;
+            StartCoroutine(((InsertionSort)algorithm).UserTestDisplayHelp(instruction, gotSortingElement));
+
+            if (gotSortingElement && !noDestination)
                 return 0;
             return 1;
         }
-        else if (insertionSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction)) // insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
+        if (noDestination) // insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
             return 1;
         else
             return 0;

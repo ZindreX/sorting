@@ -26,9 +26,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     */
 
     // Algorithm settings
-    private int numberOfElements = 8;
-    private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
-    private bool duplicates = true, helpEnabled = true, userStop = false;
+    private int numberOfElements = 4;
+    private string teachingMode = Util.USER_TEST, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
+    private bool duplicates = true, userStoppedAlgorithm = false;
+    public bool beginnerWait = false;
 
     private string algorithmName;
     private int titleIndex = 0, textIndex = 1;
@@ -76,7 +77,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (userStop)
+        if (userStoppedAlgorithm)
             return;
 
         if (algorithm.IsSortingComplete)
@@ -131,7 +132,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             else // User test
             {
                 // First check if user test setup is complete
-                if (userTestManager.HasInstructions())
+                if (userTestManager.HasInstructions() && !beginnerWait)
                 {
                     // Check if user has done a move, and is ready for next round
                     if (elementManager.CurrentMoving != null)
@@ -179,10 +180,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             case Util.STEP_BY_STEP: PerformAlgorithmTutorialStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
-        userStop = false;
-        teleportToSettings.GetComponent<TeleportPoint>().enabled = false;
-        teleportToSettings.active = false;
-
+        userStoppedAlgorithm = false;
+        teleportToSettings.GetComponent<TeleportPoint>().markerActive = false;
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -191,7 +190,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      */
     public void DestroyAndReset()
     {
-        userStop = true;
+        userStoppedAlgorithm = true;
         holderManager.DestroyObjects();
         elementManager.DestroyObjects();
         if (algorithm.IsSortingComplete)
@@ -199,8 +198,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         algorithm.ResetSetup();
         displayUnitManager.ResetDisplays();
-        teleportToSettings.GetComponent<TeleportPoint>().enabled = true;
-        teleportToSettings.active = true;
+        teleportToSettings.GetComponent<TeleportPoint>().markerActive = true;
     }
 
     // --------------------------------------- Getters and setters ---------------------------------------
@@ -221,12 +219,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         set { numberOfElements = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Number of elements: " + value); }
     }
 
-    public bool HelpEnabled
-    {
-        get { return helpEnabled; }
-        set { helpEnabled = value; }
-    }
-
     public Vector3[] HolderPositions
     {
         get { return holderPositions; }
@@ -241,6 +233,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     public string Difficulty
     {
+        get { return difficulty; }
         set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Difficulty: " + value); }
     }
 
@@ -267,6 +260,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // **
 
+    // Need this method anymore?
     public void SetAboveHolderForTeachingMode()
     {
         switch (teachingMode)
@@ -337,8 +331,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         int count = 0;
         for (int x=0; x < instructions.Count; x++)
         {
-            if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction))
+            if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
                 count++;
+
         }
         return count;
     }

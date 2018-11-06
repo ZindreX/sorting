@@ -85,15 +85,21 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     {
         skipDict.Add(Util.SKIP_NO_ELEMENT, new List<string>());
         skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FIRST_LOOP);
         skipDict[Util.SKIP_NO_ELEMENT].Add(Util.UPDATE_LOOP_INST);
         skipDict[Util.SKIP_NO_ELEMENT].Add(Util.END_LOOP_INST);
         skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FINAL_INSTRUCTION);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.INCREMENT_VAR_I);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.SET_VAR_J);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.UPDATE_VAR_J);
     }
-
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
     public abstract string GetAlgorithmName();
     public abstract void ResetSetup();
+
+    // To do stuff important for individual classes
+    public abstract void Specials(string method, int number, bool activate);
 
 
     /* Collects one line of code at a time and rewrites it into pseudocode

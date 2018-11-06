@@ -21,6 +21,10 @@ public class Util : MonoBehaviour {
     public const string MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop";
     public const string END_LOOP_INST = "End of loop";
+    public const string INCREMENT_VAR_I = "Increment variable i", SET_VAR_J = "Set variable j", UPDATE_VAR_J = "Update variable J", FIRST_LOOP = "First loop";
+
+    // Other instructions
+    public const string INCREMENT = "Incremenet", DECREMENT = "Decrement";
 
     // Skip words
     public static readonly string SKIP_NO_ELEMENT = "Skip no element", SKIP_NO_DESTINATION = "Skip no destination";
@@ -63,6 +67,7 @@ public class Util : MonoBehaviour {
     UPDATE_LOOP_INST };
 
     public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f);
+    public static float SPACE_BETWEEN_HOLDERS = 0.2f;
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 

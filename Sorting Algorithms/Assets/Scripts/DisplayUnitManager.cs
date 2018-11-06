@@ -33,8 +33,8 @@ public class DisplayUnitManager : MonoBehaviour {
 
     public void ResetDisplays()
     {
-        leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
-        centerBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
+        //leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
+        //centerBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
         rightBlackboard.GetComponent<Blackboard>().EmptyContent();
     }
 

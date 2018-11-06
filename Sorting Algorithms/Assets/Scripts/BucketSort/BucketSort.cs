@@ -74,6 +74,15 @@ public class BucketSort : Algorithm {
         Debug.Log("Nothing to reset?");
     }
 
+    public override void Specials(string method, int number, bool activate)
+    {
+        switch (method)
+        {
+            case "Somemethod": FirstInstructionCodeLine(); break; // example: some void method
+        }
+    }
+
+
     // For visuals on the blackboard
     public override string GetComparison()
     {

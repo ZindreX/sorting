@@ -15,10 +15,9 @@ public class BubbleSortInstruction : InstructionBase {
     */
 
     private int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
-    private int i, j;
 
     public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, int i, int j, string instruction, bool isCompare, bool isSorted)
-        : base(instruction, isCompare, isSorted)
+        : base(instruction, i, j, isCompare, isSorted)
     {
         sortingElementID1 = seID1;
         sortingElementID2 = seID2;
@@ -26,8 +25,6 @@ public class BubbleSortInstruction : InstructionBase {
         holderID2 = hID2;
         this.value1 = value1;
         this.value2 = value2;
-        this.i = i;
-        this.j = j;
     }
 
     public int SortingElementID1
@@ -61,16 +58,6 @@ public class BubbleSortInstruction : InstructionBase {
         get { return value2; }
     }
 
-    public int I
-    {
-        get { return i; }
-    }
-
-    public int J
-    {
-        get { return j; }
-    }
-
     public int SwitchToHolder(int sortingElementID)
     {
         return (sortingElementID == SortingElementID1) ? holderID2 : holderID1;
@@ -98,9 +85,9 @@ public class BubbleSortInstruction : InstructionBase {
     {
         switch (instruction)
         {
-            case Util.COMPARE_START_INST: return "[" + value1 + "] ? [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] ? [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
-            case Util.SWITCH_INST: return "[" + value1 + "] <--> [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] <--> [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
-            case Util.COMPARE_END_INST: return "[" + value1 + "] < [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] | [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+            case Util.COMPARE_START_INST: return base.DebugInfo() + ": [" + value1 + "] ? [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] ? [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted;
+            case Util.SWITCH_INST: return base.DebugInfo() + ": [" + value1 + "] <--> [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] <--> [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted;
+            case Util.COMPARE_END_INST: return base.DebugInfo() + ": [" + value1 + "] < [" + value2 + "] ::: [" + sortingElementID1 + " | " + holderID1 + "] | [" + sortingElementID2 + " | " + HolderID2 + "], C=" + isCompare + ", S=" + isSorted;
             default: return instruction + " has no case.";
         }
     }

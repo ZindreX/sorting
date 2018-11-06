@@ -41,6 +41,6 @@ MonoBehaviour:
   outActionArray:
   - {fileID: 11400000, guid: bc58ea9b9e0528f4bbd94a45ad8fb3ac, type: 2}
   fullPath: /actions/default
-  usage: single
+  usage: leftright
   inActions: {fileID: 11400000, guid: cb963f570130b9a4086eac4ff225f26c, type: 2}
   outActions: {fileID: 11400000, guid: d8f32b3fcfc3d76499878b5cce6dcec8, type: 2}

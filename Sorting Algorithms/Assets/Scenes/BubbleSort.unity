@@ -3575,6 +3575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayUnitManagerObj: {fileID: 1036859930}
+  teleportToSettings: {fileID: 0}
 --- !u!4 &817656498
 Transform:
   m_ObjectHideFlags: 0
@@ -4122,7 +4123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13140ca4296bfbd4f94eb3ee9b44c2be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftBlackboard: {fileID: 699585828}
+  leftBlackboard: {fileID: 0}
   centerBlackboard: {fileID: 1493429126}
   rightBlackboard: {fileID: 1529905115}
 --- !u!1 &1101884480

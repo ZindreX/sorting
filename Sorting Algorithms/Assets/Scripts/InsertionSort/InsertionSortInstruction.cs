@@ -6,16 +6,13 @@ public class InsertionSortInstruction : InstructionBase {
     protected bool isPivot;
 
     public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, string instruction, int value, bool isPivot, bool isCompare, bool isSorted)
-        : base(instruction, isCompare, isSorted)
+        : base(instruction, i, j, isCompare, isSorted)
     {
         this.sortingElementID = sortingElementID;
         this.value = value;
         this.holderID = holderID;
         this.nextHolderID = nextHolderID; // -1: not going anywhere
         this.isPivot = isPivot;
-        // For step by step tutorial
-        this.i = i;
-        this.j = j;
     }
 
     public int SortingElementID
@@ -51,20 +48,10 @@ public class InsertionSortInstruction : InstructionBase {
         set { isPivot = value; }
     }
 
-    public int I
-    {
-        get { return i; }
-    }
-
-    public int J
-    {
-        get { return j; }
-    }
-
     // Debug checker
     public override string DebugInfo()
     {
-        return "[" + value + "]: " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + ", P=" + isPivot + ", C=" + isCompare + ", S=" + isSorted + ", Inst: " + instruction;
+        return base.DebugInfo() + ": [" + value + "]: " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + ", P=" + isPivot + ", C=" + isCompare + ", S=" + isSorted;
     }
 
 }
