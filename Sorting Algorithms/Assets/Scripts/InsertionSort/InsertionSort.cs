@@ -25,7 +25,7 @@ public class InsertionSort : Algorithm {
     protected override void Awake()
     {
         base.Awake();
-        tutorialPivotElementHeight = tutorialPivotHolderHeight + new Vector3(0f, 0.03f, 0f);
+        tutorialPivotElementHeight = tutorialPivotHolderHeight + new Vector3(0f, 0.1f, 0f);
         insertionSortManager = GetComponent(typeof(InsertionSortManager)) as InsertionSortManager;
     }
 
@@ -228,20 +228,23 @@ public class InsertionSort : Algorithm {
             yield return new WaitForSeconds(seconds);
             pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
-
             // Start comparing until find the correct position is found
+            // Prepare the element to compare with
+            GameObject compareObj = list[j];
+            InsertionSortElement compare = compareObj.GetComponent<InsertionSortElement>();
+            compare.IsCompare = true;
+            Util.IndicateElement(compare);
+
             // Display pseudocode (2nd while)
             pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
             pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
+            compare.IsCompare = false;
+            compare.IsSorted = true;
 
             while (value1 < value2)
             {
                 // Pivot is smaller, start moving compare element
-                // Prepare the element to compare with
-                GameObject compareObj = list[j];
-                InsertionSortElement compare = compareObj.GetComponent<InsertionSortElement>();
-
                 // Compare element's position
                 Vector3 temp2 = compare.transform.position;
 
@@ -259,53 +262,62 @@ public class InsertionSort : Algorithm {
                 temp = temp2;
                 j -= 1;
 
-                // Display pseudocode (decrement j)
+                // Display pseudocode (update j)
                 pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), Util.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
                 pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
-                // Check if there are more elements to compare the pivot with
-                if (j >= 0)
-                {
-                    // More elements to evaluate
-                    value2 = list[j].GetComponent<InsertionSortElement>().Value;
-
-                    // Display pseudocode (2nd while new compare value)
-                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.HIGHLIGHT_COLOR);
-                    yield return new WaitForSeconds(seconds);
-                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
-                }
-                else
-                {
-                    // Make sure that the last compare element is marked as sorted
-                    compare.IsSorted = true; //list[j + 1].GetComponent<SortingElement>().IsSorted = true;
-
-                    // Display pseudocode (end 2nd while)
-                    pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.HIGHLIGHT_COLOR);
-                    yield return new WaitForSeconds(seconds);
-                    pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
-                    break;
-                }
                 // Move pivot out and place it ontop of pivot holder (above holder it check whether it's put the element)
                 pivotHolder.transform.position = temp + tutorialPivotHolderHeight;
                 pivot.transform.position = temp + tutorialPivotElementHeight;
 
                 // Wait to show the pivot being moved
                 yield return new WaitForSeconds(seconds);
+
+                // Check if there are more elements to compare the pivot with
+                if (j >= 0)
+                {
+                    // Start comparing until find the correct position is found
+                    // Prepare the element to compare with
+                    compareObj = list[j];
+                    compare = compareObj.GetComponent<InsertionSortElement>();
+                    compare.IsCompare = true;
+                    value2 = compare.Value;
+                    Util.IndicateElement(compare);
+
+                    // Display pseudocode (2nd while new compare value)
+                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.HIGHLIGHT_COLOR);
+                    yield return new WaitForSeconds(seconds);
+                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
+                    compare.IsCompare = false;
+                    compare.IsSorted = true;
+
+                    if (value1 >= value2)
+                    {
+                        Util.IndicateElement(compare);
+                        // Display pseudocode (end 2nd while)
+                        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.HIGHLIGHT_COLOR);
+                        yield return new WaitForSeconds(seconds);
+                        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
+                    }
+                }
+                else
+                {
+                    // Display pseudocode (end 2nd while)
+                    pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.HIGHLIGHT_COLOR);
+                    yield return new WaitForSeconds(seconds);
+                    pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
+                    break;
+                }
             }
-            // Make sure the 1st element is marked sorted in the first round
             if (i == 1 && value1 >= value2)
-            {
-                InsertionSortElement firstSortingElement = list[0].GetComponent<InsertionSortElement>();
-                firstSortingElement.IsSorted = true;
-                firstSortingElement.transform.position += tutorialPivotHolderHeight;
-            }
+                Util.IndicateElement(compare);
 
             // Finish off the pivots work
             pivot.IsSorted = true;
             pivot.IsPivot = false;
             pivot.transform.position = temp;
-            
+
             // Put pivot object back into the list
             list[j + 1] = pivotObj;
             pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, i, j, true), Util.HIGHLIGHT_COLOR);
@@ -446,6 +458,7 @@ public class InsertionSort : Algorithm {
     #region User test display pseudocode as support
     public IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
     {
+        //Debug.LogError("Instruction: " + instruction.Instruction);
         // Gather information from instruction
         InsertionSortElement sortingElement = null;
         if (gotSortingElement)
@@ -459,7 +472,7 @@ public class InsertionSort : Algorithm {
 
         // Gather part of code to highlight
         int i = instruction.I, j = instruction.J;
-        List<int> lineOfCode = new List<int>();
+        List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -476,14 +489,14 @@ public class InsertionSort : Algorithm {
 
             case Util.PIVOT_START_INST:
                 value1 = sortingElement.Value;
-                sortingElement.transform.position += Util.ABOVE_HOLDER_VR;
+                Util.IndicateElement(sortingElement);
 
                 lineOfCode.Add(4);
                 break;
 
             case Util.COMPARE_START_INST:
                 value2 = sortingElement.Value;
-                sortingElement.transform.position += Util.ABOVE_HOLDER_VR;
+                Util.IndicateElement(sortingElement);
 
                 lineOfCode.Add(5);
                 break;
@@ -521,7 +534,7 @@ public class InsertionSort : Algorithm {
         }
 
         yield return new WaitForSeconds(seconds);
-        insertionSortManager.beginnerWait = false;
+        insertionSortManager.BeginnerWait = false;
     }
     #endregion
 
@@ -575,12 +588,12 @@ public class InsertionSort : Algorithm {
                 sortingElements[j + 1] = compareElement;
                 sortingElements[j] = pivot;
 
+                // Add this move (compare element switched to pivot/next position) // Line 6
+                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, compareElement.Value, false, false, true));
+
                 // Line 7
                 j -= 1;
                 instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_VAR_J, i, j, false, false));
-
-                // Add this move (compare element switched to pivot/next position) // Line 6
-                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, compareElement.Value, false, false, true));
 
                 // temp2 is open spot, temp1 will be given to next compare element or place pivot there
                 temp1 = temp2;
@@ -595,12 +608,12 @@ public class InsertionSort : Algorithm {
 
             sortingElements[j + 1] = pivot;
 
+            // Add this move (pivot sorted) // Line 9
+            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, pivot.Value, false, false, true));
+
             // Line 10
             i += 1;
             instructions.Add(instructionNr++, new InstructionBase(Util.INCREMENT_VAR_I, i, j, false, false));
-
-            // Add this move (pivot sorted) // Line 9
-            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, pivot.Value, false, false, true));
         }
 
         // Add the final instruction which will be used for Pseudo code

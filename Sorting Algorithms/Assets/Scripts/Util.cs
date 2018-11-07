@@ -159,4 +159,8 @@ public class Util : MonoBehaviour {
         }
     }
 
+    public static void IndicateElement(SortingElementBase element)
+    {
+        element.transform.position += ABOVE_HOLDER_VR;
+    }
 }

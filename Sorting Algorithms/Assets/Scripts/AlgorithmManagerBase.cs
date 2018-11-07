@@ -26,10 +26,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     */
 
     // Algorithm settings
-    private int numberOfElements = 4;
-    private string teachingMode = Util.USER_TEST, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
+    private int numberOfElements = 8;
+    private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
     private bool duplicates = true, userStoppedAlgorithm = false;
-    public bool beginnerWait = false;
+    private bool beginnerWait = false;
 
     private string algorithmName;
     private int titleIndex = 0, textIndex = 1;
@@ -141,7 +141,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     }
                     else if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
                     {
-                        // Reset
+                        // Reset counter
                         userTestManager.ReadyForNext = 0;
 
                         // Checking if all sorting elements are sorted
@@ -225,6 +225,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         set { holderPositions = value; }
     }
 
+    public bool BeginnerWait
+    {
+        get { return beginnerWait; }
+        set { beginnerWait = value; }
+    }
+
     public string TeachingMode
     {
         get { return teachingMode; }
@@ -265,9 +271,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         switch (teachingMode)
         {
-            case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.01f, 0f); break;
-            case Util.STEP_BY_STEP: algorithm.AboveHolder = new Vector3(0f, 0.01f, 0f); break;
-            case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.01f, 0f); break;
+            case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
+            case Util.STEP_BY_STEP: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
+            case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
             default: Debug.Log("Teaching mode '" + teachingMode + "' hasnt't defined aboveHolder variable"); break;
         }
     }

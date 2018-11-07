@@ -154,8 +154,8 @@ public class BubbleSort : Algorithm {
                 p2.IsCompare = true;
 
                 // Update color on holders
-                p1.transform.position += aboveHolder;
-                p2.transform.position += aboveHolder;
+                Util.IndicateElement(p1);
+                Util.IndicateElement(p2);
 
                 // Get their values
                 value1 = p1.Value;
@@ -190,7 +190,7 @@ public class BubbleSort : Algorithm {
                 pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
                 p1.IsCompare = false;
-                p1.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
+                p1.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR; // fix so this happens automatically
                 p2.IsCompare = false;
                 p2.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
             }

@@ -59,7 +59,9 @@ public class InsertionSortHolder : HolderBase
             {
                 if (((InsertionSortElement)currentHolding).IsPivot)
                     CurrentColor = Util.PIVOT_COLOR;
-                if (currentHolding.IsSorted)
+                else if (currentHolding.IsCompare)
+                    CurrentColor = Util.COMPARE_COLOR;
+                else if (currentHolding.IsSorted)
                     CurrentColor = Util.SORTED_COLOR;
             }
             else // User test
