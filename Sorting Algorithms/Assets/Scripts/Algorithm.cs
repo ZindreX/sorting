@@ -33,6 +33,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     public float Seconds
     {
         get { return seconds; }
+        set { seconds = value; }
     }
 
     public bool IsReadyForNextMove

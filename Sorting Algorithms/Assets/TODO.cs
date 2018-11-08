@@ -10,7 +10,8 @@
  * > Tutorial
  *  - disable drag (non-vr), touch/grab (vr)
  * 
- * 
+ * > User test (when updating old algorithms)
+ *  - make all algorithm implement methods insertion sort uses
  * 
  * 
  * 

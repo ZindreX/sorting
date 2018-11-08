@@ -56,10 +56,11 @@ public class InsertionSortManager : AlgorithmManagerBase {
                 return 0;
             return 1;
         }
-        if (noDestination) // insertionSortInstruction.NextHolderID == Util.NO_DESTINATION) // skipping until next (user) move
+
+        // No help displayed
+        if (noDestination)
             return 1;
-        else
-            return 0;
+        return 0;
     }
 
     public override HolderBase GetCorrectHolder(int index)

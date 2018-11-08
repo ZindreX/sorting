@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialStep : UserAlgorithmControl, IBlackboardAble
+public class TutorialStep : InstructionControlBase, IBlackboardAble
 {
 
     /* --------------------------------------------  Manager --------------------------------------------

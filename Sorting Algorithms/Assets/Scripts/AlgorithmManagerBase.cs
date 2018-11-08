@@ -25,6 +25,77 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      * 
     */
 
+    
+    // ************** DEBUGGING ****************
+    [SerializeField]
+    private TeachingModeEditor teachingModeEditor;
+    private enum TeachingModeEditor { tutorial, stepByStep, userTest }
+
+    [SerializeField]
+    private DifficultyEditor difficultyEditor;
+    private enum DifficultyEditor { beginner, intermediate, examination }
+
+    [SerializeField]
+    private NumberofElementsEditor numberofElementsEditor;
+    private enum NumberofElementsEditor { two, four, six, eight }
+
+    [SerializeField]
+    private bool dupEditor = false;
+
+    [SerializeField]
+    private CaseEditor caseEditor;
+    private enum CaseEditor { none, best, worst }
+
+    [SerializeField]
+    private AlgorithmSpeed algorithmSpeed;
+    private enum AlgorithmSpeed { slow, normal, fast }
+
+    private void SettingsFromEditor()
+    {
+        switch ((int)teachingModeEditor)
+        {
+            case 0: teachingMode = Util.TUTORIAL; break;
+            case 1: teachingMode = Util.STEP_BY_STEP; break;
+            case 2: teachingMode = Util.USER_TEST; break;
+        }
+
+        switch ((int)difficultyEditor)
+        {
+            case 0: difficulty = Util.BEGINNER; break;
+            case 1: difficulty = Util.INTERMEDIATE; break;
+            case 2: difficulty = Util.EXAMINATION; break;
+        }
+
+        switch ((int)caseEditor)
+        {
+            case 0: sortingCase = Util.NONE; break;
+            case 1: sortingCase = Util.BEST_CASE; break;
+            case 2: sortingCase = Util.WORST_CASE; break;
+        }
+
+        switch ((int)numberofElementsEditor)
+        {
+            case 0: numberOfElements = 2; break;
+            case 1: numberOfElements = 4; break;
+            case 2: numberOfElements = 6; break;
+            case 3: numberOfElements = 8; break;
+        }
+
+        switch ((int)algorithmSpeed)
+        {
+            case 0: algorithm.Seconds = 2f; break;
+            case 1: algorithm.Seconds = 1f; break;
+            case 2: algorithm.Seconds = 0.5f; break;
+        }
+
+        duplicates = dupEditor;
+
+        Debug.Log("Teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", dup: " + duplicates);
+    }
+    // ********** DEBUGGING **************
+
+
+
     // Algorithm settings
     private int numberOfElements = 8;
     private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
@@ -64,6 +135,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
 
         SetAboveHolderForTeachingMode();
+
+
+        // Debugging
+        SettingsFromEditor();
     }
 
 
@@ -145,19 +220,31 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         userTestManager.ReadyForNext = 0;
 
                         // Checking if all sorting elements are sorted
-                        if (elementManager.AllSorted())
+                        if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                             algorithm.IsSortingComplete = true;
                         else
                         {
                             // Still some elements not sorted, so go on to next round
-                            userTestManager.IncrementToNextInstruction();
-                            userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
+                            bool hasInstruction = userTestManager.IncrementToNextInstruction();
+                            // Hot fix - solve in some other way?
+                            if (hasInstruction)
+                                userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
+                            else if (elementManager.AllSorted())
+                                StartCoroutine(FinishUserTest());
+
                         }
                     }
                     displayUnitManager.BlackBoard.ChangeText(textIndex, userTestManager.FillInBlackboard());
                 }
             }
         }
+    }
+
+    private IEnumerator FinishUserTest()
+    {
+        yield return new WaitForSeconds(algorithm.Seconds);
+        algorithm.IsSortingComplete = true;
+        displayUnitManager.PseudoCodeViewer.RemoveHightlight();
     }
 
     /* --------------------------------------- Instatiate Setup ---------------------------------------

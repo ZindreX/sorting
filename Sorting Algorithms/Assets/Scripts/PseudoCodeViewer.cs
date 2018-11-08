@@ -111,4 +111,12 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             line.text = "";
         }
     }
+
+    public void RemoveHightlight()
+    {
+        foreach (TextMesh line in codeLines)
+        {
+            line.color = Util.BLACKBOARD_TEXT_COLOR;
+        }
+    }
 }

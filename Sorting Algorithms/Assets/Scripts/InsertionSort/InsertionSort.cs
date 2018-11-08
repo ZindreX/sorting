@@ -17,7 +17,7 @@ public class InsertionSort : Algorithm {
 
     private InsertionSortHolder pivotHolder;
 
-    private Vector3 tutorialPivotHolderHeight = new Vector3(0f, 0.15f, -0f), tutorialPivotElementHeight;
+    private Vector3 tutorialPivotHolderHeight = new Vector3(0f, 0.14f, -0f), tutorialPivotElementHeight;
     private Vector3 userTestHeight = new Vector3(0f, 0.2f, Util.SPACE_BETWEEN_HOLDERS);
 
     private InsertionSortManager insertionSortManager;
@@ -118,7 +118,7 @@ public class InsertionSort : Algorithm {
         }
     }
 
-    public void CreatePivotHolder()
+    public void CreatePivotHolder() // 1.02998 - 0.809
     {
         // Instantiate
         Vector3 pos;
@@ -311,7 +311,7 @@ public class InsertionSort : Algorithm {
                 }
             }
             if (i == 1 && value1 >= value2)
-                Util.IndicateElement(compare);
+                compare.CurrentStandingOn.CurrentColor = Util.SORTED_COLOR;
 
             // Finish off the pivots work
             pivot.IsSorted = true;

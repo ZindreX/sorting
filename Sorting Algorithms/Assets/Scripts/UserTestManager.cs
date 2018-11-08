@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserTestManager : UserAlgorithmControl, IBlackboardAble {
+public class UserTestManager : InstructionControlBase, IBlackboardAble {
 
     /* -------------------------------------------- User Test Manager --------------------------------------------
      * 

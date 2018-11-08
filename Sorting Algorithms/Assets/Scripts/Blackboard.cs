@@ -28,4 +28,12 @@ public class Blackboard : MonoBehaviour, IDisplay {
             text.text = "";
         }
     }
+
+    public void RemoveHightlight()
+    {
+        foreach (TextMesh line in texts)
+        {
+            line.color = Util.BLACKBOARD_TEXT_COLOR;
+        }
+    }
 }

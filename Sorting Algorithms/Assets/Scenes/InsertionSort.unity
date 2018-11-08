@@ -1007,6 +1007,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62fadf70b7651144a7035dbbfd5fb5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teachingModeEditor: 0
+  difficultyEditor: 0
+  numberofElementsEditor: 3
+  dupEditor: 0
+  caseEditor: 0
+  algorithmSpeed: 1
   displayUnitManagerObj: {fileID: 805193905}
   teleportToSettings: {fileID: 1149264180}
 --- !u!4 &119957890

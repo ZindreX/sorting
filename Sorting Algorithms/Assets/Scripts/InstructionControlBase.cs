@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class UserAlgorithmControl : MonoBehaviour, IBlackboardAble {
+public abstract class InstructionControlBase : MonoBehaviour, IBlackboardAble {
 
     /* --------------------------------------------  Manager --------------------------------------------
      * 

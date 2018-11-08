@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IDisplay {
 
     void EmptyContent();
+    void RemoveHightlight();
 
 
 }

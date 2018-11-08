@@ -44,9 +44,6 @@ public class BubbleSortManager : AlgorithmManagerBase {
         s1.NextMove = true;
         s2.NextMove = true;
 
-        Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bubbleInstruction.DebugInfo());
-
-
         if (false) // help enabled
         {
 
@@ -57,6 +54,8 @@ public class BubbleSortManager : AlgorithmManagerBase {
                 return 2;
         }
         return 0;
+
+
     }
 
     protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)

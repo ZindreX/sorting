@@ -5061,7 +5061,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 817656497}
         m_MethodName: DestroyAndReset
         m_Mode: 1
         m_Arguments:
@@ -7804,6 +7804,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82aa6fc0e1a954985d311d4bf81135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teachingModeEditor: 2
+  difficultyEditor: 0
+  numberofElementsEditor: 0
+  dupEditor: 0
+  caseEditor: 0
+  algorithmSpeed: 1
   displayUnitManagerObj: {fileID: 1036859930}
   teleportToSettings: {fileID: 1833947225}
 --- !u!4 &817656498
