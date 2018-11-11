@@ -23,39 +23,41 @@ public class BubbleSortManager : AlgorithmManagerBase {
         get { return 2; }
     }
 
-    private List<string> skipInst = new List<string>() { Util.FIRST_INSTRUCTION, Util.UPDATE_LOOP_INST, Util.END_LOOP_INST, Util.FINAL_INSTRUCTION };
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        if (skipInst.Contains(instruction.Instruction))
-            return 2;
+        bool gotSortingElement = !bubbleSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        //bool noDestination = bubbleSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
-        // Get the next two instructions
-        BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)instruction;
+        if (gotSortingElement)
+        {
+            // Get the next two instructions
+            BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)instruction;
 
-        // Find the sorting elements for this instruction
-        BubbleSortElement s1 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
-        BubbleSortElement s2 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
+            // Find the sorting elements for this instruction
+            BubbleSortElement s1 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
+            BubbleSortElement s2 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
             
-        // Hand the instructions out
-        s1.Instruction = bubbleInstruction;
-        s2.Instruction = bubbleInstruction;
+            // Hand the instructions out
+            s1.Instruction = bubbleInstruction;
+            s2.Instruction = bubbleInstruction;
 
-        // Give next move permission
-        s1.NextMove = true;
-        s2.NextMove = true;
-
-        if (false) // help enabled
-        {
-
+            // Give next move permission
+            s1.NextMove = true;
+            s2.NextMove = true;
         }
-        else
+
+        if (Difficulty == Util.BEGINNER)
         {
-            if (Util.skipAbleInstructions.Contains(instruction.Instruction)) // skipping until next user move
-                return 2;
+            BeginnerWait = true;
+            StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
+
+            if (gotSortingElement)// && !noDestination)
+                return 0;
+            return 2;
         }
+        if (!gotSortingElement) // skipping until next user move
+            return 2;
         return 0;
-
-
     }
 
     protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)

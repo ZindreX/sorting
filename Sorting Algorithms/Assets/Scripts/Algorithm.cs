@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
-    [SerializeField]
     protected float seconds = 1f;
 
     // value1 <- pivot value, value2 <- compare value (usually)
@@ -116,8 +115,24 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     //public List<string> GetPseudoCode() { return new List<string>(); } // change later
 
+    /* Tutorial of the chosen sorting algorithm
+     * - No interaction from the user (except for settings)
+    */
     public abstract IEnumerator Tutorial(GameObject[] list);
+
+    /* Step by step execution of the chosen sorting algorithm
+     * - The user can progress through the algorithm one step at the time
+    */
     public abstract void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment);
+
+    /* Almost the same method as for the Step by step teaching method
+     * - Only does the visualization of the pseudocode
+    */
+    public abstract IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement);
+
+    /* Creates a instruction dictionary
+     * - Used in: User test, Step by Step
+    */
     public abstract Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);
 }
 

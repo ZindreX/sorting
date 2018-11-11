@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ElementManager : MonoBehaviour, IManager {
 
     /* -------------------------------------------- Manage all sorting elements --------------------------------------------
@@ -83,6 +82,14 @@ public class ElementManager : MonoBehaviour, IManager {
                 return false;
         }
         return true;
+    }
+
+    public void InteractionWithSortingElements(bool enable)
+    {
+        foreach (GameObject obj in SortingElements)
+        {
+            //obj.GetComponent<InteractAble>().enabled = enable;
+        }
     }
 
 

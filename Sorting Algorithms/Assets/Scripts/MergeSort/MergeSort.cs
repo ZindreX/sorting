@@ -598,6 +598,11 @@ public class MergeSort : Algorithm {
 
     public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
+        throw new System.NotImplementedException();
+    }
 
+    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    {
+        throw new System.NotImplementedException();
     }
 }

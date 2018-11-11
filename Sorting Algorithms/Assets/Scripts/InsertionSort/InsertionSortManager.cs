@@ -23,10 +23,6 @@ public class InsertionSortManager : AlgorithmManagerBase {
         get { return 1; }
     }
 
-    /* Sends instruction to the next sorting element the user should move
-     * - Beginners (difficulty) will be shown steps on pseudoboard and given some hints
-     * - Skips instructions which doesn't contain any elements nor destination
-    */
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
         bool gotSortingElement = !insertionSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
@@ -50,7 +46,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         if (Difficulty == Util.BEGINNER)
         {
             BeginnerWait = true;
-            StartCoroutine(((InsertionSort)algorithm).UserTestDisplayHelp(instruction, gotSortingElement));
+            StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
 
             if (gotSortingElement && !noDestination)
                 return 0;

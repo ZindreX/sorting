@@ -456,7 +456,7 @@ public class InsertionSort : Algorithm {
     #endregion
 
     #region User test display pseudocode as support
-    public IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
     {
         //Debug.LogError("Instruction: " + instruction.Instruction);
         // Gather information from instruction

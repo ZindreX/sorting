@@ -25,6 +25,12 @@ public class BubbleSort : Algorithm {
         return Util.BUBBLE_SORT;
     }
 
+    public override void AddSkipAbleInstructions()
+    {
+        base.AddSkipAbleInstructions();
+        // need to override here?
+    }
+
     public override string CollectLine(int lineNr)
     {
         string temp = PseudoCode(lineNr, 0, 0, true);
@@ -406,6 +412,66 @@ public class BubbleSort : Algorithm {
     }
     #endregion
 
+    #region User test display pseudocode as support
+    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    {
+        // Gather information from instruction
+        BubbleSortElement se1 = null, se2 = null;
+        if (gotSortingElement)
+        {
+            se1 = GetComponent<ElementManager>().GetSortingElement(((BubbleSortInstruction)instruction).SortingElementID1).GetComponent<BubbleSortElement>();
+            se2 = GetComponent<ElementManager>().GetSortingElement(((BubbleSortInstruction)instruction).SortingElementID2).GetComponent<BubbleSortElement>();
+        }
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
+        }
+
+        // Gather part of code to highlight
+        int i = instruction.I, j = instruction.J;
+        List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
+        switch (instruction.Instruction)
+        {
+            case Util.UPDATE_LOOP_INST:
+                lineOfCode.Add(2);
+                lineOfCode.Add(3);
+                break;
+
+            case Util.COMPARE_START_INST:
+                lineOfCode.Add(4);
+                value1 = se1.Value;
+                value2 = se2.Value;
+
+                Util.IndicateElement(se1);
+                Util.IndicateElement(se2);
+                break;
+
+            case Util.SWITCH_INST:
+                lineOfCode.Add(5);
+                break;
+
+            case Util.COMPARE_END_INST:
+                lineOfCode.Add(6);
+                break;
+
+            case Util.END_LOOP_INST:
+                lineOfCode.Add(7);
+                break;
+        }
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), Util.HIGHLIGHT_COLOR);
+        }
+
+        yield return new WaitForSeconds(seconds);
+        bubbleSortManager.BeginnerWait = false;
+    }
+    #endregion
 
     // Help functions
 

@@ -390,12 +390,14 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void PerformAlgorithmTutorial()
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
+        elementManager.InteractionWithSortingElements(false);
         StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
     }
 
     public void PerformAlgorithmTutorialStep()
     {
         // Getting instructions for this sample of sorting elements
+        elementManager.InteractionWithSortingElements(false);
         tutorialStep.Init(algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements)));
     }
 
@@ -406,6 +408,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void PerformAlgorithmUserTest()
     {
         Debug.Log(">>> Performing " + algorithmName + " user test.");
+        elementManager.InteractionWithSortingElements(true);
         
         // Getting instructions for this sample of sorting elements
         Dictionary<int, InstructionBase> instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
@@ -424,8 +427,15 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         int count = 0;
         for (int x=0; x < instructions.Count; x++)
         {
-            if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
-                count++;
+            if (algorithm.SkipDict.ContainsKey(Util.SKIP_NO_ELEMENT) && algorithm.SkipDict.ContainsKey(Util.SKIP_NO_DESTINATION)) {
+                if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
+                    count++;
+            }
+            else if (algorithm.SkipDict.ContainsKey(Util.SKIP_NO_ELEMENT))
+            {
+                if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction))
+                    count++;
+            }
 
         }
         return count;
@@ -440,7 +450,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Moves needed to progress to next instruction
     protected abstract int MovesNeeded { get; }
 
-    // Prepares the next instruction based on the algorithm being runned
+    /* Prepares the next instruction based on the algorithm being runned
+     * - Sends instruction to the next sorting element the user should move
+     * - Beginners (difficulty) will be shown steps on pseudoboard and given some hints
+     * - Skips instructions which doesn't contain any elements nor destination
+    */
     protected abstract int PrepareNextInstruction(InstructionBase instruction);
 
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
