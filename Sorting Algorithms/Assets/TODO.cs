@@ -27,5 +27,5 @@
  * 
  * 
  * 
- * 
+ * >>> Commented a lot of old methods, check if any bugs/null exceptions occours
 */

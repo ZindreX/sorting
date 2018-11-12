@@ -71,7 +71,7 @@ public class AlgorithmUserController : MonoBehaviour {
                 break;
 
             case Util.USER_TEST:
-                switch (algorithmManager.Algorithm.GetAlgorithmName())
+                switch (algorithmManager.Algorithm.AlgorithmName)
                 {
                     case Util.INSERTION_SORT:
                         if (SteamVR_Input.__actions_sortingActions_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))

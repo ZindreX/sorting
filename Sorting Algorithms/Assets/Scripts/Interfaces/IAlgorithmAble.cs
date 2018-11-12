@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IAlgorithmAble {
 
-    string GetAlgorithmName();
+    string AlgorithmName { get; }
     void ResetSetup();
 
     IEnumerator Tutorial(GameObject[] list);

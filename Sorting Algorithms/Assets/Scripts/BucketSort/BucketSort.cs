@@ -22,9 +22,9 @@ public class BucketSort : Algorithm {
         base.Awake();
     }
 
-    public override string GetAlgorithmName()
+    public override string AlgorithmName
     {
-        return Util.BUCKET_SORT;
+        get { return Util.BUCKET_SORT; }
     }
 
     public override string CollectLine(int lineNr)
@@ -84,22 +84,21 @@ public class BucketSort : Algorithm {
 
 
     // For visuals on the blackboard
-    public override string GetComparison()
-    {
-        switch (status)
-        {
-            case CHOOSE_BUCKET:
-                int bucketID = BucketIndex(value1, GetComponent<BucketSortManager>().NumberOfBuckets);
-                return value1 + " into bucket " + bucketID;
+    //public override string GetComparison()
+    //{
+    //    switch (status)
+    //    {
+    //        case CHOOSE_BUCKET:
+    //            int bucketID = BucketIndex(value1, GetComponent<BucketSortManager>().NumberOfBuckets);
+    //            return value1 + " into bucket " + bucketID;
 
-            case PUT_BACK_TO_HOLDER:
-                return value1 + " to holder " + value2;
+    //        case PUT_BACK_TO_HOLDER:
+    //            return value1 + " to holder " + value2;
 
-            case NONE: return "";
-            default: return "Nothing";
-        }
-
-    }
+    //        case NONE: return "";
+    //        default: return "Nothing";
+    //    }
+    //}
 
     #region Bucket Sort: Standard 1
     public static GameObject[] BucketSortStandard(GameObject[] sortingElements, int numberOfBuckets)
@@ -329,7 +328,7 @@ public class BucketSort : Algorithm {
     #endregion
 
 
-    public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
         throw new System.NotImplementedException();
     }

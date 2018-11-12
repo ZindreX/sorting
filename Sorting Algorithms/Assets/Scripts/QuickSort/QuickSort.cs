@@ -9,9 +9,9 @@ public class QuickSort : Algorithm {
 
     private Dictionary<int, string> pseudoCode;
 
-    public override string GetAlgorithmName()
+    public override string AlgorithmName
     {
-        return Util.QUICK_SORT;
+        get { return Util.QUICK_SORT; }
     }
 
     public override string CollectLine(int lineNr)
@@ -65,7 +65,7 @@ public class QuickSort : Algorithm {
         throw new System.NotImplementedException();
     }
 
-    public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
         throw new System.NotImplementedException();
     }

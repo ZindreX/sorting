@@ -20,9 +20,9 @@ public class BubbleSort : Algorithm {
         bubbleSortManager = GetComponent(typeof(BubbleSortManager)) as BubbleSortManager;
     }
 
-    public override string GetAlgorithmName()
+    public override string AlgorithmName
     {
-        return Util.BUBBLE_SORT;
+        get { return Util.BUBBLE_SORT; }
     }
 
     public override void AddSkipAbleInstructions()
@@ -272,7 +272,7 @@ public class BubbleSort : Algorithm {
     #endregion
 
     #region Execute order from user
-    public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
         // Gather information from instruction
         BubbleSortInstruction inst = (BubbleSortInstruction)instruction;

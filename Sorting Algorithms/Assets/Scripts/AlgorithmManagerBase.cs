@@ -130,11 +130,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         // Setup algorithm in their respective <Algorithm name>Manager
         algorithm = InstanceOfAlgorithm;
-        algorithmName = algorithm.GetAlgorithmName();
+        algorithmName = algorithm.AlgorithmName;
         algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
         algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
 
-        SetAboveHolderForTeachingMode();
+        //SetAboveHolderForTeachingMode();
 
 
         // Debugging
@@ -197,7 +197,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     }
 
                     if (instruction.Instruction != Util.FIRST_INSTRUCTION && instruction.Instruction != Util.FINAL_INSTRUCTION)
-                        algorithm.ExecuteOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
+                        algorithm.ExecuteStepByStepOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
                 }
             }
             else if (IsTutorial())
@@ -295,10 +295,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         get { return algorithm; }
     }
 
-    protected string GetAlgorithmName
-    {
-        get { return algorithm.GetAlgorithmName(); }
-    }
+    //protected string GetAlgorithmName
+    //{
+    //    get { return algorithm.AlgorithmName(); }
+    //}
 
     public int NumberOfElements
     {
@@ -354,16 +354,16 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // **
 
     // Need this method anymore?
-    public void SetAboveHolderForTeachingMode()
-    {
-        switch (teachingMode)
-        {
-            case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
-            case Util.STEP_BY_STEP: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
-            case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
-            default: Debug.Log("Teaching mode '" + teachingMode + "' hasnt't defined aboveHolder variable"); break;
-        }
-    }
+    //public void SetAboveHolderForTeachingMode()
+    //{
+    //    switch (teachingMode)
+    //    {
+    //        case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
+    //        case Util.STEP_BY_STEP: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
+    //        case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
+    //        default: Debug.Log("Teaching mode '" + teachingMode + "' hasnt't defined aboveHolder variable"); break;
+    //    }
+    //}
 
     public bool IsTutorial()
     {

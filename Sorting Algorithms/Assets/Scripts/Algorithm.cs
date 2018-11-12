@@ -8,7 +8,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     // value1 <- pivot value, value2 <- compare value (usually)
     protected int value1 = Util.INIT_STATE, value2 = Util.INIT_STATE - 1;
-    protected bool isSortingComplete = false, isReadyForNextMove = false;
+    protected bool isSortingComplete = false;// isReadyForNextMove = false;
 
     protected Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
     protected List<int> prevHighlight = new List<int>();
@@ -35,25 +35,25 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
         set { seconds = value; }
     }
 
-    public bool IsReadyForNextMove
-    {
-        get { return isReadyForNextMove; }
-        set { isReadyForNextMove = value; }
-    }
+    //public bool IsReadyForNextMove
+    //{
+    //    get { return isReadyForNextMove; }
+    //    set { isReadyForNextMove = value; }
+    //}
 
     // For visuals on the blackboard
-    public virtual string GetComparison()
-    {
-        if (value1 < value2)
-            return value1 + " < " + value2;
-        else if (value1 > value2)
-            return value1 + " > " + value2;
-        else
-            return value1 + " = " + value2;
-    }
+    //public virtual string GetComparison()
+    //{
+    //    if (value1 < value2)
+    //        return value1 + " < " + value2;
+    //    else if (value1 > value2)
+    //        return value1 + " > " + value2;
+    //    else
+    //        return value1 + " = " + value2;
+    //}
 
     public Vector3 AboveHolder
-    {   
+    {
         set { aboveHolder = value; }
     }
 
@@ -95,7 +95,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
-    public abstract string GetAlgorithmName();
+    public abstract string AlgorithmName { get; }
     public abstract void ResetSetup();
 
     // To do stuff important for individual classes
@@ -123,7 +123,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     /* Step by step execution of the chosen sorting algorithm
      * - The user can progress through the algorithm one step at the time
     */
-    public abstract void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment);
+    public abstract void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment);
 
     /* Almost the same method as for the Step by step teaching method
      * - Only does the visualization of the pseudocode

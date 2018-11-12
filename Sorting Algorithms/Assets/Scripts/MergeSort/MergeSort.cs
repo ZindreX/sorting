@@ -29,9 +29,9 @@ public class MergeSort : Algorithm {
         allMoves = new Dictionary<int, InstructionBase>();
     }
 
-    public override string GetAlgorithmName()
+    public override string AlgorithmName
     {
-        return Util.MERGE_SORT;
+        get { return Util.MERGE_SORT; }
     }
 
     public override string CollectLine(int lineNr)
@@ -596,7 +596,7 @@ public class MergeSort : Algorithm {
     #endregion
 
 
-    public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
         throw new System.NotImplementedException();
     }

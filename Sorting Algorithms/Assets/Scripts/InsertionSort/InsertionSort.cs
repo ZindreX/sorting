@@ -29,9 +29,9 @@ public class InsertionSort : Algorithm {
         insertionSortManager = GetComponent(typeof(InsertionSortManager)) as InsertionSortManager;
     }
 
-    public override string GetAlgorithmName()
+    public override string AlgorithmName
     {
-        return Util.INSERTION_SORT;
+        get { return Util.INSERTION_SORT; }
     }
 
     public HolderBase PivotHolder
@@ -345,7 +345,7 @@ public class InsertionSort : Algorithm {
     #endregion
 
     #region Execute order from user
-    public override void ExecuteOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
     {
         // Gather information from instruction
         InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
