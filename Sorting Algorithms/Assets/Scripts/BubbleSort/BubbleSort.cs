@@ -206,7 +206,7 @@ public class BubbleSort : Algorithm {
             pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
             list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
-            list[N - i - 1].transform.position += aboveHolder;
+            list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
             yield return new WaitForSeconds(seconds);
         }
         isSortingComplete = true;
@@ -386,13 +386,13 @@ public class BubbleSort : Algorithm {
             case Util.SWITCH_INST:
                 if (increment)
                 {
-                    se1.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID2).transform.position + aboveHolder;
-                    se2.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID1).transform.position + aboveHolder;
+                    se1.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID2).transform.position + Util.ABOVE_HOLDER_VR;
+                    se2.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID1).transform.position + Util.ABOVE_HOLDER_VR;
                 }
                 else
                 {
-                    se1.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID1).transform.position + aboveHolder;
-                    se2.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID2).transform.position + aboveHolder;
+                    se1.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID1).transform.position + Util.ABOVE_HOLDER_VR;
+                    se2.transform.position = bubbleSortManager.GetCorrectHolder(inst.HolderID2).transform.position + Util.ABOVE_HOLDER_VR;
                 }
                 break;
 

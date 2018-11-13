@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class ElementManager : MonoBehaviour, IManager {
 
@@ -88,7 +89,7 @@ public class ElementManager : MonoBehaviour, IManager {
     {
         foreach (GameObject obj in SortingElements)
         {
-            //obj.GetComponent<InteractAble>().enabled = enable;
+            obj.GetComponent<Interactable>().enabled = enable;
         }
     }
 

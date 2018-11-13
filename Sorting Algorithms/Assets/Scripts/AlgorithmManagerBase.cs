@@ -152,6 +152,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        // If the user clicked the stop button in game
         if (userStoppedAlgorithm)
             return;
 
@@ -300,41 +301,48 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     //    get { return algorithm.AlgorithmName(); }
     //}
 
+    // Number of elements used
     public int NumberOfElements
     {
         get { return numberOfElements; }
         set { numberOfElements = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Number of elements: " + value); }
     }
 
+    // The positions of the holders
     public Vector3[] HolderPositions
     {
         get { return holderPositions; }
         set { holderPositions = value; }
     }
 
+    // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
     public bool BeginnerWait
     {
         get { return beginnerWait; }
         set { beginnerWait = value; }
     }
 
+    // Tutorial, Step-By-Step, or User Test
     public string TeachingMode
     {
         get { return teachingMode; }
         set { teachingMode = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Teaching mode: " + value); }
     }
 
+    // Beginner, Intermediate, or Examination
     public string Difficulty
     {
         get { return difficulty; }
         set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Difficulty: " + value); }
     }
 
+    // None, Best-case, Worst-case (not implemented yet)
     public string SortingCase
     {
         set { sortingCase = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Case activated: " + value); }
     }
 
+    // Duplicates can occour in the problem sets (not implemented yet)
     public bool Duplicates
     {
         set { duplicates = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Duplicates: " + Util.EnabledToString(value)); }
@@ -346,6 +354,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         return holderManager.GetHolder(index);
     }
 
+    // Input from user during Step-By-Step (increment/decrement)
     public void PlayerStepByStepInput(bool increment)
     {
         tutorialStep.NotifyUserInput(increment);
@@ -365,16 +374,19 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     //    }
     //}
 
+    // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
     public bool IsTutorial()
     {
         return teachingMode == Util.TUTORIAL || teachingMode == Util.STEP_BY_STEP;
     }
 
+    // Check if it's StepByStep (not used?)
     public bool IsTutorialStep()
     {
         return teachingMode == Util.STEP_BY_STEP;
     }
 
+    // Check if it's UserTest
     public bool IsUserTest()
     {
         return teachingMode == Util.USER_TEST;
@@ -384,8 +396,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
 
     /* --------------------------------------- Tutorial ---------------------------------------
-     * 
-     * 
+     * - Gives a visual presentation of <sorting algorithm>
+     * - Player can't interact with sorting elements (*fix)
     */
     public void PerformAlgorithmTutorial()
     {
@@ -394,6 +406,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
     }
 
+    /* --------------------------------------- Step-By-Step ---------------------------------------
+     * - Gives a visual presentation of <sorting algorithm>
+     * - Player can't directly interact with sorting elements, but can use controllers to progress
+     *   one step of a time / or back
+    */
     public void PerformAlgorithmTutorialStep()
     {
         // Getting instructions for this sample of sorting elements
@@ -402,8 +419,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     }
 
     /* --------------------------------------- User Test ---------------------------------------
-     * 
-     * 
+     * - Gives a visual presentation of elements used in <sorting algorithm>
+     * - Player needs to interact with the sorting elements to progress through the algorithm
     */
     public void PerformAlgorithmUserTest()
     {
@@ -422,6 +439,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         //DebugCheckInstructions(instructions); // Debugging
     }
 
+    // Finds the number of instructions which the player has to do something to progress0 5   
     private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
     {
         int count = 0;

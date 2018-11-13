@@ -29,9 +29,10 @@ public class AlgorithmUserController : MonoBehaviour {
     void Start () {
 
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    //// Update is called once per frame
+    void Update()
+    {
         switch (algorithmManager.TeachingMode)
         {
             case Util.TUTORIAL:

@@ -10,7 +10,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     protected int value1 = Util.INIT_STATE, value2 = Util.INIT_STATE - 1;
     protected bool isSortingComplete = false;// isReadyForNextMove = false;
 
-    protected Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
+    //protected Vector3 aboveHolder = new Vector3(0f, 0.5f, 0f);
     protected List<int> prevHighlight = new List<int>();
     protected Dictionary<string, List<string>> skipDict = new Dictionary<string, List<string>>();
 
@@ -52,10 +52,10 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     //        return value1 + " = " + value2;
     //}
 
-    public Vector3 AboveHolder
-    {
-        set { aboveHolder = value; }
-    }
+    //public Vector3 AboveHolder
+    //{
+    //    set { aboveHolder = value; }
+    //}
 
     public PseudoCodeViewer PseudoCodeViewer
     {

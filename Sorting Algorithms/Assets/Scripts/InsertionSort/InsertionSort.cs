@@ -13,7 +13,7 @@ public class InsertionSort : Algorithm {
 
     [SerializeField]
     private GameObject pivotHolderPrefab;
-    private GameObject pivotHolderClone; // TODO: change to Holder
+    private GameObject pivotHolderClone;
 
     private InsertionSortHolder pivotHolder;
 
@@ -447,9 +447,9 @@ public class InsertionSort : Algorithm {
             case Util.SWITCH_INST:
             case Util.PIVOT_END_INST:
                 if (increment)
-                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.NextHolderID).transform.position + aboveHolder;
+                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.NextHolderID).transform.position + Util.ABOVE_HOLDER_VR;
                 else
-                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.HolderID).transform.position + aboveHolder;
+                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
                 break;
         }
     }

@@ -147,7 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0731f261d8d54b4baf6f95f7c6326f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seconds: 1
 --- !u!114 &119957885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,6 +195,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1855e87154f5df4caca433319f1237e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teachingModeEditor: 0
+  difficultyEditor: 0
+  numberofElementsEditor: 0
+  dupEditor: 0
+  caseEditor: 0
+  algorithmSpeed: 0
   displayUnitManagerObj: {fileID: 653133743}
   teleportToSettings: {fileID: 0}
   numberOfBuckets: 10

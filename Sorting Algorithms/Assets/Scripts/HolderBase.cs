@@ -103,8 +103,11 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
 
     // --------------------------------------- Implemented in subclass ---------------------------------------
+
+    // Updates the color based on the state of the sorting element
     protected abstract void UpdateColorOfHolder();
 
+    // Performed in subclasses due to different sorting elements
     protected abstract void OnCollisionEnter(Collision collision);
 
 

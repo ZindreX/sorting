@@ -993,7 +993,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ffb33adbbc5254996442d44e628b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seconds: 1
   pivotHolderPrefab: {fileID: 1946392530152884, guid: c4715b4d9cf47da429328980c8d6edec,
     type: 2}
 --- !u!114 &119957889
@@ -1007,7 +1006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62fadf70b7651144a7035dbbfd5fb5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 0
+  teachingModeEditor: 2
   difficultyEditor: 0
   numberofElementsEditor: 3
   dupEditor: 0
@@ -12863,9 +12862,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   algorithmManagerObj: {fileID: 119957883}
-  incrementAction: {fileID: 11400000, guid: 9370d563ca3ea0e4aaa7009f347e6eab, type: 2}
-  decrementAction: {fileID: 11400000, guid: 9370d563ca3ea0e4aaa7009f347e6eab, type: 2}
-  interactUIAction: {fileID: 11400000, guid: 986ef205035d57d488a883605fcea670, type: 2}
+  incrementAction: {fileID: 11400000, guid: e859c276d23d55d4aa1eb4a7fc72085f, type: 2}
+  decrementAction: {fileID: 11400000, guid: 1bd778ac68bf56148bf348c4292123d0, type: 2}
+  interactUIAction: {fileID: 11400000, guid: c7ec8b6c137b6a14494fb09be87638ad, type: 2}
 --- !u!4 &1856165312
 Transform:
   m_ObjectHideFlags: 0
@@ -12890,7 +12889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27991c206a5e66147bb8ee3ef31c8bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionSet: {fileID: 11400000, guid: 4ddd2636522fdf44282a43c14bf03e09, type: 2}
+  actionSet: {fileID: 11400000, guid: 7fab2de8fc4263b469d6edabc6548ef2, type: 2}
   disableAllOtherActionSets: 0
   activateOnStart: 1
   deactivateOnDestroy: 1
@@ -13240,7 +13239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f260935093f73f241bfaa1578e5e5506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleportAction: {fileID: 11400000, guid: 8e492e209ad85ca4dbbd6a4b253290a8, type: 2}
+  teleportAction: {fileID: 11400000, guid: ae959400fd7fbc842908a4737109a8a0, type: 2}
   traceLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
