@@ -93,7 +93,8 @@ public abstract class HolderBase : MonoBehaviour, IChild {
             }
             else // User test
             {
-                prevElementID = currentHolding.SortingElementID;
+                if (currentHolding != null)
+                    prevElementID = currentHolding.SortingElementID; // null exception, how?
             }
             currentHolding = null;
             CurrentColor = Util.STANDARD_COLOR;
@@ -109,23 +110,5 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
     // Performed in subclasses due to different sorting elements
     protected abstract void OnCollisionEnter(Collision collision);
-
-
-
-
-
-    //public void ChangeColorTo(Color color)
-    //{
-    //    // Get the renderer from the object
-    //    Renderer rend = GetComponentInChildren<Renderer>();
-
-    //    // Set the Color of the material to given color
-    //    rend.material.shader = Shader.Find("_Color");
-    //    rend.material.SetColor("_Color", color);
-
-    //    // Find the specular shader and change its color too
-    //    rend.material.shader = Shader.Find("Specular");
-    //    rend.material.SetColor("_SpecColor", color);
-    //}
 
 }

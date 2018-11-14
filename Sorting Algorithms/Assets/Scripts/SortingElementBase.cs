@@ -13,6 +13,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public static int SORTING_ELEMENT_NR = 0;
 
     protected int value, sortingElementID, prevHolderID = Util.INIT_STATE, userMove = 0, validatedUserMove = 0;
+    public int currentHolderID;
 
     // SortingElement state
     protected bool isSorted = false, isCompare = false;
@@ -21,6 +22,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
     protected GameObject parent;
     protected HolderBase currentStandingOn;
+    protected Vector3 placementAboveHolder;
 
     // Debugging
     #region Debugging variables:
@@ -37,7 +39,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     {
         value = Random.Range(0, 100);
         sortingElementID = SORTING_ELEMENT_NR++;
-        SetSurfaceText(value.ToString());       // element and holder ID (same at start)
+        SetSurfaceText(value.ToString());
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -98,6 +100,13 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public HolderBase CurrentStandingOn
     {
         get { return currentStandingOn; }
+        set { currentStandingOn = value;
+            if (value != null)
+            {
+                currentHolderID = value.HolderID;
+                PlacementAboveHolder = value.transform.position;
+            }
+            } // new stuff
     }
 
     public int SortingElementID
@@ -115,7 +124,13 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
     public void PlaceManuallySortingElementOn(HolderBase holder)
     {
-        currentStandingOn = holder;
+        CurrentStandingOn = holder;
+    }
+
+    public Vector3 PlacementAboveHolder // new stuff
+    {
+        get { return placementAboveHolder; }
+        set { placementAboveHolder = new Vector3(value.x, value.y + 0.1f, value.z); }
     }
 
     // --------------------------------------- User test validation ---------------------------------------
@@ -125,7 +140,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
         // Check if the user moved the element to a new holder,         TODO: in case of mistake -> avoid new error when fixing the mistake
         if (holder.HolderID != prevHolderID)
         {
-            currentStandingOn = holder;
+            CurrentStandingOn = holder;
             userMove++;
             holder.HasPermission = true;
 
@@ -173,13 +188,13 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             }
         }
         else
-            currentStandingOn = holder; // Back to the same
+            CurrentStandingOn = holder; // Back to the same
                                         //standingInCorrectHolder = true;
     }
 
     protected bool CanValidate()
     {
-        return Instruction != null && currentStandingOn != null;
+        return Instruction != null && CurrentStandingOn != null;
     }
 
     //  --------------------------------------- Collision detection ---------------------------------------
@@ -191,7 +206,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             HolderBase holder = collision.collider.GetComponent<HolderBase>();
             if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {
-                currentStandingOn = holder;
+                CurrentStandingOn = holder;
             }
             else
             {
@@ -205,9 +220,9 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     {
         if (collision.collider.tag == Util.HOLDER_TAG)
         {
-            if (currentStandingOn != null)
-                prevHolderID = currentStandingOn.HolderID; // tokidoki null ref exception
-            currentStandingOn = null;
+            if (CurrentStandingOn != null)
+                prevHolderID = CurrentStandingOn.HolderID; // tokidoki null ref exception
+            CurrentStandingOn = null;
             //standingInCorrectHolder = false; // todo
         }
     }

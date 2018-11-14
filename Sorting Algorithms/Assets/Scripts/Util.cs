@@ -159,8 +159,13 @@ public class Util : MonoBehaviour {
         }
     }
 
-    public static void IndicateElement(SortingElementBase element)
+    public static void IndicateElement(GameObject obj)
     {
-        element.transform.position += ABOVE_HOLDER_VR;
+        obj.transform.position += ABOVE_HOLDER_VR;
+    }
+
+    public static void ResetRotation(GameObject obj)
+    {
+        obj.transform.rotation = Quaternion.identity;
     }
 }

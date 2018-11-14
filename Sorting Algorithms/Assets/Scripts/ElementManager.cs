@@ -89,7 +89,9 @@ public class ElementManager : MonoBehaviour, IManager {
     {
         foreach (GameObject obj in SortingElements)
         {
-            obj.GetComponent<Interactable>().enabled = enable;
+            //obj.GetComponent<Interactable>().enabled = enable;
+            //obj.GetComponent<Throwable>().enabled = enable;
+            //obj.GetComponent<VelocityEstimator>().enabled = enable;
         }
     }
 

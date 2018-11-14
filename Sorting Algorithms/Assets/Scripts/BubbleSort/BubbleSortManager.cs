@@ -26,7 +26,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
         bool gotSortingElement = !bubbleSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-        //bool noDestination = bubbleSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
+        bool noDestination = bubbleSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
         if (gotSortingElement)
         {
@@ -51,7 +51,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
 
-            if (gotSortingElement)// && !noDestination)
+            if (gotSortingElement && !noDestination)
                 return 0;
             return 2;
         }

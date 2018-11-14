@@ -233,7 +233,7 @@ public class InsertionSort : Algorithm {
             GameObject compareObj = list[j];
             InsertionSortElement compare = compareObj.GetComponent<InsertionSortElement>();
             compare.IsCompare = true;
-            Util.IndicateElement(compare);
+            Util.IndicateElement(compare.gameObject);
 
             // Display pseudocode (2nd while)
             pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.HIGHLIGHT_COLOR);
@@ -283,7 +283,7 @@ public class InsertionSort : Algorithm {
                     compare = compareObj.GetComponent<InsertionSortElement>();
                     compare.IsCompare = true;
                     value2 = compare.Value;
-                    Util.IndicateElement(compare);
+                    Util.IndicateElement(compare.gameObject);
 
                     // Display pseudocode (2nd while new compare value)
                     pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.HIGHLIGHT_COLOR);
@@ -294,7 +294,7 @@ public class InsertionSort : Algorithm {
 
                     if (value1 >= value2)
                     {
-                        Util.IndicateElement(compare);
+                        Util.IndicateElement(compare.gameObject);
                         // Display pseudocode (end 2nd while)
                         pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), Util.HIGHLIGHT_COLOR);
                         yield return new WaitForSeconds(seconds);
@@ -489,14 +489,14 @@ public class InsertionSort : Algorithm {
 
             case Util.PIVOT_START_INST:
                 value1 = sortingElement.Value;
-                Util.IndicateElement(sortingElement);
+                Util.IndicateElement(sortingElement.gameObject);
 
                 lineOfCode.Add(4);
                 break;
 
             case Util.COMPARE_START_INST:
                 value2 = sortingElement.Value;
-                Util.IndicateElement(sortingElement);
+                Util.IndicateElement(sortingElement.gameObject);
 
                 lineOfCode.Add(5);
                 break;

@@ -28,7 +28,11 @@ public class BubbleSort : Algorithm {
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
-        // need to override here?
+        skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FINAL_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.COMPARE_START_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.COMPARE_END_INST);
     }
 
     public override string CollectLine(int lineNr)
@@ -160,8 +164,8 @@ public class BubbleSort : Algorithm {
                 p2.IsCompare = true;
 
                 // Update color on holders
-                Util.IndicateElement(p1);
-                Util.IndicateElement(p2);
+                Util.IndicateElement(p1.gameObject);
+                Util.IndicateElement(p2.gameObject);
 
                 // Get their values
                 value1 = p1.Value;
@@ -174,21 +178,29 @@ public class BubbleSort : Algorithm {
 
                 if (value1 > value2)
                 {
+                    // Switch their positions
+                    GameObject temp = list[j];
+                    GameObject temp2 = list[j + 1];
+                    //Vector3 pos1 = list[j].transform.position, pos2 = list[j + 1].transform.position; // p1 & p2 old positions
+                    //p1.transform.position = pos2;
+                    //list[j] = temp2;
+
+                    //p2.transform.position = pos1;
+                    //list[j + 1] = temp;
+
+                    // Switch their positions (added some stuff such that the elements get back in position)
+                    Vector3 pos1 = list[j].GetComponent<SortingElementBase>().PlacementAboveHolder, pos2 = list[j + 1].GetComponent<SortingElementBase>().PlacementAboveHolder;
+                    p1.transform.position = pos2;
+                    list[j] = temp2;
+                    p2.transform.position = pos1;
+                    list[j + 1] = temp;
+                    Util.ResetRotation(temp);
+                    Util.ResetRotation(temp2);
+
                     // Display pseudocode (swap)
                     pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.HIGHLIGHT_COLOR);
                     yield return new WaitForSeconds(seconds);
                     pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
-
-                    // Switch their positions
-                    GameObject temp = list[j];
-                    GameObject temp2 = list[j + 1];
-                    Vector3 pos1 = list[j].transform.position, pos2 = list[j + 1].transform.position; // p1 & p2 old positions
-                    p1.transform.position = pos2;
-                    list[j] = temp2;
-
-                    p2.transform.position = pos1;
-                    list[j + 1] = temp;
-                    //yield return new WaitForSeconds(seconds);
                 }
                 // Display pseudocode (comparison/if end)
                 pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), Util.HIGHLIGHT_COLOR);
@@ -196,9 +208,11 @@ public class BubbleSort : Algorithm {
                 pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
                 p1.IsCompare = false;
-                p1.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR; // fix so this happens automatically
+                if (p1.CurrentStandingOn != null)
+                    p1.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
                 p2.IsCompare = false;
-                p2.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
+                if (p2.CurrentStandingOn != null)
+                    p2.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
             }
             // Display pseudocode (end 2nd for-loop)
             pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), Util.HIGHLIGHT_COLOR);
@@ -206,7 +220,7 @@ public class BubbleSort : Algorithm {
             pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
             list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
-            list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
+            Util.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
             yield return new WaitForSeconds(seconds);
         }
         isSortingComplete = true;
@@ -444,8 +458,8 @@ public class BubbleSort : Algorithm {
                 value1 = se1.Value;
                 value2 = se2.Value;
 
-                Util.IndicateElement(se1);
-                Util.IndicateElement(se2);
+                Util.IndicateElement(se1.gameObject);
+                Util.IndicateElement(se2.gameObject);
                 break;
 
             case Util.SWITCH_INST:
