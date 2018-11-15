@@ -553,10 +553,11 @@ public class InsertionSort : Algorithm {
         // Add the first instruction which will be used for Pseudo code
         instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, i, Util.NO_VALUE, false, false));
 
-        // Line 2
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, i, Util.NO_VALUE, false, false));
         while (i < sortingElements.Length)
         {
+            // Line 2
+            instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, i, Util.NO_VALUE, false, false));
+            
             // Line 3
             int j = i - 1;
             instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_J, i, j, false, false));
@@ -579,7 +580,7 @@ public class InsertionSort : Algorithm {
                 if (pivot.Value >= compareElement.Value)
                 {
                     // Line 7
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
                     break;
                 }
 
@@ -601,7 +602,7 @@ public class InsertionSort : Algorithm {
                 if (j < 0)
                 {
                     // Added *** Test: user test // Line 8
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j+2, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
                     break;
                 }
             }
@@ -615,6 +616,9 @@ public class InsertionSort : Algorithm {
             i += 1;
             instructions.Add(instructionNr++, new InstructionBase(Util.INCREMENT_VAR_I, i, j, false, false));
         }
+
+        // Line 2 (update loop before finishing)
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, i, Util.NO_VALUE, false, false));
 
         // Add the final instruction which will be used for Pseudo code
         instructions.Add(instructionNr, new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FINAL_INSTRUCTION, Util.NO_VALUE, false, false, false));

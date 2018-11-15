@@ -47,16 +47,17 @@ public class InsertionSortManager : AlgorithmManagerBase {
         {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
-
-            if (gotSortingElement && !noDestination)
-                return 0;
-            return 1;
         }
 
-        // No help displayed
-        if (noDestination)
-            return 1;
-        return 0;
+
+        if (gotSortingElement && !noDestination)
+            return 0;
+        return 1;
+        // No help displaye
+
+        //if (noDestination)
+        //    return 1;
+        //return 0;
     }
 
     public override HolderBase GetCorrectHolder(int index)

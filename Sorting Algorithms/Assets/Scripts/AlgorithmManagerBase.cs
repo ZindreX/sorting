@@ -207,6 +207,17 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             }
             else // User test
             {
+                //if (userTestReady) // debugging
+                //{
+                //    string holderIDTest = "";
+                //    for (int x = 0; x < elementManager.SortingElements.Length; x++)
+                //    {
+                //        SortingElementBase s = elementManager.GetSortingElement(x).GetComponent<SortingElementBase>();
+                //        holderIDTest += "[" + s.Value + "|" + ((InsertionSortInstruction)s.Instruction).HolderID + "], ";
+                //    }
+                //    displayUnitManager.BlackBoard.ChangeText(textIndex, holderIDTest);
+                //}
+
                 // First check if user test setup is complete
                 if (userTestManager.HasInstructions() && !beginnerWait)
                 {
@@ -222,7 +233,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
                         // Checking if all sorting elements are sorted
                         if (!userTestManager.HasInstructions() && elementManager.AllSorted())
+                        {
                             algorithm.IsSortingComplete = true;
+                            Debug.LogError("TESTING"); // ???
+                        }
                         else
                         {
                             // Still some elements not sorted, so go on to next round
@@ -246,6 +260,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         yield return new WaitForSeconds(algorithm.Seconds);
         algorithm.IsSortingComplete = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
+        for (int x=0; x < numberOfElements; x++)
+        {
+            Util.IndicateElement(elementManager.GetSortingElement(x));
+            elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
+            yield return new WaitForSeconds(algorithm.Seconds / 2);
+        }
     }
 
     /* --------------------------------------- Instatiate Setup ---------------------------------------
@@ -437,7 +457,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         userTestManager.SetStartTime();
 
         //DebugCheckInstructions(instructions); // Debugging
+
+        userTestReady = true;
     }
+    private bool userTestReady = false; // debugging
 
     // Finds the number of instructions which the player has to do something to progress0 5   
     private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)

@@ -18,11 +18,6 @@ public class HolderManager : MonoBehaviour, IManager {
     private Vector3 firstHolderPosition; // -2.092, 2.1, 29.5
     private bool containsHolders = false;
 
-    void Awake()
-    {
-        firstHolderPosition = gameObject.transform.position;
-    }
-
     public GameObject[] Holders
     {
         get { return holders; }
@@ -39,7 +34,9 @@ public class HolderManager : MonoBehaviour, IManager {
         if (containsHolders)
             return;
 
-        holders = new GameObject[numberOfHolders]; // ***
+        firstHolderPosition = new Vector3(gameObject.transform.position.x + (Util.MAX_NUMBER_OF_ELEMENTS - numberOfHolders) * (Util.SPACE_BETWEEN_HOLDERS/2), gameObject.transform.position.y, gameObject.transform.position.z);
+
+       holders = new GameObject[numberOfHolders]; // ***
         for (int x = 0; x < numberOfHolders; x++)
         {
             holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3((x * Util.SPACE_BETWEEN_HOLDERS), 0f, 0f), Quaternion.identity);

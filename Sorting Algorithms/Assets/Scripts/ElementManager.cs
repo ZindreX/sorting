@@ -95,7 +95,6 @@ public class ElementManager : MonoBehaviour, IManager {
         }
     }
 
-
     // OUTDATED -- to be fixed
 
     /* Creation with rules

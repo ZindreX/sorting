@@ -7840,9 +7840,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82aa6fc0e1a954985d311d4bf81135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 0
+  teachingModeEditor: 2
   difficultyEditor: 0
-  numberofElementsEditor: 3
+  numberofElementsEditor: 1
   dupEditor: 0
   caseEditor: 0
   algorithmSpeed: 1
@@ -11992,7 +11992,6 @@ MonoBehaviour:
   texts:
   - {fileID: 1885449948}
   - {fileID: 1713839737}
-  - {fileID: 0}
 --- !u!1001 &1572745952
 Prefab:
   m_ObjectHideFlags: 0

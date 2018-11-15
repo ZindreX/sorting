@@ -45,14 +45,14 @@ public class BubbleSortElement : SortingElementBase {
             }
 
             if (bubbleSortInstruction.IsCompare)
-                isCompare = true;
+                IsCompare = true;
             else
-                isCompare = false;
+                IsCompare = false;
 
             if (IsSortedAchieved())
-                isSorted = true;
+                IsSorted = true;
             else
-                isSorted = false;
+                IsSorted = false;
         }
     }
     
@@ -66,10 +66,10 @@ public class BubbleSortElement : SortingElementBase {
     {
         if (CanValidate())
         {
-            switch (instruction)
+            switch (bubbleSortInstruction.Instruction)
             {
                 case Util.INIT_INSTRUCTION:
-                    return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+                    return (CurrentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
 
                 case Util.COMPARE_START_INST: break;
 
@@ -83,12 +83,12 @@ public class BubbleSortElement : SortingElementBase {
                     return Util.WRONG_HOLDER;
 
                 case Util.SWITCH_INST:
-                    return (currentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)
-                           || bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID)
+                    return (CurrentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)
+                           || bubbleSortInstruction.SwitchToHolder(sortingElementID) == CurrentStandingOn.HolderID)
                            ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
-                case Util.EXECUTED_INST:
-                    return (bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                //case Util.EXECUTED_INST:
+                //    return (bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }
@@ -98,7 +98,7 @@ public class BubbleSortElement : SortingElementBase {
 
     private bool CheckPosition()
     {
-        return sortingElementID == bubbleSortInstruction.SortingElementID1 && currentStandingOn.HolderID == bubbleSortInstruction.HolderID1 ||
-               sortingElementID == bubbleSortInstruction.SortingElementID2 && currentStandingOn.HolderID == bubbleSortInstruction.HolderID2;
+        return sortingElementID == bubbleSortInstruction.SortingElementID1 && CurrentStandingOn.HolderID == bubbleSortInstruction.HolderID1 ||
+               sortingElementID == bubbleSortInstruction.SortingElementID2 && CurrentStandingOn.HolderID == bubbleSortInstruction.HolderID2;
     }
 }

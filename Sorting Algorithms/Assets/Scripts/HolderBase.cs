@@ -63,7 +63,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
     public Color CurrentColor
     {
         get { return GetComponentInChildren<Renderer>().material.color; }
-        set { prevColor = currentColor; GetComponentInChildren<Renderer>().material.color = value; }
+        set { if (parent.GetComponent<AlgorithmManagerBase>().Difficulty != Util.EXAMINATION || parent.GetComponent<AlgorithmManagerBase>().Algorithm.IsSortingComplete) { prevColor = currentColor; GetComponentInChildren<Renderer>().material.color = value; }}
     }
 
     public Color PrevColor
@@ -93,10 +93,10 @@ public abstract class HolderBase : MonoBehaviour, IChild {
             }
             else // User test
             {
-                if (currentHolding != null)
+                if (CurrentHolding != null)
                     prevElementID = currentHolding.SortingElementID; // null exception, how?
             }
-            currentHolding = null;
+            CurrentHolding = null;
             CurrentColor = Util.STANDARD_COLOR;
         }
     }

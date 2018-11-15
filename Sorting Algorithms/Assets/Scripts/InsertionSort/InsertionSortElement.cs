@@ -50,54 +50,55 @@ public class InsertionSortElement : SortingElementBase {
             }
 
             if (insertionSortInstruction.IsPivot)
-                isPivot = true;
+                IsPivot = true;
             else
-                isPivot = false;
+                IsPivot = false;
 
             if (insertionSortInstruction.IsCompare)
-                isCompare = true;
+                IsCompare = true;
             else
-                isCompare = false;
+                IsCompare = false;
 
             if (insertionSortInstruction.IsSorted)
-                isSorted = true;
+                IsSorted = true;
             else
-                isSorted = false;
+                IsSorted = false;
         }
     }
 
     protected override string IsCorrectlyPlaced()
     {
-        //Debug.Log("IsCorrectlyPlaced()");
+        //Debug.Log("IsCorrectlyPlaced( [" + value + "] )");
         if (CanValidate())
         {
-            //Debug.Log("Can idd validate");
-            if (!insertionSortInstruction.HasBeenExecuted())
+            //Debug.Log("Can validate");
+            if (!insertionSortInstruction.HasBeenExecuted()) // this check even needed anymore?
             {
-                //Debug.Log("Not executed");
+                //Debug.Log("Not executed: " + insertionSortInstruction.Instruction);
                 switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:
-                        return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+                        return (CurrentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
 
                     case Util.PIVOT_START_INST:
-                        return (currentStandingOn.HolderID == insertionSortInstruction.HolderID || ((InsertionSortHolder)currentStandingOn).IsPivotHolder) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return ((InsertionSortHolder)CurrentStandingOn).IsPivotHolder ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.PIVOT_END_INST:
-                        return (((InsertionSortHolder)currentStandingOn).IsPivotHolder || currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return CurrentStandingOn.HolderID == insertionSortInstruction.NextHolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.COMPARE_START_INST:
                         break;
 
                     case Util.COMPARE_END_INST:
-                        return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        //Debug.Log(CurrentStandingOn.HolderID + " <= holderID => " + insertionSortInstruction.HolderID);
+                        return CurrentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.SWITCH_INST:
-                        if (intermediateMove && currentStandingOn.HolderID == insertionSortInstruction.HolderID) //insertionSortInstruction.HolderID == currentStandingOn.HolderID && insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION && IsSorted)
+                        if (intermediateMove && CurrentStandingOn.HolderID == insertionSortInstruction.HolderID)
                         {
-                            return Util.CORRECT_HOLDER; //Util.MOVE_INTERMEDIATE;
+                            return Util.CORRECT_HOLDER;
                         }
-                        else if (intermediateMove && insertionSortInstruction.NextHolderID == currentStandingOn.HolderID)
+                        else if (intermediateMove && insertionSortInstruction.NextHolderID == CurrentStandingOn.HolderID)
                         {
                             intermediateMove = false;
                             return Util.CORRECT_HOLDER;
@@ -110,36 +111,29 @@ public class InsertionSortElement : SortingElementBase {
             }
             else
             {
-                //Debug.Log("Testing moving to wrong holder (already executed instruction)");
+                Debug.Log("Has already been executed: " + insertionSortInstruction.Instruction);
                 switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:
-                        return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+                        return (CurrentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
 
                     case Util.PIVOT_START_INST:
-                        return ((InsertionSortHolder)currentStandingOn).IsPivotHolder ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return ((InsertionSortHolder)CurrentStandingOn).IsPivotHolder ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.PIVOT_END_INST:
-                        return currentStandingOn.HolderID == insertionSortInstruction.NextHolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return CurrentStandingOn.HolderID == insertionSortInstruction.NextHolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.COMPARE_START_INST:
                         break;
 
                     case Util.COMPARE_END_INST:
-                        return currentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return CurrentStandingOn.HolderID == insertionSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.SWITCH_INST:
-                        return (intermediateMove && insertionSortInstruction.NextHolderID == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                        return (insertionSortInstruction.NextHolderID == CurrentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
                 }
-
-
-
-
-                //if (insertionSortInstruction.NextHolderID != Util.NO_DESTINATION)
-                //    return (currentStandingOn.HolderID == insertionSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-                //return (currentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
             }
         }
         return Util.CANNOT_VALIDATE_ERROR;
