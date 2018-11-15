@@ -98,13 +98,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // Algorithm settings
     private int numberOfElements = 8;
-    private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
-    private bool duplicates = true, userStoppedAlgorithm = false;
-    private bool beginnerWait = false;
-
-    private string algorithmName;
-    private int titleIndex = 0, textIndex = 1;
-
+    private string algorithmName, teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
+    private bool duplicates = true, userStoppedAlgorithm = false, beginnerWait = false;
     private Vector3[] holderPositions;
 
     [SerializeField]
@@ -142,8 +137,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        displayUnitManager.BlackBoard.ChangeText(titleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(textIndex, "");
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "");
     }
 
     // Update is called once per frame
@@ -159,9 +154,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             {
                 userTestManager.SetEndTime();
                 userTestManager.CalculateScore();
-                displayUnitManager.BlackBoard.ChangeText(textIndex, userTestManager.GetExaminationResult());
+                displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
             }
-            displayUnitManager.BlackBoard.ChangeText(titleIndex, "Sorting Completed!");
+            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, "Sorting Completed!");
         }
         else
         {
@@ -197,10 +192,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     if (instruction.Instruction != Util.FIRST_INSTRUCTION && instruction.Instruction != Util.FINAL_INSTRUCTION)
                         algorithm.ExecuteStepByStepOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
                 }
-            }
-            else if (IsTutorial())
-            {
-                //blackboard.SetResultText(algorithm.GetComparison());
             }
             else if (IsUserTest()) // User test
             {
@@ -238,6 +229,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         {
                             // Still some elements not sorted, so go on to next round
                             bool hasInstruction = userTestManager.IncrementToNextInstruction();
+
                             // Hot fix - solve in some other way?
                             if (hasInstruction)
                                 userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
@@ -246,22 +238,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
                         }
                     }
-                    displayUnitManager.BlackBoard.ChangeText(textIndex, userTestManager.FillInBlackboard());
+                    displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
                 }
             }
-        }
-    }
-
-    private IEnumerator FinishUserTest()
-    {
-        yield return new WaitForSeconds(algorithm.Seconds);
-        algorithm.IsSortingComplete = true;
-        displayUnitManager.PseudoCodeViewer.RemoveHightlight();
-        for (int x=0; x < numberOfElements; x++)
-        {
-            Util.IndicateElement(elementManager.GetSortingElement(x));
-            elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
-            yield return new WaitForSeconds(algorithm.Seconds / 2);
         }
     }
 
@@ -276,8 +255,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         elementManager.CreateObjects(NumberOfElements, HolderPositions);
 
         // Display on blackboard
-        displayUnitManager.BlackBoard.ChangeText(titleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(textIndex, teachingMode);
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, teachingMode);
         
         switch (teachingMode)
         {
@@ -313,16 +292,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         get { return algorithm; }
     }
 
-    //protected string GetAlgorithmName
-    //{
-    //    get { return algorithm.AlgorithmName(); }
-    //}
-
     // Number of elements used
     public int NumberOfElements
     {
         get { return numberOfElements; }
-        set { numberOfElements = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Number of elements: " + value); }
+        set { numberOfElements = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Number of elements: " + value); }
     }
 
     // The positions of the holders
@@ -343,26 +317,26 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public string TeachingMode
     {
         get { return teachingMode; }
-        set { teachingMode = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Teaching mode: " + value); }
+        set { teachingMode = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + value); }
     }
 
     // Beginner, Intermediate, or Examination
     public string Difficulty
     {
         get { return difficulty; }
-        set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Difficulty: " + value); }
+        set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Difficulty: " + value); }
     }
 
     // None, Best-case, Worst-case (not implemented yet)
     public string SortingCase
     {
-        set { sortingCase = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Case activated: " + value); }
+        set { sortingCase = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Case activated: " + value); }
     }
 
     // Duplicates can occour in the problem sets (not implemented yet)
     public bool Duplicates
     {
-        set { duplicates = value; displayUnitManager.BlackBoard.ChangeText(textIndex, "Duplicates: " + Util.EnabledToString(value)); }
+        set { duplicates = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Duplicates: " + Util.EnabledToString(value)); }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
@@ -441,6 +415,20 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         userTestReady = true; // debugging
     }
     private bool userTestReady = false; // debugging
+
+    //
+    private IEnumerator FinishUserTest()
+    {
+        yield return new WaitForSeconds(algorithm.Seconds);
+        algorithm.IsSortingComplete = true;
+        displayUnitManager.PseudoCodeViewer.RemoveHightlight();
+        for (int x = 0; x < numberOfElements; x++)
+        {
+            Util.IndicateElement(elementManager.GetSortingElement(x));
+            elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
+            yield return new WaitForSeconds(algorithm.Seconds / 2);
+        }
+    }
 
     // Finds the number of instructions which the player has to do something to progress0 5   
     private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)

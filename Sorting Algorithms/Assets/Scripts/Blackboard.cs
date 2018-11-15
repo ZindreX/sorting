@@ -11,6 +11,17 @@ public class Blackboard : MonoBehaviour, IDisplay {
 
     [SerializeField]
     private TextMesh[] texts;
+    private int titleIndex = 0, textIndex = 1;
+
+    public int TitleIndex
+    {
+        get { return titleIndex; }
+    }
+
+    public int TextIndex
+    {
+        get { return textIndex; }
+    }
 
     public void ChangeText(int textLine, string text)
     {
