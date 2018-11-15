@@ -134,9 +134,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
         algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
 
-        //SetAboveHolderForTeachingMode();
-
-
         // Debugging
         SettingsFromEditor();
     }
@@ -205,7 +202,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             {
                 //blackboard.SetResultText(algorithm.GetComparison());
             }
-            else // User test
+            else if (IsUserTest()) // User test
             {
                 //if (userTestReady) // debugging
                 //{
@@ -380,20 +377,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         tutorialStep.NotifyUserInput(increment);
     }
 
-    // **
-
-    // Need this method anymore?
-    //public void SetAboveHolderForTeachingMode()
-    //{
-    //    switch (teachingMode)
-    //    {
-    //        case Util.TUTORIAL: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
-    //        case Util.STEP_BY_STEP: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
-    //        case Util.USER_TEST: algorithm.AboveHolder = new Vector3(0f, 0.05f, 0f); break;
-    //        default: Debug.Log("Teaching mode '" + teachingMode + "' hasnt't defined aboveHolder variable"); break;
-    //    }
-    //}
-
     // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
     public bool IsTutorial()
     {
@@ -411,9 +394,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         return teachingMode == Util.USER_TEST;
     }
-
-
-
 
     /* --------------------------------------- Tutorial ---------------------------------------
      * - Gives a visual presentation of <sorting algorithm>
@@ -458,7 +438,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         //DebugCheckInstructions(instructions); // Debugging
 
-        userTestReady = true;
+        userTestReady = true; // debugging
     }
     private bool userTestReady = false; // debugging
 
@@ -472,12 +452,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                 if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
                     count++;
             }
-            else if (algorithm.SkipDict.ContainsKey(Util.SKIP_NO_ELEMENT))
-            {
-                if (!algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction))
-                    count++;
-            }
-
         }
         return count;
     }

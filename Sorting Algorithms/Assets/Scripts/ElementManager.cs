@@ -17,8 +17,6 @@ public class ElementManager : MonoBehaviour, IManager {
     private SortingElementBase currentMoving;
     private bool containsElements = false;
 
-    private HashSet<int> sortingElementValues = new HashSet<int>(); // No duplicates
-
 
     public GameObject[] SortingElements
     {
@@ -48,6 +46,44 @@ public class ElementManager : MonoBehaviour, IManager {
         for (int x = 0; x < sortingElements.Length; x++)
         {
             // Hotfix (sorting element currentHolding / prevHolding problem)
+            sortingElements[x].GetComponent<SortingElementBase>().PlaceManuallySortingElementOn(GetComponent<HolderManager>().Holders[x].GetComponent<HolderBase>());
+        }
+
+        containsElements = true;
+    }
+
+    // Creation with rules
+    private HashSet<int> usedValues = new HashSet<int>();
+    public void CreateObjects(int numberOfElements, Vector3[] positions, bool duplicates, string sortingCase)
+    {
+        if (containsElements)
+            return;
+
+        sortingElements = new GameObject[numberOfElements]; // Util.CreateObjects(sortingElementPrefab, numberOfElements, positions, gameObject);
+
+        for (int x = 0; x < numberOfElements; x++)
+        {
+            int newValue = Random.Range(0, Util.MAX_VALUE);
+            while (duplicates && usedValues.Contains(newValue))
+            {
+                newValue = Random.Range(0, Util.MAX_VALUE);
+            }   
+            usedValues.Add(newValue);
+
+            sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + Util.ABOVE_HOLDER_VR, Quaternion.identity);
+            sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;
+            sortingElements[x].GetComponent<IChild>().Parent = gameObject;
+        }
+
+        switch (sortingCase)
+        {
+            case Util.BEST_CASE: sortingElements = InsertionSort.InsertionSortStandard(sortingElements); break;
+            case Util.WORST_CASE: sortingElements = InsertionSort.InsertionSortInverted(sortingElements); break;
+        }
+
+        // Hotfix (sorting element currentHolding / prevHolding problem)
+        for (int x = 0; x < sortingElements.Length; x++)
+        {
             sortingElements[x].GetComponent<SortingElementBase>().PlaceManuallySortingElementOn(GetComponent<HolderManager>().Holders[x].GetComponent<HolderBase>());
         }
 
@@ -94,49 +130,5 @@ public class ElementManager : MonoBehaviour, IManager {
             //obj.GetComponent<VelocityEstimator>().enabled = enable;
         }
     }
-
-    // OUTDATED -- to be fixed
-
-    /* Creation with rules
-     * rules[0]: duplicates etc.
-     * rules[1]: worst-/bestcase
-    */
-    //public void CreateSortingElementsWithRules(int numberOfElements, string[] rules, Vector3[] positions)
-    //{
-    //    for (int x = 0; x < numberOfElements; x++)
-    //    {
-    //        if (rules[0] != null)
-    //            SortingElements[x] = CreateSortingElementBasedOn(rules[0], positions[x]);
-    //    }
-    //    if (rules[1] != null)
-    //        FixCase(rules[1]);
-    //}
-
-    //// No duplicates, etc..
-    //private SortingElementBase CreateSortingElementBasedOn(string rule, Vector3 pos)
-    //{
-    //    GameObject element = Instantiate(sortingElementPrefab, pos, Quaternion.identity);
-    //    if (rule.Equals(Util.NO_DUPLICATES))
-    //    {
-    //        while (sortingElementValues.Contains(element.GetComponent<SortingElementBase>().Value))
-    //        {
-    //            element.GetComponent<SortingElementBase>().Value = Random.Range(0, Util.MAX_VALUE);
-    //        }
-    //    }
-    //    else if (rule.Equals(Util.ALL_SAME))
-    //        element.GetComponent<SortingElementBase>().Value = 1;
-    //    return element.GetComponent<SortingElementBase>();
-    //}
-
-    //// Worst-/best case...
-    //private void FixCase(string rule)
-    //{
-    //    switch (rule)
-    //    {
-    //        case Util.WORST_CASE: InsertionSort.InsertionSortStandard(sortingElements, true); break;
-    //        case Util.BEST_CASE: InsertionSort.InsertionSortStandard(sortingElements, false); break;
-    //        default: Debug.LogError("Case rule '" + rule + "' doesn't exist."); break;
-    //    }
-    //}
 
 }

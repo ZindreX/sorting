@@ -35,8 +35,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
         {
             if (currentHolding.IsSorted)
                 UpdateColorOfHolder();
-        }
-            
+        }       
     }
 
     private bool isValidSortingElement(SortingElementBase element)

@@ -50,14 +50,11 @@ public class BubbleSortManager : AlgorithmManagerBase {
         {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
-
-            if (gotSortingElement && !noDestination)
-                return 0;
-            return 2;
         }
-        if (!gotSortingElement) // skipping until next user move
-            return 2;
-        return 0;
+
+        if (gotSortingElement && !noDestination)
+            return 0;
+        return 2;
     }
 
     protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)

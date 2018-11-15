@@ -37,9 +37,9 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
     protected virtual void Awake()
     {
-        value = Random.Range(0, 100);
+        //value = Random.Range(0, 100);
         sortingElementID = SORTING_ELEMENT_NR++;
-        SetSurfaceText(value.ToString());
+        //SetSurfaceText(value.ToString());
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -58,7 +58,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public int Value
     {
         get { return value; }
-        set { this.value = value; }
+        set { this.value = value; SetSurfaceText(value.ToString()); }
     }
 
     // --------------------------------------- Getters & setters ---------------------------------------

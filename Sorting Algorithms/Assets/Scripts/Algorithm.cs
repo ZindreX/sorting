@@ -18,8 +18,6 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     protected virtual void Awake()
     {
-        //displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
-        //displayUnitManager.Algorithm = this;
         AddSkipAbleInstructions();
     }
 
@@ -34,28 +32,6 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
         get { return seconds; }
         set { seconds = value; }
     }
-
-    //public bool IsReadyForNextMove
-    //{
-    //    get { return isReadyForNextMove; }
-    //    set { isReadyForNextMove = value; }
-    //}
-
-    // For visuals on the blackboard
-    //public virtual string GetComparison()
-    //{
-    //    if (value1 < value2)
-    //        return value1 + " < " + value2;
-    //    else if (value1 > value2)
-    //        return value1 + " > " + value2;
-    //    else
-    //        return value1 + " = " + value2;
-    //}
-
-    //public Vector3 AboveHolder
-    //{
-    //    set { aboveHolder = value; }
-    //}
 
     public PseudoCodeViewer PseudoCodeViewer
     {

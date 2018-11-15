@@ -177,6 +177,26 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
+    #region Insertion Sort: Standard (inverted)
+    public static GameObject[] InsertionSortInverted(GameObject[] list)
+    {
+        int i = 1;
+        while (i < list.Length)
+        {
+            GameObject pivot = list[i];
+            int j = i - 1;
+            while (j >= 0 && pivot.GetComponent<SortingElementBase>().Value > list[j].GetComponent<SortingElementBase>().Value)
+            {
+                list[j + 1] = list[j];
+                j -= 1;
+            }
+            list[j + 1] = pivot;
+            i += 1;
+        }
+        return list;
+    }
+    #endregion
+
     #region Insertion Sort: All Moves Tutorial (Visuals)
     public override IEnumerator Tutorial(GameObject[] list)
     {

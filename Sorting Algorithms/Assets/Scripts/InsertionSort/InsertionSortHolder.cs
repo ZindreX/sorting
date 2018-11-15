@@ -37,11 +37,11 @@ public class InsertionSortHolder : HolderBase
         }
         else if (CurrentHolding.IntermediateMove)
             CurrentColor = Util.STANDARD_COLOR;
-        else if (isPivotHolder)
+        else if (IsPivotHolder)
             CurrentColor = Util.PIVOT_COLOR;
         else if (currentHolding.IsCompare)
             CurrentColor = Util.COMPARE_COLOR;
-        else if (currentHolding.IsSorted && !isPivotHolder)
+        else if (currentHolding.IsSorted && !IsPivotHolder)
             CurrentColor = Util.SORTED_COLOR;
         else
             CurrentColor = prevColor;
