@@ -178,14 +178,14 @@ public class InsertionSort : Algorithm {
     #endregion
 
     #region Insertion Sort: Standard (inverted)
-    public static GameObject[] InsertionSortInverted(GameObject[] list)
+    public static int[] InsertionSortFixCase(int[] list, bool inverted)
     {
         int i = 1;
         while (i < list.Length)
         {
-            GameObject pivot = list[i];
+            int pivot = list[i];
             int j = i - 1;
-            while (j >= 0 && pivot.GetComponent<SortingElementBase>().Value > list[j].GetComponent<SortingElementBase>().Value)
+            while (j >= 0 && (!inverted && pivot < list[j] || inverted && pivot > list[j]))
             {
                 list[j + 1] = list[j];
                 j -= 1;

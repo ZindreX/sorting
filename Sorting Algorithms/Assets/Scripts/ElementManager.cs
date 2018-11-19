@@ -40,6 +40,7 @@ public class ElementManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfElements; x++)
         {
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + Util.ABOVE_HOLDER_VR, Quaternion.identity);
+            sortingElements[x].GetComponent<SortingElementBase>().Value = Random.Range(0, Util.MAX_VALUE);
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
         }
 
@@ -54,7 +55,7 @@ public class ElementManager : MonoBehaviour, IManager {
 
     // Creation with rules
     private HashSet<int> usedValues = new HashSet<int>();
-    public void CreateObjects(int numberOfElements, Vector3[] positions, bool duplicates, string sortingCase)
+    public void CreateObjects(int numberOfElements, Vector3[] positions, bool allowDuplicates, string sortingCase)
     {
         if (containsElements)
             return;
@@ -64,7 +65,7 @@ public class ElementManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfElements; x++)
         {
             int newValue = Random.Range(0, Util.MAX_VALUE);
-            while (duplicates && usedValues.Contains(newValue))
+            while (!allowDuplicates && usedValues.Contains(newValue))
             {
                 newValue = Random.Range(0, Util.MAX_VALUE);
             }   
@@ -75,11 +76,8 @@ public class ElementManager : MonoBehaviour, IManager {
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
         }
 
-        switch (sortingCase)
-        {
-            case Util.BEST_CASE: sortingElements = InsertionSort.InsertionSortStandard(sortingElements); break;
-            case Util.WORST_CASE: sortingElements = InsertionSort.InsertionSortInverted(sortingElements); break;
-        }
+        if (sortingCase != Util.NONE)
+            ElementsBasedOnCase(sortingElements, sortingCase);
 
         // Hotfix (sorting element currentHolding / prevHolding problem)
         for (int x = 0; x < sortingElements.Length; x++)
@@ -96,6 +94,7 @@ public class ElementManager : MonoBehaviour, IManager {
         Util.DestroyObjects(sortingElements);
         containsElements = false;
         SortingElementBase.SORTING_ELEMENT_NR = 0;
+        usedValues = new HashSet<int>();
     }
 
     public SortingElementBase CurrentMoving
@@ -111,6 +110,7 @@ public class ElementManager : MonoBehaviour, IManager {
             this.currentMoving = null;
     }
 
+    // Check if all the soring elements have been sorted
     public bool AllSorted()
     {
         foreach (GameObject element in sortingElements)
@@ -121,6 +121,34 @@ public class ElementManager : MonoBehaviour, IManager {
         return true;
     }
 
+    /* Creates a specific sorting case as an exercise for the user
+     * - Since the elements have already been instantiated -> sorting values and hands them out again
+    */
+    public void ElementsBasedOnCase(GameObject[] sortingElements, string sortingCase)
+    {
+        // First gathers the values of the elements (which has been instantiated)
+        int[] values = new int[sortingElements.Length];
+        for (int x=0; x < sortingElements.Length; x++)
+        {
+            values[x] = sortingElements[x].GetComponent<SortingElementBase>().Value;
+        }
+
+        // Sort these values (using insertion sort)
+        switch (sortingCase)
+        {
+            case Util.BEST_CASE: values = InsertionSort.InsertionSortFixCase(values, false); break;
+            case Util.WORST_CASE: values = InsertionSort.InsertionSortFixCase(values, true); break;
+            default: Debug.LogError("Case '" + sortingCase + "' not added."); break;
+        }
+
+        // Change the values of the instantiated elements
+        for (int x=0; x < sortingElements.Length; x++)
+        {
+            sortingElements[x].GetComponent<SortingElementBase>().Value = values[x];
+        }
+    }
+
+    // Change whether the user can interact with the sorting elements
     public void InteractionWithSortingElements(bool enable)
     {
         foreach (GameObject obj in SortingElements)

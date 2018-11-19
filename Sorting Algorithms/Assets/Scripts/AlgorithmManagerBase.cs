@@ -40,10 +40,10 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private enum NumberofElementsEditor { two, four, six, eight }
 
     [SerializeField]
-    private bool dupEditor = false;
+    private bool allowDupEditor = false;
 
     [SerializeField]
-    private CaseEditor caseEditor;
+    private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
 
     [SerializeField]
@@ -66,7 +66,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             case 2: difficulty = Util.EXAMINATION; break;
         }
 
-        switch ((int)caseEditor)
+        switch ((int)sortingCaseEditor)
         {
             case 0: sortingCase = Util.NONE; break;
             case 1: sortingCase = Util.BEST_CASE; break;
@@ -88,9 +88,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             case 2: algorithm.Seconds = 0.5f; break;
         }
 
-        duplicates = dupEditor;
+        allowDuplicates = allowDupEditor;
 
-        Debug.Log("Teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", dup: " + duplicates);
+        Debug.Log("Teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
     }
     // ********** DEBUGGING **************
 
@@ -99,7 +99,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Algorithm settings
     private int numberOfElements = 8;
     private string algorithmName, teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
-    private bool duplicates = true, userStoppedAlgorithm = false, beginnerWait = false;
+    private bool allowDuplicates = true, userStoppedAlgorithm = false, beginnerWait = false;
     private Vector3[] holderPositions;
 
     [SerializeField]
@@ -252,7 +252,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         holderManager.CreateObjects(NumberOfElements, null);
         HolderPositions = holderManager.GetHolderPositions();
-        elementManager.CreateObjects(NumberOfElements, HolderPositions);
+        //elementManager.CreateObjects(NumberOfElements, HolderPositions);
+        elementManager.CreateObjects(NumberOfElements, HolderPositions, allowDuplicates, sortingCase);
 
         // Display on blackboard
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
@@ -336,7 +337,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Duplicates can occour in the problem sets (not implemented yet)
     public bool Duplicates
     {
-        set { duplicates = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Duplicates: " + Util.EnabledToString(value)); }
+        set { allowDuplicates = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Duplicates: " + Util.EnabledToString(value)); }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
