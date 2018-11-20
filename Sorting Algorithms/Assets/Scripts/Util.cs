@@ -61,7 +61,7 @@ public class Util : MonoBehaviour {
     // Colors used
     public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
     public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
-    public static Color BLACKBOARD_TEXT_COLOR = Color.white;
+    public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
 
     public static List<string> skipAbleInstructions = new List<string>() { FIRST_INSTRUCTION, FINAL_INSTRUCTION, COMPARE_START_INST, COMPARE_END_INST,
     UPDATE_LOOP_INST };

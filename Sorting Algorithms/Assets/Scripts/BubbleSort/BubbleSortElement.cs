@@ -38,9 +38,9 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.COMPARE_END_INST: status = "Comparing stop"; break;
                 case Util.SWITCH_INST:
                     status = "Move to " + nextHolderID;
-                    //intermediateMove = true;
+                    intermediateMove = true;
                     break;
-                case Util.EXECUTED_INST: status = "Performed"; break;
+                case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
@@ -49,17 +49,11 @@ public class BubbleSortElement : SortingElementBase {
             else
                 IsCompare = false;
 
-            if (IsSortedAchieved())
+            if (bubbleSortInstruction.IsElementSorted(sortingElementID))
                 IsSorted = true;
             else
                 IsSorted = false;
         }
-    }
-    
-    // Since two elements share instructions, usually the 2nd element is sorted, but in the final instruction both are
-    public bool IsSortedAchieved()
-    {
-        return bubbleSortInstruction.IsSorted && (bubbleSortInstruction.SortingElementID2 == sortingElementID || parent.GetComponent<UserTestManager>().LastInstruction());
     }
 
     protected override string IsCorrectlyPlaced()
@@ -74,21 +68,33 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.COMPARE_START_INST: break;
 
                 case Util.COMPARE_END_INST:
-                    if (CheckPosition())
-                    {
-                        if (sortingElementID == bubbleSortInstruction.SortingElementID2)
-                            isSorted = true;
-                        return Util.CORRECT_HOLDER;
-                    }
-                    return Util.WRONG_HOLDER;
+                    //if (CheckPosition())
+                    //{
+                    //    if (sortingElementID == bubbleSortInstruction.SortingElementID2)
+                    //        isSorted = true;
+                    //    return Util.CORRECT_HOLDER;
+                    //}
+                    //return Util.WRONG_HOLDER;
+                    break;
 
                 case Util.SWITCH_INST:
-                    return (CurrentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)
-                           || bubbleSortInstruction.SwitchToHolder(sortingElementID) == CurrentStandingOn.HolderID)
-                           ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                    if (!bubbleSortInstruction.ElementHasBeenExecuted(sortingElementID))
+                    {
+                        if (IntermediateMove && CurrentStandingOn.HolderID == bubbleSortInstruction.SwitchToHolder(sortingElementID)) // correct move
+                        {
+                            bubbleSortInstruction.ElementExecuted(sortingElementID);
+                            if (bubbleSortInstruction.HasBeenExecuted())
+                                Instruction.Instruction = Util.EXECUTED_INST;
 
-                //case Util.EXECUTED_INST:
-                //    return (bubbleSortInstruction.SwitchToHolder(sortingElementID) == currentStandingOn.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                            intermediateMove = false;
+                            return Util.CORRECT_HOLDER;
+                        }
+                        else if (IntermediateMove && CurrentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)) // did a mistake, getting back to "start"
+                            return Util.CORRECT_HOLDER;
+                        return Util.WRONG_HOLDER;
+                    }
+                    else
+                        return (CurrentStandingOn.HolderID == bubbleSortInstruction.SwitchToHolder(sortingElementID)) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }

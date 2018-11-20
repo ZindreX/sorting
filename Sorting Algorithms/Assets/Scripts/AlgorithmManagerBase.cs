@@ -223,7 +223,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                         {
                             algorithm.IsSortingComplete = true;
-                            Debug.LogError("TESTING"); // ???
+                            Debug.LogError("Any state where it's entering here???"); // ???
                         }
                         else
                         {

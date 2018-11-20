@@ -178,7 +178,7 @@ public class UserTestManager : InstructionControlBase, IBlackboardAble {
     }
 
     /* Checking whether a new instruction can be given
-     * > Changed to int counting instead of bool, because of bubblesort instruction changed*
+     * ...
     */
     public int ReadyForNext
     {

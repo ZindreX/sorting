@@ -47,7 +47,7 @@ public class InstructionBase {
         set { isSorted = value; }
     }
 
-    public bool HasBeenExecuted()
+    public virtual bool HasBeenExecuted()
     {
         return status == Util.EXECUTED_INST;
     }

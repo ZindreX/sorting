@@ -15,6 +15,7 @@ public class BubbleSortInstruction : InstructionBase {
     */
 
     private int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
+    private bool part1Executed = false, part2Executed = false;
 
     public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, int i, int j, string instruction, bool isCompare, bool isSorted)
         : base(instruction, i, j, isCompare, isSorted)
@@ -79,6 +80,29 @@ public class BubbleSortInstruction : InstructionBase {
         if (other)
             return (sortingElementID == SortingElementID1) ? value2 : value1;
         return (sortingElementID == SortingElementID1) ? value1 : value2;
+    }
+
+    public bool IsElementSorted(int sortingElementID)
+    {
+        return IsSorted && (holderID1 == 0 && sortingElementID == SortingElementID1 || (sortingElementID == sortingElementID2));
+    }
+
+    public void ElementExecuted(int sortingElementID)
+    {
+        if (sortingElementID == sortingElementID1)
+            part1Executed = true;
+        else
+            part2Executed = true;
+    }
+
+    public bool ElementHasBeenExecuted(int sortingElementID)
+    {
+        return (sortingElementID == SortingElementID1) ? part1Executed : part2Executed;
+    }
+
+    public override bool HasBeenExecuted()
+    {
+        return part1Executed && part2Executed;
     }
 
     public override string DebugInfo()

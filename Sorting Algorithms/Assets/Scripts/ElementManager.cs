@@ -60,7 +60,7 @@ public class ElementManager : MonoBehaviour, IManager {
         if (containsElements)
             return;
 
-        sortingElements = new GameObject[numberOfElements]; // Util.CreateObjects(sortingElementPrefab, numberOfElements, positions, gameObject);
+        sortingElements = new GameObject[numberOfElements];
 
         for (int x = 0; x < numberOfElements; x++)
         {

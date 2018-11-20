@@ -493,6 +493,7 @@ public class InsertionSort : Algorithm {
         // Gather part of code to highlight
         int i = instruction.I, j = instruction.J;
         List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
+        Color useColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -510,6 +511,7 @@ public class InsertionSort : Algorithm {
             case Util.PIVOT_START_INST:
                 value1 = sortingElement.Value;
                 Util.IndicateElement(sortingElement.gameObject);
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
 
                 lineOfCode.Add(4);
                 break;
@@ -523,6 +525,7 @@ public class InsertionSort : Algorithm {
 
             case Util.SWITCH_INST:
                 lineOfCode.Add(6);
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
             case Util.UPDATE_VAR_J:
@@ -535,6 +538,7 @@ public class InsertionSort : Algorithm {
 
             case Util.PIVOT_END_INST:
                 lineOfCode.Add(9);
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
             case Util.INCREMENT_VAR_I:
@@ -550,7 +554,7 @@ public class InsertionSort : Algorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), Util.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), useColor);
         }
 
         yield return new WaitForSeconds(seconds);

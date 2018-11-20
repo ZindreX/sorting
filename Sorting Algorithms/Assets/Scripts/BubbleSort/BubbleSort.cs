@@ -277,8 +277,9 @@ public class BubbleSort : Algorithm {
 
             // Update end 2nd for-loop instruction
             instructions.Add(instructionNr++, new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.END_LOOP_INST, false, false));
-
         }
+        instructions.Add(instructionNr++, new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, false, false));
+
         // Final instruction
         instructions.Add(instructionNr, new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FINAL_INSTRUCTION, false, false));
         return instructions;
@@ -446,6 +447,7 @@ public class BubbleSort : Algorithm {
         // Gather part of code to highlight
         int i = instruction.I, j = instruction.J;
         List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
+        Color useColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
             case Util.UPDATE_LOOP_INST:
@@ -464,6 +466,7 @@ public class BubbleSort : Algorithm {
 
             case Util.SWITCH_INST:
                 lineOfCode.Add(5);
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
             case Util.COMPARE_END_INST:
@@ -479,7 +482,7 @@ public class BubbleSort : Algorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), Util.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), useColor);
         }
 
         yield return new WaitForSeconds(seconds);

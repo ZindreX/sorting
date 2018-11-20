@@ -83,7 +83,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public bool NextMove
     {
         get { return nextMove; }
-        set { nextMove = value; }// Debug.Log("NextMove given to [" + this.value + "]"); }
+        set { nextMove = value; }// Debug.Log(">>> NextMove given to [" + this.value + "]"); }
     }
 
     public bool Moving
@@ -144,13 +144,9 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
             userMove++;
             holder.HasPermission = true;
 
-            //Debug.Log("Can validate: " + (validatedUserMove < userMove) + " : " + validatedUserMove + " < " + userMove);
-            // Validates the move and notifies whether we're ready to go to next instrution
             if (validatedUserMove < userMove)
             {
                 string validation = IsCorrectlyPlaced();
-                //Debug.Log("Is correctly placed: " + validation);
-
                 switch (validation)
                 {
                     case Util.INIT_OK:
@@ -159,7 +155,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
 
                     case Util.CORRECT_HOLDER:
                         standingInCorrectHolder = true;
-                        parent.GetComponent<UserTestManager>().IncrementTotalCorrect(); //parent.GetComponent<ScoreManager>().IncrementStreak();
+                        parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
                         break;
 
                     case Util.INIT_ERROR: case Util.WRONG_HOLDER:
@@ -167,15 +163,14 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                         //parent.GetComponent<ScoreManager>().Mistake();
                         break;
 
-                    default: Debug.LogError("Add '" + validation + "' case, or ignore"); break;
+                    default: Debug.Log("Add '" + validation + "' case, or ignore"); break;
                 }
 
                 // Mark instruction as executed if correct
-                if (standingInCorrectHolder)
+                if (standingInCorrectHolder && !IntermediateMove)
                 {
-                    Instruction.Status = Util.EXECUTED_INST;
-                    status = Util.EXECUTED_INST; // Debugging
-
+                    //Instruction.Status = Util.EXECUTED_INST;
+                    status = Util.EXECUTED_INST + "***"; // Debugging
 
                     // Check if ready for next round
                     if (NextMove)
