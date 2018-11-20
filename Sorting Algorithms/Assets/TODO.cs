@@ -16,7 +16,8 @@
  * > ElementManager
  * - ElementsBasedOnCase: first gather values then distribute, instead of distribute -> redistribute based on sorting case (worst/best) ?
  * 
- * 
+ * > AlgorithmManagerBase
+ *  - Clean up IsTutorial() (mixed with IsTutorialStep())
  * 
  * 
  * 
@@ -35,5 +36,5 @@
  *  *********************************** Implementation ideas **********************************************
  * > User test
  *  - gather all user inputs (during examination?)
- *  - if any mistakes has been done by buser --> show what and how
+ *  - if any mistakes has been done by buser --> show what and how (step/instructions/feedback/animations)
 */

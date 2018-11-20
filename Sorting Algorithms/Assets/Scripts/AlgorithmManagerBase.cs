@@ -195,17 +195,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             }
             else if (IsUserTest()) // User test
             {
-                //if (userTestReady) // debugging
-                //{
-                //    string holderIDTest = "";
-                //    for (int x = 0; x < elementManager.SortingElements.Length; x++)
-                //    {
-                //        SortingElementBase s = elementManager.GetSortingElement(x).GetComponent<SortingElementBase>();
-                //        holderIDTest += "[" + s.Value + "|" + ((InsertionSortInstruction)s.Instruction).HolderID + "], ";
-                //    }
-                //    displayUnitManager.BlackBoard.ChangeText(textIndex, holderIDTest);
-                //}
-
                 // First check if user test setup is complete
                 if (userTestManager.HasInstructions() && !beginnerWait)
                 {
@@ -223,7 +212,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                         {
                             algorithm.IsSortingComplete = true;
-                            Debug.LogError("Any state where it's entering here???"); // ???
+                            Debug.LogError("Manage to enter this case???"); // ???
                         }
                         else
                         {

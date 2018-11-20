@@ -74,13 +74,10 @@ public class InsertionSortElement : SortingElementBase {
 
     protected override string IsCorrectlyPlaced()
     {
-        //Debug.Log("IsCorrectlyPlaced( [" + value + "] )");
         if (CanValidate())
         {
-            //Debug.Log("Can validate");
-            if (!insertionSortInstruction.HasBeenExecuted()) // this check even needed anymore?
+            if (!insertionSortInstruction.HasBeenExecuted())
             {
-                //Debug.Log("Not executed: " + insertionSortInstruction.Instruction);
                 switch (insertionSortInstruction.Instruction)
                 {
                     case Util.INIT_INSTRUCTION:
