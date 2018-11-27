@@ -14,11 +14,19 @@ namespace Valve.VR
     using UnityEngine;
     
     
-    public class SteamVR_Input_ActionSet_sortingActions : Valve.VR.SteamVR_ActionSet
+    public class SteamVR_Input_ActionSet_sorting_In : Valve.VR.SteamVR_Action_List
     {
         
-        public SteamVR_Input_ActionSet_sortingActions_In inActions;
+        public Valve.VR.SteamVR_Action_Boolean Increment;
         
-        public SteamVR_Input_ActionSet_sortingActions_Out outActions;
+        public Valve.VR.SteamVR_Action_Boolean Decrement;
+        
+        public Valve.VR.SteamVR_Action_Boolean Teleport;
+        
+        public Valve.VR.SteamVR_Action_Boolean GrabPinch;
+        
+        public Valve.VR.SteamVR_Action_Boolean GrabGrip;
+        
+        public Valve.VR.SteamVR_Action_Boolean InteractUI;
     }
 }

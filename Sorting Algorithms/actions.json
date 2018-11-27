@@ -36,6 +36,14 @@
       "requirement": "optional"
     },
     {
+      "name": "/actions/default/in/Increment",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Decrement",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     },
@@ -64,34 +72,38 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/sortingActions/in/Teleport",
+      "name": "/actions/sorting/in/Increment",
       "type": "boolean"
     },
     {
-      "name": "/actions/sortingActions/in/Grab",
+      "name": "/actions/sorting/in/Decrement",
       "type": "boolean"
     },
     {
-      "name": "/actions/sortingActions/in/Increment",
+      "name": "/actions/sorting/in/Teleport",
       "type": "boolean"
     },
     {
-      "name": "/actions/sortingActions/in/Decrement",
+      "name": "/actions/sorting/in/GrabPinch",
       "type": "boolean"
     },
     {
-      "name": "/actions/sortingActions/in/InteractUI",
+      "name": "/actions/sorting/in/GrabGrip",
       "type": "boolean"
     },
     {
-      "name": "/actions/sortingActions/out/Haptic",
+      "name": "/actions/sorting/in/InteractUI",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/sorting/out/Haptic",
       "type": "vibration"
     }
   ],
   "action_sets": [
     {
       "name": "/actions/default",
-      "usage": "single"
+      "usage": "leftright"
     },
     {
       "name": "/actions/platformer",
@@ -102,7 +114,7 @@
       "usage": "single"
     },
     {
-      "name": "/actions/sortingActions",
+      "name": "/actions/sorting",
       "usage": "leftright"
     }
   ],

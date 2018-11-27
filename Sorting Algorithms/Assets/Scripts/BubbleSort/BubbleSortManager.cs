@@ -72,7 +72,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
             int value = element.Value;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, isCompare, isSorted);
+            elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, isCompare, isSorted);
         }
         return elementStates;
     }

@@ -596,7 +596,7 @@ public class MergeSort : Algorithm {
     #endregion
 
 
-    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment)
     {
         throw new System.NotImplementedException();
     }

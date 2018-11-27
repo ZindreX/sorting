@@ -15,12 +15,12 @@ MonoBehaviour:
   - _default
   - platformer
   - buggy
-  - sortingActions
+  - sorting
   actionSetObjects:
   - {fileID: 11400000, guid: 7fab2de8fc4263b469d6edabc6548ef2, type: 2}
   - {fileID: 11400000, guid: 96980aea2a648d44d9df8ce04b89947f, type: 2}
   - {fileID: 11400000, guid: 78706b5708ff8bc4aba50f02229e89d2, type: 2}
-  - {fileID: 11400000, guid: 85314c09587bb6f4abe2179a31ae134c, type: 2}
+  - {fileID: 11400000, guid: e7607dfd79da1e74181a42aa2457d2da, type: 2}
   actionNames:
   - __actions_default_in_InteractUI
   - __actions_default_in_Teleport
@@ -30,6 +30,8 @@ MonoBehaviour:
   - __actions_default_in_SkeletonLeftHand
   - __actions_default_in_SkeletonRightHand
   - __actions_default_in_Squeeze
+  - __actions_default_in_Increment
+  - __actions_default_in_Decrement
   - __actions_default_out_Haptic
   - __actions_platformer_in_Move
   - __actions_platformer_in_Jump
@@ -37,12 +39,13 @@ MonoBehaviour:
   - __actions_buggy_in_Throttle
   - __actions_buggy_in_Brake
   - __actions_buggy_in_Reset
-  - __actions_sortingActions_in_Teleport
-  - __actions_sortingActions_in_Grab
-  - __actions_sortingActions_in_Increment
-  - __actions_sortingActions_in_Decrement
-  - __actions_sortingActions_in_InteractUI
-  - __actions_sortingActions_out_Haptic
+  - __actions_sorting_in_Increment
+  - __actions_sorting_in_Decrement
+  - __actions_sorting_in_Teleport
+  - __actions_sorting_in_GrabPinch
+  - __actions_sorting_in_GrabGrip
+  - __actions_sorting_in_InteractUI
+  - __actions_sorting_out_Haptic
   actionObjects:
   - {fileID: 11400000, guid: c7ec8b6c137b6a14494fb09be87638ad, type: 2}
   - {fileID: 11400000, guid: ae959400fd7fbc842908a4737109a8a0, type: 2}
@@ -52,6 +55,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e02f8711b303e8e47886b0fcd95959e9, type: 2}
   - {fileID: 11400000, guid: 69a697da6fa9c294ba6b901423fb17c0, type: 2}
   - {fileID: 11400000, guid: 6e0c532874d28594c8245aa8fa8cdd8e, type: 2}
+  - {fileID: 11400000, guid: 0d10a3b6936417a47a1e3b1d2b53414e, type: 2}
+  - {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
   - {fileID: 11400000, guid: 7ad43450ef451d5439a99bd8a30878ff, type: 2}
   - {fileID: 11400000, guid: de00970b7db47ce4ea6318388d7b285e, type: 2}
   - {fileID: 11400000, guid: e4e4c8bd7d81ed8469125aaa2d8cec96, type: 2}
@@ -59,9 +64,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fcb56d567508e474ca101e5a0255b258, type: 2}
   - {fileID: 11400000, guid: d6d53f46a0ce0e744a6e2def750ac2bd, type: 2}
   - {fileID: 11400000, guid: 5f91a9420bab0044793f6d0a103bfe70, type: 2}
-  - {fileID: 11400000, guid: 1010dee16c9170c4cabd468eb9a882e4, type: 2}
-  - {fileID: 11400000, guid: e586675ac492dc9458926e2de1e11a97, type: 2}
-  - {fileID: 11400000, guid: e859c276d23d55d4aa1eb4a7fc72085f, type: 2}
-  - {fileID: 11400000, guid: 1bd778ac68bf56148bf348c4292123d0, type: 2}
-  - {fileID: 11400000, guid: 6bfc7e728ab5fb7448cf0a8b079f1f80, type: 2}
-  - {fileID: 11400000, guid: d3f361ffb12708044a05aa43d5c832f8, type: 2}
+  - {fileID: 11400000, guid: 2364308f204ad374794585de79e2d4e6, type: 2}
+  - {fileID: 11400000, guid: d74fb49ee2f7ee04791f83004368020a, type: 2}
+  - {fileID: 11400000, guid: 7e4d88a267ef33c478209c29de894689, type: 2}
+  - {fileID: 11400000, guid: ac1b6d6de49ae6341a95284f08d1c7c1, type: 2}
+  - {fileID: 11400000, guid: b51571f8499ab5841a5a2b3df783759b, type: 2}
+  - {fileID: 11400000, guid: ff49351b8d06f0e4dadbb695de395b19, type: 2}
+  - {fileID: 11400000, guid: 7eee103a4f038b741a31591ff804889a, type: 2}

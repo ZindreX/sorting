@@ -17,8 +17,8 @@ public class BubbleSortInstruction : InstructionBase {
     private int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
     private bool part1Executed = false, part2Executed = false;
 
-    public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, int i, int j, string instruction, bool isCompare, bool isSorted)
-        : base(instruction, i, j, isCompare, isSorted)
+    public BubbleSortInstruction(int seID1, int seID2, int hID1, int hID2, int value1, int value2, int i, int j, string instruction, int instructionNr, bool isCompare, bool isSorted)
+        : base(instruction, instructionNr, i, j, isCompare, isSorted)
     {
         sortingElementID1 = seID1;
         sortingElementID2 = seID2;

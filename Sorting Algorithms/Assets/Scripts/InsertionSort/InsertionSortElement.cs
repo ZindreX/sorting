@@ -10,7 +10,7 @@ public class InsertionSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        Instruction = new InsertionSortInstruction(sortingElementID, sortingElementID, Util.INIT_STATE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, value, false, false, false);
+        Instruction = new InsertionSortInstruction(sortingElementID, sortingElementID, Util.INIT_STATE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, false, false, false);
     }
 
     public bool IsPivot

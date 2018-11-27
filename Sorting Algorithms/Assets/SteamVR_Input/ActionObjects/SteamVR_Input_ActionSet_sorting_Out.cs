@@ -14,7 +14,7 @@ namespace Valve.VR
     using UnityEngine;
     
     
-    public class SteamVR_Input_ActionSet_sortingActions_Out : Valve.VR.SteamVR_Action_List
+    public class SteamVR_Input_ActionSet_sorting_Out : Valve.VR.SteamVR_Action_List
     {
         
         public Valve.VR.SteamVR_Action_Vibration Haptic;

@@ -18,7 +18,10 @@ public class AlgorithmUserController : MonoBehaviour {
     public SteamVR_Action_Boolean decrementAction;
 
     [SteamVR_DefaultAction("InteractUI")]
-    public SteamVR_Action_Boolean interactUIAction;
+    public SteamVR_Action_Boolean startStopAction;
+
+    [SerializeField]
+    private bool easyStartToggle = false;
 
     private void Awake()
     {
@@ -30,44 +33,46 @@ public class AlgorithmUserController : MonoBehaviour {
 
     }
 
-    //// Update is called once per frame
+    // Update is called once per frame
     void Update()
     {
+        // Used to start / stop sorting session::: Bindings a bit messed, so doessn't work for User Test
+        if (easyStartToggle)
+        {
+            if (SteamVR_Input.__actions_default_in_InteractUI.GetStateDown(SteamVR_Input_Sources.Any))
+            {
+                if (!algorithmManager.ControllerReady)
+                    algorithmManager.InstantiateSetup();
+                else
+                    algorithmManager.DestroyAndReset();
+            }
+        }
+
         switch (algorithmManager.TeachingMode)
         {
             case Util.TUTORIAL:
-                if (SteamVR_Input.__actions_sortingActions_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
+                if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
                 {
                     Debug.Log("Incrementing");
                 }
 
-                if (SteamVR_Input.__actions_sortingActions_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                 {
                     Debug.Log("Decrementing");
-                }
-
-                if (SteamVR_Input.__actions_sortingActions_in_InteractUI.GetStateDown(SteamVR_Input_Sources.Any))
-                {
-                    Debug.Log("Opening menu (not implemented)");
                 }
                 break;
 
             case Util.STEP_BY_STEP:
-                if (SteamVR_Input.__actions_sortingActions_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
+                if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
                 {
-                    Debug.Log("Incrementing");
                     algorithmManager.PlayerStepByStepInput(true);
+                    break;
                 }
 
-                if (SteamVR_Input.__actions_sortingActions_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                 {
-                    Debug.Log("Decrementing");
                     algorithmManager.PlayerStepByStepInput(false);
-                }
-
-                if (SteamVR_Input.__actions_sortingActions_in_InteractUI.GetStateDown(SteamVR_Input_Sources.Any))
-                {
-                    Debug.Log("Opening menu (not implemented)");
+                    break;
                 }
                 break;
 
@@ -75,10 +80,10 @@ public class AlgorithmUserController : MonoBehaviour {
                 switch (algorithmManager.Algorithm.AlgorithmName)
                 {
                     case Util.INSERTION_SORT:
-                        if (SteamVR_Input.__actions_sortingActions_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
+                        if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
                             algorithmManager.Algorithm.Specials(Util.INCREMENT, Util.NO_VALUE, true);
 
-                        if (SteamVR_Input.__actions_sortingActions_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                        if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                             algorithmManager.Algorithm.Specials(Util.DECREMENT, Util.NO_VALUE, false);
 
                         break;

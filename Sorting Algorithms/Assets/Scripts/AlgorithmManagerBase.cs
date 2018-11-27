@@ -99,7 +99,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Algorithm settings
     private int numberOfElements = 8;
     private string algorithmName, teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
-    private bool allowDuplicates = true, userStoppedAlgorithm = false, beginnerWait = false;
+    private bool allowDuplicates = true, userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
     private Vector3[] holderPositions;
 
     [SerializeField]
@@ -166,31 +166,32 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                 {
                     tutorialStep.PlayerMove = false;
                     InstructionBase instruction = tutorialStep.GetStep();
+                    Debug.Log(">>> " + instruction.Instruction);
 
-                    if (instruction.Instruction == Util.FIRST_INSTRUCTION)
-                    {
-                        tutorialStep.FirstInstruction = true;
-                        algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
-                    }
-                    else if (tutorialStep.FirstInstruction)
-                    {
-                        tutorialStep.FirstInstruction = false;
-                        algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
-                    }
+                    //if (instruction.Instruction == Util.FIRST_INSTRUCTION)
+                    //{
+                    //    tutorialStep.FirstInstruction = true;
+                    //    algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
+                    //}
+                    //else if (tutorialStep.FirstInstruction)
+                    //{
+                    //    tutorialStep.FirstInstruction = false;
+                    //    algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
+                    //}
 
-                    if (instruction.Instruction == Util.FINAL_INSTRUCTION)
-                    {
-                        tutorialStep.FinalInstruction = true;
-                        algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
-                    }
-                    else if (tutorialStep.FinalInstruction)
-                    {
-                        tutorialStep.FinalInstruction = false;
-                        algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
-                    }
+                    //if (instruction.Instruction == Util.FINAL_INSTRUCTION)
+                    //{
+                    //    tutorialStep.FinalInstruction = true;
+                    //    algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
+                    //}
+                    //else if (tutorialStep.FinalInstruction)
+                    //{
+                    //    tutorialStep.FinalInstruction = false;
+                    //    algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
+                    //}
 
-                    if (instruction.Instruction != Util.FIRST_INSTRUCTION && instruction.Instruction != Util.FINAL_INSTRUCTION)
-                        algorithm.ExecuteStepByStepOrder(instruction, tutorialStep.CurrentInstructionNr, tutorialStep.PlayerIncremented);
+                    bool gotSortingElement = !algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+                    algorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
                 }
             }
             else if (IsUserTest()) // User test
@@ -256,6 +257,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         }
         userStoppedAlgorithm = false;
         teleportToSettings.GetComponent<TeleportPoint>().markerActive = false;
+        controllerReady = true;
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -273,6 +275,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         algorithm.ResetSetup();
         displayUnitManager.ResetDisplays();
         teleportToSettings.GetComponent<TeleportPoint>().markerActive = true;
+        controllerReady = false;
     }
 
     // --------------------------------------- Getters and setters ---------------------------------------
@@ -338,7 +341,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Input from user during Step-By-Step (increment/decrement)
     public void PlayerStepByStepInput(bool increment)
     {
-        tutorialStep.NotifyUserInput(increment);
+        if (ControllerReady)
+            tutorialStep.NotifyUserInput(increment);
     }
 
     // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
@@ -357,6 +361,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public bool IsUserTest()
     {
         return teachingMode == Util.USER_TEST;
+    }
+
+    public bool ControllerReady
+    {
+        get { return controllerReady; }
+        //set { controllerReady = value; }
     }
 
     /* --------------------------------------- Tutorial ---------------------------------------

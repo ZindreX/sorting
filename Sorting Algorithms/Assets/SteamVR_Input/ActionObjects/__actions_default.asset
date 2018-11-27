@@ -20,6 +20,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e02f8711b303e8e47886b0fcd95959e9, type: 2}
   - {fileID: 11400000, guid: 69a697da6fa9c294ba6b901423fb17c0, type: 2}
   - {fileID: 11400000, guid: 6e0c532874d28594c8245aa8fa8cdd8e, type: 2}
+  - {fileID: 11400000, guid: 0d10a3b6936417a47a1e3b1d2b53414e, type: 2}
+  - {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
   - {fileID: 11400000, guid: 7ad43450ef451d5439a99bd8a30878ff, type: 2}
   nonVisualInActions:
   - {fileID: 11400000, guid: c7ec8b6c137b6a14494fb09be87638ad, type: 2}
@@ -27,6 +29,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 73eb16e40c48c73429deb38a5bfad58f, type: 2}
   - {fileID: 11400000, guid: b01ee22b2add7664c8a8b19317eb813e, type: 2}
   - {fileID: 11400000, guid: 6e0c532874d28594c8245aa8fa8cdd8e, type: 2}
+  - {fileID: 11400000, guid: 0d10a3b6936417a47a1e3b1d2b53414e, type: 2}
+  - {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
   visualActions:
   - {fileID: 11400000, guid: b76f1308e419c93489043ad2a5a62b11, type: 2}
   - {fileID: 11400000, guid: e02f8711b303e8e47886b0fcd95959e9, type: 2}
@@ -41,6 +45,6 @@ MonoBehaviour:
   outActionArray:
   - {fileID: 11400000, guid: 7ad43450ef451d5439a99bd8a30878ff, type: 2}
   fullPath: /actions/default
-  usage: single
+  usage: leftright
   inActions: {fileID: 11400000, guid: bb2374e1b5fd1274bb7856f9ac41be70, type: 2}
   outActions: {fileID: 11400000, guid: 38374dbcc852797428b8a94925cc9faf, type: 2}

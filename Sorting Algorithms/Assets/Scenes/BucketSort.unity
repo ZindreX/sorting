@@ -198,8 +198,8 @@ MonoBehaviour:
   teachingModeEditor: 0
   difficultyEditor: 0
   numberofElementsEditor: 0
-  dupEditor: 0
-  caseEditor: 0
+  allowDupEditor: 0
+  sortingCaseEditor: 0
   algorithmSpeed: 0
   displayUnitManagerObj: {fileID: 653133743}
   teleportToSettings: {fileID: 0}

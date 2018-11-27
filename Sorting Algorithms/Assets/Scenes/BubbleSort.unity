@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82aa6fc0e1a954985d311d4bf81135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 2
+  teachingModeEditor: 1
   difficultyEditor: 0
   numberofElementsEditor: 1
   allowDupEditor: 0
@@ -435,6 +435,58 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1725235943449744, guid: f366eb776cb098848af982af8cb259f1,
     type: 2}
   m_PrefabInternal: {fileID: 852264330}
+--- !u!1001 &1082351484
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4594871400684860, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114400310509500022, guid: c8c343a94abe99a4a88aeea48e5a9f77,
+        type: 2}
+      propertyPath: algorithmManagerObj
+      value: 
+      objectReference: {fileID: 817656491}
+    - target: {fileID: 114400310509500022, guid: c8c343a94abe99a4a88aeea48e5a9f77,
+        type: 2}
+      propertyPath: easyStartToggle
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &1833947225 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1206382210648956, guid: f366eb776cb098848af982af8cb259f1,

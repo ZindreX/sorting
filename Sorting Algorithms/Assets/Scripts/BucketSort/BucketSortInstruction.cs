@@ -6,8 +6,8 @@ public class BucketSortInstruction : InsertionSortInstruction {
 
     private int bucketID;
 
-    public BucketSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, int bucketID, string instruction, int value, bool isPivot, bool isCompare, bool isSorted)
-        : base(sortingElementID, holderID, nextHolderID, i, j, instruction, value, isPivot, isCompare, isSorted)
+    public BucketSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, int bucketID, string instruction, int instructionNr, int value, bool isPivot, bool isCompare, bool isSorted)
+        : base(sortingElementID, holderID, nextHolderID, i, j, instruction, instructionNr, value, isPivot, isCompare, isSorted)
     {
         this.bucketID = bucketID;
     }

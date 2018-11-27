@@ -5,8 +5,8 @@ public class InsertionSortInstruction : InstructionBase {
     protected int sortingElementID, value, holderID, nextHolderID, i, j;
     protected bool isPivot;
 
-    public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, string instruction, int value, bool isPivot, bool isCompare, bool isSorted)
-        : base(instruction, i, j, isCompare, isSorted)
+    public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, string instruction, int instructionNr, int value, bool isPivot, bool isCompare, bool isSorted)
+        : base(instruction, instructionNr, i, j, isCompare, isSorted)
     {
         this.sortingElementID = sortingElementID;
         this.value = value;

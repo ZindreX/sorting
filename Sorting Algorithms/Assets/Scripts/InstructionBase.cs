@@ -7,13 +7,15 @@ public class InstructionBase {
      * 
      * 
     */
+    public readonly int INSTRUCION_NR;
 
     protected bool isCompare, isSorted;
     protected string instruction, status;
     protected int i, j;
 
-    public InstructionBase(string instruction, int i, int j, bool isCompare, bool isSorted)
+    public InstructionBase(string instruction, int instructionNr, int i, int j, bool isCompare, bool isSorted)
     {
+        INSTRUCION_NR = instructionNr;
         this.instruction = instruction;
         status = Util.NOT_EXECUTED;
         this.isCompare = isCompare;
@@ -65,7 +67,7 @@ public class InstructionBase {
     // Debug checker
     public virtual string DebugInfo()
     {
-        return "Instruction: " + instruction + ", i=" + i + "|j=" + j;
+        return "Instruction: " + instruction + ", Nr.: " + INSTRUCION_NR + ", i=" + i + "|j=" + j;
     }
 
 

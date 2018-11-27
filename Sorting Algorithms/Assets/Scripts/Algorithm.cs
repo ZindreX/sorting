@@ -99,7 +99,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
     /* Step by step execution of the chosen sorting algorithm
      * - The user can progress through the algorithm one step at the time
     */
-    public abstract void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment);
+    public abstract void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment);
 
     /* Almost the same method as for the Step by step teaching method
      * - Only does the visualization of the pseudocode

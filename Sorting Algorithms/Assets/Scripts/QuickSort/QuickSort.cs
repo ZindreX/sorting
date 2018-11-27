@@ -65,7 +65,7 @@ public class QuickSort : Algorithm {
         throw new System.NotImplementedException();
     }
 
-    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment)
     {
         throw new System.NotImplementedException();
     }

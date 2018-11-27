@@ -365,14 +365,20 @@ public class InsertionSort : Algorithm {
     #endregion
 
     #region Execute order from user
-    public override void ExecuteStepByStepOrder(InstructionBase instruction, int instructionNr, bool increment)
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
     {
         // Gather information from instruction
-        InsertionSortInstruction inst = (InsertionSortInstruction)instruction;
-        Debug.Log("Debug: " + inst.DebugInfo() + "\n");
+        InsertionSortInstruction insertionInstruction = null;
+        InsertionSortElement sortingElement = null;
 
-        // Change internal state of sorting element
-        InsertionSortElement sortingElement = GetComponent<ElementManager>().GetSortingElement(inst.SortingElementID).GetComponent<InsertionSortElement>();
+        if (gotSortingElement)
+        {
+            insertionInstruction = (InsertionSortInstruction)instruction;
+            Debug.Log("Debug: " + insertionInstruction.DebugInfo() + "\n");
+
+            // Change internal state of sorting element
+            sortingElement = GetComponent<ElementManager>().GetSortingElement(insertionInstruction.SortingElementID).GetComponent<InsertionSortElement>();
+        }
 
         // Remove highlight from previous instruction
         for (int x = 0; x < prevHighlight.Count; x++)
@@ -381,75 +387,103 @@ public class InsertionSort : Algorithm {
         }
 
         // Gather part of code to highlight
-        int i = inst.I, j = inst.J;
+        int i = instruction.I, j = instruction.J;
         List<int> lineOfCode = new List<int>();
-        switch (inst.Instruction)
+        switch (instruction.Instruction)
         {
-            case Util.PIVOT_START_INST:
-                if (increment)
-                    sortingElement.IsPivot = inst.IsPivot;   // Test, and maybe change to: = increment ?
-                else
-                    sortingElement.IsPivot = !inst.IsPivot;
-
-                value1 = sortingElement.Value;
-                lineOfCode.Add(2);
-                lineOfCode.Add(3);
-                lineOfCode.Add(4);
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode.Add(FirstInstructionCodeLine());
                 break;
 
-            case Util.PIVOT_END_INST:
-                if (increment)
-                {
-                    sortingElement.IsPivot = inst.IsPivot;
-                    sortingElement.IsSorted = inst.IsSorted;
-                }
-                else
-                {
-                    sortingElement.IsPivot = !inst.IsPivot;
-                    sortingElement.IsSorted = !inst.IsSorted;
-                }
+            case Util.FIRST_LOOP:
+                lineOfCode.Add(2);
+                break;
 
-                lineOfCode.Add(9);
-                lineOfCode.Add(10);
+            case Util.SET_VAR_J:
+                lineOfCode.Add(3);
+                break;
+
+            case Util.PIVOT_START_INST:
+                if (increment)
+                    sortingElement.IsPivot = insertionInstruction.IsPivot;
+                else
+                    sortingElement.IsPivot = !insertionInstruction.IsPivot;
+
+                value1 = sortingElement.Value;
+                Util.IndicateElement(sortingElement.gameObject);
+
+                lineOfCode.Add(4);
                 break;
 
             case Util.COMPARE_START_INST:
                 if (increment)
-                    sortingElement.IsCompare = inst.IsCompare;
+                    sortingElement.IsCompare = insertionInstruction.IsCompare;
                 else
-                    sortingElement.IsCompare = !inst.IsCompare;
+                    sortingElement.IsCompare = !insertionInstruction.IsCompare;
+
+                value2 = sortingElement.Value;
+                Util.IndicateElement(sortingElement.gameObject);
 
                 lineOfCode.Add(5);
-                value2 = sortingElement.Value;
-                break;
-
-            case Util.COMPARE_END_INST:
-                if (increment)
-                {
-                    sortingElement.IsCompare = inst.IsCompare;
-                    sortingElement.IsSorted = inst.IsSorted;
-                }
-                else
-                {
-                    sortingElement.IsCompare = !inst.IsCompare;
-                    sortingElement.IsSorted = !inst.IsSorted;
-                }
-                lineOfCode.Add(8);
                 break;
 
             case Util.SWITCH_INST:
                 if (increment)
                 {
-                    sortingElement.IsCompare = inst.IsCompare;
-                    sortingElement.IsSorted = inst.IsSorted;
+                    sortingElement.IsCompare = insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
                 }
                 else
                 {
-                    sortingElement.IsCompare = !inst.IsCompare;
-                    sortingElement.IsSorted = !inst.IsSorted;
+                    sortingElement.IsCompare = !insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
                 }
+
                 lineOfCode.Add(6);
+                break;
+
+            case Util.UPDATE_VAR_J:
                 lineOfCode.Add(7);
+                break;
+
+            case Util.COMPARE_END_INST:
+                if (increment)
+                {
+                    sortingElement.IsCompare = insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsCompare = !insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                }
+
+                Util.IndicateElement(sortingElement.gameObject);
+                lineOfCode.Add(8);
+                break;
+
+            case Util.PIVOT_END_INST:
+                if (increment)
+                {
+                    sortingElement.IsPivot = insertionInstruction.IsPivot;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsPivot = !insertionInstruction.IsPivot;
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                }
+
+                Util.IndicateElement(sortingElement.gameObject);
+                lineOfCode.Add(9);
+                break;
+
+            case Util.INCREMENT_VAR_I:
+                lineOfCode.Add(10);
+                break;
+
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode.Add(FinalInstructionCodeLine());
                 break;
         }
         prevHighlight = lineOfCode;
@@ -461,16 +495,19 @@ public class InsertionSort : Algorithm {
         }
 
         // Move sorting element
-        switch (inst.Instruction)
+        if (gotSortingElement)
         {
-            case Util.PIVOT_START_INST:
-            case Util.SWITCH_INST:
-            case Util.PIVOT_END_INST:
-                if (increment)
-                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.NextHolderID).transform.position + Util.ABOVE_HOLDER_VR;
-                else
-                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(inst.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
-                break;
+            switch (insertionInstruction.Instruction)
+            {
+                case Util.PIVOT_START_INST:
+                case Util.SWITCH_INST:
+                case Util.PIVOT_END_INST:
+                    if (increment)
+                        sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.NextHolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                    else
+                        sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                    break;
+            }
         }
     }
     #endregion
@@ -562,7 +599,7 @@ public class InsertionSort : Algorithm {
     }
     #endregion
 
-    #region Insertion Sort: User Test / Tutorial step by step
+    #region Insertion Sort: User Test / Tutorial step by step --> Instructions creator
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
         // Create pivot holder
@@ -575,19 +612,19 @@ public class InsertionSort : Algorithm {
 
         int i = 1; // Line 1
         // Add the first instruction which will be used for Pseudo code
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, i, Util.NO_VALUE, false, false));
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr, i, Util.NO_VALUE, false, false));
 
         while (i < sortingElements.Length)
         {
             // Line 2
-            instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, i, Util.NO_VALUE, false, false));
+            instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, false, false));
             
             // Line 3
             int j = i - 1;
-            instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_J, i, j, false, false));
+            instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_J, instructionNr, i, j, false, false));
 
             int temp1 = ((InsertionSortInstruction)sortingElements[i]).HolderID; // pivot: temp1 -> temp2*
-            InsertionSortInstruction pivot = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[i]).SortingElementID, temp1, pivotHolder.HolderID, i, j, Util.PIVOT_START_INST, ((InsertionSortInstruction)sortingElements[i]).Value, true, false, false);
+            InsertionSortInstruction pivot = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[i]).SortingElementID, temp1, pivotHolder.HolderID, i, j, Util.PIVOT_START_INST, instructionNr, ((InsertionSortInstruction)sortingElements[i]).Value, true, false, false);
             sortingElements[i] = pivot;
 
             // Add this move (Pivot moved in pivot position)
@@ -596,7 +633,7 @@ public class InsertionSort : Algorithm {
             while (true)
             {
                 // Choose a new compare element // Line 4
-                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_START_INST, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
+                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_START_INST, instructionNr, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
                 sortingElements[j] = compareElement;
                 instructions.Add(instructionNr++, compareElement);
 
@@ -604,7 +641,7 @@ public class InsertionSort : Algorithm {
                 if (pivot.Value >= compareElement.Value)
                 {
                     // Line 7
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, instructionNr, compareElement.Value, false, false, true));
                     break;
                 }
 
@@ -614,11 +651,11 @@ public class InsertionSort : Algorithm {
                 sortingElements[j] = pivot;
 
                 // Add this move (compare element switched to pivot/next position) // Line 6
-                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, compareElement.Value, false, false, true));
+                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, instructionNr, compareElement.Value, false, false, true));
 
                 // Line 7
                 j -= 1;
-                instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_VAR_J, i, j, false, false));
+                instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_VAR_J, instructionNr, i, j, false, false));
 
                 // temp2 is open spot, temp1 will be given to next compare element or place pivot there
                 temp1 = temp2;
@@ -626,7 +663,7 @@ public class InsertionSort : Algorithm {
                 if (j < 0)
                 {
                     // Added *** Test: user test // Line 8
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j+2, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, compareElement.Value, false, false, true));
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j+2, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, instructionNr, compareElement.Value, false, false, true));
                     break;
                 }
             }
@@ -634,18 +671,18 @@ public class InsertionSort : Algorithm {
             sortingElements[j + 1] = pivot;
 
             // Add this move (pivot sorted) // Line 9
-            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, pivot.Value, false, false, true));
+            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, instructionNr, pivot.Value, false, false, true));
 
             // Line 10
             i += 1;
-            instructions.Add(instructionNr++, new InstructionBase(Util.INCREMENT_VAR_I, i, j, false, false));
+            instructions.Add(instructionNr++, new InstructionBase(Util.INCREMENT_VAR_I, instructionNr, i, j, false, false));
         }
 
         // Line 2 (update loop before finishing)
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, i, Util.NO_VALUE, false, false));
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, false, false));
 
         // Add the final instruction which will be used for Pseudo code
-        instructions.Add(instructionNr, new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FINAL_INSTRUCTION, Util.NO_VALUE, false, false, false));
+        instructions.Add(instructionNr, new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FINAL_INSTRUCTION, instructionNr, Util.NO_VALUE, false, false, false));
         return instructions;
     }
     #endregion
@@ -660,19 +697,22 @@ public class InsertionSort : Algorithm {
 
     public void MovePivotHolder(bool increment)
     {
-        if (increment && pivotHolder.PositionIndex < GetComponent<HolderManager>().Holders.Length - 1)
+        if (GetComponent<AlgorithmManagerBase>().ControllerReady)
         {
-            pivotHolder.transform.position += new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
-            pivotHolder.PositionIndex++;
-            if (pivotHolder.CurrentHolding != null)
-                pivotHolder.CurrentHolding.transform.position += new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
-        }
-        else if (!increment && pivotHolder.PositionIndex > 0)
-        {
-            pivotHolder.transform.position -= new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
-            pivotHolder.PositionIndex--;
-            if (pivotHolder.CurrentHolding != null)
-                pivotHolder.CurrentHolding.transform.position -= new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
+            if (increment && pivotHolder.PositionIndex < GetComponent<HolderManager>().Holders.Length - 1)
+            {
+                pivotHolder.transform.position += new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
+                pivotHolder.PositionIndex++;
+                if (pivotHolder.CurrentHolding != null)
+                    pivotHolder.CurrentHolding.transform.position += new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
+            }
+            else if (!increment && pivotHolder.PositionIndex > 0)
+            {
+                pivotHolder.transform.position -= new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
+                pivotHolder.PositionIndex--;
+                if (pivotHolder.CurrentHolding != null)
+                    pivotHolder.CurrentHolding.transform.position -= new Vector3(Util.SPACE_BETWEEN_HOLDERS, 0f, 0f);
+            }
         }
             
     }

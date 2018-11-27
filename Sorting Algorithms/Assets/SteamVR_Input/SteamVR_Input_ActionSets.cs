@@ -23,14 +23,14 @@ namespace Valve.VR
         
         public static Valve.VR.SteamVR_Input_ActionSet_buggy buggy;
         
-        public static Valve.VR.SteamVR_Input_ActionSet_sortingActions sortingActions;
+        public static Valve.VR.SteamVR_Input_ActionSet_sorting sorting;
         
         public static void Dynamic_InitializeActionSets()
         {
             SteamVR_Input._default.Initialize();
             SteamVR_Input.platformer.Initialize();
             SteamVR_Input.buggy.Initialize();
-            SteamVR_Input.sortingActions.Initialize();
+            SteamVR_Input.sorting.Initialize();
         }
         
         public static void Dynamic_InitializeInstanceActionSets()
@@ -38,13 +38,13 @@ namespace Valve.VR
             Valve.VR.SteamVR_Input._default = ((SteamVR_Input_ActionSet_default)(SteamVR_Input_References.GetActionSet("_default")));
             Valve.VR.SteamVR_Input.platformer = ((SteamVR_Input_ActionSet_platformer)(SteamVR_Input_References.GetActionSet("platformer")));
             Valve.VR.SteamVR_Input.buggy = ((SteamVR_Input_ActionSet_buggy)(SteamVR_Input_References.GetActionSet("buggy")));
-            Valve.VR.SteamVR_Input.sortingActions = ((SteamVR_Input_ActionSet_sortingActions)(SteamVR_Input_References.GetActionSet("sortingActions")));
+            Valve.VR.SteamVR_Input.sorting = ((SteamVR_Input_ActionSet_sorting)(SteamVR_Input_References.GetActionSet("sorting")));
             Valve.VR.SteamVR_Input.actionSets = new Valve.VR.SteamVR_ActionSet[]
             {
                     Valve.VR.SteamVR_Input._default,
                     Valve.VR.SteamVR_Input.platformer,
                     Valve.VR.SteamVR_Input.buggy,
-                    Valve.VR.SteamVR_Input.sortingActions};
+                    Valve.VR.SteamVR_Input.sorting};
         }
     }
 }
