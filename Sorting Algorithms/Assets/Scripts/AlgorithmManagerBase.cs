@@ -258,6 +258,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         userStoppedAlgorithm = false;
         teleportToSettings.GetComponent<TeleportPoint>().markerActive = false;
         controllerReady = true;
+
+        //algorithm.PseudoCodeViewer.PseudoCodeSetup();
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -276,6 +278,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         displayUnitManager.ResetDisplays();
         teleportToSettings.GetComponent<TeleportPoint>().markerActive = true;
         controllerReady = false;
+
+        // Cleanup pseudocode
+        algorithm.PseudoCodeViewer.ResetPseudoCode();
     }
 
     // --------------------------------------- Getters and setters ---------------------------------------

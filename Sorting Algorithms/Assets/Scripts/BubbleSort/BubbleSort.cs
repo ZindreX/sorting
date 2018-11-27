@@ -79,6 +79,7 @@ public class BubbleSort : Algorithm {
 
     public override void ResetSetup()
     {
+        base.ResetSetup();
         Debug.Log("Nothing to reset (?)");
     }
 

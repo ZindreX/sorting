@@ -32,6 +32,7 @@ MonoBehaviour:
   - __actions_default_in_Squeeze
   - __actions_default_in_Increment
   - __actions_default_in_Decrement
+  - __actions_default_in_ToggleStart
   - __actions_default_out_Haptic
   - __actions_platformer_in_Move
   - __actions_platformer_in_Jump
@@ -57,6 +58,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6e0c532874d28594c8245aa8fa8cdd8e, type: 2}
   - {fileID: 11400000, guid: 0d10a3b6936417a47a1e3b1d2b53414e, type: 2}
   - {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
+  - {fileID: 11400000, guid: 9e0212866ac059244a73445652c912f5, type: 2}
   - {fileID: 11400000, guid: 7ad43450ef451d5439a99bd8a30878ff, type: 2}
   - {fileID: 11400000, guid: de00970b7db47ce4ea6318388d7b285e, type: 2}
   - {fileID: 11400000, guid: e4e4c8bd7d81ed8469125aaa2d8cec96, type: 2}

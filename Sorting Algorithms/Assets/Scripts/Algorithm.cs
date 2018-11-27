@@ -72,7 +72,11 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithmAble {
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
     public abstract string AlgorithmName { get; }
-    public abstract void ResetSetup();
+    public virtual void ResetSetup()
+    {
+        value1 = Util.INIT_STATE;
+        value2 = Util.INIT_STATE;
+    }
 
     // To do stuff important for individual classes
     public abstract void Specials(string method, int number, bool activate);

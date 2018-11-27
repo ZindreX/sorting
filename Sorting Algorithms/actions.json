@@ -44,6 +44,10 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/default/in/ToggleStart",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     },

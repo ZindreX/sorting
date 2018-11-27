@@ -36,5 +36,7 @@ namespace Valve.VR
         public Valve.VR.SteamVR_Action_Boolean Increment;
         
         public Valve.VR.SteamVR_Action_Boolean Decrement;
+        
+        public Valve.VR.SteamVR_Action_Boolean ToggleStart;
     }
 }

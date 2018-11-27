@@ -119,4 +119,13 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             line.color = Util.BLACKBOARD_TEXT_COLOR;
         }
     }
+
+    public void ResetPseudoCode()
+    {
+        for (int x=0; x < codeLines.Length; x++)
+        {
+            Destroy(codeLines[x]);
+        }
+        PseudoCodeSetup();
+    }
 }

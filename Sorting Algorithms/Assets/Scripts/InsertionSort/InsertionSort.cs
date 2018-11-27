@@ -6,9 +6,9 @@ using UnityEngine;
 public class InsertionSort : Algorithm {
 
     /* --------------------------------------------------- Insertion Sort --------------------------------------------------- 
-     * 1) Starts from 2nd and checks if it is less than the first
+     * 1) Starts from 2nd element and checks if it is less than the first
      * 2) Moves if smaller
-     * *) Repeat, but now check all slots to the left of pivot
+     * *) Increment start point -> Repeat, but now check all slots to the left of pivot
      */
 
     [SerializeField]
@@ -106,6 +106,7 @@ public class InsertionSort : Algorithm {
 
     public override void ResetSetup()
     {
+        base.ResetSetup();
         Destroy(pivotHolderClone);
     }
 

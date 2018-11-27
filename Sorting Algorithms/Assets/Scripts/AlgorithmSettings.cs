@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AlgorithmSettings : MonoBehaviour {
 
+    // Fix this class such that settings buttons only needs to be fixed once?
+
     private int numberOfElements = 8;
     private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
     private bool duplicates = true;

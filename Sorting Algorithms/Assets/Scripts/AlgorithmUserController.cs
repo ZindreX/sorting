@@ -17,11 +17,8 @@ public class AlgorithmUserController : MonoBehaviour {
     [SteamVR_DefaultAction("Decrement")]
     public SteamVR_Action_Boolean decrementAction;
 
-    [SteamVR_DefaultAction("InteractUI")]
-    public SteamVR_Action_Boolean startStopAction;
-
-    [SerializeField]
-    private bool easyStartToggle = false;
+    [SteamVR_DefaultAction("ToggleStart")]
+    public SteamVR_Action_Boolean toggleStartAction;
 
     private void Awake()
     {
@@ -36,16 +33,13 @@ public class AlgorithmUserController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        // Used to start / stop sorting session::: Bindings a bit messed, so doessn't work for User Test
-        if (easyStartToggle)
+        // Used to start / stop sorting session
+        if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any))
         {
-            if (SteamVR_Input.__actions_default_in_InteractUI.GetStateDown(SteamVR_Input_Sources.Any))
-            {
-                if (!algorithmManager.ControllerReady)
-                    algorithmManager.InstantiateSetup();
-                else
-                    algorithmManager.DestroyAndReset();
-            }
+            if (!algorithmManager.ControllerReady)
+                algorithmManager.InstantiateSetup();
+            else
+                algorithmManager.DestroyAndReset();
         }
 
         switch (algorithmManager.TeachingMode)
@@ -53,12 +47,12 @@ public class AlgorithmUserController : MonoBehaviour {
             case Util.TUTORIAL:
                 if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
                 {
-                    Debug.Log("Incrementing");
+                    Debug.Log("Incrementing button clicked - no action implemented for Tutorial");
                 }
 
                 if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                 {
-                    Debug.Log("Decrementing");
+                    Debug.Log("Decrementing button clicked - no action implemented for Tutorial");
                 }
                 break;
 

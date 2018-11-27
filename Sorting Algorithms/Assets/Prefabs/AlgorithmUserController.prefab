@@ -55,8 +55,7 @@ MonoBehaviour:
   algorithmManagerObj: {fileID: 0}
   incrementAction: {fileID: 11400000, guid: b01ee22b2add7664c8a8b19317eb813e, type: 2}
   decrementAction: {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
-  startStopAction: {fileID: 11400000, guid: c7ec8b6c137b6a14494fb09be87638ad, type: 2}
-  easyStartToggle: 0
+  toggleStartAction: {fileID: 11400000, guid: 9e0212866ac059244a73445652c912f5, type: 2}
 --- !u!114 &114968773536413880
 MonoBehaviour:
   m_ObjectHideFlags: 1

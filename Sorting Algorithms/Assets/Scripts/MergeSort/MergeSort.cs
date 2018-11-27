@@ -56,6 +56,7 @@ public class MergeSort : Algorithm {
 
     public override void ResetSetup()
     {
+        base.ResetSetup();
         for (int x=0; x < extraHolders.Count; x++)
         {
             //Destroy(extraHolders[x])
