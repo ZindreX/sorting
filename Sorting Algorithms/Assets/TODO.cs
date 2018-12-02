@@ -1,10 +1,22 @@
-﻿/* *********************************** To do list **********************************************
+﻿/* 
+ * >>> Status of algorithms:
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ *    Algorithm name    |   Standard    |   Tutorial    |   Step-by-step    |   User Test   |                   Comment
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ *    Bubble Sort       |     Yes       |     Yes       |       Yes*        |       Yes     | Step-by-step need some adjustments
+ *    Insertion Sort    |     Yes       |     Yes       |       Yes         |       Yes     | Complete
+ *    Merge Sort        |     Yes       |     No        |       No          |       No      | Tutorial not completed yet, user test not started
+ *    Quick Sort        |      No       |     No        |       No          |       No      | Not started
+ *    Bucket Sort       |     Yes       |     Yes*      |       No?         |       No      | Implement user test + get stuff up on the blackboard
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * 
+ * 
+ * *********************************** To do list **********************************************
  * > Clean up instruction
  *  - split into more groups (inheritage), ID's, I/J ?
  * 
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)
- *      - beginner: ok, but doesnt show the final instruction -> ends the pseudoboard
  *  - remove UserActionToProceed and decrement ReadyForNext instead ? (down to 0)
  *  
  * > Tutorial
@@ -19,7 +31,8 @@
  * > AlgorithmManagerBase
  *  - Clean up IsTutorial() (mixed with IsTutorialStep())
  * 
- * 
+ * > Sorting element / holder
+ *  - Clean up: remove all, create 1 prefab and add the respectful component in ElementManager/HolderManager on instantiation
  * 
  * 
  * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************

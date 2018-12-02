@@ -42,6 +42,8 @@ public class ElementManager : MonoBehaviour, IManager {
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + Util.ABOVE_HOLDER_VR, Quaternion.identity);
             sortingElements[x].GetComponent<SortingElementBase>().Value = Random.Range(0, Util.MAX_VALUE);
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
+
+            // sortingElements[x].AddComponent<InsertionSortElement>();
         }
 
         for (int x = 0; x < sortingElements.Length; x++)

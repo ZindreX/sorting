@@ -4,43 +4,95 @@ using UnityEngine;
 
 public class AlgorithmSettings : MonoBehaviour {
 
-    // Fix this class such that settings buttons only needs to be fixed once?
-
-    private int numberOfElements = 8;
-    private string teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
-    private bool duplicates = true;
+    /* -------------------------------------------- Algorithm settings ----------------------------------------------------
+     * Takes all input from the settings walls in the VR environment and forwards it to the main unit
+     * 
+    */
 
     [SerializeField]
     private AlgorithmManagerBase algorithmManager;
 
+    [SerializeField]
+    private GameObject subSettingsTitle;
+
+    [SerializeField]
+    private GameObject[] difficultyButtons, tutorialSpeedButtons;
+
+    private void Awake()
+    {
+        ChangeSubSettingsDisplay(algorithmManager.TeachingMode);
+    }
+
     public string TeachingMode
     {
-        set { teachingMode = value; Debug.Log(value); }
+        set { algorithmManager.TeachingMode = value; ChangeSubSettingsDisplay(value); }
     }
 
     public string Difficulty
     {
-        set { difficulty = value; Debug.Log(value); }
-    }
-
-    public string SortingCase
-    {
-        set { sortingCase = value; Debug.Log(value); }
+        set { algorithmManager.Difficulty = value; }
     }
 
     public int NumberOfElements
     {
-        set { numberOfElements = value; Debug.Log(value); }
+        set { algorithmManager.NumberOfElements = value; }
     }
 
     public bool Duplicates
     {
-        set { duplicates = value; Debug.Log(value); }
+        set { algorithmManager.Duplicates = value; }
+    }
+
+    public string SortingCase
+    {
+        set { algorithmManager.SortingCase = value; }
+    }
+
+    public float TutorialSpeed
+    {
+        set { algorithmManager.TutorialSpeed = value; }
     }
 
     public void StartSorting()
     {
         algorithmManager.InstantiateSetup();
+    }
+
+    public void StopSorting()
+    {
+        algorithmManager.DestroyAndReset();
+    }
+
+    // Changes the sub settings (middle wall w/buttons) based on the chosen teaching mode
+    private void ChangeSubSettingsDisplay(string teachingMode)
+    {
+        switch (teachingMode)
+        {
+            case Util.TUTORIAL:
+                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Tutorial speed";
+                ActiveButtons(false, true);
+                break;
+            case Util.STEP_BY_STEP:
+                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "";
+                ActiveButtons(false, false);
+                break;
+            case Util.USER_TEST:
+                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Difficulty";
+                ActiveButtons(true, false);
+                break;
+        }
+    }
+
+    private void ActiveButtons(bool diffActive, bool speedActive)
+    {
+        foreach (GameObject obj in difficultyButtons)
+        {
+            obj.active = diffActive;
+        }
+        foreach (GameObject obj in tutorialSpeedButtons)
+        {
+            obj.active = speedActive;
+        }
     }
 
 }

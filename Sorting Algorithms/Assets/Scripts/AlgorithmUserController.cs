@@ -5,7 +5,12 @@ using Valve.VR;
 
 public class AlgorithmUserController : MonoBehaviour {
 
-    // https://www.youtube.com/watch?v=bn8eMxBcI70
+    /* -------------------------------------------- Algorithm User Controller ----------------------------------------------------
+     * Changes some of the controller bindings depending on the algorithm / teaching mode
+     * 
+     *  https://www.youtube.com/watch?v=bn8eMxBcI70
+    */
+
 
     [SerializeField]
     private GameObject algorithmManagerObj;
@@ -33,7 +38,7 @@ public class AlgorithmUserController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        // Used to start / stop sorting session
+        // Used to start / stop sorting task
         if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any))
         {
             if (!algorithmManager.ControllerReady)
@@ -49,35 +54,32 @@ public class AlgorithmUserController : MonoBehaviour {
                 {
                     Debug.Log("Incrementing button clicked - no action implemented for Tutorial");
                 }
-
-                if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                 {
                     Debug.Log("Decrementing button clicked - no action implemented for Tutorial");
                 }
                 break;
 
             case Util.STEP_BY_STEP:
+                // Progress to the next instruction
                 if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                {
                     algorithmManager.PlayerStepByStepInput(true);
-                    break;
-                }
 
-                if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                {
+                // Backwards to the previous instruction
+                else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                     algorithmManager.PlayerStepByStepInput(false);
-                    break;
-                }
+
                 break;
 
             case Util.USER_TEST:
                 switch (algorithmManager.Algorithm.AlgorithmName)
                 {
                     case Util.INSERTION_SORT:
+                        // Moves the pivot holder
                         if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
                             algorithmManager.Algorithm.Specials(Util.INCREMENT, Util.NO_VALUE, true);
 
-                        if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                        else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                             algorithmManager.Algorithm.Specials(Util.DECREMENT, Util.NO_VALUE, false);
 
                         break;

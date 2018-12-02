@@ -11,17 +11,8 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(DisplayUnitManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
 
-    /* -------------------------------------------- The main unit for the algorithm ----------------------------------------------------
-     * >>> Status of algorithms:
-     * ---------------------------------------------------------------------------------------------------------------------------------
-     *    Algorithm name    |   Standard    |   Tutorial    |   User Test   |                   Comment
-     * ---------------------------------------------------------------------------------------------------------------------------------
-     *    Bubble Sort       |     Yes       |     Yes       |       Yes     | Complete, but needs more testing for bugs
-     *    Insertion Sort    |     Yes       |     Yes       |       Yes     | Complete, but needs more testing for bugs
-     *    Merge Sort        |     Yes       |     No        |       No      | Tutorial not completed yet, user test not started
-     *    Quick Sort        |      No       |     No        |       No      | -
-     *    Bucket Sort       |     Yes       |     Yes*      |       No      | Implement user test + get stuff up on the blackboard
-     * ---------------------------------------------------------------------------------------------------------------------------------
+    /* -------------------------------------------- Algorithm Manager Base ----------------------------------------------------
+     * The main unit
      * 
     */
 
@@ -47,8 +38,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private enum CaseEditor { none, best, worst }
 
     [SerializeField]
-    private AlgorithmSpeed algorithmSpeed;
-    private enum AlgorithmSpeed { slow, normal, fast }
+    private TutorialSpeedEditor tutorialSpeed;
+    private enum TutorialSpeedEditor { slow, normal, fast }
 
     private void SettingsFromEditor()
     {
@@ -81,7 +72,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             case 3: numberOfElements = 8; break;
         }
 
-        switch ((int)algorithmSpeed)
+        switch ((int)tutorialSpeed)
         {
             case 0: algorithm.Seconds = 2f; break;
             case 1: algorithm.Seconds = 1f; break;
@@ -335,6 +326,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public bool Duplicates
     {
         set { allowDuplicates = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Duplicates: " + Util.EnabledToString(value)); }
+    }
+
+    public float TutorialSpeed
+    {
+        set { algorithm.Seconds = value; }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
