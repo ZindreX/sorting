@@ -40,6 +40,15 @@ public class HolderManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfHolders; x++)
         {
             holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3((x * Util.SPACE_BETWEEN_HOLDERS), 0f, 0f), Quaternion.identity);
+            switch (GetComponent<AlgorithmManagerBase>().Algorithm.AlgorithmName)
+            {
+                case Util.BUBBLE_SORT: holders[x].AddComponent<BubbleSortHolder>(); break;
+                case Util.INSERTION_SORT: holders[x].AddComponent<InsertionSortHolder>(); break;
+                case Util.BUCKET_SORT: holders[x].AddComponent<BucketSortHolder>(); break;
+                case Util.MERGE_SORT: holders[x].AddComponent<MergeSortHolder>(); break;
+                default: Debug.LogError("Add subclass for holder!"); break;
+            }
+            
             holders[x].GetComponent<HolderBase>().Parent = gameObject; // null(?): add C# script to holder / sorting elements
         }
         containsHolders = true;

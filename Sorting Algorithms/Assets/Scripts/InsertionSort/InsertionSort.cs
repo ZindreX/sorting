@@ -129,6 +129,7 @@ public class InsertionSort : Algorithm {
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + userTestHeight;
 
         pivotHolderClone = Instantiate(pivotHolderPrefab, pos, Quaternion.identity);
+        pivotHolderClone.AddComponent<InsertionSortHolder>();
         pivotHolder = pivotHolderClone.GetComponent<InsertionSortHolder>();
         // Mark as pivotholder
         pivotHolder.IsPivotHolder = true;

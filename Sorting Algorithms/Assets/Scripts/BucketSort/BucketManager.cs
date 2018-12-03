@@ -28,7 +28,7 @@ public class BucketManager : MonoBehaviour, IManager {
         if (containsBuckets)
             return;
 
-        buckets = Util.CreateObjects(bucketPrefab, numberOfElements, position, 1f, gameObject);
+        buckets = Util.CreateObjects(bucketPrefab, numberOfElements, position, Util.SPACE_BETWEEN_BUCKETS, gameObject);
         containsBuckets = true;
     }
 

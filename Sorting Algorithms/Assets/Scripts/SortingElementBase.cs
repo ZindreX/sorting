@@ -32,14 +32,9 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     protected int hID, nextHolderID;
     #endregion
 
-    [SerializeField]
-    private TextMesh[] surfaceTexts;
-
     protected virtual void Awake()
     {
-        //value = Random.Range(0, 100);
         sortingElementID = SORTING_ELEMENT_NR++;
-        //SetSurfaceText(value.ToString());
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -58,7 +53,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public int Value
     {
         get { return value; }
-        set { this.value = value; SetSurfaceText(value.ToString()); }
+        set { this.value = value; GetComponent<TextHolder>().SetSurfaceText(value.ToString()); }
     }
 
     // --------------------------------------- Getters & setters ---------------------------------------
@@ -112,14 +107,6 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
     public int SortingElementID
     {
         get { return sortingElementID; }
-    }
-
-    private void SetSurfaceText(string text)
-    {
-        foreach (TextMesh textMesh in surfaceTexts)
-        {
-            textMesh.text = text;
-        }
     }
 
     public void PlaceManuallySortingElementOn(HolderBase holder)

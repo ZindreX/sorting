@@ -330,7 +330,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     public float TutorialSpeed
     {
-        set { algorithm.Seconds = value; }
+        set { algorithm.Seconds = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Tutorial speed: " + value + " seconds"); }
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***

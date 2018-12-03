@@ -18,7 +18,6 @@ public class Bucket : MonoBehaviour, IChild {
     [SerializeField]
     private TextMesh text;
 
-    private static float COLOR_CHANGE_TIMER = 0.25f;
     private int bucketID;
     private bool displayElements = false;
     private GameObject parent;
@@ -113,19 +112,24 @@ public class Bucket : MonoBehaviour, IChild {
     {
         Color prevColor = innerBucket.material.color;
         innerBucket.material.color = color;
-        yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
+        yield return new WaitForSeconds(Util.COLOR_CHANGE_TIMER);
         innerBucket.material.color = prevColor;
-        yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
+        yield return new WaitForSeconds(Util.COLOR_CHANGE_TIMER);
         innerBucket.material.color = color;
-        yield return new WaitForSeconds(COLOR_CHANGE_TIMER);
+        yield return new WaitForSeconds(Util.COLOR_CHANGE_TIMER);
         innerBucket.material.color = prevColor;
     }
 
+    private int prevSortingElementID = -1;
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
         {
             SortingElementBase sortingElement = collision.collider.GetComponent<SortingElementBase>();
+
+            // Check for bug (same sorting element got added twice)
+            if (prevSortingElementID == sortingElement.SortingElementID)
+                return;
 
             if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {
@@ -133,6 +137,7 @@ public class Bucket : MonoBehaviour, IChild {
                 {
                     // Do animation (color -> green -> color)
                     AddSortingElementToBucket(sortingElement);
+                    prevSortingElementID = sortingElement.SortingElementID;
                 }
                 else
                 {

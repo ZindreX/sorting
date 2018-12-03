@@ -18,7 +18,7 @@ public class AlgorithmSettings : MonoBehaviour {
     [SerializeField]
     private GameObject[] difficultyButtons, tutorialSpeedButtons;
 
-    private void Awake()
+    private void Start()
     {
         ChangeSubSettingsDisplay(algorithmManager.TeachingMode);
     }
@@ -87,10 +87,12 @@ public class AlgorithmSettings : MonoBehaviour {
     {
         foreach (GameObject obj in difficultyButtons)
         {
+            obj.SetActive(diffActive);
             obj.active = diffActive;
         }
         foreach (GameObject obj in tutorialSpeedButtons)
         {
+            obj.SetActive(speedActive);
             obj.active = speedActive;
         }
     }

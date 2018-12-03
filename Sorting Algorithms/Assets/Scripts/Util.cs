@@ -67,7 +67,7 @@ public class Util : MonoBehaviour {
     UPDATE_LOOP_INST };
 
     public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f);
-    public static float SPACE_BETWEEN_HOLDERS = 0.2f;
+    public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, COLOR_CHANGE_TIMER = 0.25f;
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 

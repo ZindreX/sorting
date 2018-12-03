@@ -29,44 +29,77 @@ public class BucketSort : Algorithm {
 
     public override string CollectLine(int lineNr)
     {
-        string temp = PseudoCode(lineNr, 0, true);
         switch (lineNr)
         {
-            case 0: case 1: case 5: case 8: return temp;
-            case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().NumberOfElements - 1).ToString(), "(len( list ) - 1)");
-            case 3: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ] * n / max_value");
-            case 4: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ]");
-            case 6: return temp.Replace((bucketSortManager.NumberOfBuckets - 1).ToString(), "n-1");
-            case 7: return temp.Replace("0", "i");
-            default: return "lineNr " + lineNr + " not found!";
+            case 0: return "BucketSort(list, n)";
+            case 1: return "    buckets = new array of n empty lists";
+            case 2: return "    for i=0 to len(list):";
+            case 3: return "        index = list[i] * n / MAX_VALUE";
+            case 4: return "        buckets[index] = list[i]";
+            case 5: return "    end for";
+            case 6: return "    for i=0 to n:";
+            case 7: return "        Sortbucket(buckets[i])";
+            case 8: return "    end for";
+            case 9: return "    k = 0";
+            case 10: return "    for i=0 to n:";
+            case 11: return "        for j={0} to len(buckets[i]):";
+            case 12: return "            list[k] = buckets[i][j]";
+            case 13: return "            k++";
+            case 14: return "        end for";
+            case 15: return "    end for";
+            default: return "X";
         }
+
+        //string temp = PseudoCode(lineNr, 0, 0, 0, true);
+        //switch (lineNr)
+        //{
+        //    case 0: case 1: return temp.Replace(bucketSortManager.NumberOfBuckets.ToString(), "n");
+        //    case 5: case 8: case 13: return temp;
+        //    case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().NumberOfElements - 1).ToString(), "(len( list ) - 1)");
+        //    case 3: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ] * n / max_value");
+        //    case 4: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ]");
+        //    case 6: return temp.Replace((bucketSortManager.NumberOfBuckets - 1).ToString(), "n-1");
+        //    case 7: case 10: return temp.Replace("0", "i");
+        //    case 11: return temp.Replace("0", "j");
+        //    case 12: return temp.Replace("0", "j");
+
+        //    default: return "lineNr " + lineNr + " not found!";
+        //}
     }
 
-    private string PseudoCode(int lineNr, int i, bool increment)
+    private string PseudoCode(int lineNr, int i, int j, int k, bool increment)
     {
         switch (lineNr)
         {
-            case 0: return "BucketSort( list, n):";
-            case 1: return "    buckets = new array of n empty lists";
-            case 2: return string.Format("        for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().NumberOfElements - 1));
-            case 3: return string.Format("            {0} = {1} * {2} / {3}", value2, value1, bucketSortManager.NumberOfBuckets, Util.MAX_VALUE);
-            case 4: return string.Format("            buckets[ {0} ] = {1}", value2, value1);
-            case 5: return "        end for";
+            case 0: return string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets);
+            case 1: return string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets);
+            case 2: return string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().NumberOfElements - 1));
+            case 3: return string.Format("        {0} = {1} * {2} / {3}", value2, value1, bucketSortManager.NumberOfBuckets, Util.MAX_VALUE);
+            case 4: return string.Format("        buckets[{0}] = {1}", value2, value1);
+            case 5: return "    end for";
             case 6: return string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1));
-            case 7: return string.Format("        Sortbucket( buckets[ {0} ] ):", i);
+            case 7: return string.Format("        Sortbucket(buckets[{0}]):", i);
             case 8: return "    end for";
+            case 9: return "    k = 0";
+            case 10: return string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1));
+            case 11: return string.Format("        for j={0} to {1}:", j, value2);
+            case 12: return string.Format("            list[{0}] = buckets[{1}][{2}]", k, i, j);
+            //case 13: return string.Format("            {0} = {0}", k);
+            case 13: return "            " + k + " = " + (k-1) + " + " + "1";
+            case 14: return "        end for";
+            case 15: return "    end for";
             default: return "X";
         }
     }
 
     public override int FirstInstructionCodeLine()
     {
-        return 1;
+        return 0;
     }
 
     public override int FinalInstructionCodeLine()
     {
-        return 8;
+        return 15;
     }
 
     public override void ResetSetup()
@@ -207,11 +240,18 @@ public class BucketSort : Algorithm {
     #region Bucket Sort: Tutorial (Visual)
     public override IEnumerator Tutorial(GameObject[] sortingElements)
     {
+        // Line 0 (set parameter)
+        pseudoCodeViewer.SetCodeLine(0, PseudoCode(0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
+
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
         int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
         bucketManager.CreateObjects(numberOfBuckets, pos);
+
+        // Line 1 (Create buckets)
+        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
 
         // Buckets
         GameObject[] buckets = bucketManager.Buckets;
@@ -220,28 +260,63 @@ public class BucketSort : Algorithm {
         // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
+            // Line 2 (Update for-loop)
+            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
+
             // Get element
             GameObject element = sortingElements[i];
+            value1 = element.GetComponent<SortingElementBase>().Value;
+
+            // Bucket index
+            value2 = BucketIndex(value1, numberOfBuckets);
+
+            // Line 3 (Display bucket index)
+            pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
 
             // Get bucket
-            value1 = element.GetComponent<SortingElementBase>().Value;
-            Bucket bucket = buckets[BucketIndex(value1, numberOfBuckets)].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
+            Bucket bucket = buckets[value2].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
 
             // Move element above the bucket and put it inside
-            element.transform.position = bucket.transform.position + new Vector3(0f, 2f, 0f);
+            element.transform.position = bucket.transform.position + new Vector3(0f, 1f, 0f);
+
+            // Line 4 (Put element into bucket)
+            pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
         }
+
+        // Line 5 (end for-loop)
+        pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
 
         status = NONE;
 
         // Display elements
         for (int x=0; x < numberOfBuckets; x++)
         {
+            // Line 6 (For-loop: Sort elements in buckets)
+            pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, x, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, x, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
+
             Bucket bucket = buckets[x].GetComponent<Bucket>();
             bucket.DisplayElements = true;
+
             // Sort bucket *** TODO: go to insertion sort scene
             bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
 
+            // Line 7 (Sort elements in bucket)
+            pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, x, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, x, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
+
+
+            // Put elements for display on top of buckets
             int numberOfElementsInBucket = bucket.CurrenHolding.Count;
             for (int y=0; y < numberOfElementsInBucket; y++)
             {
@@ -255,26 +330,62 @@ public class BucketSort : Algorithm {
         // Put elements back into list
         status = PUT_BACK_TO_HOLDER;
         int k = 0;
+        // Line 9 (For-loop: Concatenate all buckets)
+        pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, Util.NO_VALUE, Util.NO_VALUE, 0, true), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, Util.NO_VALUE, Util.NO_VALUE, 0, true), Util.BLACKBOARD_TEXT_COLOR);
+
         // Holder positions (where the sorting elements initialized)
         Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
         for (int i = 0; i < numberOfBuckets; i++)
         {
             Bucket bucket = buckets[i].GetComponent<Bucket>();
-            int numberOfElementsInBucket = bucket.CurrenHolding.Count;
-            for (int j = 0; j < numberOfElementsInBucket; j++)
+            //int numberOfElementsInBucket = 
+            value2 = bucket.CurrenHolding.Count;
+
+            // Line 10 (For-loop: Concatenate all buckets)
+            pseudoCodeViewer.SetCodeLine(10, PseudoCode(10, i, Util.NO_VALUE, k, true), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(10, PseudoCode(10, i, Util.NO_VALUE, k, true), Util.BLACKBOARD_TEXT_COLOR);
+
+            for (int j = 0; j < value2; j++)
             {
+                // Line 11 (2nd For-loop: Concatenate all buckets)
+                pseudoCodeViewer.SetCodeLine(11, PseudoCode(11, i, j, k, true), Util.HIGHLIGHT_COLOR);
+                yield return new WaitForSeconds(seconds);
+                pseudoCodeViewer.SetCodeLine(11, PseudoCode(11, i, j, k, true), Util.BLACKBOARD_TEXT_COLOR);
+
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
                 
-                // Display on blackboard
+                // Value of sorting element
                 value1 = sortingElements[k].GetComponent<SortingElementBase>().Value;
-                value2 = k;
-
+                //value2 = k;
+                
+                // Move element back to holder
                 sortingElements[k].transform.position = holderPos[k] + new Vector3(0f, 2f, 0f);
                 sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
-                k++;
+
+                // Line 12 (Put element back into list)
+                pseudoCodeViewer.SetCodeLine(12, PseudoCode(12, i, j, k, true), Util.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
+                pseudoCodeViewer.SetCodeLine(12, PseudoCode(12, i, j, k, true), Util.BLACKBOARD_TEXT_COLOR);
+
+                k++;
+                // Line 13 (Update k)
+                pseudoCodeViewer.SetCodeLine(13, PseudoCode(13, i, j, k, true), Util.HIGHLIGHT_COLOR);
+                yield return new WaitForSeconds(seconds);
+                pseudoCodeViewer.SetCodeLine(13, PseudoCode(13, i, j, k, true), Util.BLACKBOARD_TEXT_COLOR);
             }
+            // Line 12 (2nd for-loop end)
+            pseudoCodeViewer.SetCodeLine(14, PseudoCode(14, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(14, PseudoCode(14, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
         }
+        // Line 13 (2nd for-loop end)
+        pseudoCodeViewer.SetCodeLine(15, PseudoCode(15, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(15, PseudoCode(15, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
+
         status = NONE;
         IsSortingComplete = true;
     }
@@ -286,10 +397,14 @@ public class BucketSort : Algorithm {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instructionNr = 0;
 
+        // Line 0
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
         int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
         bucketManager.CreateObjects(numberOfBuckets, pos);
+
 
         // Buckets
         GameObject[] buckets = bucketManager.Buckets;

@@ -40,10 +40,17 @@ public class ElementManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfElements; x++)
         {
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + Util.ABOVE_HOLDER_VR, Quaternion.identity);
+            switch (GetComponent<AlgorithmManagerBase>().Algorithm.AlgorithmName)
+            {
+                case Util.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
+                case Util.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
+                case Util.BUCKET_SORT: sortingElements[x].AddComponent<BucketSortElement>(); break;
+                case Util.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
+                default: Debug.LogError("Add subclass for sorting element!"); break;
+            }
             sortingElements[x].GetComponent<SortingElementBase>().Value = Random.Range(0, Util.MAX_VALUE);
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
 
-            // sortingElements[x].AddComponent<InsertionSortElement>();
         }
 
         for (int x = 0; x < sortingElements.Length; x++)
@@ -74,6 +81,14 @@ public class ElementManager : MonoBehaviour, IManager {
             usedValues.Add(newValue);
 
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + Util.ABOVE_HOLDER_VR, Quaternion.identity);
+            switch (GetComponent<AlgorithmManagerBase>().Algorithm.AlgorithmName)
+            {
+                case Util.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
+                case Util.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
+                case Util.BUCKET_SORT: sortingElements[x].AddComponent<BucketSortElement>(); break;
+                case Util.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
+                default: Debug.LogError("Add subclass for sorting element!"); break;
+            }
             sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;
             sortingElements[x].GetComponent<IChild>().Parent = gameObject;
         }

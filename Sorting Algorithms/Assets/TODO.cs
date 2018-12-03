@@ -31,8 +31,6 @@
  * > AlgorithmManagerBase
  *  - Clean up IsTutorial() (mixed with IsTutorialStep())
  * 
- * > Sorting element / holder
- *  - Clean up: remove all, create 1 prefab and add the respectful component in ElementManager/HolderManager on instantiation
  * 
  * 
  * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************
