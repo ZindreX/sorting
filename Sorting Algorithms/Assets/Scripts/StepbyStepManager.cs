@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialStep : InstructionControlBase, IBlackboardAble
+public class StepByStepManager : InstructionControlBase, IBlackboardAble
 {
 
     /* --------------------------------------------  Manager --------------------------------------------

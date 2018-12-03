@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAlgorithmAble {
+public interface IAlgorithm {
 
     string AlgorithmName { get; }
     void ResetSetup();

@@ -6,7 +6,7 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(HolderManager))]
 [RequireComponent(typeof(ElementManager))]
 [RequireComponent(typeof(UserTestManager))]
-[RequireComponent(typeof(TutorialStep))]
+[RequireComponent(typeof(StepByStepManager))]
 [RequireComponent(typeof(Algorithm))]
 [RequireComponent(typeof(DisplayUnitManager))]
 public abstract class AlgorithmManagerBase : MonoBehaviour {
@@ -101,7 +101,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected HolderManager holderManager;
     protected ElementManager elementManager;
     protected UserTestManager userTestManager;
-    protected TutorialStep tutorialStep;
+    protected StepByStepManager tutorialStep;
     protected Algorithm algorithm;
 
     protected virtual void Awake()
@@ -112,7 +112,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
         elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
-        tutorialStep = GetComponent(typeof(TutorialStep)) as TutorialStep;
+        tutorialStep = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
 
         // Setup algorithm in their respective <Algorithm name>Manager
         algorithm = InstanceOfAlgorithm;

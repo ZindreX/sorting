@@ -303,6 +303,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e4f8122557fd448817fb9109d99f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentInstructionNr: 0
+  playerMove: 0
+  playerIncremented: 0
+  isValidStep: 0
+  firstInstruction: 0
+  finalInstruction: 0
 --- !u!1 &1036859930 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1725235943449744, guid: f366eb776cb098848af982af8cb259f1,
