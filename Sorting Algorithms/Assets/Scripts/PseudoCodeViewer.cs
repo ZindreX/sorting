@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
-    public static readonly float SPACE_BETWEEN_CODE_LINES = 0.2f;
-
     //[SerializeField]
     private TextMesh[] codeLines;
 
@@ -27,6 +25,10 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     private void PseudoCodeSetup()
     {
+        // Dont draw pseudocode if difficulty is equal or higher than advanced
+        if (algorithm.gameObject.GetComponent<AlgorithmManagerBase>().Difficulty >= Util.ADVANCED)
+            return;
+
         int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;
         codeLines = new TextMesh[numberOfLines];
 
@@ -38,7 +40,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
             // Change transformation position and scale //new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), -0.1f);
             Vector3 pos = startPosAndMat.transform.position;
-            codeLine.transform.position = new Vector3(pos.x, pos.y - (x * SPACE_BETWEEN_CODE_LINES), pos.z);
+            codeLine.transform.position = new Vector3(pos.x, pos.y - (x * Util.SPACE_BETWEEN_CODE_LINES), pos.z);
             codeLine.transform.eulerAngles = new Vector3(startPosAndMat.transform.eulerAngles.x, startPosAndMat.transform.eulerAngles.y, startPosAndMat.transform.eulerAngles.z);
             codeLine.transform.localScale = startPosAndMat.transform.localScale; // new Vector3(0.05f, 0.05f, 0.05f);
 
@@ -51,6 +53,14 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             // Get line of code from algorithm
             codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x); // ***
             codeLines[x] = codeLine.GetComponent<TextMesh>();
+        }
+
+        // Move/extend blackboard up if the pseudocode goes below the floor
+        float codeBelowFloor = codeLines[numberOfLines - 1].transform.position.y;
+        if (codeBelowFloor < 0.342f)
+        {
+            transform.position += new Vector3(0f, 0.5f -codeBelowFloor, 0f);
+            Debug.Log("Working? move higher up? " + codeBelowFloor);
         }
     }
 

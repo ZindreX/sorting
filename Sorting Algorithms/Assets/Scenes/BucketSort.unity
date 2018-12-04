@@ -124,10 +124,9 @@ GameObject:
   - component: {fileID: 119957888}
   - component: {fileID: 119957884}
   - component: {fileID: 119957889}
-  - component: {fileID: 119957887}
   - component: {fileID: 119957886}
   - component: {fileID: 119957885}
-  - component: {fileID: 119957891}
+  - component: {fileID: 119957887}
   - component: {fileID: 119957892}
   m_Layer: 0
   m_Name: BucketSortManager
@@ -231,17 +230,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &119957891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 119957883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ea60232ca694484786cf94f65ef870b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &119957892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,46 +398,6 @@ Prefab:
       propertyPath: algorithmManager
       value: 
       objectReference: {fileID: 119957888}
-    - target: {fileID: 114337036995897674, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_TutorialSpeed
-      objectReference: {fileID: 0}
-    - target: {fileID: 114337036995897674, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114337036995897674, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114157592552583460, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_TeachingMode
-      objectReference: {fileID: 0}
-    - target: {fileID: 114157592552583460, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114885890012169792, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_TutorialSpeed
-      objectReference: {fileID: 0}
-    - target: {fileID: 114885890012169792, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114885890012169792, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_FloatArgument
-      value: 0.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0

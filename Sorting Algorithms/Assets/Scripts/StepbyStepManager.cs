@@ -5,12 +5,10 @@ using UnityEngine;
 public class StepByStepManager : InstructionControlBase, IBlackboardAble
 {
 
-    /* --------------------------------------------  Manager --------------------------------------------
+    /* -------------------------------------------- Step by step --------------------------------------------
      * 
      * 
     */
-
-    // Tutorial step by step
     private bool playerMove = false, playerIncremented = false, isValidStep = false, firstInstruction = false, finalInstruction = false;
 
 

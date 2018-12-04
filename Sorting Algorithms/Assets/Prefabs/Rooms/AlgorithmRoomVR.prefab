@@ -2961,8 +2961,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1109407047498328}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.23, y: 3.36, z: -0.1}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalPosition: {x: -4.23, y: 4.45, z: -0.1}
+  m_LocalScale: {x: 0.04, y: 0.04, z: 0.04}
   m_Children: []
   m_Father: {fileID: 4751100134047574}
   m_RootOrder: 1
@@ -2987,8 +2987,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1829655802213822}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.88, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.1}
+  m_LocalPosition: {x: 0, y: 4.27, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.08, z: 0.1}
   m_Children: []
   m_Father: {fileID: 4459192238836978}
   m_RootOrder: 1
@@ -3000,8 +3000,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1088931668932454}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.74, z: -0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0}
+  m_LocalPosition: {x: 0, y: 3.59, z: -0}
+  m_LocalScale: {x: 0.1, y: 0.07, z: 0}
   m_Children: []
   m_Father: {fileID: 4459192238836978}
   m_RootOrder: 2
@@ -3245,8 +3245,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1246438570245004}
   m_LocalRotation: {x: 0, y: 0.3420201, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 4.45, y: 1.5, z: 3.21}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.1}
+  m_LocalPosition: {x: 4.45, y: 0, z: 3.21}
+  m_LocalScale: {x: 0.3, y: 0.6, z: 0.1}
   m_Children:
   - {fileID: 4198709162439084}
   - {fileID: 4233687470526230}
@@ -3342,8 +3342,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1260934073082994}
   m_LocalRotation: {x: 0, y: -0.3420201, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: -4.45, y: 1.5, z: 3.21}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.1}
+  m_LocalPosition: {x: -4.45, y: 0, z: 3.21}
+  m_LocalScale: {x: 0.3, y: 0.6, z: 0.1}
   m_Children:
   - {fileID: 4296777566410392}
   - {fileID: 4950616619981652}
@@ -3697,8 +3697,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1848851556658960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 4.713}
-  m_LocalScale: {x: 0.35, y: 0.3, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 4.713}
+  m_LocalScale: {x: 0.35, y: 0.6, z: 1}
   m_Children:
   - {fileID: 4264911599365396}
   - {fileID: 4210633042200298}
@@ -3882,8 +3882,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1286237442701798}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.23, y: 3.36, z: -0.1}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalPosition: {x: -4.23, y: 4.45, z: -0.1}
+  m_LocalScale: {x: 0.04, y: 0.04, z: 0.04}
   m_Children: []
   m_Father: {fileID: 4530509011240870}
   m_RootOrder: 1
@@ -7920,14 +7920,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114724925514841522}
-        m_MethodName: set_Difficulty
-        m_Mode: 5
+        m_MethodName: set_TutorialSpeed
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Intermediate
+          m_FloatArgument: 1
+          m_StringArgument: 1
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
@@ -8358,7 +8358,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_SortingCase
         m_Mode: 5
         m_Arguments:
@@ -8399,7 +8399,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_Duplicates
         m_Mode: 6
         m_Arguments:
@@ -8692,13 +8692,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114724925514841522}
-        m_MethodName: set_Difficulty
-        m_Mode: 5
+        m_MethodName: set_TutorialSpeed
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: 2
           m_StringArgument: Beginner
           m_BoolArgument: 0
         m_CallState: 2
@@ -8894,7 +8894,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_NumberOfElements
         m_Mode: 3
         m_Arguments:
@@ -9735,7 +9735,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_Duplicates
         m_Mode: 6
         m_Arguments:
@@ -9831,7 +9831,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_NumberOfElements
         m_Mode: 3
         m_Arguments:
@@ -9858,8 +9858,8 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
-        m_MethodName: set_NumberOfElements
+      - m_Target: {fileID: 1356918994971074}
+        m_MethodName: 
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10096,7 +10096,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_NumberOfElements
         m_Mode: 3
         m_Arguments:
@@ -10650,7 +10650,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_SortingCase
         m_Mode: 5
         m_Arguments:
@@ -10718,7 +10718,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114724925514841522}
+      - m_Target: {fileID: 0}
         m_MethodName: set_SortingCase
         m_Mode: 5
         m_Arguments:
@@ -10923,13 +10923,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114724925514841522}
-        m_MethodName: set_Difficulty
-        m_Mode: 5
+        m_MethodName: set_TutorialSpeed
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: 0.5
           m_StringArgument: Examination
           m_BoolArgument: 0
         m_CallState: 2

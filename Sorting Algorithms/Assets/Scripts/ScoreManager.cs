@@ -107,8 +107,8 @@ public class ScoreManager : MonoBehaviour, IScore {
         // Do reduction to score
         switch (difficultyLevel)
         {
-            case Util.BEGINNER: return 0; // No punishment
-            case Util.INTERMEDIATE: case Util.EXAMINATION: return (SUBSTRACTION_PER_ERROR * GetComponent<UserTestManager>().TotalErrorCount) * difficultyMultiplier;
+            //case Util.BEGINNER: return 0; // No punishment
+            //case Util.INTERMEDIATE: case Util.EXAMINATION: return (SUBSTRACTION_PER_ERROR * GetComponent<UserTestManager>().TotalErrorCount) * difficultyMultiplier;
             default:
                 Debug.LogError("Difficulty level '" + difficultyLevel + "' not implemented.");
                 return 0;

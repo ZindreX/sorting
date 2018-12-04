@@ -17,7 +17,6 @@ public class BucketSortManager : AlgorithmManagerBase {
         bucketSort = GetComponent(typeof(BucketSort)) as BucketSort;
         bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
         base.Awake();
-
     }
 
     public int NumberOfBuckets
@@ -55,44 +54,48 @@ public class BucketSortManager : AlgorithmManagerBase {
 
     protected override int PrepareNextInstruction(InstructionBase instruction)
     {
-        // Get the next instruction
-        BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
+        bool gotSortingElement = !bucketSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        bool noDestination = bucketSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
-        if (bucketSortInstruction.Instruction == Util.PHASING_INST)
+        if (instruction.Instruction == Util.PHASING_INST)
         {
-            // Phase into Insertion Sort (?)
-            AutoSort();
-            StartCoroutine(PutElementsForDisplay());
+            // Phase into Insertion Sort?
+            AutoSortBuckets();
         }
-        else
+        else if (instruction.Instruction == Util.DISPLAY_ELEMENT)
         {
+            // Display elements on top of bucket
+            StartCoroutine(PutElementsForDisplay(instruction.I));
+        }
+        else if (gotSortingElement)
+        {
+            // Get the next instruction
+            BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
+
             // Get the Sorting element
-            BucketSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<BucketSortElement>();
+            InsertionSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
 
             // Hands out the next instruction
             sortingElement.Instruction = bucketSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            sortingElement.NextMove = true;
-
-            Debug.Log("Round " + userTestManager.CurrentInstructionNr + ": " + bucketSortInstruction.DebugInfo());
+            if (instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
+                sortingElement.NextMove = true;
         }
 
         // Display help on blackboard
-        if (false) // help enabled
+        if (Difficulty <= Util.BEGINNER)
         {
-
+            BeginnerWait = true;
+            StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
         }
-        else
-        {
-            if (bucketSortInstruction.NextHolderID == Util.NO_DESTINATION && bucketSortInstruction.BucketID == Util.NO_DESTINATION) // skipping until next (user) move
-                return 1;
-        }
-        return 0;
+        if (gotSortingElement && !noDestination)
+            return 0;
+        return 1;
     }
 
 
-    private void AutoSort()
+    private void AutoSortBuckets()
     {
         for (int x=0; x < numberOfBuckets; x++)
         {
@@ -101,22 +104,19 @@ public class BucketSortManager : AlgorithmManagerBase {
         }
     }
 
-    private IEnumerator PutElementsForDisplay()
+    public IEnumerator PutElementsForDisplay(int bucketID)
     {
-        for (int x=0; x < numberOfBuckets; x++)
-        {
-            Bucket bucket = bucketManager.GetBucket(x);
-            bucket.DisplayElements = true;
+        Bucket bucket = bucketManager.GetBucket(bucketID);
+        bucket.DisplayElements = true;
 
-            int numberOfElements = bucket.CurrenHolding.Count;
-            if (numberOfElements > 0)
+        int numberOfElements = bucket.CurrenHolding.Count;
+        if (numberOfElements > 0)
+        {
+            for (int y=0; y < numberOfElements; y++)
             {
-                for (int y=0; y < numberOfElements; y++)
-                {
-                    SortingElementBase element = bucket.RemoveSoringElement();
-                    element.transform.position = new Vector3(0f, 2f, 0f);
-                    yield return new WaitForSeconds(bucketSort.Seconds);
-                }
+                SortingElementBase element = bucket.RemoveSoringElement();
+                element.transform.position = new Vector3(0f, 2f, 0f);
+                yield return new WaitForSeconds(bucketSort.Seconds);
             }
         }
     }

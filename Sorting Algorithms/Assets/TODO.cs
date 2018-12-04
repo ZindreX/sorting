@@ -1,20 +1,28 @@
 ﻿/* 
  * >>> Status of algorithms:
- * ---------------------------------------------------------------------------------------------------------------------------------
- *    Algorithm name    |   Standard    |   Tutorial    |   Step-by-step    |   User Test   |                   Comment
- * ---------------------------------------------------------------------------------------------------------------------------------
- *    Bubble Sort       |     Yes       |     Yes       |       Yes*        |       Yes     | Step-by-step need some adjustments
- *    Insertion Sort    |     Yes       |     Yes       |       Yes         |       Yes     | Complete
- *    Merge Sort        |     Yes       |     No        |       No          |       No      | Tutorial not completed yet, user test not started
- *    Quick Sort        |      No       |     No        |       No          |       No      | Not started
- *    Bucket Sort       |     Yes       |     Yes*      |       No?         |       No      | Implement user test + get stuff up on the blackboard
- * ---------------------------------------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ *    Algorithm name    |   Standard    |   Tutorial    |   Step-by-step    |   User Test   |                               Comment                                 |
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ *    Bubble Sort       |     Yes       |     Yes       |       Yes*        |       Yes     | Step-by-step need some adjustments                                    |
+ *    Insertion Sort    |     Yes       |     Yes       |       Yes         |       Yes     | Complete                                                              |
+ *    Bucket Sort       |     Yes       |     Yes       |       Yes*        |       Yes*    | Standard/Tutorial: OK, rest needs testing                             |
+ *    Merge Sort        |     Yes       |     No        |       No          |       No      | Standard: OK, Tutorial started/not finished                           |
+ *    Quick Sort        |      No       |     No        |       No          |       No      | Not started                                                           |
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
  * 
  * 
  * *********************************** To do list **********************************************
- * > Clean up instruction
- *  - split into more groups (inheritage), ID's, I/J ?
- * 
+ * >>> Clean up
+ *  > Instruction classes
+ *      - split instruction into a second step (
+ *      - InstructionBase(string instruction, int instructionNr);
+ *      - InstructionLoops(...., int i, int j)
+ *      - InstructionUpdateElement(..., bool isCompare, bool isSorted)
+ *      - <Algorithm>Instruction(..., ....)
+ *  > Old unused stuff
+ *      - remove
+ *  > 
+ *
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)
  *  - remove UserActionToProceed and decrement ReadyForNext instead ? (down to 0)
@@ -30,7 +38,11 @@
  * 
  * > AlgorithmManagerBase
  *  - Clean up IsTutorial() (mixed with IsTutorialStep())
+ *  
+ * > InstructionNr
+ *  - remove it from UserTestManager++
  * 
+ * > Disable settings while task ongoing
  * 
  * 
  * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************

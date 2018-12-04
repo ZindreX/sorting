@@ -28,7 +28,7 @@ public class AlgorithmSettings : MonoBehaviour {
         set { algorithmManager.TeachingMode = value; ChangeSubSettingsDisplay(value); }
     }
 
-    public string Difficulty
+    public int Difficulty
     {
         set { algorithmManager.Difficulty = value; }
     }

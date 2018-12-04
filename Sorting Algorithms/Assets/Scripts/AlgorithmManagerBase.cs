@@ -24,7 +24,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     [SerializeField]
     private DifficultyEditor difficultyEditor;
-    private enum DifficultyEditor { beginner, intermediate, examination }
+    private enum DifficultyEditor { beginner, intermediate, advanced, examination }
 
     [SerializeField]
     private NumberofElementsEditor numberofElementsEditor;
@@ -54,7 +54,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         {
             case 0: difficulty = Util.BEGINNER; break;
             case 1: difficulty = Util.INTERMEDIATE; break;
-            case 2: difficulty = Util.EXAMINATION; break;
+            case 2: difficulty = Util.ADVANCED; break;
+            case 3: difficulty = Util.EXAMINATION; break;
         }
 
         switch ((int)sortingCaseEditor)
@@ -88,8 +89,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
 
     // Algorithm settings
-    private int numberOfElements = 8;
-    private string algorithmName, teachingMode = Util.TUTORIAL, difficulty = Util.BEGINNER, sortingCase = Util.NONE;
+    private int numberOfElements = 8, difficulty = Util.BEGINNER;
+    private string algorithmName, teachingMode = Util.TUTORIAL, sortingCase = Util.NONE;
     private bool allowDuplicates = true, userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
     private Vector3[] holderPositions;
 
@@ -310,7 +311,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     }
 
     // Beginner, Intermediate, or Examination
-    public string Difficulty
+    public int Difficulty
     {
         get { return difficulty; }
         set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Difficulty: " + value); }

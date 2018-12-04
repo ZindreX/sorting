@@ -62,7 +62,12 @@ public abstract class HolderBase : MonoBehaviour, IChild {
     public Color CurrentColor
     {
         get { return GetComponentInChildren<Renderer>().material.color; }
-        set { if (parent.GetComponent<AlgorithmManagerBase>().Difficulty != Util.EXAMINATION || parent.GetComponent<AlgorithmManagerBase>().Algorithm.IsSortingComplete) { prevColor = currentColor; GetComponentInChildren<Renderer>().material.color = value; }}
+        set {
+            if (parent.GetComponent<AlgorithmManagerBase>().Difficulty < Util.EXAMINATION || parent.GetComponent<AlgorithmManagerBase>().Algorithm.IsSortingComplete)
+            {
+                prevColor = currentColor;
+                GetComponentInChildren<Renderer>().material.color = value;
+            }}
     }
 
     public Color PrevColor

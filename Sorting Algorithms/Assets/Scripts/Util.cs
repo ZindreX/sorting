@@ -9,17 +9,38 @@ using UnityEngine;
 */
 
 public class Util : MonoBehaviour {
-    // Rules (numbers)
-    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100, NUMBER_OF_RULE_TYPES = 2;
 
+    // ******************************************** Settings ********************************************
+    // Algorithms
+    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
+    public const string BUCKET_SORT = "Bucket sort";
+
+    // Teaching modes
+    public const string TUTORIAL = "Tutorial", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
+
+    // Difficulty
+    //public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", ADVANCED = "Advanced", EXAMINATION = "Examination";
+    public const int BEGINNER = 1, INTERMEDIATE = 2, ADVANCED = 3, EXAMINATION = 4;
+
+    // Rules (cases)
+    public const string NONE = "None", WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
+
+    // Rules (numbers)
+    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100;
+
+
+    // ******************************************** Instructions ******************************************** 
     // Instructions
     public static readonly int NO_DESTINATION = -1, INIT_STATE = -2, NO_VALUE = -3;
+
+    // Help out, might change later
+    public const int LOOP_ONE = -1, LOOP_TWO = -2;
 
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Init instruction", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
     public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";
-    public const string MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
-    public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop";
+    public const string CREATE_BUCKETS_INST = "Create buckets", BUCKET_INDEX_INST = "Bucket index", MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
+    public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop", DISPLAY_ELEMENT = "Display element";
     public const string END_LOOP_INST = "End of loop";
     public const string INCREMENT_VAR_I = "Increment variable i", SET_VAR_J = "Set variable j", UPDATE_VAR_J = "Update variable J", FIRST_LOOP = "First loop";
 
@@ -33,41 +54,40 @@ public class Util : MonoBehaviour {
     public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
 
-    // Rules (cases)
-    public const string NONE = "None", WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
 
-    // Teaching modes
-    public const string TUTORIAL = "Tutorial", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
+    // ******************************************** Collision/tags ********************************************
+    // Object types
+    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
 
+
+    // ******************************************** Visualization ********************************************
+    // Colors used
+    public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
+    public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
+    public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
+
+    // The distance above a holder (when teleporting a element)
+    public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f);
+
+    // Spacing
+    public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, SPACE_BETWEEN_CODE_LINES = 0.25f;
+
+    // Timing
+    public static float COLOR_CHANGE_TIMER = 0.25f;
+
+
+    // ******************************************** Outdated stuff? ********************************************
     // Rooms
     public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
 
     // Buttons
     public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal", QUIT = "Quit";
 
-    // Algorithms
-    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
-    public const string BUCKET_SORT = "Bucket sort";
-
-    // Difficulty
-    public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", EXAMINATION = "Examination";
-
-    // Object types
-    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
-    
     // Other switch cases
     public const string INIT = "Init", UPDATE_BLACKBOARD = "Update blackboard";
 
-    // Colors used
-    public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
-    public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
-    public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
+    public static List<string> skipAbleInstructions = new List<string>() { FIRST_INSTRUCTION, FINAL_INSTRUCTION, COMPARE_START_INST, COMPARE_END_INST, UPDATE_LOOP_INST };
 
-    public static List<string> skipAbleInstructions = new List<string>() { FIRST_INSTRUCTION, FINAL_INSTRUCTION, COMPARE_START_INST, COMPARE_END_INST,
-    UPDATE_LOOP_INST };
-
-    public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f);
-    public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, COLOR_CHANGE_TIMER = 0.25f;
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 

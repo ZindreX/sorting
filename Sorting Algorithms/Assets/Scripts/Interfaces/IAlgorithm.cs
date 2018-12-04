@@ -10,4 +10,6 @@ public interface IAlgorithm {
     IEnumerator Tutorial(GameObject[] list);
     Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);
 
+    void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment);
+    IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement);
 }

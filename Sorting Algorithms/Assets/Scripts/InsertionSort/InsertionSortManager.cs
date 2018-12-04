@@ -43,7 +43,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
 
         // Display help on blackboard
-        if (Difficulty == Util.BEGINNER)
+        if (Difficulty <= Util.BEGINNER)
         {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));

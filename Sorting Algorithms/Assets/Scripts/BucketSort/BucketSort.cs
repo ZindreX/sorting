@@ -326,6 +326,10 @@ public class BucketSort : Algorithm {
                 yield return new WaitForSeconds(seconds);
             }
         }
+        // Line 8 (end for loop)
+        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
 
         // Put elements back into list
         status = PUT_BACK_TO_HOLDER;
@@ -397,7 +401,7 @@ public class BucketSort : Algorithm {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instructionNr = 0;
 
-        // Line 0
+        // Line 0 (set parameter)
         instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
 
         // Create buckets
@@ -405,52 +409,373 @@ public class BucketSort : Algorithm {
         int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
+        // Line 1 (Create buckets)
+        instructions.Add(instructionNr++, new InstructionBase(Util.CREATE_BUCKETS_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
 
         // Buckets
         GameObject[] buckets = bucketManager.Buckets;
 
-        // Move sorting elements to the correct bucket instructions
+        //status = CHOOSE_BUCKET;
+        // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
+            // Line 2 (Update for-loop)
+            instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.LOOP_ONE, false, false)); // create one unique instruction for each loop, or "cheat" using the parametre?
+
             // Get element
-            BucketSortInstruction element = (BucketSortInstruction)sortingElements[i];
+            int sortingElementID = ((BucketSortInstruction)sortingElements[i]).SortingElementID;
+            int holderID = ((BucketSortInstruction)sortingElements[i]).HolderID;
+            int value = ((BucketSortInstruction)sortingElements[i]).Value;
+            int bucketIndex = BucketIndex(value, numberOfBuckets);
 
-            // Get bucket
-            int bucketIndex = BucketIndex(element.Value, numberOfBuckets);
+            // Line 3 (Display bucket index)
+            instructions.Add(instructionNr++, new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, i, Util.NO_VALUE, bucketIndex, Util.BUCKET_INDEX_INST, instructionNr, value, false, true, false));
 
-            // Move element above the bucket and put it inside
-            instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, element.HolderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, bucketIndex, Util.MOVE_TO_BUCKET_INST, instructionNr, element.Value, false, false, false));
+            // Line 4 (Put element into bucket)
+            instructions.Add(instructionNr++, new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, i, Util.NO_VALUE, bucketIndex, Util.MOVE_TO_BUCKET_INST, instructionNr, value, false, false, false));
         }
 
-        // Move player into insertion sort room, and let them do the sorting or skip ?
-        instructions.Add(instructionNr++, new BucketSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.PHASING_INST, instructionNr, Util.NO_VALUE, false, false, false));
+        // Line 5 (end for-loop)
+        instructions.Add(instructionNr++, new InstructionBase(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.LOOP_ONE, false, false));
+
+        //status = NONE;
+
+        //// Display elements
+        //for (int i = 0; i < numberOfBuckets; i++)
+        //{
+        //    // Line 6 (For-loop: Sort elements in buckets)
+        //    instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, 2, false, false));
+
+        //    Bucket bucket = buckets[i].GetComponent<Bucket>();
+        //    bucket.DisplayElements = true;
+
+        //    // Sort bucket *** TODO: go to insertion sort scene
+        //    bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
+
+        //    // Line 7 (Sort elements in bucket)
+        //    pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
+        //    yield return new WaitForSeconds(seconds);
+        //    pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
+
+
+        //    // Put elements for display on top of buckets
+        //    int numberOfElementsInBucket = bucket.CurrenHolding.Count;
+        //    for (int y = 0; y < numberOfElementsInBucket; y++)
+        //    {
+        //        SortingElementBase element = bucket.GetElementForDisplay(y);
+        //        element.gameObject.active = true;
+        //        element.transform.position += new Vector3(0f, 2f, 0f);
+        //        yield return new WaitForSeconds(seconds);
+        //    }
+        //}
+
+        // Line 6, 7, 8 (make the buckets sort what they hold)
+        instructions.Add(instructionNr++, new InstructionBase(Util.PHASING_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+
+        // Display sorting elements on top of buckets - k: the sorted order of elements
+        for (int x=0; x < sortingElements.Length; x++)
+        {
+            instructions.Add(instructionNr++, new InstructionBase(Util.DISPLAY_ELEMENT, instructionNr, x, Util.NO_VALUE, false, true));
+        }
 
         // Put elements back into list
+        //status = PUT_BACK_TO_HOLDER;
+
+
         int k = 0;
+        // Line 9 (For-loop: Concatenate all buckets)
+        instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_J, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+
         // Holder positions (where the sorting elements initialized)
         Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
         for (int i = 0; i < numberOfBuckets; i++)
         {
             Bucket bucket = buckets[i].GetComponent<Bucket>();
-            int numberOfElementsInBucket = bucket.CurrenHolding.Count;
-            for (int j = 0; j < numberOfElementsInBucket; j++)
+            //int numberOfElementsInBucket = 
+            value2 = bucket.CurrenHolding.Count;
+
+            // Line 10 (For-loop: Concatenate all buckets)
+            instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_LOOP_INST, instructionNr, i, Util.NO_VALUE, false, false));
+
+            for (int j = 0; j < value2; j++)
             {
-                BucketSortElement element = (BucketSortElement)bucket.GetElementForDisplay(j);
-                instructions.Add(instructionNr++, new BucketSortInstruction(element.SortingElementID, bucket.BucketID, k++, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.MOVE_BACK_INST, instructionNr, element.Value, false, false, true));
+                // Line 11 (2nd For-loop: Concatenate all buckets)
+                instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_LOOP_INST, instructionNr, i, j, false, false));
+
+                //sortingElements[k] = bucket.RemoveSoringElement().gameObject;
+
+                // Value of sorting element
+                //value1 = sortingElements[k].GetComponent<SortingElementBase>().Value;
+                //value2 = k;
+
+                // Move element back to holder
+                //sortingElements[k].transform.position = holderPos[k] + new Vector3(0f, 2f, 0f);
+                //sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
+
+                // Line 12 (Put element back into list)
+                instructions.Add(instructionNr++, new InstructionBase(Util.MOVE_BACK_INST, instructionNr, k, Util.NO_VALUE, false, true)); // k: buckets are sorted, so send to instruction to element k*
+
+                k++;
+                // Line 13 (Update k)
+                instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_VAR_J, instructionNr, k, Util.NO_VALUE, false, false));
             }
+            // Line 14 (2nd for-loop end)
+            instructions.Add(instructionNr++, new InstructionBase(Util.END_LOOP_INST, instructionNr, i, Util.LOOP_TWO, false, false));
         }
+        // Line 15 (2nd for-loop end)
+        instructions.Add(instructionNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+
+        //status = NONE;
         return instructions;
     }
     #endregion
 
 
-    public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment)
+    #region Execute order from user
+    public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
     {
-        throw new System.NotImplementedException();
-    }
+        // Gather information from instruction
+        BucketSortInstruction bucketInstruction = null;
+        BucketSortElement sortingElement = null;
 
+        if (gotSortingElement)
+        {
+            bucketInstruction = (BucketSortInstruction)instruction;
+            Debug.Log("Debug: " + bucketInstruction.DebugInfo() + "\n");
+
+            // Change internal state of sorting element
+            sortingElement = GetComponent<ElementManager>().GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
+        }
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
+        }
+
+        // Gather part of code to highlight
+        int i = instruction.I, j = instruction.J, k = 0;
+        List<int> lineOfCode = new List<int>();
+        switch (instruction.Instruction)
+        {
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode.Add(FirstInstructionCodeLine());
+                break;
+
+            case Util.CREATE_BUCKETS_INST:
+                lineOfCode.Add(1);
+                break;
+
+            case Util.FIRST_LOOP:
+                lineOfCode.Add(2);
+                break;
+
+            case Util.BUCKET_INDEX_INST:
+                lineOfCode.Add(3);
+                value1 = sortingElement.Value;
+
+                if (increment)
+                    sortingElement.IsCompare = instruction.IsCompare;
+                else
+                    sortingElement.IsCompare = !instruction.IsCompare;
+
+                Util.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case Util.MOVE_TO_BUCKET_INST:
+                lineOfCode.Add(4);
+                value1 = sortingElement.Value;
+                if (increment)
+                    sortingElement.IsCompare = instruction.IsCompare;
+                else
+                    sortingElement.IsCompare = !instruction.IsCompare;
+                Util.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case Util.END_LOOP_INST:
+                if (j < 0)
+                {
+                    switch (instruction.J)
+                    {
+                        case Util.LOOP_ONE: lineOfCode.Add(5); break;
+                        case Util.LOOP_TWO: lineOfCode.Add(12); break;
+                        default: Debug.LogError(Util.END_LOOP_INST + ": '" + instruction.J + "' loop not found"); break;
+                    }
+                }
+                break;
+
+            case Util.PHASING_INST:
+                lineOfCode.Add(6);
+                lineOfCode.Add(7);
+                lineOfCode.Add(8);
+                break;
+
+            case Util.DISPLAY_ELEMENT:
+                bucketSortManager.PutElementsForDisplay(i);
+                break;
+
+            case Util.SET_VAR_J:
+                lineOfCode.Add(9);
+                break;
+
+            case Util.UPDATE_LOOP_INST:
+                if (j == Util.NO_VALUE)
+                    lineOfCode.Add(10);
+                else
+                    lineOfCode.Add(11);
+                break;
+
+            case Util.MOVE_BACK_INST:
+                lineOfCode.Add(12);
+                k = i;
+                break;
+
+            case Util.UPDATE_VAR_J:
+                lineOfCode.Add(13);
+                k = i;
+                break;
+
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode.Add(FinalInstructionCodeLine());
+                break;
+        }
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, k, increment), Util.HIGHLIGHT_COLOR);
+        }
+
+        // Move sorting element
+        if (gotSortingElement)
+        {
+            switch (bucketInstruction.Instruction)
+            {
+                case Util.MOVE_TO_BUCKET_INST:
+                case Util.MOVE_BACK_INST:
+                    if (increment)
+                        sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.NextHolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                    else
+                        sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                    break;
+            }
+        }
+    }
+    #endregion
+
+    #region User test display help
     public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
     {
-        throw new System.NotImplementedException();
+        // Gather information from instruction
+        BucketSortInstruction bucketInstruction = null;
+        BucketSortElement sortingElement = null;
+
+        if (gotSortingElement)
+        {
+            bucketInstruction = (BucketSortInstruction)instruction;
+            Debug.Log("Debug: " + bucketInstruction.DebugInfo() + "\n");
+
+            // Change internal state of sorting element
+            sortingElement = GetComponent<ElementManager>().GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
+        }
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
+        }
+
+        // Gather part of code to highlight
+        int i = instruction.I, j = instruction.J, k = 0;
+        List<int> lineOfCode = new List<int>();
+        switch (instruction.Instruction)
+        {
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode.Add(FirstInstructionCodeLine());
+                break;
+
+            case Util.CREATE_BUCKETS_INST:
+                lineOfCode.Add(1);
+                break;
+
+            case Util.FIRST_LOOP:
+                lineOfCode.Add(2);
+                break;
+
+            case Util.BUCKET_INDEX_INST:
+                lineOfCode.Add(3);
+                value1 = sortingElement.Value;
+
+                sortingElement.IsCompare = instruction.IsCompare;
+                Util.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case Util.MOVE_TO_BUCKET_INST:
+                lineOfCode.Add(4);
+                value1 = sortingElement.Value;
+
+                sortingElement.IsCompare = instruction.IsCompare;
+                Util.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case Util.END_LOOP_INST:
+                if (j < 0)
+                {
+                    switch (instruction.J)
+                    {
+                        case Util.LOOP_ONE: lineOfCode.Add(5); break;
+                        case Util.LOOP_TWO: lineOfCode.Add(14); break;
+                        default: Debug.LogError(Util.END_LOOP_INST + ": '" + instruction.J + "' loop not found"); break;
+                    }
+                }
+                break;
+
+            case Util.PHASING_INST:
+                lineOfCode.Add(6);
+                lineOfCode.Add(7);
+                lineOfCode.Add(8);
+                break;
+
+            case Util.DISPLAY_ELEMENT:
+                bucketSortManager.PutElementsForDisplay(i);
+                break;
+
+            case Util.SET_VAR_J:
+                lineOfCode.Add(9);
+                break;
+
+            case Util.UPDATE_LOOP_INST:
+                if (j == Util.NO_VALUE)
+                    lineOfCode.Add(10);
+                else
+                    lineOfCode.Add(11);
+                break;
+
+            case Util.MOVE_BACK_INST:
+                lineOfCode.Add(12);
+                k = i;
+                break;
+
+            case Util.UPDATE_VAR_J:
+                lineOfCode.Add(13);
+                k = i;
+                break;
+
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode.Add(FinalInstructionCodeLine());
+                break;
+        }
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, k, true), Util.HIGHLIGHT_COLOR);
+        }
+
+        yield return new WaitForSeconds(seconds);
+        bucketSortManager.BeginnerWait = false;
     }
+    #endregion
 }
