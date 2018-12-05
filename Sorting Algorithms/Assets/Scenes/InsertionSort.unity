@@ -443,6 +443,16 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114287345624387356, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: switchToScene
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114287345624387356, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: title
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0

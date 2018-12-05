@@ -130,7 +130,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     void Start()
     {
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "");
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + TeachingMode);
     }
 
     // Update is called once per frame
@@ -159,28 +159,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     tutorialStep.PlayerMove = false;
                     InstructionBase instruction = tutorialStep.GetStep();
                     Debug.Log(">>> " + instruction.Instruction);
-
-                    //if (instruction.Instruction == Util.FIRST_INSTRUCTION)
-                    //{
-                    //    tutorialStep.FirstInstruction = true;
-                    //    algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
-                    //}
-                    //else if (tutorialStep.FirstInstruction)
-                    //{
-                    //    tutorialStep.FirstInstruction = false;
-                    //    algorithm.HighllightPseudoLine(algorithm.FirstInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
-                    //}
-
-                    //if (instruction.Instruction == Util.FINAL_INSTRUCTION)
-                    //{
-                    //    tutorialStep.FinalInstruction = true;
-                    //    algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.HIGHLIGHT_COLOR);
-                    //}
-                    //else if (tutorialStep.FinalInstruction)
-                    //{
-                    //    tutorialStep.FinalInstruction = false;
-                    //    algorithm.HighllightPseudoLine(algorithm.FinalInstructionCodeLine(), Util.BLACKBOARD_TEXT_COLOR);
-                    //}
 
                     bool gotSortingElement = !algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
                     algorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
@@ -251,7 +229,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         //settings.GetComponent<TeleportPoint>().markerActive = false;
         settings.SetActive(false);
         controllerReady = true;
-
         //algorithm.PseudoCodeViewer.PseudoCodeSetup();
     }
 

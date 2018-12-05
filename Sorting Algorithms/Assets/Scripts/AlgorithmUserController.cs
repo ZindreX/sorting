@@ -47,6 +47,28 @@ public class AlgorithmUserController : MonoBehaviour {
                 algorithmManager.DestroyAndReset();
         }
 
+        // ************* DEBUGGING *************
+        if (debugNextReady)
+        {
+            if (Input.GetKey(KeyCode.E))
+            {
+                algorithmManager.PlayerStepByStepInput(true);
+                StartCoroutine(DebugWait());
+            }
+            else if (Input.GetKey(KeyCode.Q))
+            {
+                algorithmManager.PlayerStepByStepInput(false);
+                StartCoroutine(DebugWait());
+            }
+            else if (Input.GetKey(KeyCode.I))
+            {
+                algorithmManager.InstantiateSetup();
+                algorithmManager.PerformAlgorithmTutorialStep();
+                StartCoroutine(DebugWait());
+            }
+        }
+        // *************
+
         switch (algorithmManager.TeachingMode)
         {
             case Util.TUTORIAL:
@@ -88,5 +110,12 @@ public class AlgorithmUserController : MonoBehaviour {
         }
     }
 
+    private bool debugNextReady = true;
+    private IEnumerator DebugWait()
+    {
+        debugNextReady = false;
+        yield return new WaitForSeconds(0.2f);
+        debugNextReady = true;
+    }
 
 }

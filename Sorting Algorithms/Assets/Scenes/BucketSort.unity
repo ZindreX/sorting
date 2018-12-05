@@ -198,8 +198,8 @@ MonoBehaviour:
   difficultyEditor: 0
   numberofElementsEditor: 3
   allowDupEditor: 0
-  sortingCaseEditor: 0
-  tutorialSpeed: 1
+  sortingCaseEditor: 2
+  tutorialSpeed: 2
   displayUnitManagerObj: {fileID: 653133743}
   settings: {fileID: 181930995}
   numberOfBuckets: 10
