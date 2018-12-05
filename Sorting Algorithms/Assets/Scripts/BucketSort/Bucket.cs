@@ -125,11 +125,17 @@ public class Bucket : MonoBehaviour, IChild {
     {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
         {
-            SortingElementBase sortingElement = collision.collider.GetComponent<SortingElementBase>();
+            BucketSortElement sortingElement = collision.collider.GetComponent<BucketSortElement>();
 
             // Check for bug (same sorting element got added twice)
             if (prevSortingElementID == sortingElement.SortingElementID)
                 return;
+
+            if (!sortingElement.CanEnterBucket)
+            {
+                Debug.Log(sortingElement.CanEnterBucket);
+                return;
+            }
 
             if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
             {

@@ -95,7 +95,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private Vector3[] holderPositions;
 
     [SerializeField]
-    private GameObject displayUnitManagerObj, teleportToSettings;
+    private GameObject displayUnitManagerObj, settings;
 
     // Base object instances
     protected DisplayUnitManager displayUnitManager;
@@ -248,7 +248,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
         userStoppedAlgorithm = false;
-        teleportToSettings.GetComponent<TeleportPoint>().markerActive = false;
+        //settings.GetComponent<TeleportPoint>().markerActive = false;
+        settings.SetActive(false);
         controllerReady = true;
 
         //algorithm.PseudoCodeViewer.PseudoCodeSetup();
@@ -268,7 +269,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         algorithm.ResetSetup();
         displayUnitManager.ResetDisplays();
-        teleportToSettings.GetComponent<TeleportPoint>().markerActive = true;
+        //settings.GetComponent<TeleportPoint>().markerActive = true;
+        settings.SetActive(true);
         controllerReady = false;
 
         // Cleanup pseudocode

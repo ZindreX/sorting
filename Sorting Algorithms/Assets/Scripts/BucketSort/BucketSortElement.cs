@@ -5,7 +5,7 @@ using UnityEngine;
 public class BucketSortElement : SortingElementBase {
 
     private BucketSortInstruction bucketSortInstruction;
-    private bool isPivot;
+    private bool isPivot, canEnterBucket = true;
     private int nextBucketID;
     private Bucket currentInside;
 
@@ -31,6 +31,12 @@ public class BucketSortElement : SortingElementBase {
     {
         get { return currentInside; }
         set { currentInside = value; }
+    }
+
+    public bool CanEnterBucket
+    {
+        get { return canEnterBucket; }
+        set { canEnterBucket = value; }
     }
 
     protected override void UpdateSortingElementState()

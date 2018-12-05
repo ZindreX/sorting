@@ -67,7 +67,7 @@ public class Util : MonoBehaviour {
     public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
 
     // The distance above a holder (when teleporting a element)
-    public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f);
+    public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f), ABOVE_BUCKET_VR = new Vector3(0f, 1.0f, 0f);
 
     // Spacing
     public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, SPACE_BETWEEN_CODE_LINES = 0.25f;

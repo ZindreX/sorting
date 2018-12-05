@@ -42,8 +42,9 @@
  * > InstructionNr
  *  - remove it from UserTestManager++
  * 
- * > Disable settings while task ongoing
  * 
+ * > BucketSort
+ *  - Display elements working/sometimes not
  * 
  * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************
  * 

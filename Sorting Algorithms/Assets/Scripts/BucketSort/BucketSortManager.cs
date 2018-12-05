@@ -79,7 +79,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             sortingElement.Instruction = bucketSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
+            if (instruction.Instruction == Util.MOVE_TO_BUCKET_INST || instruction.Instruction == Util.MOVE_BACK_INST)//(instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
                 sortingElement.NextMove = true;
         }
 
@@ -94,7 +94,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         return 1;
     }
 
-
+    // copied to BucketManager
     private void AutoSortBuckets()
     {
         for (int x=0; x < numberOfBuckets; x++)
@@ -104,6 +104,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         }
     }
 
+    // copied **
     public IEnumerator PutElementsForDisplay(int bucketID)
     {
         Bucket bucket = bucketManager.GetBucket(bucketID);

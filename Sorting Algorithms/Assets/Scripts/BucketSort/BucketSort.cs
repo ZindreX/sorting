@@ -67,6 +67,8 @@ public class BucketSort : Algorithm {
         //}
     }
 
+    // value1 = value of element
+    private int bucketIndex, loopRange;
     private string PseudoCode(int lineNr, int i, int j, int k, bool increment)
     {
         switch (lineNr)
@@ -74,17 +76,16 @@ public class BucketSort : Algorithm {
             case 0: return string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets);
             case 1: return string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets);
             case 2: return string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().NumberOfElements - 1));
-            case 3: return string.Format("        {0} = {1} * {2} / {3}", value2, value1, bucketSortManager.NumberOfBuckets, Util.MAX_VALUE);
-            case 4: return string.Format("        buckets[{0}] = {1}", value2, value1);
+            case 3: return string.Format("        {0} = {1} * {2} / {3}", bucketIndex, value1, bucketSortManager.NumberOfBuckets, Util.MAX_VALUE);
+            case 4: return string.Format("        buckets[{0}] = {1}", bucketIndex, value1);
             case 5: return "    end for";
-            case 6: return string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1));
-            case 7: return string.Format("        Sortbucket(buckets[{0}]):", i);
+            case 6: return string.Format("    for i={0} to {1}:", i, j);
+            case 7: return string.Format("        Sortbucket(buckets[{0}]):", bucketIndex);
             case 8: return "    end for";
             case 9: return "    k = 0";
             case 10: return string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1));
-            case 11: return string.Format("        for j={0} to {1}:", j, value2);
-            case 12: return string.Format("            list[{0}] = buckets[{1}][{2}]", k, i, j);
-            //case 13: return string.Format("            {0} = {0}", k);
+            case 11: return string.Format("        for j={0} to {1}:", j, loopRange);
+            case 12: return string.Format("            list[{0}] = " + value1, k);//buckets[{1}][{2}]", k, i, j);
             case 13: return "            " + k + " = " + (k-1) + " + " + "1";
             case 14: return "        end for";
             case 15: return "    end for";
@@ -106,6 +107,35 @@ public class BucketSort : Algorithm {
     {
         base.ResetSetup();
         Debug.Log("Nothing to reset?");
+    }
+
+    public override void AddSkipAbleInstructions()
+    {
+        base.AddSkipAbleInstructions();
+        // > No destination
+        skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FINAL_INSTRUCTION);
+        // > No element
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FIRST_LOOP);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.SET_VAR_J);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.UPDATE_VAR_J);
+
+
+        // Bucket sort only
+        // > No destination
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.BUCKET_INDEX_INST);
+
+        // > No element
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.CREATE_BUCKETS_INST);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.PHASING_INST);
+
+
+        //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.DISPLAY_ELEMENT);
+        //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.MOVE_TO_BUCKET_INST); ***
+        //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.MOVE_BACK_INST); ***
+
+
     }
 
     public override void Specials(string method, int number, bool activate)
@@ -412,10 +442,6 @@ public class BucketSort : Algorithm {
         // Line 1 (Create buckets)
         instructions.Add(instructionNr++, new InstructionBase(Util.CREATE_BUCKETS_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
 
-        // Buckets
-        GameObject[] buckets = bucketManager.Buckets;
-
-        //status = CHOOSE_BUCKET;
         // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
@@ -438,49 +464,41 @@ public class BucketSort : Algorithm {
         // Line 5 (end for-loop)
         instructions.Add(instructionNr++, new InstructionBase(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.LOOP_ONE, false, false));
 
-        //status = NONE;
-
-        //// Display elements
-        //for (int i = 0; i < numberOfBuckets; i++)
-        //{
-        //    // Line 6 (For-loop: Sort elements in buckets)
-        //    instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, 2, false, false));
-
-        //    Bucket bucket = buckets[i].GetComponent<Bucket>();
-        //    bucket.DisplayElements = true;
-
-        //    // Sort bucket *** TODO: go to insertion sort scene
-        //    bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
-
-        //    // Line 7 (Sort elements in bucket)
-        //    pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
-        //    yield return new WaitForSeconds(seconds);
-        //    pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
-
-
-        //    // Put elements for display on top of buckets
-        //    int numberOfElementsInBucket = bucket.CurrenHolding.Count;
-        //    for (int y = 0; y < numberOfElementsInBucket; y++)
-        //    {
-        //        SortingElementBase element = bucket.GetElementForDisplay(y);
-        //        element.gameObject.active = true;
-        //        element.transform.position += new Vector3(0f, 2f, 0f);
-        //        yield return new WaitForSeconds(seconds);
-        //    }
-        //}
-
         // Line 6, 7, 8 (make the buckets sort what they hold)
         instructions.Add(instructionNr++, new InstructionBase(Util.PHASING_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
 
-        // Display sorting elements on top of buckets - k: the sorted order of elements
-        for (int x=0; x < sortingElements.Length; x++)
+        // Sorting elements
+        int[] values = new int[sortingElements.Length];
+        for (int x = 0; x < sortingElements.Length; x++)
         {
-            instructions.Add(instructionNr++, new InstructionBase(Util.DISPLAY_ELEMENT, instructionNr, x, Util.NO_VALUE, false, true));
+            values[x] = ((BucketSortInstruction)sortingElements[x]).Value;
+        }
+        int[] sorted = InsertionSort.InsertionSortFixCase(values, false);
+
+        // Creating fictionary buckets
+        Dictionary<int, List<BucketSortInstruction>> buckets = new Dictionary<int, List<BucketSortInstruction>>();
+        for (int x=0; x < numberOfBuckets; x++)
+        {
+            buckets[x] = new List<BucketSortInstruction>();
         }
 
-        // Put elements back into list
-        //status = PUT_BACK_TO_HOLDER;
-
+        // Look for correct value and add element to bucket
+        for (int x = 0; x < sorted.Length; x++)
+        {
+            BucketSortInstruction temp = null;
+            for (int y = 0; y < sortingElements.Length; y++)
+            {
+                BucketSortInstruction t = (BucketSortInstruction)sortingElements[y];
+                if (sorted[x] == t.Value)
+                {
+                    int bucketIndex = BucketIndex(t.Value, bucketSortManager.NumberOfBuckets);
+                    BucketSortInstruction displayInstruction = new BucketSortInstruction(t.SortingElementID, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, bucketIndex, Util.DISPLAY_ELEMENT, instructionNr, t.Value, false, false, true);
+                    instructions.Add(instructionNr++, displayInstruction);
+                    buckets[bucketIndex].Add(displayInstruction);
+                    break;
+                }
+            }
+        }
 
         int k = 0;
         // Line 9 (For-loop: Concatenate all buckets)
@@ -490,30 +508,20 @@ public class BucketSort : Algorithm {
         Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
         for (int i = 0; i < numberOfBuckets; i++)
         {
-            Bucket bucket = buckets[i].GetComponent<Bucket>();
-            //int numberOfElementsInBucket = 
-            value2 = bucket.CurrenHolding.Count;
+            List<BucketSortInstruction> bucket = buckets[i];
+            int numberOfElementsInBucket = bucket.Count;
 
             // Line 10 (For-loop: Concatenate all buckets)
             instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_LOOP_INST, instructionNr, i, Util.NO_VALUE, false, false));
 
-            for (int j = 0; j < value2; j++)
+            for (int j = 0; j < numberOfElementsInBucket; j++)
             {
                 // Line 11 (2nd For-loop: Concatenate all buckets)
                 instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_LOOP_INST, instructionNr, i, j, false, false));
-
-                //sortingElements[k] = bucket.RemoveSoringElement().gameObject;
-
-                // Value of sorting element
-                //value1 = sortingElements[k].GetComponent<SortingElementBase>().Value;
-                //value2 = k;
-
-                // Move element back to holder
-                //sortingElements[k].transform.position = holderPos[k] + new Vector3(0f, 2f, 0f);
-                //sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
-
+                
                 // Line 12 (Put element back into list)
-                instructions.Add(instructionNr++, new InstructionBase(Util.MOVE_BACK_INST, instructionNr, k, Util.NO_VALUE, false, true)); // k: buckets are sorted, so send to instruction to element k*
+                //instructions.Add(instructionNr++, new InstructionBase(Util.MOVE_BACK_INST, instructionNr, k, Util.NO_VALUE, false, true)); // k: buckets are sorted, so send to instruction to element k*
+                instructions.Add(instructionNr++, new BucketSortInstruction(bucket[j].SortingElementID, Util.NO_VALUE, k, i, j, bucket[j].BucketID, Util.MOVE_BACK_INST, instructionNr, bucket[j].Value, false, false, true));
 
                 k++;
                 // Line 13 (Update k)
@@ -573,6 +581,7 @@ public class BucketSort : Algorithm {
             case Util.BUCKET_INDEX_INST:
                 lineOfCode.Add(3);
                 value1 = sortingElement.Value;
+                bucketIndex = bucketInstruction.BucketID;
 
                 if (increment)
                     sortingElement.IsCompare = instruction.IsCompare;
@@ -585,6 +594,8 @@ public class BucketSort : Algorithm {
             case Util.MOVE_TO_BUCKET_INST:
                 lineOfCode.Add(4);
                 value1 = sortingElement.Value;
+                bucketIndex = bucketInstruction.BucketID;
+
                 if (increment)
                     sortingElement.IsCompare = instruction.IsCompare;
                 else
@@ -595,10 +606,10 @@ public class BucketSort : Algorithm {
             case Util.END_LOOP_INST:
                 if (j < 0)
                 {
-                    switch (instruction.J)
+                    switch (j)
                     {
                         case Util.LOOP_ONE: lineOfCode.Add(5); break;
-                        case Util.LOOP_TWO: lineOfCode.Add(12); break;
+                        case Util.LOOP_TWO: lineOfCode.Add(14); break;
                         default: Debug.LogError(Util.END_LOOP_INST + ": '" + instruction.J + "' loop not found"); break;
                     }
                 }
@@ -608,10 +619,14 @@ public class BucketSort : Algorithm {
                 lineOfCode.Add(6);
                 lineOfCode.Add(7);
                 lineOfCode.Add(8);
+                i = 0;
+                j = (bucketSortManager.NumberOfBuckets - 1);
+                bucketIndex = j;
+                bucketManager.AutoSortBuckets();
                 break;
 
             case Util.DISPLAY_ELEMENT:
-                bucketSortManager.PutElementsForDisplay(i);
+                bucketManager.PutElementsForDisplay(i);
                 break;
 
             case Util.SET_VAR_J:
@@ -619,15 +634,27 @@ public class BucketSort : Algorithm {
                 break;
 
             case Util.UPDATE_LOOP_INST:
+                Debug.Log("I = "+ i + ", J = " + j);
                 if (j == Util.NO_VALUE)
+                {
+                    j = 0;
                     lineOfCode.Add(10);
-                else
+                }
+                else 
                     lineOfCode.Add(11);
+
+                loopRange = j;
                 break;
 
             case Util.MOVE_BACK_INST:
                 lineOfCode.Add(12);
-                k = i;
+                value1 = sortingElement.Value;
+                k = bucketInstruction.NextHolderID;
+                if (increment)
+                    sortingElement.IsSorted = bucketInstruction.IsSorted;
+                else
+                    sortingElement.IsSorted = !bucketInstruction.IsSorted;
+
                 break;
 
             case Util.UPDATE_VAR_J:
@@ -653,11 +680,27 @@ public class BucketSort : Algorithm {
             switch (bucketInstruction.Instruction)
             {
                 case Util.MOVE_TO_BUCKET_INST:
+                    if (increment)
+                        sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + Util.ABOVE_BUCKET_VR;
+                    else
+                        sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                    break;
+
+                case Util.DISPLAY_ELEMENT:
+                    if (increment)
+                    {
+                        sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + Util.ABOVE_BUCKET_VR;
+                        sortingElement.gameObject.active = true;
+                    }
+                    else
+                        Debug.LogError("Todo");
+                    break;
+
                 case Util.MOVE_BACK_INST:
                     if (increment)
                         sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.NextHolderID).transform.position + Util.ABOVE_HOLDER_VR;
                     else
-                        sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                        sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + Util.ABOVE_BUCKET_VR;
                     break;
             }
         }
@@ -778,4 +821,14 @@ public class BucketSort : Algorithm {
         bucketSortManager.BeginnerWait = false;
     }
     #endregion
+
+
+
+    // ---------------------------------------- Extras ----------------------------------------
+
+
+
+
+
 }
+

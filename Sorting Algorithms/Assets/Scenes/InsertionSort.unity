@@ -213,7 +213,7 @@ MonoBehaviour:
   sortingCaseEditor: 2
   tutorialSpeed: 0
   displayUnitManagerObj: {fileID: 805193905}
-  teleportToSettings: {fileID: 1197108970}
+  settings: {fileID: 591157532}
 --- !u!4 &119957890
 Transform:
   m_ObjectHideFlags: 0
@@ -383,37 +383,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114252597790740704, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114573930551771078, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114557057635402692, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
     - target: {fileID: 114822162427827590, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114677545877037592, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114370532806403442, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114258169248844580, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
       propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -428,9 +398,59 @@ Prefab:
       propertyPath: algorithmManager
       value: 
       objectReference: {fileID: 119957889}
+    - target: {fileID: 114677545877037592, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 119957889}
+    - target: {fileID: 114573930551771078, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 119957889}
+    - target: {fileID: 114557057635402692, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 119957889}
+    - target: {fileID: 114370532806403442, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 119957889}
+    - target: {fileID: 114258169248844580, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 119957889}
+    - target: {fileID: 114252597790740704, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 119957889}
+    - target: {fileID: 23904828198216906, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 23736405545395540, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 23742764037256542, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &591157532 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1356918994971074, guid: f366eb776cb098848af982af8cb259f1,
+    type: 2}
+  m_PrefabInternal: {fileID: 475352617}
 --- !u!1001 &715414432
 Prefab:
   m_ObjectHideFlags: 0
@@ -481,10 +501,5 @@ Prefab:
 --- !u!1 &805193905 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1725235943449744, guid: f366eb776cb098848af982af8cb259f1,
-    type: 2}
-  m_PrefabInternal: {fileID: 475352617}
---- !u!1 &1197108970 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1206382210648956, guid: f366eb776cb098848af982af8cb259f1,
     type: 2}
   m_PrefabInternal: {fileID: 475352617}
