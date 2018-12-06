@@ -1,40 +1,13 @@
 ﻿
 
-public class InsertionSortInstruction : InstructionBase {
+public class InsertionSortInstruction : InstructionSingleElementUpdate {
 
-    protected int sortingElementID, value, holderID, nextHolderID, i, j;
     protected bool isPivot;
 
-    public InsertionSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, string instruction, int instructionNr, int value, bool isPivot, bool isCompare, bool isSorted)
-        : base(instruction, instructionNr, i, j, isCompare, isSorted)
+    public InsertionSortInstruction(string instruction, int instructionNr, int i, int j, int k, int sortingElementID, int value, bool isCompare, bool isSorted, bool isPivot, int holderID, int nextHolderID)
+        : base(instruction, instructionNr, i, j, k, sortingElementID, holderID, nextHolderID, value, isCompare, isSorted)
     {
-        this.sortingElementID = sortingElementID;
-        this.value = value;
-        this.holderID = holderID;
-        this.nextHolderID = nextHolderID; // -1: not going anywhere
         this.isPivot = isPivot;
-    }
-
-    public int SortingElementID
-    {
-        get { return sortingElementID; }
-    }
-
-    public int Value
-    {
-        get { return value; }
-    }
-
-    public int HolderID
-    {
-        get { return holderID; }
-        set { holderID = value; }
-    }
-
-    public int NextHolderID
-    {
-        get { return nextHolderID; }
-        set { nextHolderID = value; }
     }
 
     public string GetCombinedID()
@@ -51,7 +24,7 @@ public class InsertionSortInstruction : InstructionBase {
     // Debug checker
     public override string DebugInfo()
     {
-        return base.DebugInfo() + ": [" + value + "]: " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + ", P=" + isPivot + ", C=" + isCompare + ", S=" + isSorted;
+        return base.DebugInfo() + "| : " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + ", P=" + isPivot;
     }
 
 }

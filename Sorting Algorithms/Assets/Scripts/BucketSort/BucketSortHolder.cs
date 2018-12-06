@@ -12,8 +12,8 @@ public class BucketSortHolder : InsertionSortHolder {
             if (hasPermission)
                 parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
         }
-        else if (CurrentHolding.IntermediateMove)
-            CurrentColor = Util.TEST_COLOR;
+        //else if (CurrentHolding.IntermediateMove)
+        //    CurrentColor = Util.TEST_COLOR;
         else if (currentHolding.IsCompare)
             CurrentColor = Util.COMPARE_COLOR;
         else if (currentHolding.IsSorted)
@@ -27,11 +27,14 @@ public class BucketSortHolder : InsertionSortHolder {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            currentHolding = collision.collider.GetComponent<BucketSortElement>();
+            BucketSortElement element = collision.collider.GetComponent<BucketSortElement>();
+            currentHolding = element;
 
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
             {
+                element.CanEnterBucket = true;
+
                 if (currentHolding.IsCompare)
                     CurrentColor = Util.COMPARE_COLOR;
                 if (currentHolding.IsSorted)

@@ -8496,7 +8496,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_SortingCase
         m_Mode: 5
         m_Arguments:
@@ -8560,7 +8560,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_Duplicates
         m_Mode: 6
         m_Arguments:
@@ -8626,7 +8626,7 @@ MonoBehaviour:
   markerActive: 1
   teleportType: 1
   title: 
-  switchToScene: MainMenu
+  switchToScene: 0
   titleVisibleColor: {r: 0.13885128, g: 0.6527193, b: 0.78677076, a: 0.5}
   titleHighlightedColor: {r: 0.45280647, g: 0.9191189, b: 0.45602244, a: 0.5}
   titleLockedColor: {r: 0.7867738, g: 0.5544188, b: 0.1388565, a: 0.5}
@@ -9082,7 +9082,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_NumberOfElements
         m_Mode: 3
         m_Arguments:
@@ -9997,7 +9997,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_Duplicates
         m_Mode: 6
         m_Arguments:
@@ -10107,7 +10107,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_NumberOfElements
         m_Mode: 3
         m_Arguments:
@@ -10372,7 +10372,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_NumberOfElements
         m_Mode: 3
         m_Arguments:
@@ -10606,7 +10606,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teachingModeEditor: 0
+  difficultyEditor: 0
+  numberofElementsEditor: 0
+  allowDupEditor: 0
+  sortingCaseEditor: 0
+  tutorialSpeed: 0
   algorithmManager: {fileID: 0}
+  blackboard: {fileID: 114300670801863908}
   subSettingsTitle: {fileID: 1945564582846316}
   difficultyButtons:
   - {fileID: 1153602352224808}
@@ -10617,6 +10624,18 @@ MonoBehaviour:
   - {fileID: 1378093453324802}
   - {fileID: 1691380108440256}
   - {fileID: 1732370635955832}
+  numberOfElementsButtons:
+  - {fileID: 1016960962599972}
+  - {fileID: 1362271417873360}
+  - {fileID: 1627889966985628}
+  - {fileID: 1361527687953046}
+  caseButtons:
+  - {fileID: 1649497494590844}
+  - {fileID: 1126387492523584}
+  - {fileID: 1465434155096068}
+  duplicateButtons:
+  - {fileID: 1168307634588832}
+  - {fileID: 1474665068929344}
 --- !u!114 &114725502302555320
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10927,7 +10946,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_SortingCase
         m_Mode: 5
         m_Arguments:
@@ -10995,7 +11014,7 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114724925514841522}
         m_MethodName: set_SortingCase
         m_Mode: 5
         m_Arguments:

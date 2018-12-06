@@ -157,7 +157,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
                 if (standingInCorrectHolder && !IntermediateMove)
                 {
                     //Instruction.Status = Util.EXECUTED_INST;
-                    status = Util.EXECUTED_INST + "***"; // Debugging
+                    status = Util.EXECUTED_INST; // + "***"; // Debugging
 
                     // Check if ready for next round
                     if (NextMove)
@@ -186,7 +186,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
         if (collision.collider.tag == Util.HOLDER_TAG)
         {
             HolderBase holder = collision.collider.GetComponent<HolderBase>();
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
             {
                 CurrentStandingOn = holder;
             }

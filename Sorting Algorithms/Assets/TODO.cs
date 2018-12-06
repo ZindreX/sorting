@@ -30,8 +30,6 @@
  * > Tutorial
  *  - disable drag (non-vr), touch/grab (vr)
  * 
- * > User test (when updating old algorithms)
- *  - make all algorithm implement methods insertion sort uses
  * 
  * > ElementManager (randomizing values+)
  * - ElementsBasedOnCase: first gather values then distribute, instead of distribute -> redistribute based on sorting case (worst/best) ?

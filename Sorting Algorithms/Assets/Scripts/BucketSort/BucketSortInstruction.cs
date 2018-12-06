@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BucketSortInstruction : InsertionSortInstruction {
+public class BucketSortInstruction : InstructionSingleElementUpdate {
 
     /* ************************************ Bucket sort instruction ************************************
      * > Inheritages insertion sort incase it'll use insertion sort later in a "phashing" operation
@@ -10,11 +10,10 @@ public class BucketSortInstruction : InsertionSortInstruction {
      * 
     */
 
-
     private int bucketID;
 
-    public BucketSortInstruction(int sortingElementID, int holderID, int nextHolderID, int i, int j, int bucketID, string instruction, int instructionNr, int value, bool isPivot, bool isCompare, bool isSorted)
-        : base(sortingElementID, holderID, nextHolderID, i, j, instruction, instructionNr, value, isPivot, isCompare, isSorted)
+    public BucketSortInstruction(string instruction, int instructionNr, int i, int j, int k, int sortingElementID, int value, bool isCompare, bool isSorted, int holderID, int nextHolderID, int bucketID)
+        : base(instruction, instructionNr, i, j, k, sortingElementID, holderID, nextHolderID, value, isCompare, isSorted)
     {
         this.bucketID = bucketID;
     }
@@ -26,6 +25,6 @@ public class BucketSortInstruction : InsertionSortInstruction {
 
     public override string DebugInfo()
     {
-        return base.DebugInfo() + ": Bucket=" + bucketID;
+        return base.DebugInfo() + "| " + holderID + " -> " + Util.TranslateNextHolder(nextHolderID) + " or -> Bucket=" + bucketID;
     }
 }

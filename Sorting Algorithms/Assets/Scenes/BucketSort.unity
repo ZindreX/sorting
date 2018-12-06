@@ -194,14 +194,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1855e87154f5df4caca433319f1237e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 1
-  difficultyEditor: 0
-  numberofElementsEditor: 3
-  allowDupEditor: 0
-  sortingCaseEditor: 2
-  tutorialSpeed: 2
   displayUnitManagerObj: {fileID: 653133743}
   settings: {fileID: 181930995}
+  algorithmSettings: {fileID: 181930997}
   numberOfBuckets: 10
 --- !u!114 &119957889
 MonoBehaviour:
@@ -314,6 +309,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1356918994971074, guid: f366eb776cb098848af982af8cb259f1,
     type: 2}
   m_PrefabInternal: {fileID: 653133742}
+--- !u!114 &181930997 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+    type: 2}
+  m_PrefabInternal: {fileID: 653133742}
+  m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
 --- !u!1 &437159578
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +429,26 @@ Prefab:
       propertyPath: algorithmManager
       value: 
       objectReference: {fileID: 119957888}
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: numberofElementsEditor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: tutorialSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: sortingCaseEditor
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: teachingModeEditor
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0

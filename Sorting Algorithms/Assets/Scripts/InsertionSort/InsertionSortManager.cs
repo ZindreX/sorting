@@ -43,7 +43,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
 
         // Display help on blackboard
-        if (Difficulty <= Util.BEGINNER)
+        if (algorithmSettings.Difficulty <= Util.BEGINNER)
         {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
@@ -74,7 +74,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
             bool isPivot = element.IsPivot;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new InsertionSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isPivot, isCompare, isSorted);
+            elementStates[i] = new InsertionSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, value, isCompare, isSorted, isPivot, holderID, Util.NO_DESTINATION); // new InsertionSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isPivot, isCompare, isSorted);
         }
         return elementStates;
     }

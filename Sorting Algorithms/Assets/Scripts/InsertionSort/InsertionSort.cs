@@ -80,7 +80,7 @@ public class InsertionSort : Algorithm {
         {
             case 0: return  "InsertionSort( List<int> list )";
             case 1: return  "i = 1";
-            case 2: return  "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().NumberOfElements + " )";
+            case 2: return  "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements + " )";
             case 3: return  "   " + j + " = " + i  + " - 1";
             case 4: return  "   pivot = " + value1;
             case 5: return  "   while ( " + j + " >= 0 and pivot < " + value2 + " )"; //+ value1 + " < " + value2 + " )";
@@ -123,7 +123,7 @@ public class InsertionSort : Algorithm {
     {
         // Instantiate
         Vector3 pos;
-        if (GetComponent<AlgorithmManagerBase>().IsTutorial())
+        if (GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + tutorialPivotHolderHeight;
         else
             pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + userTestHeight;
@@ -372,6 +372,7 @@ public class InsertionSort : Algorithm {
         // Gather information from instruction
         InsertionSortInstruction insertionInstruction = null;
         InsertionSortElement sortingElement = null;
+        int i = Util.NO_VALUE, j = Util.NO_VALUE; // k = Util.NO_VALUE;
 
         if (gotSortingElement)
         {
@@ -382,6 +383,13 @@ public class InsertionSort : Algorithm {
             sortingElement = GetComponent<ElementManager>().GetSortingElement(insertionInstruction.SortingElementID).GetComponent<InsertionSortElement>();
         }
 
+        if (instruction is InstructionLoop)
+        {
+            i = ((InstructionLoop)instruction).I;
+            j = ((InstructionLoop)instruction).J;
+            //k = ((InstructionLoop)instruction).K;
+        }
+
         // Remove highlight from previous instruction
         for (int x = 0; x < prevHighlight.Count; x++)
         {
@@ -389,7 +397,6 @@ public class InsertionSort : Algorithm {
         }
 
         // Gather part of code to highlight
-        int i = instruction.I, j = instruction.J;
         List<int> lineOfCode = new List<int>();
         switch (instruction.Instruction)
         {
@@ -520,8 +527,18 @@ public class InsertionSort : Algorithm {
         //Debug.LogError("Instruction: " + instruction.Instruction);
         // Gather information from instruction
         InsertionSortElement sortingElement = null;
+        int i = Util.NO_VALUE, j = Util.NO_VALUE; // k = Util.NO_VALUE;
+
         if (gotSortingElement)
             sortingElement = GetComponent<ElementManager>().GetSortingElement(((InsertionSortInstruction)instruction).SortingElementID).GetComponent<InsertionSortElement>();
+
+        if (instruction is InstructionLoop)
+        {
+            i = ((InstructionLoop)instruction).I;
+            j = ((InstructionLoop)instruction).J;
+            // k = ((InstructionLoop)instruction).K;
+        }
+
 
         // Remove highlight from previous instruction
         for (int x = 0; x < prevHighlight.Count; x++)
@@ -530,7 +547,6 @@ public class InsertionSort : Algorithm {
         }
 
         // Gather part of code to highlight
-        int i = instruction.I, j = instruction.J;
         List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
         Color useColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
@@ -614,19 +630,21 @@ public class InsertionSort : Algorithm {
 
         int i = 1; // Line 1
         // Add the first instruction which will be used for Pseudo code
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr, i, Util.NO_VALUE, false, false));
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr)); // new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr, i, Util.NO_VALUE, false, false));
 
         while (i < sortingElements.Length)
         {
             // Line 2
-            instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, false, false));
+            instructions.Add(instructionNr++, new InstructionLoop(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE)); // new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, false, false));
             
             // Line 3
             int j = i - 1;
-            instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_J, instructionNr, i, j, false, false));
+            instructions.Add(instructionNr++, new InstructionLoop(Util.SET_VAR_J, instructionNr, i, j, Util.NO_VALUE)); // new InstructionBase(Util.SET_VAR_J, instructionNr, i, j, false, false));
 
-            int temp1 = ((InsertionSortInstruction)sortingElements[i]).HolderID; // pivot: temp1 -> temp2*
-            InsertionSortInstruction pivot = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[i]).SortingElementID, temp1, pivotHolder.HolderID, i, j, Util.PIVOT_START_INST, instructionNr, ((InsertionSortInstruction)sortingElements[i]).Value, true, false, false);
+            InsertionSortInstruction element = (InsertionSortInstruction)sortingElements[i];
+            int temp1 = element.HolderID; //((InsertionSortInstruction)sortingElements[i]).HolderID; // pivot: temp1 -> temp2*
+
+            InsertionSortInstruction pivot = new InsertionSortInstruction(Util.PIVOT_START_INST, instructionNr, i, j, Util.NO_VALUE, element.SortingElementID, element.Value, false, false, true, temp1, pivotHolder.HolderID); // new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[i]).SortingElementID, temp1, pivotHolder.HolderID, i, j, Util.PIVOT_START_INST, instructionNr, ((InsertionSortInstruction)sortingElements[i]).Value, true, false, false);
             sortingElements[i] = pivot;
 
             // Add this move (Pivot moved in pivot position)
@@ -634,8 +652,12 @@ public class InsertionSort : Algorithm {
 
             while (true)
             {
+                InsertionSortInstruction element2 = (InsertionSortInstruction)sortingElements[j];
+
                 // Choose a new compare element // Line 4
-                compareElement = new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_START_INST, instructionNr, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
+                compareElement = new InsertionSortInstruction(Util.COMPARE_START_INST, instructionNr, i, j, Util.NO_VALUE, element2.SortingElementID, element2.Value, true, element2.IsSorted, false, j, Util.NO_DESTINATION); // new InsertionSortInstruction(((InsertionSortInstruction)sortingElements[j]).SortingElementID, j, Util.NO_DESTINATION, i, j, Util.COMPARE_START_INST, instructionNr, ((InsertionSortInstruction)sortingElements[j]).Value, false, true, sortingElements[j].IsSorted);
+                //use this instead?: compareElement = new InstructionSingleElementUpdate(Util.COMPARE_START_INST, instructionNr, i, j, Util.NO_VALUE, element2.SortingElementID, element2.Value, true, element2.IsSorted);
+                    
                 sortingElements[j] = compareElement;
                 instructions.Add(instructionNr++, compareElement);
 
@@ -643,7 +665,7 @@ public class InsertionSort : Algorithm {
                 if (pivot.Value >= compareElement.Value)
                 {
                     // Line 7
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, instructionNr, compareElement.Value, false, false, true));
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(Util.COMPARE_END_INST, instructionNr, i, j, Util.NO_VALUE, compareElement.SortingElementID, compareElement.Value, false, true, false, compareElement.HolderID, Util.NO_DESTINATION)); // new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, instructionNr, compareElement.Value, false, false, true));
                     break;
                 }
 
@@ -653,19 +675,19 @@ public class InsertionSort : Algorithm {
                 sortingElements[j] = pivot;
 
                 // Add this move (compare element switched to pivot/next position) // Line 6
-                instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, instructionNr, compareElement.Value, false, false, true));
+                instructions.Add(instructionNr++, new InsertionSortInstruction(Util.SWITCH_INST, instructionNr, i, j, Util.NO_VALUE, compareElement.SortingElementID, compareElement.Value, false, true, false, compareElement.HolderID, temp1)); // new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, instructionNr, compareElement.Value, false, false, true));
 
                 // Line 7
                 j -= 1;
-                instructions.Add(instructionNr++, new InstructionBase(Util.UPDATE_VAR_J, instructionNr, i, j, false, false));
+                instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_VAR_J, instructionNr, i, j, Util.NO_VALUE)); // new InstructionBase(Util.UPDATE_VAR_J, instructionNr, i, j, false, false));
 
                 // temp2 is open spot, temp1 will be given to next compare element or place pivot there
                 temp1 = temp2;
 
                 if (j < 0)
                 {
-                    // Added *** Test: user test // Line 8
-                    instructions.Add(instructionNr++, new InsertionSortInstruction(compareElement.SortingElementID, j+2, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, instructionNr, compareElement.Value, false, false, true));
+                    // Line 8
+                    instructions.Add(instructionNr++, new InsertionSortInstruction(Util.COMPARE_END_INST, instructionNr, i, j, Util.NO_VALUE, compareElement.SortingElementID, compareElement.Value, false, true, false, j+2, Util.NO_DESTINATION)); // new InsertionSortInstruction(compareElement.SortingElementID, j+2, Util.NO_DESTINATION, i, j, Util.COMPARE_END_INST, instructionNr, compareElement.Value, false, false, true));
                     break;
                 }
             }
@@ -673,18 +695,18 @@ public class InsertionSort : Algorithm {
             sortingElements[j + 1] = pivot;
 
             // Add this move (pivot sorted) // Line 9
-            instructions.Add(instructionNr++, new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, instructionNr, pivot.Value, false, false, true));
+            instructions.Add(instructionNr++, new InsertionSortInstruction(Util.PIVOT_END_INST, instructionNr, i, j, Util.NO_VALUE, pivot.SortingElementID, pivot.Value, false, true, false, pivotHolder.HolderID, temp1)); // new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, instructionNr, pivot.Value, false, false, true));
 
             // Line 10
             i += 1;
-            instructions.Add(instructionNr++, new InstructionBase(Util.INCREMENT_VAR_I, instructionNr, i, j, false, false));
+            instructions.Add(instructionNr++, new InstructionLoop(Util.INCREMENT_VAR_I, instructionNr, i, j, Util.NO_VALUE)); // new InstructionBase(Util.INCREMENT_VAR_I, instructionNr, i, j, false, false));
         }
 
         // Line 2 (update loop before finishing)
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, false, false));
+        instructions.Add(instructionNr++, new InstructionLoop(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE)); // new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.NO_VALUE, false, false));
 
         // Add the final instruction which will be used for Pseudo code
-        instructions.Add(instructionNr, new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FINAL_INSTRUCTION, instructionNr, Util.NO_VALUE, false, false, false));
+        instructions.Add(instructionNr, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr)); // new InsertionSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.FINAL_INSTRUCTION, instructionNr, Util.NO_VALUE, false, false, false));
         return instructions;
     }
     #endregion

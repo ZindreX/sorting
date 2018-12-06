@@ -49,7 +49,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
             }
         }
 
-        if (Difficulty <= Util.BEGINNER)
+        if (algorithmSettings.Difficulty <= Util.BEGINNER)
         {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
@@ -72,7 +72,8 @@ public class BubbleSortManager : AlgorithmManagerBase {
             int value = element.Value;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, isCompare, isSorted);
+            elementStates[i] = new BubbleSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, Util.NO_VALUE, holderID, Util.NO_VALUE, value, Util.NO_VALUE, false, false);
+// new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, holderID, Util.NO_DESTINATION, value, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, isCompare, isSorted);
         }
         return elementStates;
     }

@@ -9,7 +9,7 @@ public class BubbleSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        Instruction = new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, sortingElementID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, false, false);
+        Instruction = new BubbleSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, sortingElementID, Util.NO_VALUE, Util.NO_VALUE, value, Util.NO_VALUE, false, false); //new BubbleSortInstruction(sortingElementID, Util.NO_DESTINATION, sortingElementID, Util.NO_DESTINATION, value, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, false, false);
     }
 
     public override InstructionBase Instruction
@@ -68,14 +68,7 @@ public class BubbleSortElement : SortingElementBase {
                 case Util.COMPARE_START_INST: break;
 
                 case Util.COMPARE_END_INST:
-                    //if (CheckPosition())
-                    //{
-                    //    if (sortingElementID == bubbleSortInstruction.SortingElementID2)
-                    //        isSorted = true;
-                    //    return Util.CORRECT_HOLDER;
-                    //}
-                    //return Util.WRONG_HOLDER;
-                    break;
+                    return CheckPosition() ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                 case Util.SWITCH_INST:
                     if (!bubbleSortInstruction.ElementHasBeenExecuted(sortingElementID))

@@ -12,7 +12,7 @@ public class BucketSortElement : SortingElementBase {
     protected override void Awake()
     {
         base.Awake();
-        Instruction = new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, false, false, false);
+        Instruction = new BucketSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, value, false, false, sortingElementID, Util.NO_DESTINATION, Util.NO_VALUE); // new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, false, false, false);
     }
 
     public override InstructionBase Instruction
@@ -52,19 +52,14 @@ public class BucketSortElement : SortingElementBase {
             switch (instruction)
             {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-                case Util.PIVOT_START_INST: status = "Move to pivot holder"; break;
-                case Util.PIVOT_END_INST: status = "Move down from pivot holder"; break;
-                case Util.COMPARE_START_INST: status = "Comparing with pivot"; break;
-                case Util.COMPARE_END_INST: status = "Comparing stop"; break;
-                case Util.SWITCH_INST:
-                    status = "Move to " + nextHolderID;
-                    intermediateMove = true; // Too easy for the user?
+                case Util.BUCKET_INDEX_INST:
+                    status = "Bucket index: " + nextBucketID;
                     break;
 
-                // Bucket sort
                 case Util.MOVE_TO_BUCKET_INST:
                     status = "Move to bucket" + nextBucketID;
                     intermediateMove = true;
+                    canEnterBucket = true; // ***
                     break;
                 case Util.MOVE_BACK_INST:
                     status = "Move to holder " + nextHolderID;
@@ -74,11 +69,6 @@ public class BucketSortElement : SortingElementBase {
                 case Util.EXECUTED_INST: status = "Performed"; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
-
-            if (bucketSortInstruction.IsPivot)
-                isPivot = true;
-            else
-                isPivot = false;
 
             if (bucketSortInstruction.IsCompare)
                 isCompare = true;
@@ -101,43 +91,42 @@ public class BucketSortElement : SortingElementBase {
                 case Util.INIT_INSTRUCTION:
                     return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
 
-                case Util.PIVOT_START_INST:
-                    return (currentStandingOn.HolderID == bucketSortInstruction.HolderID || ((BucketSortHolder)currentStandingOn).IsPivotHolder) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-
-                case Util.PIVOT_END_INST:
-                    return (((BucketSortHolder)currentStandingOn).IsPivotHolder || currentStandingOn.HolderID == bucketSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-
-                case Util.COMPARE_START_INST:
-                    break;
-
-                case Util.COMPARE_END_INST:
-                    return currentStandingOn.HolderID == bucketSortInstruction.HolderID ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-
-                case Util.SWITCH_INST:
-                    if (intermediateMove && currentStandingOn.HolderID == bucketSortInstruction.HolderID) //insertionSortInstruction.HolderID == currentStandingOn.HolderID && insertionSortInstruction.NextHolderID != Util.NO_INSTRUCTION && IsSorted)
+                case Util.MOVE_TO_BUCKET_INST:
+                    if (!bucketSortInstruction.HasBeenExecuted())
                     {
-                        return Util.CORRECT_HOLDER; //Util.MOVE_INTERMEDIATE;
-                    }
-                    else if (intermediateMove && bucketSortInstruction.NextHolderID == currentStandingOn.HolderID)
-                    {
-                        intermediateMove = false;
-                        return Util.CORRECT_HOLDER;
+                        if (IntermediateMove && currentInside.BucketID == bucketSortInstruction.BucketID)
+                        {
+                            intermediateMove = false;
+                            Debug.Log("Change to bucket?");
+                            return Util.CORRECT_HOLDER;
+                        }
+                        else if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.HolderID)
+                            return Util.CORRECT_HOLDER;
+                        return Util.WRONG_HOLDER;
                     }
                     else
-                        return Util.WRONG_HOLDER;
-
-                case Util.MOVE_TO_BUCKET_INST:
-                    return intermediateMove && (currentStandingOn.HolderID == bucketSortInstruction.HolderID || currentInside.BucketID == bucketSortInstruction.BucketID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
+                    {
+                        Debug.Log("TODO?");
+                        return null;
+                    }
 
                 case Util.MOVE_BACK_INST:
-                    return intermediateMove && (currentInside.BucketID == bucketSortInstruction.BucketID || currentStandingOn.HolderID == bucketSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER; // collapse cases?
-
-
-                case Util.EXECUTED_INST:
-                    if (bucketSortInstruction.NextHolderID != Util.NO_DESTINATION)
-                        return (currentStandingOn.HolderID == bucketSortInstruction.NextHolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-                    return (currentStandingOn.HolderID == bucketSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
-
+                    if (!bucketSortInstruction.HasBeenExecuted())
+                    {
+                        if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID)
+                        {
+                            intermediateMove = false;
+                            return Util.CORRECT_HOLDER;
+                        }
+                        else if (IntermediateMove && CurrentInside.BucketID == bucketSortInstruction.BucketID)
+                            return Util.CORRECT_HOLDER;
+                        return Util.WRONG_HOLDER;
+                    }
+                    else
+                    {
+                        Debug.Log("TODO?");
+                        return null;
+                    }
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }
         }

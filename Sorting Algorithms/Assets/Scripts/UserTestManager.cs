@@ -216,8 +216,7 @@ public class UserTestManager : InstructionControlBase, IBlackboardAble {
 
     public override string FillInBlackboard()
     {
-        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + Util.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount
-            + "\nDebugging: " + GetInstruction().DebugInfo();
+        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + Util.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
     }
 
 }

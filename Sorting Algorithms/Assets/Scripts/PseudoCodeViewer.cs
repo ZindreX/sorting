@@ -26,7 +26,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     private void PseudoCodeSetup()
     {
         // Dont draw pseudocode if difficulty is equal or higher than advanced
-        if (algorithm.gameObject.GetComponent<AlgorithmManagerBase>().Difficulty >= Util.ADVANCED)
+        if (algorithm.gameObject.GetComponent<AlgorithmManagerBase>().algorithmSettings.Difficulty >= Util.ADVANCED)
             return;
 
         int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;

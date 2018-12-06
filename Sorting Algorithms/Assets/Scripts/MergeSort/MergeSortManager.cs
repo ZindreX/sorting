@@ -63,7 +63,7 @@ public class MergeSortManager : AlgorithmManagerBase {
             int value = element.Value;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new MergeSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isCompare, isSorted);
+            elementStates[i] = new MergeSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, value, isCompare, isSorted, holderID, Util.NO_DESTINATION); // new MergeSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isCompare, isSorted);
         }
         return elementStates;
     }

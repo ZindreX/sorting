@@ -69,7 +69,7 @@ public class AlgorithmUserController : MonoBehaviour {
         }
         // *************
 
-        switch (algorithmManager.TeachingMode)
+        switch (algorithmManager.algorithmSettings.TeachingMode)
         {
             case Util.TUTORIAL:
                 if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))

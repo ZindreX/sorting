@@ -25,13 +25,13 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
     void Update()
     {
-        if (parent.GetComponent<AlgorithmManagerBase>().IsUserTest())
+        if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsUserTest())
         {
             // Always checking the status of the sorting element this holder is holding, and changing color thereafter
             if (isValidSortingElement(currentHolding))
                 UpdateColorOfHolder();
         }
-        else if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial() && currentHolding != null)
+        else if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial() && currentHolding != null)
         {
             if (currentHolding.IsSorted)
                 UpdateColorOfHolder();
@@ -63,7 +63,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
     {
         get { return GetComponentInChildren<Renderer>().material.color; }
         set {
-            if (parent.GetComponent<AlgorithmManagerBase>().Difficulty < Util.EXAMINATION || parent.GetComponent<AlgorithmManagerBase>().Algorithm.IsSortingComplete)
+            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.Difficulty < Util.EXAMINATION || parent.GetComponent<AlgorithmManagerBase>().Algorithm.IsSortingComplete)
             {
                 prevColor = currentColor;
                 GetComponentInChildren<Renderer>().material.color = value;
@@ -91,7 +91,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
         {
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
             {
 
             }

@@ -47,7 +47,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             bool isPivot = element.IsPivot;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isPivot, isCompare, isSorted);
+            elementStates[i] = new BucketSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, value, isCompare, isSorted, holderID, Util.NO_DESTINATION, Util.NO_VALUE); // new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isPivot, isCompare, isSorted);
         }
         return elementStates;
     }
@@ -65,7 +65,8 @@ public class BucketSortManager : AlgorithmManagerBase {
         else if (instruction.Instruction == Util.DISPLAY_ELEMENT)
         {
             // Display elements on top of bucket
-            StartCoroutine(PutElementsForDisplay(instruction.I));
+            StartCoroutine(PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));
+            Debug.Log("Testing: correct variable used???");
         }
         else if (gotSortingElement)
         {
@@ -73,7 +74,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
 
             // Get the Sorting element
-            InsertionSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
+            BucketSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<BucketSortElement>();
 
             // Hands out the next instruction
             sortingElement.Instruction = bucketSortInstruction;
@@ -84,7 +85,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         }
 
         // Display help on blackboard
-        if (Difficulty <= Util.BEGINNER)
+        if (algorithmSettings.Difficulty <= Util.BEGINNER)
         {
             BeginnerWait = true;
             StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));

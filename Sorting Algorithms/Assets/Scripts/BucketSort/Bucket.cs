@@ -85,7 +85,7 @@ public class Bucket : MonoBehaviour, IChild {
         StartCoroutine(ChangeColor(Util.SORTED_COLOR));
 
         // Make invisible
-        sortingElement.gameObject.active = false;
+        sortingElement.gameObject.SetActive(false);
     }
 
     public SortingElementBase GetElementForDisplay(int index)
@@ -137,7 +137,7 @@ public class Bucket : MonoBehaviour, IChild {
                 return;
             }
 
-            if (parent.GetComponent<AlgorithmManagerBase>().IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
             {
                 if (!displayElements && ValidateSortingElement(sortingElement))
                 {

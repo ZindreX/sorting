@@ -16,86 +16,15 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      * 
     */
 
-    
-    // ************** DEBUGGING ****************
-    [SerializeField]
-    private TeachingModeEditor teachingModeEditor;
-    private enum TeachingModeEditor { tutorial, stepByStep, userTest }
-
-    [SerializeField]
-    private DifficultyEditor difficultyEditor;
-    private enum DifficultyEditor { beginner, intermediate, advanced, examination }
-
-    [SerializeField]
-    private NumberofElementsEditor numberofElementsEditor;
-    private enum NumberofElementsEditor { two, four, six, eight }
-
-    [SerializeField]
-    private bool allowDupEditor = false;
-
-    [SerializeField]
-    private CaseEditor sortingCaseEditor;
-    private enum CaseEditor { none, best, worst }
-
-    [SerializeField]
-    private TutorialSpeedEditor tutorialSpeed;
-    private enum TutorialSpeedEditor { slow, normal, fast }
-
-    private void SettingsFromEditor()
-    {
-        switch ((int)teachingModeEditor)
-        {
-            case 0: teachingMode = Util.TUTORIAL; break;
-            case 1: teachingMode = Util.STEP_BY_STEP; break;
-            case 2: teachingMode = Util.USER_TEST; break;
-        }
-
-        switch ((int)difficultyEditor)
-        {
-            case 0: difficulty = Util.BEGINNER; break;
-            case 1: difficulty = Util.INTERMEDIATE; break;
-            case 2: difficulty = Util.ADVANCED; break;
-            case 3: difficulty = Util.EXAMINATION; break;
-        }
-
-        switch ((int)sortingCaseEditor)
-        {
-            case 0: sortingCase = Util.NONE; break;
-            case 1: sortingCase = Util.BEST_CASE; break;
-            case 2: sortingCase = Util.WORST_CASE; break;
-        }
-
-        switch ((int)numberofElementsEditor)
-        {
-            case 0: numberOfElements = 2; break;
-            case 1: numberOfElements = 4; break;
-            case 2: numberOfElements = 6; break;
-            case 3: numberOfElements = 8; break;
-        }
-
-        switch ((int)tutorialSpeed)
-        {
-            case 0: algorithm.Seconds = 2f; break;
-            case 1: algorithm.Seconds = 1f; break;
-            case 2: algorithm.Seconds = 0.5f; break;
-        }
-
-        allowDuplicates = allowDupEditor;
-
-        Debug.Log("Teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
-    }
-    // ********** DEBUGGING **************
-
-
-
-    // Algorithm settings
-    private int numberOfElements = 8, difficulty = Util.BEGINNER;
-    private string algorithmName, teachingMode = Util.TUTORIAL, sortingCase = Util.NONE;
-    private bool allowDuplicates = true, userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
+    private string algorithmName;
+    private bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
     private Vector3[] holderPositions;
 
     [SerializeField]
     private GameObject displayUnitManagerObj, settings;
+
+    [SerializeField]
+    public AlgorithmSettings algorithmSettings;
 
     // Base object instances
     protected DisplayUnitManager displayUnitManager;
@@ -120,9 +49,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         algorithmName = algorithm.AlgorithmName;
         algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
         algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
-
-        // Debugging
-        SettingsFromEditor();
     }
 
 
@@ -130,7 +56,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     void Start()
     {
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + TeachingMode);
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + algorithmSettings.TeachingMode);
     }
 
     // Update is called once per frame
@@ -142,7 +68,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         if (algorithm.IsSortingComplete)
         {
-            if (IsUserTest() && userTestManager.TimeSpent == 0)
+            if (algorithmSettings.IsUserTest() && userTestManager.TimeSpent == 0)
             {
                 userTestManager.SetEndTime();
                 userTestManager.CalculateScore();
@@ -152,7 +78,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         }
         else
         {
-            if (IsTutorialStep())
+            if (algorithmSettings.IsTutorialStep())
             {
                 if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
                 {
@@ -164,7 +90,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     algorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
                 }
             }
-            else if (IsUserTest()) // User test
+            else if (algorithmSettings.IsUserTest()) // User test
             {
                 // First check if user test setup is complete
                 if (userTestManager.HasInstructions() && !beginnerWait)
@@ -210,16 +136,16 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     */
     public void InstantiateSetup()
     {
-        holderManager.CreateObjects(NumberOfElements, null);
+        holderManager.CreateObjects(algorithmSettings.NumberOfElements, null);
         HolderPositions = holderManager.GetHolderPositions();
         //elementManager.CreateObjects(NumberOfElements, HolderPositions);
-        elementManager.CreateObjects(NumberOfElements, HolderPositions, allowDuplicates, sortingCase);
+        elementManager.CreateObjects(algorithmSettings.NumberOfElements, HolderPositions, algorithmSettings.Duplicates, algorithmSettings.SortingCase);
 
         // Display on blackboard
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, teachingMode);
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, algorithmSettings.TeachingMode);
         
-        switch (teachingMode)
+        switch (algorithmSettings.TeachingMode)
         {
             case Util.TUTORIAL: PerformAlgorithmTutorial(); break;
             case Util.STEP_BY_STEP: PerformAlgorithmTutorialStep(); break;
@@ -261,13 +187,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         get { return algorithm; }
     }
 
-    // Number of elements used
-    public int NumberOfElements
-    {
-        get { return numberOfElements; }
-        set { numberOfElements = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Number of elements: " + value); }
-    }
-
     // The positions of the holders
     public Vector3[] HolderPositions
     {
@@ -282,37 +201,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         set { beginnerWait = value; }
     }
 
-    // Tutorial, Step-By-Step, or User Test
-    public string TeachingMode
-    {
-        get { return teachingMode; }
-        set { teachingMode = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + value); }
-    }
-
-    // Beginner, Intermediate, or Examination
-    public int Difficulty
-    {
-        get { return difficulty; }
-        set { difficulty = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Difficulty: " + value); }
-    }
-
-    // None, Best-case, Worst-case (not implemented yet)
-    public string SortingCase
-    {
-        set { sortingCase = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Case activated: " + value); }
-    }
-
-    // Duplicates can occour in the problem sets (not implemented yet)
-    public bool Duplicates
-    {
-        set { allowDuplicates = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Duplicates: " + Util.EnabledToString(value)); }
-    }
-
-    public float TutorialSpeed
-    {
-        set { algorithm.Seconds = value; displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Tutorial speed: " + value + " seconds"); }
-    }
-
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
     public virtual HolderBase GetCorrectHolder(int index)
     {
@@ -324,24 +212,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         if (ControllerReady)
             tutorialStep.NotifyUserInput(increment);
-    }
-
-    // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
-    public bool IsTutorial()
-    {
-        return teachingMode == Util.TUTORIAL || teachingMode == Util.STEP_BY_STEP;
-    }
-
-    // Check if it's StepByStep (not used?)
-    public bool IsTutorialStep()
-    {
-        return teachingMode == Util.STEP_BY_STEP;
-    }
-
-    // Check if it's UserTest
-    public bool IsUserTest()
-    {
-        return teachingMode == Util.USER_TEST;
     }
 
     public bool ControllerReady
@@ -403,7 +273,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         yield return new WaitForSeconds(algorithm.Seconds);
         algorithm.IsSortingComplete = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
-        for (int x = 0; x < numberOfElements; x++)
+        for (int x = 0; x < algorithmSettings.NumberOfElements; x++)
         {
             Util.IndicateElement(elementManager.GetSortingElement(x));
             elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;

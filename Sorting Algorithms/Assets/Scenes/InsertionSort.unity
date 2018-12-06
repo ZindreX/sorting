@@ -206,14 +206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62fadf70b7651144a7035dbbfd5fb5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 1
-  difficultyEditor: 2
-  numberofElementsEditor: 1
-  allowDupEditor: 1
-  sortingCaseEditor: 2
-  tutorialSpeed: 0
   displayUnitManagerObj: {fileID: 805193905}
   settings: {fileID: 591157532}
+  algorithmSettings: {fileID: 591157534}
 --- !u!4 &119957890
 Transform:
   m_ObjectHideFlags: 0
@@ -383,75 +378,25 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114822162427827590, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114810494295988004, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
       propertyPath: algorithmManager
       value: 
       objectReference: {fileID: 119957889}
-    - target: {fileID: 114677545877037592, guid: f366eb776cb098848af982af8cb259f1,
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114573930551771078, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114557057635402692, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114370532806403442, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114258169248844580, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 114252597790740704, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 119957889}
-    - target: {fileID: 23904828198216906, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: numberofElementsEditor
+      value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 23736405545395540, guid: f366eb776cb098848af982af8cb259f1,
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 23742764037256542, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114287345624387356, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: switchToScene
+      propertyPath: tutorialSpeed
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114287345624387356, guid: f366eb776cb098848af982af8cb259f1,
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
-      propertyPath: title
-      value: 
+      propertyPath: teachingModeEditor
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
@@ -461,6 +406,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1356918994971074, guid: f366eb776cb098848af982af8cb259f1,
     type: 2}
   m_PrefabInternal: {fileID: 475352617}
+--- !u!114 &591157534 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+    type: 2}
+  m_PrefabInternal: {fileID: 475352617}
+  m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
 --- !u!1001 &715414432
 Prefab:
   m_ObjectHideFlags: 0
