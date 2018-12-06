@@ -5,7 +5,7 @@
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
  *    Bubble Sort       |     Yes       |     Yes       |       Yes*        |       Yes     | Step-by-step need some adjustments                                    |
  *    Insertion Sort    |     Yes       |     Yes       |       Yes         |       Yes     | Complete                                                              |
- *    Bucket Sort       |     Yes       |     Yes       |       Yes*        |       Yes*    | Standard/Tutorial: OK, rest needs testing                             |
+ *    Bucket Sort       |     Yes       |     Yes       |       Yes*        |       Yes*    | Standard/Tutorial/Step-by-step: ok**, user test needs more work       |
  *    Merge Sort        |     Yes       |     No        |       No          |       No      | Standard: OK, Tutorial started/not finished                           |
  *    Quick Sort        |      No       |     No        |       No          |       No      | Not started                                                           |
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -13,12 +13,6 @@
  * 
  * *********************************** To do list **********************************************
  * >>> Clean up
- *  > Instruction classes
- *      - split instruction into a second step (
- *      - InstructionBase(string instruction, int instructionNr);
- *      - InstructionLoops(...., int i, int j)
- *      - InstructionUpdateElement(..., bool isCompare, bool isSorted)
- *      - <Algorithm>Instruction(..., ....)
  *  > Old unused stuff
  *      - remove
  *  > 
