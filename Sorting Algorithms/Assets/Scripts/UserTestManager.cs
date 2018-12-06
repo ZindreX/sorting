@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserTestManager : InstructionControlBase, IBlackboardAble {
+public class UserTestManager : InstructionControlBase {
 
     /* -------------------------------------------- User Test Manager --------------------------------------------
      * 
@@ -211,8 +211,6 @@ public class UserTestManager : InstructionControlBase, IBlackboardAble {
         currentStreak = 0;
         longestStreak = 0;
     }
-
-
 
     public override string FillInBlackboard()
     {

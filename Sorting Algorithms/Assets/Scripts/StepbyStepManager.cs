@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StepByStepManager : InstructionControlBase, IBlackboardAble
-{
+public class StepByStepManager : InstructionControlBase {
 
     /* -------------------------------------------- Step by step --------------------------------------------
      * 
@@ -71,6 +70,6 @@ public class StepByStepManager : InstructionControlBase, IBlackboardAble
 
     public override string FillInBlackboard()
     {
-        return "Nothing yet";
+        return "Fill in blackboard not implemented yet - see StepByStepManager";
     }
 }

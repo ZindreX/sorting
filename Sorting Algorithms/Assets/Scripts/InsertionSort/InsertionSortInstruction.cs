@@ -1,6 +1,6 @@
 ﻿
 
-public class InsertionSortInstruction : InstructionSingleElementUpdate {
+public class InsertionSortInstruction : InstructionSingleElement {
 
     protected bool isPivot;
 

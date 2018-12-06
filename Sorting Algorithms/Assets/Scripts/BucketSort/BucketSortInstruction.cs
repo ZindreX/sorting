@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BucketSortInstruction : InstructionSingleElementUpdate {
+public class BucketSortInstruction : InstructionSingleElement {
 
     /* ************************************ Bucket sort instruction ************************************
      * > Inheritages insertion sort incase it'll use insertion sort later in a "phashing" operation

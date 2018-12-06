@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstructionDoubleElementUpdate : InstructionLoop {
+public class InstructionDoubleElement : InstructionLoop {
 
     protected int sortingElementID1, sortingElementID2, holderID1, holderID2, value1, value2;
     protected bool isCompare, isSorted;
     protected bool part1Executed = false, part2Executed = false;
 
-    public InstructionDoubleElementUpdate(string instruction, int instructionNr, int i, int j, int k, int seID1, int seID2, int hID1, int hID2, int value1, int value2, bool isCompare, bool isSorted)
+    public InstructionDoubleElement(string instruction, int instructionNr, int i, int j, int k, int seID1, int seID2, int hID1, int hID2, int value1, int value2, bool isCompare, bool isSorted)
     : base(instruction, instructionNr, i, j, k)
     {
         sortingElementID1 = seID1;

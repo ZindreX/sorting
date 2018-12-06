@@ -15,7 +15,8 @@
  * >>> Clean up
  *  > Old unused stuff
  *      - remove
- *  > 
+ *  > Settings
+ *   - added 2x to AlgorithmManager (remove 1x and fix)
  *
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)

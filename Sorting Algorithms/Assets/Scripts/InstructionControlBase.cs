@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InstructionControlBase : MonoBehaviour, IBlackboardAble {
+public abstract class InstructionControlBase : MonoBehaviour {
 
     /* --------------------------------------------  Manager --------------------------------------------
      * 
@@ -85,7 +85,6 @@ public abstract class InstructionControlBase : MonoBehaviour, IBlackboardAble {
         instructions = null;
         currentInstructionNr = -1;
     }
-
 
     public abstract string FillInBlackboard();
 }

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstructionSingleElementUpdate : InstructionLoop {
+public class InstructionSingleElement : InstructionLoop {
 
     protected int sortingElementID, holderID, nextHolderID, value;
     protected bool isCompare, isSorted;
 
-    public InstructionSingleElementUpdate(string instruction, int instructionNr, int i, int j, int k, int sortingElementID, int holderID, int nextHolderID, int value, bool isCompare, bool isSorted)
+    public InstructionSingleElement(string instruction, int instructionNr, int i, int j, int k, int sortingElementID, int holderID, int nextHolderID, int value, bool isCompare, bool isSorted)
         : base(instruction, instructionNr, i, j, k)
     {
         this.sortingElementID = sortingElementID;

@@ -1,6 +1,6 @@
 ﻿
 
-public class BubbleSortInstruction : InstructionDoubleElementUpdate {
+public class BubbleSortInstruction : InstructionDoubleElement {
 
     /* -------------------------------------------- Instruction class for user test --------------------------------------------
      * Sorting element 1: sortindElementID1 + holderID1 + value1 

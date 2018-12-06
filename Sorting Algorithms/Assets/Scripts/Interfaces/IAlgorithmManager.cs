@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface IAlgorithmManager {
+    // NOT USED
 
     void InitAlgorithm();
     void InitRules();
