@@ -41,9 +41,9 @@ public class BubbleSort : Algorithm {
         switch (lineNr)
         {
             case 0: case 6: case 7: case 8: return temp;
-            case 1: return temp.Replace(GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements.ToString(), "len( list )");
-            case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements - 1).ToString(), "n-1");
-            case 3: return temp.Replace((GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements - 1).ToString(), "n-i-1");
+            case 1: return temp.Replace(GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements.ToString(), "len( list )");
+            case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1).ToString(), "n-1");
+            case 3: return temp.Replace((GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1).ToString(), "n-i-1");
             case 4: case 5: return temp.Replace(Util.INIT_STATE.ToString(), "list[ j ]").Replace((Util.INIT_STATE - 1).ToString(), "list[ j + 1 ]");
             default: return "lineNr " + lineNr + " not found!";
         }
@@ -51,7 +51,7 @@ public class BubbleSort : Algorithm {
 
     private string PseudoCode(int lineNr, int i, int j, bool increment)
     {
-        int n = GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements;
+        int n = GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements;
         switch (lineNr)
         {
             case 0: return "BubbleSort( list ):"; // add case for this line(?): BubbleSort(4, 1, 10, ... etc.)
@@ -233,60 +233,6 @@ public class BubbleSort : Algorithm {
     }
     #endregion
 
-    #region Bubble Sort: User Test
-    public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
-    {
-        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
-        int instructionNr = 0, i = 0, j = 0;
-        // Add first instruction
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FIRST_INSTRUCTION, instructionNr, false, false));
-
-        int N = sortingElements.Length; // line 1 
-        for (i = 0; i < N; i++)
-        {
-            for (j = 0; j < N - i - 1; j++)
-            {
-                // Update for loop instruction
-                instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_LOOP_INST, instructionNr, i, j, Util.NO_VALUE)); //new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, instructionNr, false, false));
-
-                // Choose sorting elements to compare
-                BubbleSortInstruction comparison = MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, Util.COMPARE_START_INST, instructionNr, true, false);
-
-                // Add this instruction
-                instructions.Add(instructionNr++, comparison);
-
-                if (comparison.Value1 > comparison.Value2)
-                {
-                    // Switch their positions
-                    instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, Util.SWITCH_INST, instructionNr, true, false));
-
-                    int holder1 = ((BubbleSortInstruction)sortingElements[j]).HolderID1;
-                    int holder2 = ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1;
-                    InstructionBase temp = sortingElements[j];
-                    sortingElements[j] = sortingElements[j + 1];
-                    sortingElements[j + 1] = temp;
-
-                    // Update holderID
-                    ((BubbleSortInstruction)sortingElements[j]).HolderID1 = holder1;
-                    ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1 = holder2;
-                }
-                // Add this instruction
-                instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, Util.COMPARE_END_INST, instructionNr, false, false));
-            }
-            if (instructions[instructions.Count - 1] is BubbleSortInstruction)
-                ((BubbleSortInstruction)instructions[instructions.Count - 1]).IsSorted = true;
-
-            // Update end 2nd for-loop instruction
-            instructions.Add(instructionNr++, new InstructionLoop(Util.END_LOOP_INST, instructionNr, i, j, Util.NO_VALUE)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.END_LOOP_INST, instructionNr, false, false));
-        }
-        instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_LOOP_INST, instructionNr, i, j, Util.NO_VALUE)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, instructionNr, false, false));
-
-        // Final instruction
-        instructions.Add(instructionNr, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FINAL_INSTRUCTION, instructionNr, false, false));
-        return instructions;
-    }
-    #endregion
-
     #region Execute order from user
     public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
     {
@@ -343,7 +289,15 @@ public class BubbleSort : Algorithm {
                 {
                     se1.IsCompare = !bubbleInstruction.IsCompare;
                     se2.IsCompare = !bubbleInstruction.IsCompare;
+
+                    if (bubbleInstruction.IsElementSorted(se1.SortingElementID) != se1.IsSorted)
+                        se1.IsSorted = bubbleInstruction.IsElementSorted(se1.SortingElementID);
+
+                    if (bubbleInstruction.IsElementSorted(se2.SortingElementID) != se2.IsSorted)
+                        se2.IsSorted = bubbleInstruction.IsElementSorted(se2.SortingElementID);
                 }
+                Util.IndicateElement(se1.gameObject);
+                Util.IndicateElement(se2.gameObject);
 
                 lineOfCode.Add(4);
                 value1 = se1.Value;
@@ -351,21 +305,6 @@ public class BubbleSort : Algorithm {
                 break;
 
             case Util.SWITCH_INST:
-                if (increment)
-                {
-                    se1.IsCompare = bubbleInstruction.IsCompare;
-                    se2.IsCompare = bubbleInstruction.IsCompare;
-                    se1.IsSorted = bubbleInstruction.IsElementSorted(se1.SortingElementID);
-                    se2.IsSorted = bubbleInstruction.IsElementSorted(se2.SortingElementID);
-                }
-                else
-                {
-                    se1.IsCompare = !bubbleInstruction.IsCompare;
-                    se2.IsCompare = !bubbleInstruction.IsCompare;
-                    se1.IsSorted = !bubbleInstruction.IsElementSorted(se1.SortingElementID);
-                    se2.IsSorted = !bubbleInstruction.IsElementSorted(se2.SortingElementID);
-                }
-
                 lineOfCode.Add(5);
                 break;
 
@@ -381,9 +320,14 @@ public class BubbleSort : Algorithm {
                 {
                     se1.IsCompare = !bubbleInstruction.IsCompare;
                     se2.IsCompare = !bubbleInstruction.IsCompare;
-                    se1.IsSorted = !bubbleInstruction.IsElementSorted(se1.SortingElementID);
-                    se2.IsSorted = !bubbleInstruction.IsElementSorted(se2.SortingElementID);
+                    if (bubbleInstruction.IsElementSorted(se1.SortingElementID) != se1.IsSorted)
+                        se1.IsSorted = bubbleInstruction.IsElementSorted(se1.SortingElementID);
+
+                    if (bubbleInstruction.IsElementSorted(se2.SortingElementID) != se2.IsSorted)
+                        se2.IsSorted = bubbleInstruction.IsElementSorted(se2.SortingElementID);
                 }
+                Util.IndicateElement(se1.gameObject);
+                Util.IndicateElement(se2.gameObject);
 
                 lineOfCode.Add(6);
                 break;
@@ -410,16 +354,6 @@ public class BubbleSort : Algorithm {
         {
             switch (instruction.Instruction)
             {
-                case Util.COMPARE_START_INST:
-                    if (se1.CurrentStandingOn != null && se2.CurrentStandingOn != null)
-                    {
-                        se1.CurrentStandingOn.CurrentColor = Util.COMPARE_COLOR;
-                        se2.CurrentStandingOn.CurrentColor = Util.COMPARE_COLOR;
-                    }
-                    else
-                        Debug.Log("Too fast!?");
-                    break;
-
                 case Util.SWITCH_INST:
                     if (increment)
                     {
@@ -432,26 +366,13 @@ public class BubbleSort : Algorithm {
                         se2.transform.position = bubbleSortManager.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + Util.ABOVE_HOLDER_VR;
                     }
                     break;
-
-                case Util.COMPARE_END_INST:
-                    if (se1.CurrentStandingOn != null && se2.CurrentStandingOn != null)
-                    {
-                        se1.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
-                        if (!se2.IsSorted)
-                            se2.CurrentStandingOn.CurrentColor = Util.STANDARD_COLOR;
-                        else
-                            se2.CurrentStandingOn.CurrentColor = Util.SORTED_COLOR;
-                    }
-                    else
-                        Debug.Log("Too fast!?");
-                    break;
             }
         }
     }
     #endregion
 
     #region User test display pseudocode as support
-    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
         // Gather information from instruction
         BubbleSortElement se1 = null, se2 = null;
@@ -528,6 +449,61 @@ public class BubbleSort : Algorithm {
         bubbleSortManager.BeginnerWait = false;
     }
     #endregion
+
+    #region Bubble Sort: User Test
+    public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
+    {
+        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
+        int instructionNr = 0, i = 0, j = 0;
+        // Add first instruction
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FIRST_INSTRUCTION, instructionNr, false, false));
+
+        int N = sortingElements.Length; // line 1 
+        for (i = 0; i < N; i++)
+        {
+            for (j = 0; j < N - i - 1; j++)
+            {
+                // Update for loop instruction
+                instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_LOOP_INST, instructionNr, i, j, Util.NO_VALUE)); //new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, instructionNr, false, false));
+
+                // Choose sorting elements to compare
+                BubbleSortInstruction comparison = MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, Util.COMPARE_START_INST, instructionNr, true, false);
+
+                // Add this instruction
+                instructions.Add(instructionNr++, comparison);
+
+                if (comparison.Value1 > comparison.Value2)
+                {
+                    // Switch their positions
+                    instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, Util.SWITCH_INST, instructionNr, true, false));
+
+                    int holder1 = ((BubbleSortInstruction)sortingElements[j]).HolderID1;
+                    int holder2 = ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1;
+                    InstructionBase temp = sortingElements[j];
+                    sortingElements[j] = sortingElements[j + 1];
+                    sortingElements[j + 1] = temp;
+
+                    // Update holderID
+                    ((BubbleSortInstruction)sortingElements[j]).HolderID1 = holder1;
+                    ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1 = holder2;
+                }
+                // Add this instruction
+                instructions.Add(instructionNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, Util.COMPARE_END_INST, instructionNr, false, false));
+            }
+            if (instructions[instructions.Count - 1] is BubbleSortInstruction)
+                ((BubbleSortInstruction)instructions[instructions.Count - 1]).IsSorted = true;
+
+            // Update end 2nd for-loop instruction
+            instructions.Add(instructionNr++, new InstructionLoop(Util.END_LOOP_INST, instructionNr, i, j, Util.NO_VALUE)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.END_LOOP_INST, instructionNr, false, false));
+        }
+        instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_LOOP_INST, instructionNr, i, j, Util.NO_VALUE)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, instructionNr, false, false));
+
+        // Final instruction
+        instructions.Add(instructionNr, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FINAL_INSTRUCTION, instructionNr, false, false));
+        return instructions;
+    }
+    #endregion
+
 
     // Help functions
 

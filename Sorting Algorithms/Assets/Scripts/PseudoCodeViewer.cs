@@ -20,15 +20,11 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         seconds = algorithm.Seconds;
 
         // If pseudo code added, put it to display
-        PseudoCodeSetup();
+        //PseudoCodeSetup();
     }
 
-    private void PseudoCodeSetup()
+    public void PseudoCodeSetup()
     {
-        // Dont draw pseudocode if difficulty is equal or higher than advanced
-        if (algorithm.gameObject.GetComponent<AlgorithmManagerBase>().algorithmSettings.Difficulty >= Util.ADVANCED)
-            return;
-
         int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;
         codeLines = new TextMesh[numberOfLines];
 
@@ -60,7 +56,6 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         if (codeBelowFloor < 0.342f)
         {
             transform.position += new Vector3(0f, 0.5f -codeBelowFloor, 0f);
-            Debug.Log("Working? move higher up? " + codeBelowFloor);
         }
     }
 
@@ -130,7 +125,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    public void ResetPseudoCode()
+    public void DestroyPseudoCode()
     {
         for (int x=0; x < codeLines.Length; x++)
         {

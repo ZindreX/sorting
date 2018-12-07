@@ -21,10 +21,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     private Vector3[] holderPositions;
 
     [SerializeField]
-    private GameObject displayUnitManagerObj, settings;
+    private GameObject displayUnitManagerObj, settingsObj;
 
-    [SerializeField]
-    public AlgorithmSettings algorithmSettings;
 
     // Base object instances
     protected DisplayUnitManager displayUnitManager;
@@ -33,10 +31,12 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected UserTestManager userTestManager;
     protected StepByStepManager tutorialStep;
     protected Algorithm algorithm;
+    protected AlgorithmSettings algorithmSettings;
 
     protected virtual void Awake()
     {
         // *** Objects ***
+        algorithmSettings = settingsObj.GetComponent(typeof(AlgorithmSettings)) as AlgorithmSettings;
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
 
         holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
@@ -47,14 +47,17 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         // Setup algorithm in their respective <Algorithm name>Manager
         algorithm = InstanceOfAlgorithm;
         algorithmName = algorithm.AlgorithmName;
+
+        // Set displays
         algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
-        algorithm.PseudoCodeViewerFixed = displayUnitManager.PseudoCodeViewerFixed;
+        displayUnitManager.SetAlgorithmForPseudo(algorithm);
     }
 
 
     // Use this for initialization
     void Start()
     {
+        // Right blackboard title / text
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + algorithmSettings.TeachingMode);
     }
@@ -85,6 +88,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                     tutorialStep.PlayerMove = false;
                     InstructionBase instruction = tutorialStep.GetStep();
                     Debug.Log(">>> " + instruction.Instruction);
+                    //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
+                    //Debug.Log(tutorialStep.CurrentInstructionNr);
+
 
                     bool gotSortingElement = !algorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
                     algorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
@@ -144,6 +150,30 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         // Display on blackboard
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, algorithmSettings.TeachingMode);
+
+        // Display pseudocode
+        if (algorithmSettings.TeachingMode == Util.USER_TEST)
+        {
+            if (algorithmSettings.Difficulty <= Util.INTERMEDIATE)
+            {
+                displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+                displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
+            }
+            else if (algorithmSettings.Difficulty == Util.ADVANCED)
+            {
+                //isplayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+                // Ideas for left/center blackboard?
+            }
+            else
+            {
+                // Ideas for left/center? (Examination)
+            }
+        }
+        else
+        {
+            displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+            displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
+        }
         
         switch (algorithmSettings.TeachingMode)
         {
@@ -152,10 +182,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
         userStoppedAlgorithm = false;
-        //settings.GetComponent<TeleportPoint>().markerActive = false;
-        settings.SetActive(false);
+        settingsObj.SetActive(false);
         controllerReady = true;
-        //algorithm.PseudoCodeViewer.PseudoCodeSetup();
+
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -172,12 +201,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         algorithm.ResetSetup();
         displayUnitManager.ResetDisplays();
-        //settings.GetComponent<TeleportPoint>().markerActive = true;
-        settings.SetActive(true);
+        settingsObj.SetActive(true);
         controllerReady = false;
 
         // Cleanup pseudocode
-        algorithm.PseudoCodeViewer.ResetPseudoCode();
+        //algorithm.PseudoCodeViewer.DestroyPseudoCode();
     }
 
     // --------------------------------------- Getters and setters ---------------------------------------
@@ -185,6 +213,11 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public Algorithm Algorithm
     {
         get { return algorithm; }
+    }
+
+    public AlgorithmSettings AlgorithmSettings
+    {
+        get { return algorithmSettings; }
     }
 
     // The positions of the holders

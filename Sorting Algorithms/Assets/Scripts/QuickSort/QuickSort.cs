@@ -70,7 +70,7 @@ public class QuickSort : Algorithm {
         throw new System.NotImplementedException();
     }
 
-    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
         throw new System.NotImplementedException();
     }

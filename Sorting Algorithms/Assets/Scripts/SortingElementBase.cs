@@ -186,7 +186,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild {
         if (collision.collider.tag == Util.HOLDER_TAG)
         {
             HolderBase holder = collision.collider.GetComponent<HolderBase>();
-            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsTutorial())
             {
                 CurrentStandingOn = holder;
             }

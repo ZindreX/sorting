@@ -16,16 +16,14 @@ public class InsertionSort : Algorithm {
     private GameObject pivotHolderClone;
 
     private InsertionSortHolder pivotHolder;
-
-    private Vector3 tutorialPivotHolderHeight = new Vector3(0f, 0.14f, -0f), tutorialPivotElementHeight;
-    private Vector3 userTestHeight = new Vector3(0f, 0.2f, Util.SPACE_BETWEEN_HOLDERS);
+    private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, Util.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
 
     private InsertionSortManager insertionSortManager;
 
     protected override void Awake()
     {
         base.Awake();
-        tutorialPivotElementHeight = tutorialPivotHolderHeight + new Vector3(0f, 0.1f, 0f);
+        tutorialPivotElementHeight = pivotHolderPos + new Vector3(0f, 0.1f, 0f);
         insertionSortManager = GetComponent(typeof(InsertionSortManager)) as InsertionSortManager;
     }
 
@@ -80,7 +78,7 @@ public class InsertionSort : Algorithm {
         {
             case 0: return  "InsertionSort( List<int> list )";
             case 1: return  "i = 1";
-            case 2: return  "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements + " )";
+            case 2: return  "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements + " )";
             case 3: return  "   " + j + " = " + i  + " - 1";
             case 4: return  "   pivot = " + value1;
             case 5: return  "   while ( " + j + " >= 0 and pivot < " + value2 + " )"; //+ value1 + " < " + value2 + " )";
@@ -122,15 +120,12 @@ public class InsertionSort : Algorithm {
     public void CreatePivotHolder() // 1.02998 - 0.809
     {
         // Instantiate
-        Vector3 pos;
-        if (GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
-            pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + tutorialPivotHolderHeight;
-        else
-            pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + userTestHeight;
+        Vector3 pos = GetComponent<AlgorithmManagerBase>().HolderPositions[1] + pivotHolderPos;
 
         pivotHolderClone = Instantiate(pivotHolderPrefab, pos, Quaternion.identity);
         pivotHolderClone.AddComponent<InsertionSortHolder>();
         pivotHolder = pivotHolderClone.GetComponent<InsertionSortHolder>();
+
         // Mark as pivotholder
         pivotHolder.IsPivotHolder = true;
         // Set gameobject parent
@@ -236,7 +231,7 @@ public class InsertionSort : Algorithm {
             temp = pivot.transform.position;
 
             // Place pivot holder above the pivot element
-            pivotHolder.transform.position = temp + tutorialPivotHolderHeight;
+            pivotHolder.transform.position = temp + pivotHolderPos;
 
             // Place the pivot on top of the pivot holder
             pivot.transform.position = temp + tutorialPivotElementHeight;
@@ -290,7 +285,7 @@ public class InsertionSort : Algorithm {
                 pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), Util.BLACKBOARD_TEXT_COLOR);
 
                 // Move pivot out and place it ontop of pivot holder (above holder it check whether it's put the element)
-                pivotHolder.transform.position = temp + tutorialPivotHolderHeight;
+                pivotHolder.transform.position = temp + pivotHolderPos;
                 pivot.transform.position = temp + tutorialPivotElementHeight;
 
                 // Wait to show the pivot being moved
@@ -426,9 +421,18 @@ public class InsertionSort : Algorithm {
 
             case Util.COMPARE_START_INST:
                 if (increment)
+                {
                     sortingElement.IsCompare = insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
                 else
+                {
                     sortingElement.IsCompare = !insertionInstruction.IsCompare;
+                    if (insertionInstruction.HolderID == sortingElement.SortingElementID) // works for worst case, none might be buggy
+                        sortingElement.IsSorted = insertionInstruction.IsSorted;
+                    else
+                        sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                }
 
                 value2 = sortingElement.Value;
                 Util.IndicateElement(sortingElement.gameObject);
@@ -443,10 +447,7 @@ public class InsertionSort : Algorithm {
                     sortingElement.IsSorted = insertionInstruction.IsSorted;
                 }
                 else
-                {
                     sortingElement.IsCompare = !insertionInstruction.IsCompare;
-                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
-                }
 
                 lineOfCode.Add(6);
                 break;
@@ -508,7 +509,35 @@ public class InsertionSort : Algorithm {
         {
             switch (insertionInstruction.Instruction)
             {
-                case Util.PIVOT_START_INST:
+                case Util.COMPARE_START_INST: // testing
+                    if (increment)
+                    {
+                        // Positioning the pivot holder behind/slightly above comparing element
+                        pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
+                        // Postitioning the pivot element on top of the pivot holder
+                        pivotHolder.CurrentHolding.transform.position = pivotHolder.transform.position + Util.ABOVE_HOLDER_VR;
+                    }
+                    else
+                    {
+                        //sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+
+                    }
+                    break;
+
+                case Util.PIVOT_START_INST: // tesing (was combined with switch/pivot_end
+                    if (increment)
+                    {
+                        pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
+                        sortingElement.transform.position = pivotHolder.transform.position + Util.ABOVE_HOLDER_VR;
+                    }
+                    else
+                    {
+                        //
+                        sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+                    }
+                    break;
+
+                //case Util.PIVOT_START_INST: // original working setup (non moving pivot holder)
                 case Util.SWITCH_INST:
                 case Util.PIVOT_END_INST:
                     if (increment)
@@ -522,7 +551,7 @@ public class InsertionSort : Algorithm {
     #endregion
 
     #region User test display pseudocode as support
-    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
         //Debug.LogError("Instruction: " + instruction.Instruction);
         // Gather information from instruction

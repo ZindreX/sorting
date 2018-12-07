@@ -3,8 +3,8 @@
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
  *    Algorithm name    |   Standard    |   Tutorial    |   Step-by-step    |   User Test   |                               Comment                                 |
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
- *    Bubble Sort       |     Yes       |     Yes       |       Yes*        |       Yes     | Step-by-step need some adjustments                                    |
- *    Insertion Sort    |     Yes       |     Yes       |       Yes         |       Yes     | Complete                                                              |
+ *    Bubble Sort       |     Yes       |     Yes       |       Yes         |       Yes     | Complete                                                              |
+ *    Insertion Sort    |     Yes       |     Yes       |       Yes*        |       Yes     | Complete*: found small bug in step-by-step                            |
  *    Bucket Sort       |     Yes       |     Yes       |       Yes*        |       Yes*    | Standard/Tutorial/Step-by-step: ok**, user test needs more work       |
  *    Merge Sort        |     Yes       |     No        |       No          |       No      | Standard: OK, Tutorial started/not finished                           |
  *    Quick Sort        |      No       |     No        |       No          |       No      | Not started                                                           |
@@ -15,8 +15,6 @@
  * >>> Clean up
  *  > Old unused stuff
  *      - remove
- *  > Settings
- *   - added 2x to AlgorithmManager (remove 1x and fix)
  *
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)
@@ -26,7 +24,7 @@
  *  - disable drag (non-vr), touch/grab (vr)
  * 
  * 
- * > ElementManager (randomizing values+)
+ * > ElementManager (cleanup: (duplicate) randomizing values)
  * - ElementsBasedOnCase: first gather values then distribute, instead of distribute -> redistribute based on sorting case (worst/best) ?
  * 
  * > AlgorithmManagerBase
@@ -35,9 +33,25 @@
  * > InstructionNr
  *  - remove it from UserTestManager++
  * 
+ * > Settings menu
+ *  - give feedback (change button color)
  * 
- * > BucketSort
- *  - Display elements working/sometimes not
+ * 
+ * *********************************** Bugs to fix **********************************************
+ * 
+ * >>> Bubble sort
+ *  > Any new bugs found?
+ *  
+ *  
+ * >>> Insertion sort
+ *  > step-by-step: almost done, isSorted buggy (case: none)
+ *  
+ *  
+ * >>> BucketSort
+ *  > Step-by-step: backwards needs more work
+ *  > User test needs more work
+ * 
+ * 
  * 
  * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************
  * 
@@ -51,7 +65,16 @@
  * 
  * 
  * 
+ * 
+ * 
  *  *********************************** Implementation ideas **********************************************
+ * 
+ * > Sensory Curiosity
+ *  - add effects (sound, animation, etc.)
+ *  
+ * > Cognitive Curiosity
+ * - give more information about runtime (n^2, log(n) etc.) + test?
+ * 
  * > User test
  *  - gather all user inputs (during examination?)
  *  - if any mistakes has been done by buser --> show what and how (step/instructions/feedback/animations)

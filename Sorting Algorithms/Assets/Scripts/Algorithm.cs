@@ -14,7 +14,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithm {
     protected List<int> prevHighlight = new List<int>();
     protected Dictionary<string, List<string>> skipDict = new Dictionary<string, List<string>>();
 
-    protected PseudoCodeViewer pseudoCodeViewer, pseudoCodeViewerFixed;
+    protected PseudoCodeViewer pseudoCodeViewer;
 
     protected virtual void Awake()
     {
@@ -37,12 +37,6 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithm {
     {
         get { return pseudoCodeViewer; }
         set { pseudoCodeViewer = value; pseudoCodeViewer.SetAlgorithm(this); }
-    }
-
-    public PseudoCodeViewer PseudoCodeViewerFixed
-    {
-        get { return pseudoCodeViewerFixed; }
-        set { pseudoCodeViewerFixed = value; pseudoCodeViewerFixed.SetAlgorithm(this); }
     }
 
     // Reach to line of code which are not mentioned in instructions
@@ -108,7 +102,7 @@ public abstract class Algorithm : MonoBehaviour, IAlgorithm {
     /* Almost the same method as for the Step by step teaching method
      * - Only does the visualization of the pseudocode
     */
-    public abstract IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement);
+    public abstract IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement);
 
     /* Creates a instruction dictionary
      * - Used in: User test, Step by Step

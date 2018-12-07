@@ -36,7 +36,7 @@ public class Portal : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag(Util.PLAYER_TAG))
+        if (collision.collider.CompareTag(Util.PLAYER_TAG) || collision.collider.CompareTag(Util.PORTAL_OBJECT))
         {
             if (sceneBuildIndex <= LARGEST_BUILD_INDEX)
                 LoadLevel();

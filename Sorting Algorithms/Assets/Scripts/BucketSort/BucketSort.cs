@@ -71,7 +71,7 @@ public class BucketSort : Algorithm {
         {
             case 0: return string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets);
             case 1: return string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets);
-            case 2: return string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().algorithmSettings.NumberOfElements - 1));
+            case 2: return string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1));
             case 3: return string.Format("        {0} = {1} * {2} / {3}", bucketIndex, value1, bucketSortManager.NumberOfBuckets, Util.MAX_VALUE);
             case 4: return string.Format("        buckets[{0}] <- {1}", bucketIndex, value1);
             case 5: return "    end for";
@@ -583,7 +583,7 @@ public class BucketSort : Algorithm {
     #endregion
 
     #region User test display help
-    public override IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement)
+    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
         // Gather information from instruction
         BucketSortInstruction bucketInstruction = null;

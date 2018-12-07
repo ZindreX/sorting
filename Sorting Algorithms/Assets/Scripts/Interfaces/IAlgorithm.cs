@@ -11,5 +11,5 @@ public interface IAlgorithm {
     Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);
 
     void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment);
-    IEnumerator UserTestDisplayHelp(InstructionBase instruction, bool gotSortingElement);
+    IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement);
 }

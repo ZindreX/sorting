@@ -40,7 +40,7 @@ public class BucketManager : MonoBehaviour, IManager {
         if (containsBuckets)
             return;
 
-        if (!GetComponent<AlgorithmManagerBase>().algorithmSettings.IsUserTest())
+        if (!GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsUserTest())
         {
             buckets = Util.CreateObjects(bucketPrefab, numberOfElements, position, Util.SPACE_BETWEEN_BUCKETS, gameObject);
         }

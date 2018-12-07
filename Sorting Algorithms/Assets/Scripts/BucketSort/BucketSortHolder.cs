@@ -31,7 +31,7 @@ public class BucketSortHolder : InsertionSortHolder {
             currentHolding = element;
 
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsTutorial())
             {
                 element.CanEnterBucket = true;
 

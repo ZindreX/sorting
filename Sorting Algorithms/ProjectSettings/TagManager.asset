@@ -8,6 +8,7 @@ TagManager:
   - SortingElement
   - Portal
   - Bucket
+  - Portal object
   layers:
   - Default
   - TransparentFX

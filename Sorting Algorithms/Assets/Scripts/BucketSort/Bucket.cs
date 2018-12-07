@@ -137,7 +137,7 @@ public class Bucket : MonoBehaviour, IChild {
                 return;
             }
 
-            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsTutorial())
             {
                 if (!displayElements && ValidateSortingElement(sortingElement))
                 {

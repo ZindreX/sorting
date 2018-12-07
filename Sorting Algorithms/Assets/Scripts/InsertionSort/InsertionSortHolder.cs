@@ -57,7 +57,7 @@ public class InsertionSortHolder : HolderBase
             currentHolding = collision.collider.GetComponent<InsertionSortElement>();
 
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().algorithmSettings.IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsTutorial())
             {
                 if (((InsertionSortElement)currentHolding).IsPivot)
                     CurrentColor = Util.PIVOT_COLOR;

@@ -34,7 +34,7 @@ public class InsertionSortElement : SortingElementBase {
             hID = insertionSortInstruction.HolderID;
             nextHolderID = insertionSortInstruction.NextHolderID;
 
-            switch (instruction)
+            switch (insertionSortInstruction.Instruction)
             {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
                 case Util.PIVOT_START_INST:

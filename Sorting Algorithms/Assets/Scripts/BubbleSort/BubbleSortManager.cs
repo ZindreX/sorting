@@ -52,7 +52,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
         if (algorithmSettings.Difficulty <= Util.BEGINNER)
         {
             BeginnerWait = true;
-            StartCoroutine(algorithm.UserTestDisplayHelp(instruction, gotSortingElement));
+            StartCoroutine(algorithm.UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
 
         if (gotSortingElement && !noDestination)
