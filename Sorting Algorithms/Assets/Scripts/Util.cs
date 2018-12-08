@@ -34,7 +34,7 @@ public class Util : MonoBehaviour {
     public static readonly int NO_DESTINATION = -1, INIT_STATE = -2, NO_VALUE = -3;
 
     // Help out, might change later
-    public const int LOOP_ONE = -1, LOOP_TWO = -2;
+    public const int OUTER_LOOP = -1, INNER_LOOP = -2;
 
     // Instructions (strings)
     public const string INIT_INSTRUCTION = "Init instruction", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
@@ -57,12 +57,12 @@ public class Util : MonoBehaviour {
 
     // ******************************************** Collision/tags ********************************************
     // Object types
-    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
+    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket", TOOLTIPS_ELEMENT = "Tooltips element";
 
 
     // ******************************************** Visualization ********************************************
     // Colors used
-    public static Color PIVOT_COLOR = Color.blue, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
+    public static Color PIVOT_COLOR = Color.cyan, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
     public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
     public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
 

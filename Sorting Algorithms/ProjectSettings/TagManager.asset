@@ -9,6 +9,9 @@ TagManager:
   - Portal
   - Bucket
   - Portal object
+  - projectile
+  - FxTemporaire
+  - Tooltips element
   layers:
   - Default
   - TransparentFX

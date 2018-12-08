@@ -475,8 +475,8 @@ public class BucketSort : Algorithm {
                 {
                     switch (j)
                     {
-                        case Util.LOOP_ONE: lineOfCode.Add(5); break;
-                        case Util.LOOP_TWO: lineOfCode.Add(12); break;
+                        case Util.OUTER_LOOP: lineOfCode.Add(5); break;
+                        case Util.INNER_LOOP: lineOfCode.Add(12); break;
                         default: Debug.LogError(Util.END_LOOP_INST + ": '" + j + "' loop not found"); break;
                     }
                 }
@@ -649,8 +649,8 @@ public class BucketSort : Algorithm {
                 {
                     switch (j)
                     {
-                        case Util.LOOP_ONE: lineOfCode.Add(5); break;
-                        case Util.LOOP_TWO: lineOfCode.Add(14); break;
+                        case Util.OUTER_LOOP: lineOfCode.Add(5); break;
+                        case Util.INNER_LOOP: lineOfCode.Add(14); break;
                         default: Debug.LogError(Util.END_LOOP_INST + ": '" + j + "' loop not found"); break;
                     }
                 }
@@ -724,7 +724,7 @@ public class BucketSort : Algorithm {
         for (int i = 0; i < sortingElements.Length; i++)
         {
             // Line 2 (Update for-loop)
-            instructions.Add(instructionNr++, new InstructionLoop(Util.FIRST_LOOP, instructionNr, i, Util.LOOP_ONE, Util.NO_VALUE)); // new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.LOOP_ONE, false, false)); // create one unique instruction for each loop, or "cheat" using the parametre?
+            instructions.Add(instructionNr++, new InstructionLoop(Util.FIRST_LOOP, instructionNr, i, Util.OUTER_LOOP, Util.NO_VALUE)); // new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.LOOP_ONE, false, false)); // create one unique instruction for each loop, or "cheat" using the parametre?
 
             // Get element
             BucketSortInstruction element = (BucketSortInstruction)sortingElements[i];
@@ -738,7 +738,7 @@ public class BucketSort : Algorithm {
         }
 
         // Line 5 (end for-loop)
-        instructions.Add(instructionNr++, new InstructionLoop(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.LOOP_ONE, Util.NO_VALUE)); // new InstructionBase(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.LOOP_ONE, false, false));
+        instructions.Add(instructionNr++, new InstructionLoop(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.OUTER_LOOP, Util.NO_VALUE)); // new InstructionBase(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.LOOP_ONE, false, false));
 
         // Line 6, 7, 8 (make the buckets sort what they hold)
         instructions.Add(instructionNr++, new InstructionBase(Util.PHASING_INST, instructionNr)); // new InstructionBase(Util.PHASING_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
@@ -803,7 +803,7 @@ public class BucketSort : Algorithm {
                 instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_VAR_J, instructionNr, Util.NO_VALUE, Util.NO_VALUE, k)); // new InstructionBase(Util.UPDATE_VAR_J, instructionNr, k, Util.NO_VALUE, false, false)); ******
             }
             // Line 14 (2nd for-loop end)
-            instructions.Add(instructionNr++, new InstructionLoop(Util.END_LOOP_INST, instructionNr, i, Util.LOOP_TWO, Util.NO_VALUE)); // new InstructionBase(Util.END_LOOP_INST, instructionNr, i, Util.LOOP_TWO, false, false)); **** i=?
+            instructions.Add(instructionNr++, new InstructionLoop(Util.END_LOOP_INST, instructionNr, i, Util.INNER_LOOP, Util.NO_VALUE)); // new InstructionBase(Util.END_LOOP_INST, instructionNr, i, Util.LOOP_TWO, false, false)); **** i=?
         }
         // Line 15 (2nd for-loop end)
         instructions.Add(instructionNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr)); // new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));

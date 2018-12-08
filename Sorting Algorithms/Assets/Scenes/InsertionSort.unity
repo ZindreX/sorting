@@ -395,7 +395,7 @@ Prefab:
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
       propertyPath: teachingModeEditor
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
@@ -405,7 +405,7 @@ Prefab:
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
       propertyPath: sortingCaseEditor
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}

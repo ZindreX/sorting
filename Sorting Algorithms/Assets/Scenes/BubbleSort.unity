@@ -393,28 +393,13 @@ Prefab:
       objectReference: {fileID: 817656497}
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
-      propertyPath: numberofElementsEditor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: tutorialSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
       propertyPath: teachingModeEditor
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
-      propertyPath: sortingCaseEditor
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
-        type: 2}
-      propertyPath: allowDupEditor
-      value: 0
+      propertyPath: tutorialSpeed
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
