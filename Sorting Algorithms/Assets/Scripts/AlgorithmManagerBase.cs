@@ -33,6 +33,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected Algorithm algorithm;
     protected AlgorithmSettings algorithmSettings;
 
+    [SerializeField]
+    protected AlgorithmUserController algorithmUserController;
+
     protected virtual void Awake()
     {
         // *** Objects ***
@@ -174,7 +177,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
             displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
         }
-        
+
         switch (algorithmSettings.TeachingMode)
         {
             case Util.TUTORIAL: PerformAlgorithmTutorial(); break;
@@ -193,16 +196,23 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      */
     public void DestroyAndReset()
     {
-        userStoppedAlgorithm = true;
-        holderManager.DestroyObjects();
-        elementManager.DestroyObjects();
-        if (algorithm.IsSortingComplete)
-            algorithm.IsSortingComplete = false;
+        if (algorithmSettings.IsTutorial() && !algorithm.IsSortingComplete)
+        {
+            StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during tutorial. See blackboard for progress.", Util.ERROR_COLOR));
+        }
+        else
+        {
+            userStoppedAlgorithm = true;
+            holderManager.DestroyObjects();
+            elementManager.DestroyObjects();
+            if (algorithm.IsSortingComplete)
+                algorithm.IsSortingComplete = false;
 
-        algorithm.ResetSetup();
-        displayUnitManager.ResetDisplays();
-        settingsObj.SetActive(true);
-        controllerReady = false;
+            algorithm.ResetSetup();
+            displayUnitManager.ResetDisplays();
+            settingsObj.SetActive(true);
+            controllerReady = false;
+        }
 
         // Cleanup pseudocode
         //algorithm.PseudoCodeViewer.DestroyPseudoCode();

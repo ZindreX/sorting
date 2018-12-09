@@ -12774,7 +12774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 1
+  teachingModeEditor: 0
   difficultyEditor: 0
   numberofElementsEditor: 1
   allowDupEditor: 0

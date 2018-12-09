@@ -16,6 +16,9 @@ public class AlgorithmUserController : MonoBehaviour {
     private GameObject algorithmManagerObj;
     private AlgorithmManagerBase algorithmManager;
 
+    [SerializeField]
+    private UnityEngine.UI.Text warningMessage;
+
     [SteamVR_DefaultAction("Increment")]
     public SteamVR_Action_Boolean incrementAction;
 
@@ -45,6 +48,7 @@ public class AlgorithmUserController : MonoBehaviour {
                 algorithmManager.InstantiateSetup();
             else
                 algorithmManager.DestroyAndReset();
+
         }
 
         // ************* DEBUGGING *************
@@ -65,6 +69,10 @@ public class AlgorithmUserController : MonoBehaviour {
                 algorithmManager.InstantiateSetup();
                 algorithmManager.PerformAlgorithmTutorialStep();
                 StartCoroutine(DebugWait());
+            }
+            else if (Input.GetKey(KeyCode.O))
+            {
+                algorithmManager.DestroyAndReset();
             }
         }
         // *************
@@ -118,4 +126,11 @@ public class AlgorithmUserController : MonoBehaviour {
         debugNextReady = true;
     }
 
+    public IEnumerator CreateWarningMessage(string warningMessage, Color color)
+    {
+        this.warningMessage.color = color;
+        this.warningMessage.text = warningMessage;
+        yield return new WaitForSeconds(3.0f);
+        this.warningMessage.text = "";
+    }
 }

@@ -8080,6 +8080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayUnitManagerObj: {fileID: 1036859930}
   settingsObj: {fileID: 433463786}
+  algorithmUserController: {fileID: 1082351485}
 --- !u!4 &817656498
 Transform:
   m_ObjectHideFlags: 0
@@ -10678,9 +10679,24 @@ Prefab:
       propertyPath: easyStartToggle
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114809895915431858, guid: c8c343a94abe99a4a88aeea48e5a9f77,
+        type: 2}
+      propertyPath: algorithmManagerObj
+      value: 
+      objectReference: {fileID: 817656491}
+    - target: {fileID: 4861177360633684, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8c343a94abe99a4a88aeea48e5a9f77, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &1082351485 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114809895915431858, guid: c8c343a94abe99a4a88aeea48e5a9f77,
+    type: 2}
+  m_PrefabInternal: {fileID: 1082351484}
+  m_Script: {fileID: 11500000, guid: a778e93635beb3542b003255d44b08e7, type: 3}
 --- !u!1 &1087649990
 GameObject:
   m_ObjectHideFlags: 0
