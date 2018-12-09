@@ -639,6 +639,7 @@ public class BucketSort : Algorithm {
             case Util.MOVE_TO_BUCKET_INST:
                 lineOfCode.Add(4);
                 value1 = sortingElement.Value;
+                bucketIndex = bucketInstruction.BucketID;
 
                 sortingElement.IsCompare = bucketInstruction.IsCompare;
                 Util.IndicateElement(sortingElement.gameObject);

@@ -156,9 +156,9 @@ public class Util : MonoBehaviour {
             case 1: return TUTORIAL_ROOM;
             case 2: return BUBBLE_SORT;
             case 3: return INSERTION_SORT;
-            case 4: return MERGE_SORT;
-            case 5: return QUICK_SORT;
-            case 6: return BUCKET_SORT;
+            case 4: return BUCKET_SORT;
+            case 5: return MERGE_SORT;
+            case 6: return QUICK_SORT;
             case 7: return VR_TEST_ROOM;
             default: return "X";
 

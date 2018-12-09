@@ -189,10 +189,12 @@ public class AlgorithmSettings : MonoBehaviour {
             case Util.STEP_BY_STEP:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "";
                 ActiveButtons(false, false);
+                algorithmManager.Algorithm.Seconds = 0.5f;
                 break;
             case Util.USER_TEST:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Difficulty";
                 ActiveButtons(true, false);
+                algorithmManager.Algorithm.Seconds = 0.5f;
                 break;
         }
     }
