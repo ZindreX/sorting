@@ -1353,7 +1353,7 @@ GameObject:
   - component: {fileID: 114318954029990536}
   - component: {fileID: 114588582331891562}
   m_Layer: 0
-  m_Name: TutorialButton
+  m_Name: DemoButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5968,7 +5968,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: a8efcea891afb0947b75c6f28610b2e2, type: 2}
+  - {fileID: 2100000, guid: d8667345f025b3c4ab4154bb6f3423ba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12261,7 +12261,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 10
           m_FloatArgument: 0
-          m_StringArgument: Tutorial
+          m_StringArgument: Demo
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
@@ -13458,7 +13458,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Tutorial
+  m_Text: Demo
 --- !u!114 &114908526009417858
 MonoBehaviour:
   m_ObjectHideFlags: 1

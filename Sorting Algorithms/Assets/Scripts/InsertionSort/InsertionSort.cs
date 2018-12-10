@@ -201,6 +201,11 @@ public class InsertionSort : Algorithm {
         CreatePivotHolder();
         Vector3 temp = new Vector3();
 
+        // Testing
+        list[0].GetComponent<SortingElementBase>().IsSorted = true;
+        Util.IndicateElement(list[0]);
+        yield return new WaitForSeconds(seconds);
+
         int i = 1, listLength = list.Length;
         // Display pseudocode (set i)
         pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, i, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
@@ -395,6 +400,19 @@ public class InsertionSort : Algorithm {
         List<int> lineOfCode = new List<int>();
         switch (instruction.Instruction)
         {
+            case Util.SET_SORTED_INST:
+                if (increment)
+                {
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                    Util.IndicateElement(sortingElement.gameObject);
+                }
+                else
+                {
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                    Util.IndicateElement(sortingElement.gameObject);
+                }
+                break;
+
             case Util.FIRST_INSTRUCTION:
                 lineOfCode.Add(FirstInstructionCodeLine());
                 break;
@@ -580,6 +598,10 @@ public class InsertionSort : Algorithm {
         Color useColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
+            case Util.SET_SORTED_INST:
+                Util.IndicateElement(sortingElement.gameObject);
+                break;
+
             case Util.FIRST_INSTRUCTION:
                 lineOfCode.Add(FirstInstructionCodeLine());
                 break;
@@ -656,6 +678,9 @@ public class InsertionSort : Algorithm {
         int instructionNr = 0;
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         InsertionSortInstruction compareElement;
+
+        // Testing
+        instructions.Add(instructionNr++, new InsertionSortInstruction(Util.SET_SORTED_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, 0, ((InsertionSortInstruction)sortingElements[0]).Value, false, true, false, 0, Util.NO_DESTINATION));
 
         int i = 1; // Line 1
         // Add the first instruction which will be used for Pseudo code

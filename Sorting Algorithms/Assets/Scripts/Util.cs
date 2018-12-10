@@ -16,7 +16,7 @@ public class Util : MonoBehaviour {
     public const string BUCKET_SORT = "Bucket sort";
 
     // Teaching modes
-    public const string TUTORIAL = "Tutorial", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
+    public const string DEMO = "Demo", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
 
     // Difficulty
     //public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", ADVANCED = "Advanced", EXAMINATION = "Examination";
@@ -41,7 +41,7 @@ public class Util : MonoBehaviour {
     public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";
     public const string CREATE_BUCKETS_INST = "Create buckets", BUCKET_INDEX_INST = "Bucket index", MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop", DISPLAY_ELEMENT = "Display element";
-    public const string END_LOOP_INST = "End of loop";
+    public const string END_LOOP_INST = "End of loop", SET_SORTED_INST = "Set sorted";
     public const string INCREMENT_VAR_I = "Increment variable i", SET_VAR_J = "Set variable j", UPDATE_VAR_J = "Update variable J", FIRST_LOOP = "First loop";
 
     // Other instructions

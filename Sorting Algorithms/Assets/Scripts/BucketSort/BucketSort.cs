@@ -29,11 +29,11 @@ public class BucketSort : Algorithm {
         {
             case 0: return "BucketSort(list, n)";
             case 1: return "    buckets = new array of n empty lists";
-            case 2: return "    for i=0 to len(list):";
+            case 2: return "    for i=0 to len(list)-1:";
             case 3: return "        index = list[i] * n / MAX_VALUE";
             case 4: return "        buckets[index] <- list[i]";
             case 5: return "    end for";
-            //case 6: return "    for i=0 to n:";
+            //case 6: return "    for i=0 to n-1:";
             case 6: return "    Sorting each bucket w/InsertionSort";
             //case 8: return "    end for";
             case 7: return "    k = 0";

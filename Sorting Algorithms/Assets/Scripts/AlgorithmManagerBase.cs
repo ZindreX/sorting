@@ -180,7 +180,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         switch (algorithmSettings.TeachingMode)
         {
-            case Util.TUTORIAL: PerformAlgorithmTutorial(); break;
+            case Util.DEMO: PerformAlgorithmTutorial(); break;
             case Util.STEP_BY_STEP: PerformAlgorithmTutorialStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
@@ -196,9 +196,9 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      */
     public void DestroyAndReset()
     {
-        if (algorithmSettings.IsTutorial() && !algorithm.IsSortingComplete)
+        if (algorithmSettings.IsDemo() && !algorithm.IsSortingComplete)
         {
-            StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during tutorial. See blackboard for progress.", Util.ERROR_COLOR));
+            StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", Util.ERROR_COLOR));
         }
         else
         {

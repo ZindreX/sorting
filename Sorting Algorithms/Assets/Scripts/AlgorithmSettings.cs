@@ -12,7 +12,7 @@ public class AlgorithmSettings : MonoBehaviour {
     // ************** DEBUGGING ****************
     [SerializeField]
     private TeachingModeEditor teachingModeEditor;
-    private enum TeachingModeEditor { tutorial, stepByStep, userTest }
+    private enum TeachingModeEditor { demo, stepByStep, userTest }
 
     [SerializeField]
     private DifficultyEditor difficultyEditor;
@@ -37,7 +37,7 @@ public class AlgorithmSettings : MonoBehaviour {
     {
         switch ((int)teachingModeEditor)
         {
-            case 0: teachingMode = Util.TUTORIAL; break;
+            case 0: teachingMode = Util.DEMO; break;
             case 1: teachingMode = Util.STEP_BY_STEP; break;
             case 2: teachingMode = Util.USER_TEST; break;
         }
@@ -80,7 +80,7 @@ public class AlgorithmSettings : MonoBehaviour {
 
     // Algorithm settings
     private int numberOfElements = 8, difficulty = Util.BEGINNER;
-    private string teachingMode = Util.TUTORIAL, sortingCase = Util.NONE;
+    private string teachingMode = Util.DEMO, sortingCase = Util.NONE;
     private bool allowDuplicates = true;
 
     [SerializeField]
@@ -142,10 +142,10 @@ public class AlgorithmSettings : MonoBehaviour {
         set { sortingCase = value; blackboard.ChangeText(blackboard.TextIndex, "Case activated: " + value); }
     }
 
-    public float TutorialSpeed
+    public float DemoSpeed
     {
         get { return algorithmManager.Algorithm.Seconds; }
-        set { algorithmManager.Algorithm.Seconds = value; blackboard.ChangeText(blackboard.TextIndex, "Tutorial speed: " + value + " seconds"); }
+        set { algorithmManager.Algorithm.Seconds = value; blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
     }
 
 
@@ -160,9 +160,9 @@ public class AlgorithmSettings : MonoBehaviour {
     }
 
     // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
-    public bool IsTutorial()
+    public bool IsDemo()
     {
-        return teachingMode == Util.TUTORIAL || teachingMode == Util.STEP_BY_STEP;
+        return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
     }
 
     // Check if it's StepByStep (not used?)
@@ -182,8 +182,8 @@ public class AlgorithmSettings : MonoBehaviour {
     {
         switch (teachingMode)
         {
-            case Util.TUTORIAL:
-                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Tutorial speed";
+            case Util.DEMO:
+                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Demo speed";
                 ActiveButtons(false, true);
                 break;
             case Util.STEP_BY_STEP:

@@ -31,7 +31,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
             if (isValidSortingElement(currentHolding))
                 UpdateColorOfHolder();
         }
-        else if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsTutorial() && currentHolding != null)
+        else if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo() && currentHolding != null)
         {
             if (currentHolding.IsSorted)
                 UpdateColorOfHolder();
@@ -91,7 +91,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
         if (collision.collider.tag == Util.SORTING_ELEMENT_TAG)
         {
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsTutorial())
+            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo())
             {
 
             }

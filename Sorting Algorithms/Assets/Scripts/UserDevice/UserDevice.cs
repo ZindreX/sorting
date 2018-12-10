@@ -39,7 +39,7 @@ public class UserDevice : MonoBehaviour {
     {
         switch (buttonMode)
         {
-            case Util.TUTORIAL:
+            case Util.DEMO:
 
                 break;
             case Util.USER_TEST: break;

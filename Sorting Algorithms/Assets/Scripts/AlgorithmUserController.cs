@@ -79,7 +79,7 @@ public class AlgorithmUserController : MonoBehaviour {
 
         switch (algorithmManager.AlgorithmSettings.TeachingMode)
         {
-            case Util.TUTORIAL:
+            case Util.DEMO:
                 if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
                 {
                     Debug.Log("Incrementing button clicked - no action implemented for Tutorial");

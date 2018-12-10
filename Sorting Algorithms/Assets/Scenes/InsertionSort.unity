@@ -456,11 +456,11 @@ Prefab:
       propertyPath: algorithmManager
       value: 
       objectReference: {fileID: 119957889}
-    - target: {fileID: 23458799174550128, guid: f366eb776cb098848af982af8cb259f1,
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: d8667345f025b3c4ab4154bb6f3423ba, type: 2}
+      propertyPath: teachingModeEditor
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0
