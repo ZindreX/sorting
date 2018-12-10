@@ -51,6 +51,10 @@ public class InsertionSortElement : SortingElementBase {
                     status = "Move to " + nextHolderID;
                     intermediateMove = true;
                     break;
+                case Util.SET_SORTED_INST:
+                    IsSorted = true;
+                    Util.IndicateElement(gameObject);
+                    break;
                 case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
@@ -82,6 +86,9 @@ public class InsertionSortElement : SortingElementBase {
                 {
                     case Util.INIT_INSTRUCTION:
                         return (CurrentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+
+                    case Util.SET_SORTED_INST:
+                        return (CurrentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.PIVOT_START_INST:
                         if (IntermediateMove && ((InsertionSortHolder)CurrentStandingOn).IsPivotHolder) // correct move
@@ -133,6 +140,9 @@ public class InsertionSortElement : SortingElementBase {
                 {
                     case Util.INIT_INSTRUCTION:
                         return (CurrentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
+
+                    case Util.SET_SORTED_INST:
+                        return (CurrentStandingOn.HolderID == insertionSortInstruction.HolderID) ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;
 
                     case Util.PIVOT_START_INST:
                         return ((InsertionSortHolder)CurrentStandingOn).IsPivotHolder ? Util.CORRECT_HOLDER : Util.WRONG_HOLDER;

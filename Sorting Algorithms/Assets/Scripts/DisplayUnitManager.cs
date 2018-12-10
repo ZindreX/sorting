@@ -34,13 +34,13 @@ public class DisplayUnitManager : MonoBehaviour {
     public void SetAlgorithmForPseudo(Algorithm algorithm)
     {
         PseudoCodeViewer.SetAlgorithm(algorithm);
-        PseudoCodeViewerFixed.SetAlgorithm(algorithm);
+        //PseudoCodeViewerFixed.SetAlgorithm(algorithm);
     }
 
 
     public void ResetDisplays()
     {
-        leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
+        //leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
         centerBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
         rightBlackboard.GetComponent<Blackboard>().EmptyContent();
     }

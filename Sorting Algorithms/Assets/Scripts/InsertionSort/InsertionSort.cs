@@ -45,6 +45,7 @@ public class InsertionSort : Algorithm {
         skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FINAL_INSTRUCTION);
         skipDict[Util.SKIP_NO_DESTINATION].Add(Util.COMPARE_START_INST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(Util.COMPARE_END_INST);
+        SkipDict[Util.SKIP_NO_DESTINATION].Add(Util.SET_SORTED_INST);
 
         skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FIRST_LOOP);
         skipDict[Util.SKIP_NO_ELEMENT].Add(Util.INCREMENT_VAR_I);

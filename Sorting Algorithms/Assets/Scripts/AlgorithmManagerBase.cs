@@ -160,7 +160,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             if (algorithmSettings.Difficulty <= Util.INTERMEDIATE)
             {
                 displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
-                displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
+                //displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
             }
             else if (algorithmSettings.Difficulty == Util.ADVANCED)
             {
@@ -175,7 +175,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         else
         {
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
-            displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
+            //displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
         }
 
         switch (algorithmSettings.TeachingMode)
@@ -196,7 +196,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      */
     public void DestroyAndReset()
     {
-        if (algorithmSettings.IsDemo() && !algorithm.IsSortingComplete)
+        if (algorithmSettings.IsDemo() && !algorithmSettings.IsTutorialStep() && !algorithm.IsSortingComplete)
         {
             StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", Util.ERROR_COLOR));
         }
