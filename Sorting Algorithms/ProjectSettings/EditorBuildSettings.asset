@@ -6,11 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/StartRoom.unity
+    guid: 7e7e794de4c852447a8429802b3cbeb8
+  - enabled: 1
+    path: Assets/Scenes/TutorialScene.unity
+    guid: 4e00d7ac081c23f47be47366288fcd74
+  - enabled: 1
     path: Assets/Scenes/MainMenuVR.unity
     guid: b08f0c5efc4dc4b46baed4dec0d8ebdc
-  - enabled: 1
-    path: Assets/Scenes/TutorialRoom.unity
-    guid: 923d34588df57e04d9739bc6d667e52a
   - enabled: 1
     path: Assets/Scenes/BubbleSort.unity
     guid: 21e7c23f7fc941346ace4541e86fa999

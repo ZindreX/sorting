@@ -79,6 +79,7 @@ public class Util : MonoBehaviour {
     // ******************************************** Outdated stuff? ********************************************
     // Rooms
     public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
+    public const string TUTORIAL = "Tutorial";
 
     // Buttons
     public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal", PORTAL_OBJECT = "Portal object", QUIT = "Quit";

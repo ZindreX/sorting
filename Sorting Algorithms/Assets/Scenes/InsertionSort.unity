@@ -456,6 +456,24 @@ Prefab:
       propertyPath: algorithmManager
       value: 
       objectReference: {fileID: 119957889}
+    - target: {fileID: 1254978746584970, guid: f366eb776cb098848af982af8cb259f1, type: 2}
+      propertyPath: m_Name
+      value: tutorialCornerTitle
+      objectReference: {fileID: 0}
+    - target: {fileID: 102842094875592132, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: m_Text
+      value: Tutorial Corner
+      objectReference: {fileID: 0}
+    - target: {fileID: 4269202926927888, guid: f366eb776cb098848af982af8cb259f1, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.596
+      objectReference: {fileID: 0}
+    - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: teachingModeEditor
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0
