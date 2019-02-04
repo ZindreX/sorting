@@ -80,7 +80,7 @@ public class AlgorithmSettings : MonoBehaviour {
 
     // Algorithm settings
     private int numberOfElements = 8, difficulty = Util.BEGINNER;
-    private string teachingMode = Util.DEMO, sortingCase = Util.NONE;
+    private string algorithm = Util.BUBBLE_SORT, teachingMode = Util.DEMO, sortingCase = Util.NONE;
     private bool allowDuplicates = true;
 
     [SerializeField]
@@ -105,6 +105,12 @@ public class AlgorithmSettings : MonoBehaviour {
     private void Update()
     {
         
+    }
+
+    public string Algorithm
+    {
+        get { return algorithm; }
+        set { algorithm = value; blackboard.ChangeText(blackboard.TextIndex, "Algorithm: " + value); }
     }
 
     // Tutorial, Step-By-Step, or User Test

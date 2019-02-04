@@ -78,7 +78,7 @@ public class Util : MonoBehaviour {
 
     // ******************************************** Outdated stuff? ********************************************
     // Rooms
-    public const string MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
+    public const string START_ROOM = "Start room", MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
     public const string TUTORIAL = "Tutorial";
 
     // Buttons
@@ -153,14 +153,12 @@ public class Util : MonoBehaviour {
     {
         switch (sceneBuildIndex)
         {
-            case 0: return MAIN_MENU;
+            case 0: return START_ROOM;
             case 1: return TUTORIAL_ROOM;
-            case 2: return BUBBLE_SORT;
-            case 3: return INSERTION_SORT;
-            case 4: return BUCKET_SORT;
-            case 5: return MERGE_SORT;
-            case 6: return QUICK_SORT;
-            case 7: return VR_TEST_ROOM;
+            case 2: return MAIN_MENU;
+            case 3: return BUBBLE_SORT;
+            case 4: return INSERTION_SORT;
+            case 5: return BUCKET_SORT;
             default: return "X";
 
         }

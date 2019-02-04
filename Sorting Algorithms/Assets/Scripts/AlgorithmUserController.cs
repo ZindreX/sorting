@@ -77,6 +77,7 @@ public class AlgorithmUserController : MonoBehaviour {
         }
         // *************
 
+        // Do actions according to what teaching mode the player has activated
         switch (algorithmManager.AlgorithmSettings.TeachingMode)
         {
             case Util.DEMO:
@@ -126,6 +127,7 @@ public class AlgorithmUserController : MonoBehaviour {
         debugNextReady = true;
     }
 
+    // Test of warning messages in UI (only works on the monitor)
     public IEnumerator CreateWarningMessage(string warningMessage, Color color)
     {
         this.warningMessage.color = color;

@@ -11,7 +11,7 @@ public class Portal : MonoBehaviour {
      * 
     */
 
-    private static int LARGEST_BUILD_INDEX = 7;
+    private static int LARGEST_BUILD_INDEX = 5;
 
     [SerializeField]
     private int sceneBuildIndex;
