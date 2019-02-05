@@ -14,94 +14,132 @@ public class TutorialManager : MonoBehaviour {
      * 
     */
 
-    public readonly int FINAL_TUTORIAL_TASK = 1;
+    public readonly int FINAL_TUTORIAL_TASK = 1, TASK_COMPLETE = -1;
+    public readonly char SPLIT = ':';
 
-    private Dictionary<int, string> tutorialTasks;
+    private Dictionary<int, List<string>> tutorialTasks;
     private int currentTask = 0;
-    private bool currentTaskReady = false, currentTaskComplete = false;
+    private int currentSubTask = 0, prevSubtask = -1, numberOfSubTasks;
+    private bool currentTaskComplete;
+
     private Vector3 playerPosition, taskStartPosition;
 
     [SerializeField]
-    private GameObject player, infoPanel;
+    private GameObject[] infoPanels;
 
     [SerializeField]
-    private TextMesh taskText;
+    private GameObject player;
+
+    [SerializeField]
+    private BoxCollider[] taskAreas;
+
+    [SerializeField]
+    private TextMesh debugText;
 
     private void Awake()
     {
-        tutorialTasks = new Dictionary<int, string>();
+        tutorialTasks = new Dictionary<int, List<string>>();
+
         // Init task
-        tutorialTasks.Add(0, "This tutorial will teach you the basics\n of the VR controllers, such as\n teleporting and interaction with\n objects.\n\n Step forward to continue.");
+        tutorialTasks.Add(0, new List<string>());
+        tutorialTasks[0].Add("Information:This tutorial will teach you the\n basics of the VR controllers, such\n as teleporting and interaction\n with objects.\n\n Step forward to continue.");
+        // Teleporting sub task
+        tutorialTasks[0].Add("Teleporting point: Click the touch pad to aim,\n then release to teleport to your\n new destination.\n\n Aim for the teleport point\n to your right.");
 
-        // Teleporting task
-        tutorialTasks.Add(1, "How to teleport using Vive controller:\n - Use the touch surface to\n aim for teleporting areas.\n - Click the touch pad to teleport to new position");
-
+        // Teleport area
+        tutorialTasks.Add(1, new List<string>());
+        tutorialTasks[1].Add("Teleporting area: Use the same technique as\n in the previous task. \n\n Aim for the teleporting area\n to your left.");
     }
 
     // Use this for initialization
     void Start () {
- 
-	}
+        // Number of sub tasks
+        numberOfSubTasks = tutorialTasks[currentTask].Count;
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        // No more tasks
+        if (currentTask > FINAL_TUTORIAL_TASK)
+        {
+            debugText.text = "All tasks completed.";
+            return;
+        }
+        
+        // Get current position of the player (camera object)
         playerPosition = player.transform.position;
 
-        if (!currentTaskReady)
-            SetupNewTask(currentTask);
+        // Set up if new task is assigned to player
+        if (prevSubtask != currentSubTask && currentSubTask < numberOfSubTasks)
+            SetupMainOrSubTask();
 
-        switch (currentTask)
-        {
-            case 0: currentTaskComplete = InitTask(); break;
-            case 1: currentTaskComplete = TeleportTaskPart1(); break;
-            case 2: currentTaskComplete = TeleportTaskPart2(); break;
-        }
+        // Checks whether task is completed by player
+        PerformTask();
 
+        // Prepare for next main task
         if (currentTaskComplete)
         {
+            // Next main task
             currentTask++;
+            // Number of sub tasks
+            numberOfSubTasks = tutorialTasks[currentTask].Count;
+            // Reset counters for sub tasks
+            currentSubTask = 0;
+            prevSubtask = -1;
             currentTaskComplete = false;
-            currentTaskReady = false;
-
-            infoPanel.transform.position = new Vector3(playerPosition.x, 0.3f, playerPosition.z + 1f);
         }
+
+        debugText.text = "Task: " + currentTask + ", subtask: " + currentSubTask + "/" + numberOfSubTasks;
 	}
 
-    private void SetupNewTask(int currentTask)
+    // Sets up a new tutorial task (update information panels, add stuff?)
+    private void SetupMainOrSubTask()
     {
-        if (currentTask <= FINAL_TUTORIAL_TASK)
+        // Player position when tutorial task starts
+        taskStartPosition = player.transform.position;
+
+        // 0: title, 1: information
+        string[] taskSplit = tutorialTasks[currentTask][currentSubTask].Split(SPLIT);
+        infoPanels[currentTask].transform.Find("Panel/Title").GetComponent<TextMesh>().text = taskSplit[0];
+        infoPanels[currentTask].transform.Find("Panel/Information").GetComponent<TextMesh>().text = taskSplit[1];
+
+        prevSubtask++;
+    }
+
+
+    private void PerformTask()
+    {
+        int validationValue = 0;
+        switch (currentTask)
         {
-            // Player position when tutorial task starts
-            taskStartPosition = player.transform.position;
-            taskText.text = tutorialTasks[currentTask];
+            case 0: validationValue = Task1(); break;
+            case 1: validationValue = Task2(); break;
+        }
 
-            // Add and/or remove prefabs needed for the tutorial task
-            switch (currentTask)
-            {
-            }
+        if (validationValue >= 0)
+            currentSubTask += validationValue;
+        else
+            currentTaskComplete = true;
+    }
 
-            currentTaskReady = true;
+    // **** Task completed methods ****
+
+    /* Task 1
+     * - Sub task 1: Walk forward towards the information panel
+     * - Sub task 2: Teleport to the point to the right of the player
+    */
+    private int Task1()
+    {
+        switch (currentSubTask)
+        {
+            case 0: case 1: return taskAreas[currentSubTask].GetComponent<BoxCollider>().bounds.Contains(player.transform.position) ? 1 : 0;
+            default: return TASK_COMPLETE;
         }
     }
 
-    // Simple walk forward task
-    private bool InitTask()
+    private int Task2()
     {
-        return (playerPosition.z - taskStartPosition.z) >= 0.25;
+        return 0;
     }
 
-    private bool TeleportTaskPart1()
-    {
-        return playerPosition.x >= 3.5;
-    }
-
-    private bool TeleportTaskPart2()
-    {
-        return playerPosition.x >= 3.5;
-    }
-
-    private bool ClickButtonTask()
-    {
-        return false;
-    }
 }
