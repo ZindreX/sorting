@@ -28,6 +28,9 @@ public class Util : MonoBehaviour {
     // Rules (numbers)
     public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100;
 
+    // Values
+    public static readonly int INF = -1;
+
 
     // ******************************************** Instructions ******************************************** 
     // Instructions
