@@ -8,7 +8,7 @@ public class Edge : MonoBehaviour {
     private float angle;
     private Color currentColor;
 
-    public Edge(int cost, float angle)
+    public Edge(int cost, Node node1, Node node2)
     {
         this.cost = cost;
         SetAngle(angle);
