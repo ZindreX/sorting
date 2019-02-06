@@ -38,9 +38,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     protected virtual void Awake()
     {
-        if (true)
-            return;
-
         // *** Objects ***
         algorithmSettings = settingsObj.GetComponent(typeof(AlgorithmSettings)) as AlgorithmSettings;
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
@@ -71,9 +68,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (true)
-            return;
-
         // If the user clicked the stop button in game
         if (userStoppedAlgorithm)
             return;

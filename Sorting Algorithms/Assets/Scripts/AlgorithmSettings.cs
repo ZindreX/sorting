@@ -200,7 +200,7 @@ public class AlgorithmSettings : MonoBehaviour {
             case Util.USER_TEST:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Difficulty";
                 ActiveButtons(true, false);
-                algorithmManager.Algorithm.Seconds = 2.0f;
+                algorithmManager.Algorithm.Seconds = 0.5f;
                 break;
         }
     }

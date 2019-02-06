@@ -428,6 +428,11 @@ Prefab:
       propertyPath: teachingModeEditor
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114201338764917752, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: sceneBuildIndex
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}
   m_IsPrefabAsset: 0

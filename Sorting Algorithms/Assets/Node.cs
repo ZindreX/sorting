@@ -7,6 +7,13 @@ public class Node : MonoBehaviour {
     private int nodeID, totalCost;
     private Color currentColor;
 
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     public Node(int nodeID, bool startNode)
     {
         this.nodeID = nodeID;
@@ -28,6 +35,7 @@ public class Node : MonoBehaviour {
         get { return currentColor; }
         set { currentColor = value; GetComponentInChildren<Renderer>().material.color = value; }
     }
+
 
 
 }

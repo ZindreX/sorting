@@ -472,12 +472,32 @@ Prefab:
     - target: {fileID: 114724925514841522, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
       propertyPath: teachingModeEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114588582331891562, guid: f366eb776cb098848af982af8cb259f1,
         type: 2}
       propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: Demo
+      objectReference: {fileID: 0}
+    - target: {fileID: 114337036995897674, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: set_DemoSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 114157592552583460, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: set_DemoSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 114885890012169792, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: onHandClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: set_DemoSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 114201338764917752, guid: f366eb776cb098848af982af8cb259f1,
+        type: 2}
+      propertyPath: sceneBuildIndex
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f366eb776cb098848af982af8cb259f1, type: 2}

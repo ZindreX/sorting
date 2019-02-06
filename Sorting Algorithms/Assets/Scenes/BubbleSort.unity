@@ -3786,7 +3786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teachingModeEditor: 1
+  teachingModeEditor: 0
   difficultyEditor: 0
   numberofElementsEditor: 1
   allowDupEditor: 0
@@ -7280,6 +7280,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4497051163190238, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
       propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114857202093164314, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: sceneBuildIndex
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
