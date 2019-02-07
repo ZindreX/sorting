@@ -15,15 +15,17 @@ public abstract class GraphManager : MonoBehaviour {
     protected Edge[] edges;
 
     protected int numberOfNodes, numberOfEdges;
+    protected string activeGraphStructure;
 
     protected virtual void Awake()
     {
-        numberOfNodes = 10;
+        activeGraphStructure = UtilGraph.TREE;
+        ActivateDeactivateGraphComponents(activeGraphStructure);
     }
 
     // Use this for initialization
     void Start () {
-        InitGraph(GetGraphStructure(UtilGraph.TREE));
+        InitGraph(GetGraphStructure(activeGraphStructure));
         CreateGraph();
     }
 	
@@ -37,28 +39,47 @@ public abstract class GraphManager : MonoBehaviour {
         MAX_NODES = GetMaxNumberOfNodes();
         Debug.Log("Max nodes: " + MAX_NODES);
         CreateNodes();
+        CreateEdges("");
     }
 
+    // Keeps only one graph structure active
+    private void ActivateDeactivateGraphComponents(string graphStructure)
+    {
+        switch (graphStructure)
+        {
+            case UtilGraph.GRID:
+                GetComponent<GridManager>().enabled = true;
+                GetComponent<TreeManager>().enabled = false;
+                break;
+
+            case UtilGraph.TREE:
+                GetComponent<TreeManager>().enabled = true;
+                GetComponent<GridManager>().enabled = false;
+                break;
+
+            default: Debug.Log("Graph structure '" + graphStructure + "' not found."); break;
+        }
+    }
 
     private int[] GetGraphStructure(string graphType)
     {
         switch (graphType)
         {
             case UtilGraph.GRID:
-                // 0: rows, 1: columns, 2: grid space
                 int[] gridStructure = new int[3];
-                gridStructure[0] = 5;
-                gridStructure[1] = 5;
-                gridStructure[2] = 4;
+                gridStructure[0] = 5;   // 0: rows
+                gridStructure[1] = 5;   // 1: columns
+                gridStructure[2] = 4;   // 2: grid space
                 return gridStructure;
+
             case UtilGraph.TREE:
-                // 0: level, 1: n tree, 2: node space x, 3: node space z
                 int[] treeStructure = new int[4];
-                treeStructure[0] = 2;
-                treeStructure[1] = 2;
-                treeStructure[2] = 4;
-                treeStructure[3] = 4;
+                treeStructure[0] = 2;   // 0: level (root only = 0)
+                treeStructure[1] = 2;   // 1: n tree (binary, etc.)
+                treeStructure[2] = 4;   // 2: node space x
+                treeStructure[3] = 4;   // 3: node space z
                 return treeStructure;
+
             default: return null;
         }
     }

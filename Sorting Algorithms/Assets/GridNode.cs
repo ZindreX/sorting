@@ -6,7 +6,7 @@ public class GridNode : Node {
 
     private int totalCost;
 
-    public GridNode(int nodeID, bool startNode) : base(nodeID)
+    public void InitGridNode(bool startNode)
     {
         if (startNode)
             totalCost = 0;

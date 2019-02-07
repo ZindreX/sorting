@@ -12,27 +12,22 @@ public class TreeNode : Node {
     [SerializeField]
     private List<TreeNode> children;
 
-
-    public TreeNode(int nodeID, TreeNode parent, int treeLevel) : base(nodeID)
-    {
-        children = new List<TreeNode>();
-        this.parent = parent;
-        this.treeLevel = treeLevel;
-    }
-
     public void InitTreeNode(TreeNode parent, int treeLevel)
     {
         children = new List<TreeNode>();
         this.parent = parent;
         this.treeLevel = treeLevel;
 
+        if (parent == null)
+            isRoot = true;
+
         if (parent != null)
             parent.AddChildren(this);
     }
 
-    public override string TotalCost()
+    private void Update()
     {
-        throw new System.NotImplementedException();
+        UpdateCostText();
     }
 
     public void AddChildren(TreeNode child)
@@ -41,21 +36,35 @@ public class TreeNode : Node {
         {
             children.Add(child);
             if (child.parent != this)
-                child.SetParent(this);
+                child.Parent = this;
         }
-
     }
 
-    public void SetParent(TreeNode parent)
+    public TreeNode Parent
     {
-        this.parent = parent;
-        parent.AddChildren(this);
+        get { return parent; }
+        set { parent = value; }
     }
-
+ 
     public int TreeLevel
     {
         get { return treeLevel; }
     }
 
+    public List<TreeNode> Children
+    {
+        get { return children; }
+    }
+
+
+    public override string TotalCost()
+    {
+        return "Lvl: " + treeLevel;
+    }
+
+    public void UpdateCostText()
+    {
+        GetComponentInChildren<TextMesh>().text = TotalCost();
+    }
 
 }

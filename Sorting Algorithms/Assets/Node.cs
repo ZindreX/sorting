@@ -14,13 +14,6 @@ public abstract class Node : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    public Node(int nodeID)
-    {
-        this.nodeID = nodeID;
-        CurrentColor = UtilSort.STANDARD_COLOR;
-    }
-
-
     public Color CurrentColor
     {
         get { return currentColor; }
@@ -28,4 +21,5 @@ public abstract class Node : MonoBehaviour {
     }
 
     public abstract string TotalCost();
+
 }

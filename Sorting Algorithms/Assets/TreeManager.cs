@@ -29,21 +29,37 @@ public class TreeManager : GraphManager {
         // Create root
         tree.Add(GenerateNode(null, new Vector3(0f, 0f, 0f), 0));
 
-        int nonLeafNodes = GetNumberOfNonLeafNodes();
+        int nonLeafNodes = NumberOfInternalNodes();
+        int currentLevel = 1;
+        float xPos = 0, zPos = 0, levelSplit = 0;
         for (int z = 1; z <= nonLeafNodes; z++)
         {
             // Get parent
             TreeNode parent = tree[z-1];
 
-            // Next level Z position
-            int zPos = UtilGraph.GRAPH_MIN_Z + (parent.TreeLevel + 1) * nodeSpaceZ;
+            // 
+            if (parent.TreeLevel != currentLevel)
+            {
+                currentLevel = parent.TreeLevel;
 
-            //float levelSplit = (UtilGraph.GRAPH_MAX_X - UtilGraph.GRAPH_MIN_X) / ((numberOfLeafs * z) * 2);
+                // Next level Z position
+                zPos = UtilGraph.GRAPH_MIN_Z + (currentLevel + 1) * nodeSpaceZ;
+
+                /* Split width of map into pieces for where to place nodes
+                 * |--------O--------|
+                 * |----O-------O----|
+                 * |--O---O---O---O--|
+                 * |-O-O-O-O-O-O-O-O-|
+                */
+                levelSplit = (UtilGraph.GRAPH_MAX_X - UtilGraph.GRAPH_MIN_X) / (z * nTree);
+                xPos = UtilGraph.GRAPH_MAX_X - levelSplit / 2;
+            }
 
             // Create children
             for (int x = 0; x < nTree; x++)
             {
-                tree.Add(GenerateNode(parent, new Vector3(CalculateChildPosition(nTree, parent.transform, x), 0f, zPos), z));
+                tree.Add(GenerateNode(parent, new Vector3(xPos, 0f, zPos), parent.TreeLevel + 1));
+                xPos -= levelSplit;
             }
         }
     }
@@ -56,45 +72,49 @@ public class TreeManager : GraphManager {
         return node.GetComponent<TreeNode>();
     }
 
-    private int GetNumberOfNonLeafNodes()
+    private int NumberOfInternalNodes()
     {
         return (int)Mathf.Pow(nTree, treeLevel) - 1;
     }
 
-    private float CalculateChildPosition(int nTree, Transform parentPos, int childNr)
+    private int NumberOfEdges()
     {
-        switch (nTree)
-        {
-            case 2:
-                if (parentPos.position.x > 0)
-                {
-                    if (childNr == 0)
-                        return parentPos.position.x + (UtilGraph.GRAPH_MAX_X - parentPos.position.x) / 2;
-                    else
-                        return parentPos.position.x - (UtilGraph.GRAPH_MAX_X - parentPos.position.x) / 2;
-                }
-                else
-                    if (childNr == 1)
-                        return parentPos.position.x + (UtilGraph.GRAPH_MIN_X - parentPos.position.x) / 2;
-                    else
-                        return parentPos.position.x - (UtilGraph.GRAPH_MIN_X - parentPos.position.x) / 2;
-
-            case 3:
-                switch (childNr)
-                {
-                    case 0: return parentPos.position.x + (UtilGraph.GRAPH_MAX_X - parentPos.position.x) / 2;
-                    case 1: return parentPos.position.x;
-                    case 2: return parentPos.position.x + (UtilGraph.GRAPH_MIN_X - parentPos.position.x) / 2;
-                    default: return -1;
-                }
-            default: return -1;
-        }
+        return tree.Count - 1;
     }
-
 
     protected override void CreateEdges(string mode)
     {
-        throw new System.NotImplementedException();
+        edges = new Edge[NumberOfEdges()];
+
+        int edgeNr = 0;
+        Vector3 n1, n2;
+        // Go through all nodes w/children
+        for (int node=0; node < NumberOfInternalNodes(); node++)
+        {
+            TreeNode currentNode = tree[node];
+            n1 = currentNode.transform.position;
+
+            // Go through all children of current node
+            for (int child=0; child < nTree; child++)
+            {
+                n2 = currentNode.Children[child].transform.position;
+
+                // Find center between node and child
+                Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
+
+                // Find angle
+                //Debug.Log("Angle: " + -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg);
+                float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg;
+
+                // Instantiate and fix edge
+                Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
+                edge.transform.Rotate(0, angle, 0, Space.Self);
+                
+
+                edges[edgeNr] = edge;
+                edgeNr++;
+            }
+        }
     }
 
 
