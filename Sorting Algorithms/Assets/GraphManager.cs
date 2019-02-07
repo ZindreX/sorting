@@ -14,15 +14,18 @@ public abstract class GraphManager : MonoBehaviour {
     protected Node[] nodes;
     protected Edge[] edges;
 
+    protected int numberOfNodes, numberOfEdges;
+
     protected virtual void Awake()
     {
-        Debug.Log("Testing");
+        numberOfNodes = 10;
     }
 
     // Use this for initialization
     void Start () {
+        InitGraph(GetGraphStructure("Grid"));
         CreateGraph();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -33,10 +36,31 @@ public abstract class GraphManager : MonoBehaviour {
     {
         MAX_NODES = GetMaxNumberOfNodes();
         Debug.Log("Max nodes: " + MAX_NODES);
-        StartCoroutine(CreateNodes(MAX_NODES));
+        CreateNodes();
     }
 
-    protected abstract IEnumerator CreateNodes(int numberOfNodes);
-    protected abstract IEnumerator CreateEdges(Node[] nodes, string mode);
+
+    private int[] GetGraphStructure(string graphType)
+    {
+        switch (graphType)
+        {
+            case "Grid":
+                //  GRID_MIN_X = -8, GRID_MAX_X = 8, GRID_MIN_Z = 0, GRID_MAX_Z = 16, GRID_SPACE = 4;
+                int[] gridStructure = new int[5];
+                gridStructure[0] = -8;
+                gridStructure[1] = 8;
+                gridStructure[2] = 0;
+                gridStructure[3] = 16;
+                gridStructure[4] = 4;
+                return gridStructure;
+            case "Tree":
+                return null;
+            default: return null;
+        }
+    }
+
+    protected abstract void InitGraph(int[] graphStructure);
+    protected abstract void CreateNodes();
+    protected abstract void CreateEdges(string mode);
     protected abstract int GetMaxNumberOfNodes();
 }

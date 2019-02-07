@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class TreeManager : GraphManager
 {
-    protected override IEnumerator CreateNodes(int numberOfNodes)
+    protected override void InitGraph(int[] graphStructure)
     {
         throw new System.NotImplementedException();
     }
 
-    protected override IEnumerator CreateEdges(Node[] nodes, string mode)
+    protected override void CreateNodes()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected override void CreateEdges(string mode)
     {
         throw new System.NotImplementedException();
     }
