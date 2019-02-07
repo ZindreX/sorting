@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour {
+public abstract class Node : MonoBehaviour {
 
-    private int nodeID, totalCost;
+    private int nodeID;
     private Color currentColor;
 
     private Animator animator;
@@ -14,21 +14,12 @@ public class Node : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    public Node(int nodeID, bool startNode)
+    public Node(int nodeID)
     {
         this.nodeID = nodeID;
-        CurrentColor = Util.STANDARD_COLOR;
-
-        if (startNode)
-            totalCost = 0;
-        else
-            totalCost = Util.INF;
+        CurrentColor = UtilSort.STANDARD_COLOR;
     }
 
-    public string TotalCost()
-    {
-        return (totalCost != Util.INF) ? totalCost.ToString() : "INF";
-    }
 
     public Color CurrentColor
     {
@@ -36,6 +27,5 @@ public class Node : MonoBehaviour {
         set { currentColor = value; GetComponentInChildren<Renderer>().material.color = value; }
     }
 
-
-
+    public abstract string TotalCost();
 }

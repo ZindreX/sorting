@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4382387314442566}
-  - component: {fileID: 114371656104714176}
   - component: {fileID: 95710320700540896}
   m_Layer: 0
   m_Name: Node
@@ -688,17 +687,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 0.8
   m_Text: 
---- !u!114 &114371656104714176
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1155645530711212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bd3303801b1b634e83d1a96b908df75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114429884794206400
 MonoBehaviour:
   m_ObjectHideFlags: 1

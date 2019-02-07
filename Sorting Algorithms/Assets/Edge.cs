@@ -12,7 +12,7 @@ public class Edge : MonoBehaviour {
     {
         this.cost = cost;
         SetAngle(angle);
-        CurrentColor = Util.STANDARD_COLOR;
+        CurrentColor = UtilSort.STANDARD_COLOR;
     }
 
     private void SetAngle(float angle)

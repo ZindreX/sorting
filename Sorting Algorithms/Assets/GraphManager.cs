@@ -7,7 +7,7 @@ public abstract class GraphManager : MonoBehaviour {
     protected int MAX_NODES;
 
     [SerializeField]
-    protected Node nodePrefab;
+    protected GameObject nodePrefab;
     [SerializeField]
     protected Edge edgePrefab;
 
@@ -23,7 +23,7 @@ public abstract class GraphManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        InitGraph(GetGraphStructure("Grid"));
+        InitGraph(GetGraphStructure(UtilGraph.TREE));
         CreateGraph();
     }
 	
@@ -44,23 +44,27 @@ public abstract class GraphManager : MonoBehaviour {
     {
         switch (graphType)
         {
-            case "Grid":
-                //  GRID_MIN_X = -8, GRID_MAX_X = 8, GRID_MIN_Z = 0, GRID_MAX_Z = 16, GRID_SPACE = 4;
-                int[] gridStructure = new int[5];
-                gridStructure[0] = -8;
-                gridStructure[1] = 8;
-                gridStructure[2] = 0;
-                gridStructure[3] = 16;
-                gridStructure[4] = 4;
+            case UtilGraph.GRID:
+                // 0: rows, 1: columns, 2: grid space
+                int[] gridStructure = new int[3];
+                gridStructure[0] = 5;
+                gridStructure[1] = 5;
+                gridStructure[2] = 4;
                 return gridStructure;
-            case "Tree":
-                return null;
+            case UtilGraph.TREE:
+                // 0: level, 1: n tree, 2: node space x, 3: node space z
+                int[] treeStructure = new int[4];
+                treeStructure[0] = 2;
+                treeStructure[1] = 2;
+                treeStructure[2] = 4;
+                treeStructure[3] = 4;
+                return treeStructure;
             default: return null;
         }
     }
 
+    protected abstract int GetMaxNumberOfNodes();
     protected abstract void InitGraph(int[] graphStructure);
     protected abstract void CreateNodes();
     protected abstract void CreateEdges(string mode);
-    protected abstract int GetMaxNumberOfNodes();
 }

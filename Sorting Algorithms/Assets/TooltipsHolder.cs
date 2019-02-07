@@ -13,7 +13,7 @@ public class TooltipsHolder : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag(Util.TOOLTIPS_ELEMENT))
+        if (collision.collider.CompareTag(UtilSort.TOOLTIPS_ELEMENT))
         {
             tooltipsText.GetComponent<TextMesh>().text = message;
         }

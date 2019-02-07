@@ -39,12 +39,12 @@ public class UserDevice : MonoBehaviour {
     {
         switch (buttonMode)
         {
-            case Util.DEMO:
+            case UtilSort.DEMO:
 
                 break;
-            case Util.USER_TEST: break;
-            case Util.RULE_BUTTONS: break;
-            case Util.QUIT: break;
+            case UtilSort.USER_TEST: break;
+            case UtilSort.RULE_BUTTONS: break;
+            case UtilSort.QUIT: break;
         }
     }
 
@@ -63,13 +63,13 @@ public class UserDevice : MonoBehaviour {
     {
         Dictionary<int, Dictionary<string, bool>> options = new Dictionary<int, Dictionary<string, bool>>();
         //options.Add(0, CreateValue(Util.TUTORIAL, true));
-        options.Add(1, CreateValue(Util.HELP_ENABLED, false));
-        options.Add(2, CreateValue(Util.DUPLICATES, true));
+        options.Add(1, CreateValue(UtilSort.HELP_ENABLED, false));
+        options.Add(2, CreateValue(UtilSort.DUPLICATES, true));
         //options.Add(3, CreateValue("Case", false)); // Best- / worst case
-        options.Add(4, CreateValue(Util.BEST_CASE, false));
+        options.Add(4, CreateValue(UtilSort.BEST_CASE, false));
         //options.Add(5, CreateValue(Util.USER_TEST, false));
         options.Add(6, CreateValue("", false));
-        options.Add(7, CreateValue(Util.WORST_CASE, false));
+        options.Add(7, CreateValue(UtilSort.WORST_CASE, false));
         return options;
     }
 
@@ -85,13 +85,13 @@ public class UserDevice : MonoBehaviour {
     {
         switch (buttonSet)
         {
-            case Util.NUMBER_BUTTONS:
+            case UtilSort.NUMBER_BUTTONS:
                 for (int x=0; x < alternativeButtons.Length; x++)
                 {
                     alternativeButtons[x].GetComponentInChildren<TextMesh>().text = x.ToString();
                 }
                 break;
-            case Util.RULE_BUTTONS:
+            case UtilSort.RULE_BUTTONS:
 
                 break;
             default: Debug.Log("No buttonSet called '" + buttonSet + "'."); break;
@@ -102,17 +102,17 @@ public class UserDevice : MonoBehaviour {
     {
         switch (buttonMode)
         {
-            case Util.ON_OR_OFF:
+            case UtilSort.ON_OR_OFF:
                 for (int x=0; x < options.Count; x++)
                 {
 
                 }
 
                 break;
-            case Util.PORTAL:
+            case UtilSort.PORTAL:
                 for (int x=0; x < alternativeButtons.Length; x++)
                 {
-                    alternativeButtons[x].GetComponentInChildren<TextMesh>().text = Util.ConvertSceneBuildIndexToName(x);
+                    alternativeButtons[x].GetComponentInChildren<TextMesh>().text = UtilSort.ConvertSceneBuildIndexToName(x);
                 }
                 break;
         }
