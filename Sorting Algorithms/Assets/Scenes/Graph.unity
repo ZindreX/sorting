@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 591449216}
   - component: {fileID: 591449215}
   - component: {fileID: 591449217}
+  - component: {fileID: 591449218}
   m_Layer: 0
   m_Name: GraphManager
   m_TagString: Untagged
@@ -441,6 +442,18 @@ MonoBehaviour:
   nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
   edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
     type: 2}
+--- !u!114 &591449218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 591449214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aacd32d2480d4f49aa1fa7862c6633d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphStructureEditor: 1
 --- !u!1 &668667158
 GameObject:
   m_ObjectHideFlags: 0

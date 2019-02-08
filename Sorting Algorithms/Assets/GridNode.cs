@@ -6,9 +6,13 @@ public class GridNode : Node {
 
     private int totalCost;
     private int[] cell;
+
+    [SerializeField]
+    private List<GridNode> neighbors;
     
     public void InitGridNode(int[] cell, bool startNode)
     {
+        neighbors = new List<GridNode>();
         this.cell = cell;
 
         if (startNode)
@@ -20,6 +24,15 @@ public class GridNode : Node {
     public int[] Cell
     {
         get { return cell; }
+    }
+
+    public void AddNeighbor(GridNode node)
+    {
+        if (!neighbors.Contains(node))
+        {
+            neighbors.Add(node);
+            node.AddNeighbor(this);
+        }
     }
 
     public override string TotalCost()

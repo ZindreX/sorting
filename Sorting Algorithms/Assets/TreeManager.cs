@@ -9,7 +9,7 @@ public class TreeManager : GraphManager {
     
 
     // N^(L+1) - 1. || (N^L-1) / (N-1).
-    protected override int GetMaxNumberOfNodes()
+    public override int GetMaxNumberOfNodes()
     {
         return (int)Mathf.Pow(nTree, treeLevel + 1) - 1;
     }
@@ -22,7 +22,7 @@ public class TreeManager : GraphManager {
         nodeSpaceZ = graphStructure[3];
     }
 
-    protected override void CreateNodes()
+    protected override void CreateNodes(string structure)
     {
         tree = new List<TreeNode>();
 
@@ -77,14 +77,14 @@ public class TreeManager : GraphManager {
         return (int)Mathf.Pow(nTree, treeLevel) - 1;
     }
 
-    private int NumberOfEdges()
+    public override int GetNumberOfEdges()
     {
         return tree.Count - 1;
     }
 
     protected override void CreateEdges(string mode)
     {
-        edges = new Edge[NumberOfEdges()];
+        edges = new Edge[GetNumberOfEdges()];
 
         int edgeNr = 0;
         Vector3 n1, n2;
@@ -109,8 +109,8 @@ public class TreeManager : GraphManager {
                 // Instantiate and fix edge
                 Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                 edge.transform.Rotate(0, angle, 0, Space.Self);
+                edge.InitEdge(currentNode, currentNode.Children[child], 0);
                 
-
                 edges[edgeNr] = edge;
                 edgeNr++;
             }

@@ -15,7 +15,7 @@ public class TreeNode : Node {
     public void InitTreeNode(TreeNode parent, int treeLevel)
     {
         children = new List<TreeNode>();
-        this.parent = parent;
+        //this.parent = parent;
         this.treeLevel = treeLevel;
 
         if (parent == null)

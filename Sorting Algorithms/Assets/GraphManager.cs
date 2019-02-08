@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(GraphSettings))]
 public abstract class GraphManager : MonoBehaviour {
 
     protected int MAX_NODES;
@@ -15,17 +16,18 @@ public abstract class GraphManager : MonoBehaviour {
     protected Edge[] edges;
 
     protected int numberOfNodes, numberOfEdges;
-    protected string activeGraphStructure;
+
+    protected GraphSettings gs;
 
     protected virtual void Awake()
     {
-        activeGraphStructure = UtilGraph.GRID;
-        ActivateDeactivateGraphComponents(activeGraphStructure);
+        gs = GetComponent(typeof(GraphSettings)) as GraphSettings;
+        ActivateDeactivateGraphComponents(gs.Graphstructure);
     }
 
     // Use this for initialization
     void Start () {
-        InitGraph(GetGraphStructure(activeGraphStructure));
+        InitGraph(GetGraphStructure(gs.Graphstructure));
         CreateGraph();
     }
 	
@@ -38,7 +40,7 @@ public abstract class GraphManager : MonoBehaviour {
     {
         MAX_NODES = GetMaxNumberOfNodes();
         Debug.Log("Max nodes: " + MAX_NODES);
-        CreateNodes();
+        CreateNodes("");
         CreateEdges("");
     }
 
@@ -84,8 +86,11 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
-    protected abstract int GetMaxNumberOfNodes();
     protected abstract void InitGraph(int[] graphStructure);
-    protected abstract void CreateNodes();
+
+    protected abstract void CreateNodes(string structure);
+    public abstract int GetMaxNumberOfNodes();
+
     protected abstract void CreateEdges(string mode);
+    public abstract int GetNumberOfEdges();
 }
