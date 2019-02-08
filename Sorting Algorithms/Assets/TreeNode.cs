@@ -25,11 +25,6 @@ public class TreeNode : Node {
             parent.AddChildren(this);
     }
 
-    private void Update()
-    {
-        UpdateCostText();
-    }
-
     public void AddChildren(TreeNode child)
     {
         if (!children.Contains(child))
@@ -62,7 +57,7 @@ public class TreeNode : Node {
         return "Lvl: " + treeLevel;
     }
 
-    public void UpdateCostText()
+    public override void UpdateCostText()
     {
         GetComponentInChildren<TextMesh>().text = TotalCost();
     }

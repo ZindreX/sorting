@@ -19,7 +19,7 @@ public abstract class GraphManager : MonoBehaviour {
 
     protected virtual void Awake()
     {
-        activeGraphStructure = UtilGraph.TREE;
+        activeGraphStructure = UtilGraph.GRID;
         ActivateDeactivateGraphComponents(activeGraphStructure);
     }
 

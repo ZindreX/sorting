@@ -14,6 +14,11 @@ public abstract class Node : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        UpdateCostText();
+    }
+
     public Color CurrentColor
     {
         get { return currentColor; }
@@ -21,5 +26,6 @@ public abstract class Node : MonoBehaviour {
     }
 
     public abstract string TotalCost();
+    public abstract void UpdateCostText();
 
 }
