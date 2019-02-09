@@ -10,7 +10,8 @@ public class GraphSettings : MonoBehaviour {
 
     private string graphStructure;
 
-    void Awake()
+
+    public void PrepareSettings()
     {
         switch ((int)graphStructureEditor)
         {

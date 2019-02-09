@@ -453,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aacd32d2480d4f49aa1fa7862c6633d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphStructureEditor: 1
+  graphStructureEditor: 0
 --- !u!1 &668667158
 GameObject:
   m_ObjectHideFlags: 0

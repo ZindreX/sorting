@@ -15,7 +15,7 @@ public class TreeNode : Node {
     public void InitTreeNode(TreeNode parent, int treeLevel)
     {
         children = new List<TreeNode>();
-        //this.parent = parent;
+        this.parent = parent;
         this.treeLevel = treeLevel;
 
         if (parent == null)
@@ -23,6 +23,11 @@ public class TreeNode : Node {
 
         if (parent != null)
             parent.AddChildren(this);
+    }
+
+    public override string NodeID
+    {
+        get { return "Tree node " + nodeID; }
     }
 
     public void AddChildren(TreeNode child)

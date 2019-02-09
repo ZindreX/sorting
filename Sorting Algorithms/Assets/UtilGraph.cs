@@ -8,4 +8,7 @@ public class UtilGraph : MonoBehaviour {
 
     public const string GRID = "Grid", TREE = "Tree";
 
+
+    public static Color STANDARD_COLOR = Color.black, TRAVERSE_COLOR = Color.red, MARKED = Color.yellow, TRAVERSED_COLOR = Color.green;
+
 }

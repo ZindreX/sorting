@@ -21,6 +21,11 @@ public class GridNode : Node {
             totalCost = UtilSort.INF;
     }
 
+    public override string NodeID
+    {
+        get { return "Grid node " + nodeID; }
+    }
+
     public int[] Cell
     {
         get { return cell; }

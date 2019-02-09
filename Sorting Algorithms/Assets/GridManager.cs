@@ -23,6 +23,11 @@ public class GridManager : GraphManager {
         return rows * cols;
     }
 
+    public GridNode[,] GridNodes
+    {
+        get { return gridNodes; }
+    }
+
     protected override void InitGraph(int[] graphStructure)
     {
         // Init graph strucutre values
@@ -61,8 +66,6 @@ public class GridManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
-        edges = new Edge[GetNumberOfEdges()];
-
         int edgeNr = 0;
         Vector3 n1, n2;
 
@@ -94,7 +97,6 @@ public class GridManager : GraphManager {
                         edge.transform.Rotate(0, angle, 0, Space.Self);
                         edge.InitEdge(gridNodes[row, col], neighbors[neighbor], 0);
 
-                        edges[edgeNr] = edge;
                         edgeNr++;
                     }
 
@@ -197,16 +199,41 @@ public class GridManager : GraphManager {
         List<GridNode> neighbors = new List<GridNode>();
         int z = node.Cell[0], x = node.Cell[1];
 
+        if (x - 1 >= 0)
+            neighbors.Add(gridNodes[z, x - 1]);
         if (z - 1 >= 0)
             neighbors.Add(gridNodes[z - 1, x]);
         if (z + 1 < rows)
             neighbors.Add(gridNodes[z + 1, x]);
-        if (x - 1 >= 0)
-            neighbors.Add(gridNodes[z, x - 1]);
         if (x + 1 < cols)
             neighbors.Add(gridNodes[z, x + 1]);
         return neighbors;
     }
 
+
+    protected override List<Node> ConvertNodes()
+    {
+        List<Node> converted = new List<Node>();
+        for (int i=0; i < rows; i++) //gridNodes.GetLength()
+        {
+            for (int j=0; j < cols; j++)
+            {
+                converted.Add(gridNodes[i, j]);
+            }
+        }
+        return converted;
+    }
+
+
+    // Algorithms
+    protected override IEnumerator TraverseBFS(string config)
+    {
+        yield return new WaitForSeconds(3f);
+    }
+
+    protected override IEnumerator TraverseDFS(string config)
+    {
+        yield return new WaitForSeconds(3f);
+    }
 
 }

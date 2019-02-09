@@ -45,14 +45,22 @@ public class Edge : MonoBehaviour {
     */
     private void NotifyNodes(Node node1, Node node2)
     {
+        node1.AddEdge(this);
+        node2.AddEdge(this);
+
         if (node1.GetComponent(typeof(GridNode)))
         {
             node1.GetComponent<GridNode>().AddNeighbor(node2.GetComponent<GridNode>());
         }
         else if (node1.GetComponent(typeof(TreeNode)))
         {
-            node2.GetComponent<TreeNode>().Parent = node1.GetComponent<TreeNode>();
-            node1.GetComponent<TreeNode>().AddChildren(node2.GetComponent<TreeNode>());
+            //node2.GetComponent<TreeNode>().Parent = node1.GetComponent<TreeNode>();
+            //node1.GetComponent<TreeNode>().AddChildren(node2.GetComponent<TreeNode>());
         }
+    }
+
+    public Node OtherNodeConnected(Node node)
+    {
+        return (node == node1) ? node2 : node1;
     }
 }

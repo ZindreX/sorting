@@ -6,12 +6,16 @@ public class TreeManager : GraphManager {
 
     private int treeLevel, nTree, nodeSpaceX, nodeSpaceZ;
     private List<TreeNode> tree;
-    
-
+ 
     // N^(L+1) - 1. || (N^L-1) / (N-1).
     public override int GetMaxNumberOfNodes()
     {
         return (int)Mathf.Pow(nTree, treeLevel + 1) - 1;
+    }
+
+    public List<TreeNode> Tree
+    {
+        get { return tree; }
     }
 
     protected override void InitGraph(int[] graphStructure)
@@ -31,7 +35,7 @@ public class TreeManager : GraphManager {
 
         int nonLeafNodes = NumberOfInternalNodes();
         int currentLevel = 1;
-        float xPos = 0, zPos = 0, levelSplit = 0;
+        float xPos = 0, zPos = 0, widthSplit = 0;
         for (int z = 1; z <= nonLeafNodes; z++)
         {
             // Get parent
@@ -51,15 +55,15 @@ public class TreeManager : GraphManager {
                  * |--O---O---O---O--|
                  * |-O-O-O-O-O-O-O-O-|
                 */
-                levelSplit = (UtilGraph.GRAPH_MAX_X - UtilGraph.GRAPH_MIN_X) / (z * nTree);
-                xPos = UtilGraph.GRAPH_MAX_X - levelSplit / 2;
+                widthSplit = (UtilGraph.GRAPH_MAX_X - UtilGraph.GRAPH_MIN_X) / (z * nTree);
+                xPos = UtilGraph.GRAPH_MAX_X - widthSplit / 2;
             }
 
             // Create children
             for (int x = 0; x < nTree; x++)
             {
                 tree.Add(GenerateNode(parent, new Vector3(xPos, 0f, zPos), parent.TreeLevel + 1));
-                xPos -= levelSplit;
+                xPos -= widthSplit;
             }
         }
     }
@@ -84,8 +88,6 @@ public class TreeManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
-        edges = new Edge[GetNumberOfEdges()];
-
         int edgeNr = 0;
         Vector3 n1, n2;
         // Go through all nodes w/children
@@ -111,11 +113,40 @@ public class TreeManager : GraphManager {
                 edge.transform.Rotate(0, angle, 0, Space.Self);
                 edge.InitEdge(currentNode, currentNode.Children[child], 0);
                 
-                edges[edgeNr] = edge;
                 edgeNr++;
             }
         }
     }
 
+    protected override List<Node> ConvertNodes()
+    {
+        List<Node> converted = new List<Node>();
+        for (int i=0; i < tree.Count; i++)
+        {
+            converted.Add(tree[i].GetComponent<Node>());
+        }
+        return converted;
+    }
 
+
+    // Algorithms
+    protected override IEnumerator TraverseBFS(string config)
+    {
+        Debug.Log("Starting BFS demo in 3 seconds");
+        yield return new WaitForSeconds(3f);
+
+        Debug.Log("Starting BFS demo");
+        for (int i = 0; i < tree.Count; i++)
+        {
+            TreeNode currentNode = tree[i];
+            currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+            yield return new WaitForSeconds(1f);
+            currentNode.CurrentColor = UtilGraph.STANDARD_COLOR;
+        }
+    }
+
+    protected override IEnumerator TraverseDFS(string config)
+    {
+        yield return new WaitForSeconds(3f);
+    }
 }
