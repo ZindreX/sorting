@@ -19,22 +19,33 @@ public class BFS : TraverseAlgorithm {
         {
             Node currentNode = queue.Dequeue();
 
+            if (currentNode.MarkedFrom != null)
+            {
+                currentNode.MarkedFrom.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                yield return new WaitForSeconds(seconds / 2);
+            }
+
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
             yield return new WaitForSeconds(seconds);
-            currentNode.CurrentColor = UtilGraph.STANDARD_COLOR;
 
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
                 Edge edge = currentNode.Edges[i];
                 Node checkingNode = edge.OtherNodeConnected(currentNode);
-                edge.CurrentColor = UtilGraph.TRAVERSED_COLOR;                  // edge color???
 
                 // Check if node has already been traversed or already is marked
                 if (!checkingNode.Traversed && !checkingNode.Marked)
                 {
+                    // Add to queue
                     queue.Enqueue(checkingNode);
+
+                    // Mark node
                     checkingNode.Marked = true;
                     checkingNode.CurrentColor = UtilGraph.MARKED;
+                    
+                    // Mark edge
+                    edge.CurrentColor = UtilGraph.MARKED;
+                    checkingNode.MarkedFrom = edge;
                 }
             }
 

@@ -21,6 +21,12 @@ public class DFS : TraverseAlgorithm {
         {
             Node currentNode = stack.Pop();
 
+            if (currentNode.MarkedFrom != null)
+            {
+                currentNode.MarkedFrom.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                yield return new WaitForSeconds(seconds / 2);
+            }
+
             MarkNode(currentNode);
 
             if (visitLeftFirst)
@@ -36,10 +42,16 @@ public class DFS : TraverseAlgorithm {
 
                     if (!checkingNode.Traversed && !checkingNode.Marked) // rather check if checkingNode is in stack? (drop marked?)
                     {
-                        edge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                        // Put ontop of stack
                         stack.Push(checkingNode);
+
+                        // Mark node
                         checkingNode.Marked = true;
                         checkingNode.CurrentColor = UtilGraph.MARKED;
+
+                        // Mark edge
+                        edge.CurrentColor = UtilGraph.MARKED;
+                        checkingNode.MarkedFrom = edge;
                     }
                 }
             }

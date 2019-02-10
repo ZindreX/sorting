@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Edge : MonoBehaviour {
 
-    private int cost;
+    public static int EDGE_ID;
+
+    // TODO: Direction of edge????
+
+    [SerializeField]
+    private int edgeID, cost;
     private float angle;
     private Color currentColor;
 
@@ -13,9 +18,10 @@ public class Edge : MonoBehaviour {
 
     public void InitEdge(Node node1, Node node2, int cost)
     {
+        edgeID = EDGE_ID++;
         this.node1 = node1;
         this.node2 = node2;
-        this.cost = cost;
+        Cost = cost;
         SetAngle(angle);
         CurrentColor = UtilSort.STANDARD_COLOR;
 
@@ -23,8 +29,15 @@ public class Edge : MonoBehaviour {
         NotifyNodes(node1, node2);
     }
 
+    public int Cost
+    {
+        get { return cost; }
+        set { cost = value; GetComponentInChildren<TextMesh>().text = value.ToString(); }
+    }
+
     private void SetAngle(float angle)
     {
+        this.angle = angle;
         transform.Rotate(0f, angle, 0f);
     }
 
@@ -63,4 +76,10 @@ public class Edge : MonoBehaviour {
     {
         return (node == node1) ? node2 : node1;
     }
+
+    public int EdgeAndOtherNodeCombinedCost(Node fromNode)
+    {
+        return (fromNode == node1) ? (cost + node2.TotalCost) : (cost + node1.TotalCost);
+    }
+
 }

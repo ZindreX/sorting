@@ -4,24 +4,18 @@ using UnityEngine;
 
 public class GridNode : Node {
 
-    private int totalCost;
     private int[] cell;
 
     [SerializeField]
     private List<GridNode> neighbors;
     
-    public void InitGridNode(int[] cell, bool startNode)
+    public void InitGridNode(int[] cell)
     {
         neighbors = new List<GridNode>();
         this.cell = cell;
-
-        if (startNode)
-            totalCost = 0;
-        else
-            totalCost = UtilSort.INF;
     }
 
-    public override string NodeID
+    public override string NodeType
     {
         get { return "Grid node " + nodeID; }
     }
@@ -40,13 +34,10 @@ public class GridNode : Node {
         }
     }
 
-    public override string TotalCost()
-    {
-        return (totalCost != UtilSort.INF) ? totalCost.ToString() : "INF";
-    }
-
     public override void UpdateCostText()
     {
-        GetComponentInChildren<TextMesh>().text = "Z=" + cell[0] + ", X=" + cell[1];
+        //Debug.Log(cell[0] + ", " + cell[1] + ": " + totalCost);
+        GetComponentInChildren<TextMesh>().text = UtilGraph.ConvertIfInf(totalCost.ToString()); //"Z=" + cell[0] + ", X=" + cell[1];
     }
+
 }

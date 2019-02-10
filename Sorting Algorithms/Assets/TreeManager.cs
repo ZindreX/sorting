@@ -59,11 +59,27 @@ public class TreeManager : GraphManager {
                 xPos = UtilGraph.GRAPH_MAX_X - widthSplit / 2;
             }
 
-            // Create children
+            // Create children w/edge
             for (int x = 0; x < nTree; x++)
             {
                 tree.Add(GenerateNode(parent, new Vector3(xPos, 0f, zPos), parent.TreeLevel + 1));
                 xPos -= widthSplit;
+
+                // *** Add edge between parent and child
+                Vector3 n2 = tree[tree.Count - 1].transform.position;
+
+                // Find center between node and child
+                Vector3 centerPos = new Vector3(parent.transform.position.x + n2.x, 0f, parent.transform.position.z + n2.z) / 2;
+
+                // Find angle
+                //Debug.Log("Angle: " + -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg);
+                float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - parent.transform.position.x) * Mathf.Rad2Deg;
+
+                // Instantiate and fix edge
+                Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
+                edge.transform.Rotate(0, angle, 0, Space.Self);
+                edge.InitEdge(parent, tree[tree.Count - 1], 0); // insert cost
+
             }
         }
     }
@@ -88,7 +104,8 @@ public class TreeManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
-        int edgeNr = 0;
+        Debug.LogError("No need for this method anymore (tree)");
+        //int edgeNr = 0;
         Vector3 n1, n2;
         // Go through all nodes w/children
         for (int node=0; node < NumberOfInternalNodes(); node++)
@@ -113,7 +130,7 @@ public class TreeManager : GraphManager {
                 edge.transform.Rotate(0, angle, 0, Space.Self);
                 edge.InitEdge(currentNode, currentNode.Children[child], 0);
                 
-                edgeNr++;
+                //edgeNr++;
             }
         }
     }

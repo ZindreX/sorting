@@ -26,16 +26,26 @@ public abstract class GraphManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
-        InitGraph(GetGraphStructure(gs.Graphstructure));
+        InitGraph(gs.GraphSetup());
         CreateGraph();
 
         // Test
-        //StartCoroutine(BFS.Demo(GetComponent<TreeManager>().Tree[4]));
-        StartCoroutine(BFS.Demo(GetComponent<GridManager>().GridNodes[2, 2]));
+        switch (gs.UseAlgorithm)
+        {
+            case UtilGraph.BFS:
+                //StartCoroutine(BFS.Demo(GetComponent<TreeManager>().Tree[0]));
+                StartCoroutine(BFS.Demo(GetComponent<GridManager>().GridNodes[2, 2]));
+                break;
+            case UtilGraph.DFS:
+                //StartCoroutine(DFS.Demo(GetComponent<TreeManager>().Tree[0], true));
+                StartCoroutine(DFS.Demo(GetComponent<GridManager>().GridNodes[2, 2], true));
+                break;
+            case UtilGraph.DIJKSTRA:
+                StartCoroutine(Dijkstra.Demo(GetComponent<GridManager>().GridNodes[0, 0]));
+                break;
+        }
 
-        //StartCoroutine(DFS.Demo(GetComponent<TreeManager>().Tree[0], true));
-        //StartCoroutine(DFS.Demo(GetComponent<GridManager>().GridNodes[2, 2], true));
+
     }
 	
 	// Update is called once per frame
@@ -70,28 +80,11 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
-    private int[] GetGraphStructure(string graphStructure)
+    public void ResetGraph()
     {
-        switch (graphStructure)
-        {
-            case UtilGraph.GRID:
-                int[] gridStructure = new int[3];
-                gridStructure[0] = 5;   // 0: rows
-                gridStructure[1] = 5;   // 1: columns
-                gridStructure[2] = 4;   // 2: grid space
-                return gridStructure;
 
-            case UtilGraph.TREE:
-                int[] treeStructure = new int[4];
-                treeStructure[0] = 3;   // 0: level (root only = 0)
-                treeStructure[1] = 2;   // 1: n tree (binary, etc.)
-                treeStructure[2] = 4;   // 2: node space x
-                treeStructure[3] = 4;   // 3: node space z
-                return treeStructure;
-
-            default: return null;
-        }
     }
+
 
     protected abstract void InitGraph(int[] graphStructure);
 

@@ -8,10 +8,7 @@ public class GridManager : GraphManager {
 
     private int rows, cols, gridSpace;
 
-    //private Vector3[,] grid;
     private GridNode[,] gridNodes;
-
-    private HashSet<int> usedNodes;
 
     protected override void Awake()
     {
@@ -50,7 +47,7 @@ public class GridManager : GraphManager {
                 int xPos = startX - x * gridSpace;
                 GameObject node = Instantiate(nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
                 node.AddComponent<GridNode>();
-                node.GetComponent<GridNode>().InitGridNode(new int[2] { z, x }, false);
+                node.GetComponent<GridNode>().InitGridNode(new int[2] { z, x });
                 gridNodes[z, x] = node.GetComponent<GridNode>();
             }
         }
@@ -95,7 +92,7 @@ public class GridManager : GraphManager {
                         // Instantiate and fix edge
                         Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                         edge.transform.Rotate(0, angle, 0, Space.Self);
-                        edge.InitEdge(gridNodes[row, col], neighbors[neighbor], 0);
+                        edge.InitEdge(gridNodes[row, col], neighbors[neighbor], Random.Range(0, 101));
 
                         edgeNr++;
                     }

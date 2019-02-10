@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TraverseAlgorithm : MonoBehaviour {
 
-    protected static float seconds = 0.5f;
+    protected static float seconds = 0f;
 
 
 

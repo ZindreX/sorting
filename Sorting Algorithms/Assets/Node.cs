@@ -1,22 +1,26 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Node : MonoBehaviour {
+public abstract class Node : MonoBehaviour, IComparable<Node> {
 
     public static int NODE_ID;
 
-    private bool traversed, marked;
-
     [SerializeField]
     protected int nodeID;
+
+    [SerializeField]
+    protected int totalCost;
+    private bool traversed, marked; // need marked? just check if in list/stack...
+
     protected Color currentColor;
 
     [SerializeField]
-    protected List<Edge> edges;
+    private Node prevNode; // shortest path
 
     [SerializeField]
-    protected string space = "Ignore space";
+    protected List<Edge> edges;
+    private Edge markedFrom;
 
     protected Animator animator;
 
@@ -27,11 +31,19 @@ public abstract class Node : MonoBehaviour {
         edges = new List<Edge>();
         traversed = false;
         marked = false;
+        TotalCost = UtilGraph.INF;
+        prevNode = null;
     }
 
-    private void Update()
+    public int NodeID
     {
-        UpdateCostText();
+        get { return nodeID; }
+    }
+
+    public int TotalCost
+    {
+        get { return totalCost; }
+        set { totalCost = value; UpdateCostText(); }
     }
 
     public bool Traversed
@@ -44,6 +56,12 @@ public abstract class Node : MonoBehaviour {
     {
         get { return marked; }
         set { marked = value; }
+    }
+
+    public Edge MarkedFrom
+    {
+        get { return markedFrom; }
+        set { markedFrom = value; }
     }
 
     public Color CurrentColor
@@ -69,8 +87,23 @@ public abstract class Node : MonoBehaviour {
             edges.Remove(edge);
     }
 
-    public abstract string NodeID { get; }
-    public abstract string TotalCost();
-    public abstract void UpdateCostText();
+    public Node PrevNode
+    {
+        get { return prevNode; }
+        set { prevNode = value; }
+    }
 
+    // ******************************************************************* OBS: inverted
+    public int CompareTo(Node other)
+    {
+        int otherTotalCost = other.TotalCost;
+        if (totalCost < otherTotalCost)
+            return 1;
+        else if (totalCost > otherTotalCost)
+            return -1;
+        return 0;
+    }
+
+    public abstract string NodeType { get; }
+    public abstract void UpdateCostText();
 }

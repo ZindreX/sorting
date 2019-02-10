@@ -28,10 +28,6 @@ public class UtilSort : MonoBehaviour {
     // Rules (numbers)
     public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100;
 
-    // Values
-    public static readonly int INF = -1;
-
-
     // ******************************************** Instructions ******************************************** 
     // Instructions
     public static readonly int NO_DESTINATION = -1, INIT_STATE = -2, NO_VALUE = -3;

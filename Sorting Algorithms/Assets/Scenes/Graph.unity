@@ -454,6 +454,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graphStructureEditor: 0
+  useAlgorithmEditor: 2
+  gridRowsEditor: 5
+  gridColumnsEditor: 5
+  gridSpaceEditor: 0
+  treeDepthEditor: 2
+  nTreeEditor: 0
+  nodeSpaceXEditor: 1
+  nodeSpaceZEditor: 1
 --- !u!1 &668667158
 GameObject:
   m_ObjectHideFlags: 0

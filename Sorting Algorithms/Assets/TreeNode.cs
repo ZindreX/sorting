@@ -25,7 +25,7 @@ public class TreeNode : Node {
             parent.AddChildren(this);
     }
 
-    public override string NodeID
+    public override string NodeType
     {
         get { return "Tree node " + nodeID; }
     }
@@ -56,15 +56,9 @@ public class TreeNode : Node {
         get { return children; }
     }
 
-
-    public override string TotalCost()
-    {
-        return "Lvl: " + treeLevel;
-    }
-
     public override void UpdateCostText()
     {
-        GetComponentInChildren<TextMesh>().text = TotalCost();
+        GetComponentInChildren<TextMesh>().text = totalCost.ToString();
     }
 
 }
