@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 591449216}
   - component: {fileID: 591449215}
   - component: {fileID: 591449217}
+  - component: {fileID: 591449219}
   - component: {fileID: 591449218}
   m_Layer: 0
   m_Name: GraphManager
@@ -455,13 +456,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphStructureEditor: 0
   useAlgorithmEditor: 2
-  gridRowsEditor: 5
-  gridColumnsEditor: 5
+  algorithmSpeedEditor: 3
+  gridRowsEditor: 4
+  gridColumnsEditor: 4
   gridSpaceEditor: 0
-  treeDepthEditor: 2
+  treeDepthEditor: 3
   nTreeEditor: 0
   nodeSpaceXEditor: 1
   nodeSpaceZEditor: 1
+  visitLeftFirst: 0
+  x1: 0
+  z1: 0
+  x2: 4
+  z2: 4
+--- !u!114 &591449219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 591449214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a780cb66949dd5e48aac71c28a273b67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
+  edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
+    type: 2}
 --- !u!1 &668667158
 GameObject:
   m_ObjectHideFlags: 0

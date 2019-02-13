@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dijkstra : TraverseAlgorithm {
+public class Dijkstra : MonoBehaviour, IShortestPath {
 
 
-    public static IEnumerator Demo(Node startNode)
+    public IEnumerator Demo(Node startNode, Node endNode)
     {
         // Create list
         List<Node> list = new List<Node>();
@@ -14,7 +14,6 @@ public class Dijkstra : TraverseAlgorithm {
         list.Add(startNode);
         startNode.TotalCost = 0;
 
-        Node backtrackNode = null;
         Debug.Log("Starting Dijkstra shortest path demo in 3 seconds");
         yield return new WaitForSeconds(3f);
 
@@ -27,13 +26,10 @@ public class Dijkstra : TraverseAlgorithm {
             list.RemoveAt(list.Count - 1);
             currentNode.Traversed = true; /// ????
 
-            // Test
-            if (backtrackNode == null || currentNode.NodeID > backtrackNode.NodeID)
-                backtrackNode = currentNode;
-
-            currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-            yield return new WaitForSeconds(seconds);
-            currentNode.CurrentColor = UtilGraph.MARKED;
+            //currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+            yield return new WaitForSeconds(UtilGraph.seconds);
+            currentNode.Marked = true;
+            //currentNode.CurrentColor = UtilGraph.MARKED;
             
 
             // Check all nodes connected with current node
@@ -43,11 +39,13 @@ public class Dijkstra : TraverseAlgorithm {
                 // Checking edge
                 Edge currentEdge = edges[edge];
                 currentEdge.CurrentColor = UtilGraph.MARKED;
-                yield return new WaitForSeconds(seconds);
+                yield return new WaitForSeconds(UtilGraph.seconds);
 
                 // Checking node on the other side of the edge
                 Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
-                connectedNode.CurrentColor = UtilGraph.MARKED;
+                //connectedNode.CurrentColor = UtilGraph.MARKED;
+                connectedNode.Marked = true;
+
 
                 // Cost between nodes
                 int costFromCurrentToConnected = currentNode.TotalCost + currentEdge.Cost;
@@ -58,8 +56,8 @@ public class Dijkstra : TraverseAlgorithm {
                 if (costFromCurrentToConnected < connectedNode.TotalCost)
                 {
                     connectedNode.TotalCost = costFromCurrentToConnected;
-                    connectedNode.PrevNode = currentNode;
-                    yield return new WaitForSeconds(seconds);
+                    connectedNode.PrevEdge = currentEdge;
+                    yield return new WaitForSeconds(UtilGraph.seconds);
                 }
 
                 if (!connectedNode.Traversed && !list.Contains(connectedNode))
@@ -73,24 +71,23 @@ public class Dijkstra : TraverseAlgorithm {
 
         while (true)
         {
-            backtrackNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-            List<Edge> edges = backtrackNode.Edges;
-            
-            for (int edge=0; edge < edges.Count; edge++)
+            // Change color of node
+            endNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+
+            // Change color of edge leading to previous node
+            Edge backtrackEdge = endNode.PrevEdge;
+            backtrackEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+
+            // Set "next" node
+            endNode = backtrackEdge.OtherNodeConnected(endNode);
+            yield return new WaitForSeconds(UtilGraph.seconds);
+
+
+            if (endNode.PrevEdge == null)
             {
-                Edge backtrackEdge = edges[edge];
-                if (backtrackEdge.OtherNodeConnected(backtrackNode) == backtrackNode.PrevNode)
-                {
-                    backtrackEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-                    backtrackNode = backtrackNode.PrevNode;
-                    break;
-                }
-            }
-            yield return new WaitForSeconds(seconds);
-
-
-            if (backtrackNode == null)
+                endNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
                 break;
+            }
         }
         Debug.Log("Shortest path from start node to last node marked");
     }

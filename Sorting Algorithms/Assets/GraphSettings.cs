@@ -12,6 +12,10 @@ public class GraphSettings : MonoBehaviour {
     private UseAlgorithmEditor useAlgorithmEditor;
     private enum UseAlgorithmEditor { BFS, DFS, Dijkstra }
 
+    [SerializeField]
+    private AlgorithmSpeedEditor algorithmSpeedEditor;
+    private enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
+
 
     // *** Grid graph ***
     [SerializeField]
@@ -25,6 +29,7 @@ public class GraphSettings : MonoBehaviour {
     [SerializeField]
     private GridSpaceEditor gridSpaceEditor;
     private enum GridSpaceEditor { Four, Eight }
+
 
     // *** Tree graph ***
     [SerializeField]
@@ -43,7 +48,15 @@ public class GraphSettings : MonoBehaviour {
     private NodeSpaceZ nodeSpaceZEditor;
     private enum NodeSpaceZ { Two, Four }
 
+    [SerializeField]
+    private bool visitLeftFirst;
 
+
+    // *** Start-/End nodes ***
+    [SerializeField]
+    private int x1, z1, x2, z2;
+
+    private float algorithmSpeed;
     private string graphStructure, useAlgorithm;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, nodeSpaceX, nodeSpaceZ;
@@ -62,6 +75,14 @@ public class GraphSettings : MonoBehaviour {
             case 0: useAlgorithm = UtilGraph.BFS; break;
             case 1: useAlgorithm = UtilGraph.DFS; break;
             case 2: useAlgorithm = UtilGraph.DIJKSTRA; break;
+        }
+
+        switch ((int)algorithmSpeedEditor)
+        {
+            case 0: algorithmSpeed = 3f; break;
+            case 1: algorithmSpeed = 1f; break;
+            case 2: algorithmSpeed = 0.5f; break;
+            case 4: algorithmSpeed = 0f; break;
         }
 
         if (graphStructure.Equals(UtilGraph.GRID))
@@ -92,6 +113,26 @@ public class GraphSettings : MonoBehaviour {
     public string UseAlgorithm
     {
         get { return useAlgorithm; }
+    }
+
+    public float AlgorithmSpeed
+    {
+        get { return algorithmSpeed; }
+    }
+
+    public int[] StartNode()
+    {
+        return new int[2] { x1, z1 };
+    }
+
+    public int[] EndNode()
+    {
+        return new int[2] { x2, z2 };
+    }
+
+    public bool VisitLeftFirst
+    {
+        get { return visitLeftFirst; }
     }
 
     public int[] GraphSetup()

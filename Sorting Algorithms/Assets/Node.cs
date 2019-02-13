@@ -16,7 +16,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     protected Color currentColor;
 
     [SerializeField]
-    private Node prevNode; // shortest path
+    private Edge prevEdge; // shortest path
 
     [SerializeField]
     protected List<Edge> edges;
@@ -32,7 +32,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
         traversed = false;
         marked = false;
         TotalCost = UtilGraph.INF;
-        prevNode = null;
+        prevEdge = null;
     }
 
     public int NodeID
@@ -49,13 +49,23 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     public bool Traversed
     {
         get { return traversed; }
-        set { traversed = value; }
+        set { traversed = value;
+            if (traversed)
+                CurrentColor = UtilGraph.TRAVERSED_COLOR;
+            else
+                CurrentColor = UtilGraph.STANDARD_COLOR;
+        }
     }
 
     public bool Marked
     {
         get { return marked; }
-        set { marked = value; }
+        set { marked = value;
+            if (marked)
+                CurrentColor = UtilGraph.MARKED;
+            else
+                CurrentColor = UtilGraph.STANDARD_COLOR;
+        }
     }
 
     public Edge MarkedFrom
@@ -87,10 +97,10 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
             edges.Remove(edge);
     }
 
-    public Node PrevNode
+    public Edge PrevEdge
     {
-        get { return prevNode; }
-        set { prevNode = value; }
+        get { return prevEdge; }
+        set { prevEdge = value; }
     }
 
     // ******************************************************************* OBS: inverted

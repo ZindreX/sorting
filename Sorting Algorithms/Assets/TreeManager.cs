@@ -104,6 +104,7 @@ public class TreeManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
+        return;
         Debug.LogError("No need for this method anymore (tree)");
         //int edgeNr = 0;
         Vector3 n1, n2;
@@ -135,35 +136,13 @@ public class TreeManager : GraphManager {
         }
     }
 
-    protected override List<Node> ConvertNodes()
+    // TODO: fix later
+    // 
+    public override Node GetNode(int a, int b)
     {
-        List<Node> converted = new List<Node>();
-        for (int i=0; i < tree.Count; i++)
-        {
-            converted.Add(tree[i].GetComponent<Node>());
-        }
-        return converted;
+        if (a >= 0 && a < tree.Count)
+            return tree[a];
+        return null;
     }
 
-
-    // Algorithms
-    protected override IEnumerator TraverseBFS(string config)
-    {
-        Debug.Log("Starting BFS demo in 3 seconds");
-        yield return new WaitForSeconds(3f);
-
-        Debug.Log("Starting BFS demo");
-        for (int i = 0; i < tree.Count; i++)
-        {
-            TreeNode currentNode = tree[i];
-            currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-            yield return new WaitForSeconds(1f);
-            currentNode.CurrentColor = UtilGraph.STANDARD_COLOR;
-        }
-    }
-
-    protected override IEnumerator TraverseDFS(string config)
-    {
-        yield return new WaitForSeconds(3f);
-    }
 }

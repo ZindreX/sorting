@@ -207,30 +207,13 @@ public class GridManager : GraphManager {
         return neighbors;
     }
 
-
-    protected override List<Node> ConvertNodes()
+    // Return cell with a=row and b=column
+    public override Node GetNode(int a, int b)
     {
-        List<Node> converted = new List<Node>();
-        for (int i=0; i < rows; i++) //gridNodes.GetLength()
-        {
-            for (int j=0; j < cols; j++)
-            {
-                converted.Add(gridNodes[i, j]);
-            }
-        }
-        return converted;
+        if (a >= 0 && a < rows && b >= 0 && b < cols)
+            return gridNodes[a, b];
+        return null;
     }
 
-
-    // Algorithms
-    protected override IEnumerator TraverseBFS(string config)
-    {
-        yield return new WaitForSeconds(3f);
-    }
-
-    protected override IEnumerator TraverseDFS(string config)
-    {
-        yield return new WaitForSeconds(3f);
-    }
 
 }

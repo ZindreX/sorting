@@ -58,7 +58,7 @@ public class TreeNode : Node {
 
     public override void UpdateCostText()
     {
-        GetComponentInChildren<TextMesh>().text = totalCost.ToString();
+        GetComponentInChildren<TextMesh>().text = UtilGraph.ConvertIfInf(totalCost.ToString());
     }
 
 }

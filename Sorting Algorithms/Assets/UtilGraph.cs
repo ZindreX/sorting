@@ -6,8 +6,10 @@ public class UtilGraph : MonoBehaviour {
 
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16;
 
+    public static float seconds;
+
     // Graph structures
-    public const string GRID = "Grid", TREE = "Tree";
+    public const string GRID = "Grid", TREE = "Tree", RANDOM_GRAPH = "Random graph";
 
     // Algorithms
     public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DIJKSTRA = "Dijkstra";

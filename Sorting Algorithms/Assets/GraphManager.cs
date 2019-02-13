@@ -12,16 +12,26 @@ public abstract class GraphManager : MonoBehaviour {
     [SerializeField]
     protected Edge edgePrefab;
 
-    protected int numberOfNodes, numberOfEdges;
+    //protected int numberOfNodes, numberOfEdges;
 
     protected GraphSettings gs;
+    protected ITraverse traverseAlgorithm;
+    protected IShortestPath shortestPathAlgorithm;
 
     protected virtual void Awake()
     {
         gs = GetComponent(typeof(GraphSettings)) as GraphSettings;
         gs.PrepareSettings();
+        UtilGraph.seconds = gs.AlgorithmSpeed;
         ActivateDeactivateGraphComponents(gs.Graphstructure);
         Debug.Log("Graph structure: " + gs.Graphstructure);
+
+        switch (gs.UseAlgorithm)
+        {
+            case UtilGraph.BFS: traverseAlgorithm = new BFS(); break;
+            case UtilGraph.DFS: traverseAlgorithm = new DFS(); break;
+            case UtilGraph.DIJKSTRA: shortestPathAlgorithm = new Dijkstra(); break;
+        }
     }
 
     // Use this for initialization
@@ -29,25 +39,35 @@ public abstract class GraphManager : MonoBehaviour {
         InitGraph(gs.GraphSetup());
         CreateGraph();
 
-        // Test
+        int[] startNode = gs.StartNode();
         switch (gs.UseAlgorithm)
         {
-            case UtilGraph.BFS:
-                //StartCoroutine(BFS.Demo(GetComponent<TreeManager>().Tree[0]));
-                StartCoroutine(BFS.Demo(GetComponent<GridManager>().GridNodes[2, 2]));
-                break;
+            case UtilGraph.BFS: TraverseGraph(traverseAlgorithm, GetNode(startNode[0], startNode[1])); break;
             case UtilGraph.DFS:
-                //StartCoroutine(DFS.Demo(GetComponent<TreeManager>().Tree[0], true));
-                StartCoroutine(DFS.Demo(GetComponent<GridManager>().GridNodes[2, 2], true));
+                ((DFS)traverseAlgorithm).VisistLeftFirst = gs.VisitLeftFirst;
+                TraverseGraph(traverseAlgorithm, GetNode(startNode[0], startNode[1]));
                 break;
+
+
             case UtilGraph.DIJKSTRA:
-                StartCoroutine(Dijkstra.Demo(GetComponent<GridManager>().GridNodes[0, 0]));
+                int[] endNode = gs.EndNode();
+                ShortestPath(shortestPathAlgorithm, GetNode(startNode[0], startNode[1]), GetNode(endNode[0], startNode[1]));
                 break;
         }
-
-
     }
 	
+
+    private void TraverseGraph(ITraverse algorithm, Node startNode)
+    {
+        StartCoroutine(algorithm.Demo(startNode));
+    }
+
+    private void ShortestPath(IShortestPath algorithm, Node from, Node to)
+    {
+        StartCoroutine(algorithm.Demo(from, to));
+
+    }
+
 	// Update is called once per frame
 	void Update () {
 		
@@ -69,10 +89,18 @@ public abstract class GraphManager : MonoBehaviour {
             case UtilGraph.GRID:
                 GetComponent<GridManager>().enabled = true;
                 GetComponent<TreeManager>().enabled = false;
+                GetComponent<RandomGraphManager>().enabled = false;
                 break;
 
             case UtilGraph.TREE:
                 GetComponent<TreeManager>().enabled = true;
+                GetComponent<GridManager>().enabled = false;
+                GetComponent<RandomGraphManager>().enabled = false;
+                break;
+
+            case UtilGraph.RANDOM_GRAPH:
+                GetComponent<RandomGraphManager>().enabled = true;
+                GetComponent<TreeManager>().enabled = false;
                 GetComponent<GridManager>().enabled = false;
                 break;
 
@@ -85,19 +113,24 @@ public abstract class GraphManager : MonoBehaviour {
 
     }
 
-
+    // Initialize the setup variables for the graph
     protected abstract void InitGraph(int[] graphStructure);
 
+    // Creates the nodes (and edges*)
     protected abstract void CreateNodes(string structure);
+
+    // Max #nodes (change/remove?)
     public abstract int GetMaxNumberOfNodes();
-    protected abstract List<Node> ConvertNodes();
 
+    // Get specific node
+    public abstract Node GetNode(int a, int b);
+
+
+    // Creates the edges of the graph (in case not already done)
     protected abstract void CreateEdges(string mode);
-    public abstract int GetNumberOfEdges();
 
-    // Algorithms
-    protected abstract IEnumerator TraverseBFS(string config);
-    protected abstract IEnumerator TraverseDFS(string config);
+    // #Edges
+    public abstract int GetNumberOfEdges();
 
 
 }

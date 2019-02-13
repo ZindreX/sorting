@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BFS : TraverseAlgorithm {
+public class BFS : MonoBehaviour, ITraverse {
 
-    public static IEnumerator Demo(Node node)
+    public IEnumerator Demo(Node node)
     {
         Debug.Log("Starting BFS demo in 3 seconds");
 
@@ -22,11 +22,11 @@ public class BFS : TraverseAlgorithm {
             if (currentNode.MarkedFrom != null)
             {
                 currentNode.MarkedFrom.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-                yield return new WaitForSeconds(seconds / 2);
+                yield return new WaitForSeconds(UtilGraph.seconds / 2);
             }
 
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSeconds(UtilGraph.seconds);
 
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
@@ -51,7 +51,7 @@ public class BFS : TraverseAlgorithm {
 
             currentNode.Traversed = true;
             currentNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSeconds(UtilGraph.seconds);
         }
 
         Debug.Log("BFS demo completed");
