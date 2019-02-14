@@ -5,5 +5,6 @@ using UnityEngine;
 public interface ITraverse {
 
     IEnumerator Demo(Node startNode);
+    List<int> VisitNodeOrder(Node startNode);
 
 }

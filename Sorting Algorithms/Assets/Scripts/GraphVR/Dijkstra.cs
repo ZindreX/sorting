@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dijkstra : MonoBehaviour, IShortestPath {
+public class Dijkstra : GraphAlgorithm, IShortestPath {
 
 
     public IEnumerator Demo(Node startNode, Node endNode)
@@ -27,7 +27,7 @@ public class Dijkstra : MonoBehaviour, IShortestPath {
             currentNode.Traversed = true; /// ????
 
             //currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-            yield return new WaitForSeconds(UtilGraph.seconds);
+            yield return new WaitForSeconds(seconds);
             currentNode.Marked = true;
             //currentNode.CurrentColor = UtilGraph.MARKED;
             
@@ -39,7 +39,7 @@ public class Dijkstra : MonoBehaviour, IShortestPath {
                 // Checking edge
                 Edge currentEdge = edges[edge];
                 currentEdge.CurrentColor = UtilGraph.MARKED;
-                yield return new WaitForSeconds(UtilGraph.seconds);
+                yield return new WaitForSeconds(seconds);
 
                 // Checking node on the other side of the edge
                 Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
@@ -57,7 +57,7 @@ public class Dijkstra : MonoBehaviour, IShortestPath {
                 {
                     connectedNode.TotalCost = costFromCurrentToConnected;
                     connectedNode.PrevEdge = currentEdge;
-                    yield return new WaitForSeconds(UtilGraph.seconds);
+                    yield return new WaitForSeconds(seconds);
                 }
 
                 if (!connectedNode.Traversed && !list.Contains(connectedNode))
@@ -80,7 +80,7 @@ public class Dijkstra : MonoBehaviour, IShortestPath {
 
             // Set "next" node
             endNode = backtrackEdge.OtherNodeConnected(endNode);
-            yield return new WaitForSeconds(UtilGraph.seconds);
+            yield return new WaitForSeconds(seconds);
 
 
             if (endNode.PrevEdge == null)

@@ -12,6 +12,8 @@ TagManager:
   - projectile
   - FxTemporaire
   - Tooltips element
+  - Edge
+  - Node
   layers:
   - Default
   - TransparentFX

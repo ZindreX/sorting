@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DFS : MonoBehaviour, ITraverse {
+public class DFS : GraphAlgorithm, ITraverse {
 
     private bool visitLeftFirst;
 
@@ -30,11 +30,11 @@ public class DFS : MonoBehaviour, ITraverse {
             if (currentNode.MarkedFrom != null)
             {
                 currentNode.MarkedFrom.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-                yield return new WaitForSeconds(UtilGraph.seconds / 2);
+                yield return new WaitForSeconds(seconds / 2);
             }
 
             node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-            yield return new WaitForSeconds(UtilGraph.seconds);
+            yield return new WaitForSeconds(seconds);
 
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
@@ -62,9 +62,13 @@ public class DFS : MonoBehaviour, ITraverse {
 
             currentNode.Traversed = true;
             currentNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-            yield return new WaitForSeconds(UtilGraph.seconds);
+            yield return new WaitForSeconds(seconds);
         }
     }
 
+    public List<int> VisitNodeOrder(Node startNode)
+    {
+        throw new System.NotImplementedException();
+    }
 
 }

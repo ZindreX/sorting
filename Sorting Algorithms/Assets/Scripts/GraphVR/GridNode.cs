@@ -34,6 +34,15 @@ public class GridNode : Node {
         }
     }
 
+    public void RemoveNeighbor(GridNode node)
+    {
+        if (neighbors.Contains(node))
+        {
+            neighbors.Remove(node);
+            node.RemoveNeighbor(this);
+        }
+    }
+
     public override void UpdateCostText()
     {
         //Debug.Log(cell[0] + ", " + cell[1] + ": " + totalCost);

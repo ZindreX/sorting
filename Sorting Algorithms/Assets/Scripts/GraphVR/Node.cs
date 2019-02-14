@@ -28,11 +28,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     {
         animator = GetComponent<Animator>();
         nodeID = NODE_ID++;
-        edges = new List<Edge>();
-        traversed = false;
-        marked = false;
-        TotalCost = UtilGraph.INF;
-        prevEdge = null;
+        ResetNode();
     }
 
     public int NodeID
@@ -113,6 +109,17 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
             return -1;
         return 0;
     }
+
+    public virtual void ResetNode()
+    {
+        edges = new List<Edge>();
+        traversed = false;
+        marked = false;
+        TotalCost = UtilGraph.INF;
+        prevEdge = null;
+        CurrentColor = UtilGraph.STANDARD_COLOR;
+    }
+
 
     public abstract string NodeType { get; }
     public abstract void UpdateCostText();

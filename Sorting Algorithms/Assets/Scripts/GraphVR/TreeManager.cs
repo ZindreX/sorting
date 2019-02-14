@@ -78,7 +78,7 @@ public class TreeManager : GraphManager {
                 // Instantiate and fix edge
                 Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                 edge.transform.Rotate(0, angle, 0, Space.Self);
-                edge.InitEdge(parent, tree[tree.Count - 1], 0); // insert cost
+                edge.InitEdge(parent, tree[tree.Count - 1], 0, UtilGraph.TREE); // insert cost
 
             }
         }
@@ -104,36 +104,36 @@ public class TreeManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
-        return;
-        Debug.LogError("No need for this method anymore (tree)");
-        //int edgeNr = 0;
-        Vector3 n1, n2;
-        // Go through all nodes w/children
-        for (int node=0; node < NumberOfInternalNodes(); node++)
-        {
-            TreeNode currentNode = tree[node];
-            n1 = currentNode.transform.position;
+        //return;
+        //Debug.LogError("No need for this method anymore (tree)");
+        ////int edgeNr = 0;
+        //Vector3 n1, n2;
+        //// Go through all nodes w/children
+        //for (int node=0; node < NumberOfInternalNodes(); node++)
+        //{
+        //    TreeNode currentNode = tree[node];
+        //    n1 = currentNode.transform.position;
 
-            // Go through all children of current node
-            for (int child=0; child < nTree; child++)
-            {
-                n2 = currentNode.Children[child].transform.position;
+        //    // Go through all children of current node
+        //    for (int child=0; child < nTree; child++)
+        //    {
+        //        n2 = currentNode.Children[child].transform.position;
 
-                // Find center between node and child
-                Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
+        //        // Find center between node and child
+        //        Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
 
-                // Find angle
-                //Debug.Log("Angle: " + -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg);
-                float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg;
+        //        // Find angle
+        //        //Debug.Log("Angle: " + -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg);
+        //        float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg;
 
-                // Instantiate and fix edge
-                Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
-                edge.transform.Rotate(0, angle, 0, Space.Self);
-                edge.InitEdge(currentNode, currentNode.Children[child], 0);
+        //        // Instantiate and fix edge
+        //        Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
+        //        edge.transform.Rotate(0, angle, 0, Space.Self);
+        //        edge.InitEdge(currentNode, currentNode.Children[child], 0);
                 
-                //edgeNr++;
-            }
-        }
+        //        //edgeNr++;
+        //    }
+        //}
     }
 
     // TODO: fix later
@@ -145,4 +145,20 @@ public class TreeManager : GraphManager {
         return null;
     }
 
+    public override void ResetGraph()
+    {
+        for (int i=0; i < tree.Count; i++)
+        {
+            tree[i].ResetNode();
+        }
+    }
+
+    public override void DeleteGraph()
+    {
+        Node.NODE_ID = 0;
+        for (int i=0; i < tree.Count; i++)
+        {
+            Destroy(tree[i]);
+        }
+    }
 }

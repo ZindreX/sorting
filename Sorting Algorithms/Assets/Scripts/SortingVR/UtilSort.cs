@@ -8,20 +8,9 @@ using UnityEngine;
  * ---------------------------------------------------------------------------------------------------------
 */
 
-public class UtilSort : MonoBehaviour {
+public class UtilSort : Util {
 
     // ******************************************** Settings ********************************************
-    // Algorithms
-    public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
-    public const string BUCKET_SORT = "Bucket sort";
-
-    // Teaching modes
-    public const string DEMO = "Demo", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
-
-    // Difficulty
-    //public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", ADVANCED = "Advanced", EXAMINATION = "Examination";
-    public const int BEGINNER = 1, INTERMEDIATE = 2, ADVANCED = 3, EXAMINATION = 4;
-
     // Rules (cases)
     public const string NONE = "None", WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
 
@@ -62,7 +51,7 @@ public class UtilSort : MonoBehaviour {
     // ******************************************** Visualization ********************************************
     // Colors used
     public static Color PIVOT_COLOR = Color.cyan, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
-    public static Color STANDARD_COLOR = Color.black, MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
+    public static Color MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
     public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
 
     // The distance above a holder (when teleporting a element)
@@ -76,10 +65,6 @@ public class UtilSort : MonoBehaviour {
 
 
     // ******************************************** Outdated stuff? ********************************************
-    // Rooms
-    public const string START_ROOM = "Start room", MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
-    public const string TUTORIAL = "Tutorial";
-
     // Buttons
     public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal", PORTAL_OBJECT = "Portal object", QUIT = "Quit";
 
@@ -146,21 +131,6 @@ public class UtilSort : MonoBehaviour {
     public static string EnabledToString(bool enabled)
     {
         return enabled ? "Enabled" : "Disabled";
-    }
-
-    public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)
-    {
-        switch (sceneBuildIndex)
-        {
-            case 0: return START_ROOM;
-            case 1: return TUTORIAL_ROOM;
-            case 2: return MAIN_MENU;
-            case 3: return BUBBLE_SORT;
-            case 4: return INSERTION_SORT;
-            case 5: return BUCKET_SORT;
-            default: return "X";
-
-        }
     }
 
     public static string TranslateInstructionForExamination(string instruction)

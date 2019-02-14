@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UtilGraph : MonoBehaviour {
+public class UtilGraph : Util {
 
-    public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16;
-
-    public static float seconds;
+    public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
 
     // Graph structures
     public const string GRID = "Grid", TREE = "Tree", RANDOM_GRAPH = "Random graph";
 
-    // Algorithms
-    public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DIJKSTRA = "Dijkstra";
+    // Graph objects
+    public static string NODE = "Node", EDGE = "Edge";
 
     // 
     public static int INF = int.MaxValue;
 
 
     // Colors
-    public static Color STANDARD_COLOR = Color.black, TRAVERSE_COLOR = Color.red, MARKED = Color.yellow, TRAVERSED_COLOR = Color.green;
+    public static Color TRAVERSE_COLOR = Color.red, MARKED = Color.yellow, TRAVERSED_COLOR = Color.green;
 
 
 
@@ -38,6 +36,11 @@ public class UtilGraph : MonoBehaviour {
 
         return (isNumberic) ? cost : INF;
 
+    }
+
+    public static float DistanceBetweenNodes(Transform n1, Transform n2)
+    {
+        return Mathf.Sqrt(Mathf.Pow(n1.position.x - n2.position.x, 2) + Mathf.Pow(n1.position.z - n2.position.z, 2));
     }
 
 }

@@ -6,27 +6,37 @@ public class Edge : MonoBehaviour {
 
     public static int EDGE_ID;
 
-    // TODO: Direction of edge????
-
     [SerializeField]
     private int edgeID, cost;
-    private float angle;
+    private float angle; // needed???
+    private string graphStructure;
+
+    [SerializeField]
+    private bool collisionOccured;
+
     private Color currentColor;
 
     [SerializeField]
     private Node node1, node2;
 
-    public void InitEdge(Node node1, Node node2, int cost)
+    public void InitEdge(Node node1, Node node2, int cost, string graphStructure)
     {
         edgeID = EDGE_ID++;
         this.node1 = node1;
         this.node2 = node2;
         Cost = cost;
-        SetAngle(angle);
+        this.graphStructure = graphStructure;
+
         CurrentColor = UtilSort.STANDARD_COLOR;
+        collisionOccured = false;
 
         // Notify nodes (neighbors / parent / child)
         NotifyNodes(node1, node2);
+    }
+
+    public int EdgeID
+    {
+        get { return edgeID; }
     }
 
     public int Cost
@@ -41,13 +51,18 @@ public class Edge : MonoBehaviour {
         transform.Rotate(0f, angle, 0f);
     }
 
+    public void SetLength(float length)
+    {
+        GetComponentInChildren<MeshRenderer>().transform.localScale += new Vector3(length - 5f, 0f, 0f);
+    }
+
     public Color CurrentColor
     {
         get { return currentColor; }
         set { currentColor = value; GetComponentInChildren<Renderer>().material.color = value; }
     }
 
-    /* *** Grid ***
+    /* *** Grid / RandomNode ***
      * node1 --- node2
      * 
      * *** Tree ***
@@ -70,6 +85,10 @@ public class Edge : MonoBehaviour {
             //node2.GetComponent<TreeNode>().Parent = node1.GetComponent<TreeNode>();
             //node1.GetComponent<TreeNode>().AddChildren(node2.GetComponent<TreeNode>());
         }
+        else if (node1.GetComponent(typeof(RandomNode)))
+        {
+            node1.GetComponent<RandomNode>().AddNeighbor(node2.GetComponent<RandomNode>());
+        }
     }
 
     public Node OtherNodeConnected(Node node)
@@ -80,6 +99,34 @@ public class Edge : MonoBehaviour {
     public int EdgeAndOtherNodeCombinedCost(Node fromNode)
     {
         return (fromNode == node1) ? (cost + node2.TotalCost) : (cost + node1.TotalCost);
+    }
+
+    public bool CollisionOccured
+    {
+        get { return collisionOccured; }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (graphStructure == UtilGraph.RANDOM_GRAPH)
+        {
+            if (collision.collider.tag == UtilGraph.EDGE) // Hit an edge
+            {
+                Debug.Log("Edge " + edgeID + " collided with Edge " + collision.collider.GetComponentInParent<Edge>().EdgeID);
+                collisionOccured = true;
+            }
+
+            if (collision.collider.tag == UtilGraph.NODE)
+            {
+                int nodeID = collision.collider.GetComponentInParent<Node>().NodeID; // cube collides, so need to get from object
+
+                if (nodeID != node1.NodeID && nodeID != node2.NodeID) // Hit a node (not connecting nodes)
+                {
+                    Debug.Log("Edge " + edgeID + " collided with Node " + nodeID);
+                    collisionOccured = true;
+                }
+            }
+        }
     }
 
 }

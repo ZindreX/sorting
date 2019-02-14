@@ -7,70 +7,95 @@ public abstract class GraphManager : MonoBehaviour {
 
     protected int MAX_NODES;
 
-    [SerializeField]
     protected GameObject nodePrefab;
-    [SerializeField]
     protected Edge edgePrefab;
 
-    //protected int numberOfNodes, numberOfEdges;
+    private bool userTestReady;
 
     protected GraphSettings gs;
-    protected ITraverse traverseAlgorithm;
-    protected IShortestPath shortestPathAlgorithm;
+    protected GraphAlgorithm algorithm;
 
     protected virtual void Awake()
     {
+        // Get settings from editor
         gs = GetComponent(typeof(GraphSettings)) as GraphSettings;
         gs.PrepareSettings();
-        UtilGraph.seconds = gs.AlgorithmSpeed;
-        ActivateDeactivateGraphComponents(gs.Graphstructure);
-        Debug.Log("Graph structure: " + gs.Graphstructure);
 
-        switch (gs.UseAlgorithm)
-        {
-            case UtilGraph.BFS: traverseAlgorithm = new BFS(); break;
-            case UtilGraph.DFS: traverseAlgorithm = new DFS(); break;
-            case UtilGraph.DIJKSTRA: shortestPathAlgorithm = new Dijkstra(); break;
-        }
+        // Activate/deactivate components (Grid / Tree / Random)
+        ActivateDeactivateGraphComponents(gs.Graphstructure);
+
+        // Prefabs (cleaness)
+        nodePrefab = gs.nodePrefab;
+        edgePrefab = gs.edgePrefab;
+
+        // Algorithm
+        algorithm = gs.GetGraphAlgorithm();
+        algorithm.Seconds = gs.AlgorithmSpeed;
     }
 
     // Use this for initialization
     void Start () {
+        // Get variables for graph setup
         InitGraph(gs.GraphSetup());
+
+        // Create graph based on init variables
         CreateGraph();
 
+        // Init teaching mode
         int[] startNode = gs.StartNode();
-        switch (gs.UseAlgorithm)
+        switch (gs.TeachingMode)
         {
-            case UtilGraph.BFS: TraverseGraph(traverseAlgorithm, GetNode(startNode[0], startNode[1])); break;
-            case UtilGraph.DFS:
-                ((DFS)traverseAlgorithm).VisistLeftFirst = gs.VisitLeftFirst;
-                TraverseGraph(traverseAlgorithm, GetNode(startNode[0], startNode[1]));
+            case UtilGraph.DEMO:
+                switch (gs.UseAlgorithm)
+                {
+                    case UtilGraph.BFS: TraverseGraph(algorithm, GetNode(startNode[0], startNode[1])); break;
+                    case UtilGraph.DFS:
+                        ((DFS)algorithm).VisistLeftFirst = gs.VisitLeftFirst;
+                        TraverseGraph(algorithm, GetNode(startNode[0], startNode[1]));
+                        break;
+
+
+                    case UtilGraph.DIJKSTRA:
+                        int[] endNode = gs.EndNode();
+                        ShortestPath(algorithm, GetNode(startNode[0], startNode[1]), GetNode(endNode[0], endNode[1]));
+                        break;
+                }
                 break;
 
+            case UtilGraph.USER_TEST:
+                if (gs.UseAlgorithm == UtilGraph.BFS)
+                {
+                    List<int> visitOrder = ((BFS)algorithm).VisitNodeOrder(GetNode(startNode[0], startNode[1]));
 
-            case UtilGraph.DIJKSTRA:
-                int[] endNode = gs.EndNode();
-                ShortestPath(shortestPathAlgorithm, GetNode(startNode[0], startNode[1]), GetNode(endNode[0], startNode[1]));
+                    string result = "";
+                    for (int x = 0; x < visitOrder.Count; x++)
+                    {
+                        result += visitOrder[x].ToString() + " -> ";
+                    }
+                    result.Substring(0, result.Length - 4);
+                    Debug.Log(result);
+                }
+
+                PerformUserTest();
                 break;
         }
     }
-	
 
-    private void TraverseGraph(ITraverse algorithm, Node startNode)
+    private void TraverseGraph(GraphAlgorithm algorithm, Node startNode)
     {
-        StartCoroutine(algorithm.Demo(startNode));
+        StartCoroutine(algorithm.GetComponent<ITraverse>().Demo(startNode));
     }
 
-    private void ShortestPath(IShortestPath algorithm, Node from, Node to)
+    private void ShortestPath(GraphAlgorithm algorithm, Node from, Node to)
     {
-        StartCoroutine(algorithm.Demo(from, to));
+        StartCoroutine(algorithm.GetComponent<IShortestPath>().Demo(from, to));
 
     }
 
 	// Update is called once per frame
 	void Update () {
-		
+        if (userTestReady)
+            Debug.Log("Ready for user test!");
 	}
 
     public void CreateGraph()
@@ -108,9 +133,11 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
-    public void ResetGraph()
-    {
 
+    private void PerformUserTest()
+    {
+        ResetGraph();
+        userTestReady = true;
     }
 
     // Initialize the setup variables for the graph
@@ -132,5 +159,9 @@ public abstract class GraphManager : MonoBehaviour {
     // #Edges
     public abstract int GetNumberOfEdges();
 
+    // Reset graph (prepare for User Test)
+    public abstract void ResetGraph();
 
+    // Delete graph
+    public abstract void DeleteGraph();
 }

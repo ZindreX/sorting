@@ -242,6 +242,70 @@ Transform:
   m_Father: {fileID: 1022332492}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &157921380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 157921384}
+  - component: {fileID: 157921383}
+  - component: {fileID: 157921382}
+  - component: {fileID: 157921381}
+  m_Layer: 0
+  m_Name: GraphAlgorithm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &157921381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 157921380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32df272a53dc2ff479cdaa4ee05d23dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &157921382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 157921380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 187d5d6132636db4298f436cddef2e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &157921383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 157921380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff1358d637a33f469f182cd77f9a948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &157921384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 157921380}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &405828587
 Prefab:
   m_ObjectHideFlags: 0
@@ -413,9 +477,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2292f2def04e0a44a173023ac7a5c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
-  edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
-    type: 2}
 --- !u!4 &591449216
 Transform:
   m_ObjectHideFlags: 0
@@ -440,9 +501,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a6697376a1a0848b813fcf1dba106e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
-  edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
-    type: 2}
 --- !u!114 &591449218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,21 +512,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aacd32d2480d4f49aa1fa7862c6633d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphStructureEditor: 0
-  useAlgorithmEditor: 2
+  nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
+  edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
+    type: 2}
+  graphAlgorithmObj: {fileID: 157921380}
+  teachingModeEditor: 1
+  graphStructureEditor: 1
+  useAlgorithmEditor: 0
   algorithmSpeedEditor: 3
   gridRowsEditor: 4
   gridColumnsEditor: 4
   gridSpaceEditor: 0
-  treeDepthEditor: 3
+  treeDepthEditor: 2
   nTreeEditor: 0
   nodeSpaceXEditor: 1
   nodeSpaceZEditor: 1
   visitLeftFirst: 0
   x1: 0
   z1: 0
-  x2: 4
-  z2: 4
+  x2: 3
+  z2: 0
 --- !u!114 &591449219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,9 +543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a780cb66949dd5e48aac71c28a273b67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
-  edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
-    type: 2}
 --- !u!1 &668667158
 GameObject:
   m_ObjectHideFlags: 0

@@ -92,7 +92,7 @@ public class GridManager : GraphManager {
                         // Instantiate and fix edge
                         Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                         edge.transform.Rotate(0, angle, 0, Space.Self);
-                        edge.InitEdge(gridNodes[row, col], neighbors[neighbor], Random.Range(0, 101));
+                        edge.InitEdge(gridNodes[row, col], neighbors[neighbor], Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT), UtilGraph.GRID);
 
                         edgeNr++;
                     }
@@ -215,5 +215,26 @@ public class GridManager : GraphManager {
         return null;
     }
 
+    public override void ResetGraph()
+    {
+        for (int i=0; i < rows; i++)
+        {
+            for (int j=0; j < cols; j++)
+            {
+                gridNodes[i, j].ResetNode();
+            }
+        }
+    }
 
+    public override void DeleteGraph()
+    {
+        Node.NODE_ID = 0;
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Destroy(gridNodes[i, j]);
+            }
+        }
+    }
 }

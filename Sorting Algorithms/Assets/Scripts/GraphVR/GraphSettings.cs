@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class GraphSettings : MonoBehaviour {
 
+    public GameObject nodePrefab;
+    public Edge edgePrefab;
+
+    [SerializeField]
+    private GameObject graphAlgorithmObj;
+
+    [Header("Overall settings")]
+    [SerializeField]
+    private TeachingModeEditor teachingModeEditor;
+    private enum TeachingModeEditor { Demo, UserTest }
+
     [SerializeField]
     private GraphStructureEditor graphStructureEditor;
-    private enum GraphStructureEditor { Grid, Tree }
+    private enum GraphStructureEditor { Grid, Tree, Random }
 
     [SerializeField]
     private UseAlgorithmEditor useAlgorithmEditor;
@@ -18,6 +29,8 @@ public class GraphSettings : MonoBehaviour {
 
 
     // *** Grid graph ***
+    [Space(2)]
+    [Header("Grid graph settings")]
     [SerializeField]
     private GridRowsEditor gridRowsEditor;
     private enum GridRowsEditor { One, Two, Three, Four, Five, Test }
@@ -32,6 +45,8 @@ public class GraphSettings : MonoBehaviour {
 
 
     // *** Tree graph ***
+    [Space(2)]
+    [Header("Tree graph settings")]
     [SerializeField]
     private TreeDepth treeDepthEditor;
     private enum TreeDepth { Zero, One, Two, Three, Four, Five }
@@ -53,21 +68,34 @@ public class GraphSettings : MonoBehaviour {
 
 
     // *** Start-/End nodes ***
+    [Space(2)]
+    [Header("Start node")]
     [SerializeField]
-    private int x1, z1, x2, z2;
+    private int x1, z1;
+
+    [Header("End node (Shortest path)")]
+    [SerializeField]
+    private int x2, z2;
 
     private float algorithmSpeed;
-    private string graphStructure, useAlgorithm;
+    private string teachingMode, graphStructure, useAlgorithm;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, nodeSpaceX, nodeSpaceZ;
 
 
     public void PrepareSettings()
     {
+        switch ((int)teachingModeEditor)
+        {
+            case 0: teachingMode = UtilGraph.DEMO; break;
+            case 1: teachingMode = UtilGraph.USER_TEST; break;
+        }
+
         switch ((int)graphStructureEditor)
         {
             case 0: graphStructure = UtilGraph.GRID; break;
             case 1: graphStructure = UtilGraph.TREE; break;
+            case 2: graphStructure = UtilGraph.RANDOM_GRAPH; break;
         }
 
         switch ((int)useAlgorithmEditor)
@@ -99,10 +127,15 @@ public class GraphSettings : MonoBehaviour {
         else if (graphStructure.Equals(UtilGraph.TREE))
         {
             treeDepth = (int)treeDepthEditor;
-            nTree = ((int)nTreeEditor + 2) + (int)nTreeEditor;
+            nTree = ((int)nTreeEditor + 2);
             nodeSpaceX = ((int)nodeSpaceXEditor + 2) + (int)nodeSpaceXEditor * 2;
             nodeSpaceZ = ((int)nodeSpaceZEditor + 2) + (int)nodeSpaceZEditor * 2;
         }
+    }
+
+    public string TeachingMode
+    {
+        get { return teachingMode; }
     }
 
     public string Graphstructure
@@ -141,7 +174,34 @@ public class GraphSettings : MonoBehaviour {
         {
             case UtilGraph.GRID: return new int[3] { gridRows, gridColumns, gridSpace };
             case UtilGraph.TREE: return new int[4] { treeDepth, nTree, nodeSpaceX, nodeSpaceZ };
+            case UtilGraph.RANDOM_GRAPH: return new int[3] { 4, 4, 4 };
             default: Debug.LogError("Couldn't setup graph! Unknown graph structure: '" + graphStructure + "'."); return null;
+        }
+    }
+
+    public GraphAlgorithm GetGraphAlgorithm()
+    {
+        switch (useAlgorithm)
+        {
+            case UtilGraph.BFS:
+                //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
+                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
+                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
+                return graphAlgorithmObj.GetComponent<BFS>();
+
+            case UtilGraph.DFS:
+                //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
+                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
+                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
+                return graphAlgorithmObj.GetComponent<DFS>();
+
+            case UtilGraph.DIJKSTRA:
+                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
+                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
+                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
+                return graphAlgorithmObj.GetComponent<Dijkstra>();
+
+            default: return null;
         }
     }
 }
