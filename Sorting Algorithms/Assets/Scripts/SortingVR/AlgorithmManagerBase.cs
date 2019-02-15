@@ -310,12 +310,14 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     }
     private bool userTestReady = false; // debugging
 
-    //
+    // Give feedback to the user when the sorting task (user test) is completed)
     private IEnumerator FinishUserTest()
     {
         yield return new WaitForSeconds(algorithm.Seconds);
         algorithm.IsSortingComplete = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
+
+        // Visual feedback (make each element "jump")
         for (int x = 0; x < algorithmSettings.NumberOfElements; x++)
         {
             UtilSort.IndicateElement(elementManager.GetSortingElement(x));
