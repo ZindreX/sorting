@@ -26,7 +26,7 @@ public class TreeManager : GraphManager {
         nodeSpaceZ = graphStructure[3];
     }
 
-    protected override void CreateNodes(string structure)
+    protected override void CreateNodes(string s)
     {
         tree = new List<TreeNode>();
 
@@ -88,7 +88,7 @@ public class TreeManager : GraphManager {
     {
         GameObject node = Instantiate(nodePrefab, pos, Quaternion.identity);
         node.AddComponent<TreeNode>();
-        node.GetComponent<TreeNode>().InitTreeNode(parent, treeLevel);
+        node.GetComponent<TreeNode>().InitTreeNode(algorithm.AlgorithmName, parent, treeLevel);
         return node.GetComponent<TreeNode>();
     }
 

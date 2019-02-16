@@ -12,9 +12,9 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     private float seconds;
 
-    private Algorithm algorithm;
+    private TeachingAlgorithm algorithm;
 
-    public void SetAlgorithm(Algorithm algorithm)
+    public void SetAlgorithm(TeachingAlgorithm algorithm)
     {
         this.algorithm = algorithm;
         seconds = algorithm.Seconds;

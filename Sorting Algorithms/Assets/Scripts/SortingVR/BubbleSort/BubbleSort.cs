@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BubbleSortManager))]
-public class BubbleSort : Algorithm {
+public class BubbleSort : SortAlgorithm {
 
     /* --------------------------------------------------- Bubble Sort --------------------------------------------------- 
      * Comparing 2 elements at a time
@@ -135,8 +135,8 @@ public class BubbleSort : Algorithm {
     }
     #endregion
 
-    #region Bubble Sort: All Moves Tutorial (Visual)
-    public override IEnumerator Tutorial(GameObject[] list)
+    #region Bubble Sort: All Moves Demo (Visual)
+    public override IEnumerator Demo(GameObject[] list)
     {
         int N = list.Length, i = 0, j = 0;
 
@@ -227,7 +227,7 @@ public class BubbleSort : Algorithm {
             UtilSort.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
             yield return new WaitForSeconds(seconds);
         }
-        isSortingComplete = true;
+        isTaskCompleted = true;
 
         // Display pseudocode (end 1st for-loop)
         pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.HIGHLIGHT_COLOR);

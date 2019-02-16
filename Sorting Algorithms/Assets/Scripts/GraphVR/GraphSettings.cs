@@ -21,7 +21,7 @@ public class GraphSettings : MonoBehaviour {
 
     [SerializeField]
     private UseAlgorithmEditor useAlgorithmEditor;
-    private enum UseAlgorithmEditor { BFS, DFS, Dijkstra }
+    private enum UseAlgorithmEditor { BFS, DFS, Dijkstra, PreOrder }
 
     [SerializeField]
     private AlgorithmSpeedEditor algorithmSpeedEditor;
@@ -71,17 +71,20 @@ public class GraphSettings : MonoBehaviour {
     [Space(2)]
     [Header("Start node")]
     [SerializeField]
-    private int x1, z1;
+    private int x1;
+    [SerializeField]
+    private int z1;
 
     [Header("End node (Shortest path)")]
     [SerializeField]
-    private int x2, z2;
+    private int x2;
+    [SerializeField]
+    private int z2;
 
     private float algorithmSpeed;
     private string teachingMode, graphStructure, useAlgorithm;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, nodeSpaceX, nodeSpaceZ;
-
 
     public void PrepareSettings()
     {
@@ -103,6 +106,7 @@ public class GraphSettings : MonoBehaviour {
             case 0: useAlgorithm = UtilGraph.BFS; break;
             case 1: useAlgorithm = UtilGraph.DFS; break;
             case 2: useAlgorithm = UtilGraph.DIJKSTRA; break;
+            //case 3: useAlgorithm = UtilGraph.TREE_PRE_ORDER_TRAVERSAL; break;
         }
 
         switch ((int)algorithmSpeedEditor)
@@ -200,6 +204,9 @@ public class GraphSettings : MonoBehaviour {
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
                 return graphAlgorithmObj.GetComponent<Dijkstra>();
+
+            //case UtilGraph.TREE_PRE_ORDER_TRAVERSAL:
+            //    return graphAlgorithmObj.GetComponent<TreePreOrderTraversal>();
 
             default: return null;
         }

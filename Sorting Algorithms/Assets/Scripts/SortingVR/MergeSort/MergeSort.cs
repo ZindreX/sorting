@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MergeSort : Algorithm {
+public class MergeSort : SortAlgorithm {
 
     /* --------------------------------------------------- Merge Sort --------------------------------------------------- 
      * 1) Recursive aproach till just 1 element left in list
@@ -270,7 +270,7 @@ public class MergeSort : Algorithm {
     private static readonly string LEFT = "Left", RIGHT = "Right";
 
     #region Merge Sort: All Moves Tutorial TODO: implement
-    public override IEnumerator Tutorial(GameObject[] list)
+    public override IEnumerator Demo(GameObject[] list)
     {
         split = FindNumberOfSplits(list.Length, 0);
         return MS(list, 0, list.Length);

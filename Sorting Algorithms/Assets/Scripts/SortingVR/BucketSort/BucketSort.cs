@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(BucketManager))]
 [RequireComponent(typeof(BucketSortManager))]
-public class BucketSort : Algorithm {
+public class BucketSort : SortAlgorithm {
 
     public const string CHOOSE_BUCKET = "Choose bucket", PUT_BACK_TO_HOLDER = "Put back to holder", NONE = "None";
     private Dictionary<int, string> pseudoCode;
@@ -244,7 +244,7 @@ public class BucketSort : Algorithm {
     #endregion
 
     #region Bucket Sort: Tutorial (Visual)
-    public override IEnumerator Tutorial(GameObject[] sortingElements)
+    public override IEnumerator Demo(GameObject[] sortingElements)
     {
         // Line 0 (set parameter)
         pseudoCodeViewer.SetCodeLine(0, PseudoCode(0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
@@ -394,7 +394,7 @@ public class BucketSort : Algorithm {
         yield return new WaitForSeconds(seconds);
         pseudoCodeViewer.SetCodeLine(13, PseudoCode(13, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
 
-        IsSortingComplete = true;
+        IsTaskCompleted = true;
     }
     #endregion
 

@@ -12,8 +12,9 @@ public class TreeNode : Node {
     [SerializeField]
     private List<TreeNode> children;
 
-    public void InitTreeNode(TreeNode parent, int treeLevel)
+    public void InitTreeNode(string algorithm, TreeNode parent, int treeLevel)
     {
+        InitNode(algorithm);
         children = new List<TreeNode>();
         this.parent = parent;
         this.treeLevel = treeLevel;
@@ -56,9 +57,9 @@ public class TreeNode : Node {
         get { return children; }
     }
 
-    public override void UpdateCostText()
+    protected override void UpdateNodeText(string text)
     {
-        GetComponentInChildren<TextMesh>().text = UtilGraph.ConvertIfInf(totalCost.ToString());
+        GetComponentInChildren<TextMesh>().text = text;
     }
 
 }

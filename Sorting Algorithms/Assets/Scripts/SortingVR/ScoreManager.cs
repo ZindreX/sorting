@@ -36,7 +36,7 @@ public class ScoreManager : MonoBehaviour, IScore {
 
     public int CalculateScore()
     {
-        if (GetComponent<Algorithm>().IsSortingComplete)
+        if (GetComponent<SortAlgorithm>().IsTaskCompleted)
             return CalculateTotalScore();
         return CalculateIntermediateScore();
     }
@@ -69,7 +69,7 @@ public class ScoreManager : MonoBehaviour, IScore {
     // Sets when User Test ends
     public void SetEndTime()
     {
-        if (endTime == 0 && GetComponent<Algorithm>().IsSortingComplete)
+        if (endTime == 0 && GetComponent<SortAlgorithm>().IsTaskCompleted)
         {
             endTime = Time.deltaTime;
             timeSpent = endTime - startTime;

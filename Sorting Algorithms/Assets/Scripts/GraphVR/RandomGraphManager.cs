@@ -27,7 +27,7 @@ public class RandomGraphManager : GraphManager {
         return numberOfEdges;
     }
 
-    protected override void CreateNodes(string structure)
+    protected override void CreateNodes(string s)
     {
         // Start node
         nodes.Add(GenerateNode(new Vector3(0f, 0f, 0f)));
@@ -62,7 +62,7 @@ public class RandomGraphManager : GraphManager {
     {
         GameObject node = Instantiate(nodePrefab, pos, Quaternion.identity);
         node.AddComponent<RandomNode>();
-        node.GetComponent<RandomNode>().InitRandomNode();
+        node.GetComponent<RandomNode>().InitRandomNode(algorithm.AlgorithmName);
         return node.GetComponent<RandomNode>();
     }
 

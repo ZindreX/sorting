@@ -13,7 +13,7 @@ public class MergeSortManager : AlgorithmManagerBase {
         base.Awake();
     }
 
-    protected override Algorithm InstanceOfAlgorithm
+    protected override SortAlgorithm InstanceOfAlgorithm
     {
         get { return mergeSort; }
     }

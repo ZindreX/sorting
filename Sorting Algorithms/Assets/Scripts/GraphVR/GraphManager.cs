@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GraphSettings))]
-public abstract class GraphManager : MonoBehaviour {
+public abstract class GraphManager : MainManager {
 
     protected int MAX_NODES;
 
     protected GameObject nodePrefab;
     protected Edge edgePrefab;
-
-    private bool userTestReady;
 
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
@@ -24,7 +22,7 @@ public abstract class GraphManager : MonoBehaviour {
         // Activate/deactivate components (Grid / Tree / Random)
         ActivateDeactivateGraphComponents(gs.Graphstructure);
 
-        // Prefabs (cleaness)
+        // Prefabs (editor clean up)
         nodePrefab = gs.nodePrefab;
         edgePrefab = gs.edgePrefab;
 
@@ -48,24 +46,29 @@ public abstract class GraphManager : MonoBehaviour {
             case UtilGraph.DEMO:
                 switch (gs.UseAlgorithm)
                 {
-                    case UtilGraph.BFS: TraverseGraph(algorithm, GetNode(startNode[0], startNode[1])); break;
+                    case UtilGraph.BFS: StartCoroutine(((BFS)algorithm).Demo(GetNode(startNode[0], startNode[1]))); break;
                     case UtilGraph.DFS:
                         ((DFS)algorithm).VisistLeftFirst = gs.VisitLeftFirst;
-                        TraverseGraph(algorithm, GetNode(startNode[0], startNode[1]));
+                        StartCoroutine(((DFS)algorithm).Demo(GetNode(startNode[0], startNode[1])));
                         break;
 
 
                     case UtilGraph.DIJKSTRA:
                         int[] endNode = gs.EndNode();
-                        ShortestPath(algorithm, GetNode(startNode[0], startNode[1]), GetNode(endNode[0], endNode[1]));
+                        StartCoroutine(((Dijkstra)algorithm).Demo(GetNode(startNode[0], startNode[1]), GetNode(endNode[0], endNode[1])));
                         break;
+
+                    //case UtilGraph.TREE_PRE_ORDER_TRAVERSAL:
+                    //    Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                    //    TraverseGraph(algorithm, GetNode(startNode[0], startNode[1]));
+                    //    break;
                 }
                 break;
 
             case UtilGraph.USER_TEST:
                 if (gs.UseAlgorithm == UtilGraph.BFS)
                 {
-                    List<int> visitOrder = ((BFS)algorithm).VisitNodeOrder(GetNode(startNode[0], startNode[1]));
+                    List<int> visitOrder = null; // ((BFS)algorithm).UserTestInstructions(GetNode(startNode[0], startNode[1]));
 
                     string result = "";
                     for (int x = 0; x < visitOrder.Count; x++)
@@ -81,29 +84,31 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
-    private void TraverseGraph(GraphAlgorithm algorithm, Node startNode)
-    {
-        StartCoroutine(algorithm.GetComponent<ITraverse>().Demo(startNode));
-    }
+    // Bugged?
+    //private void TraverseGraph(Node startNode)
+    //{
+    //    Debug.Log(">>> Algorithm: " + algorithm.AlgorithmName);
+    //    Debug.Log("Test: " + algorithm.GetComponent(typeof(DFS)));
+    //    StartCoroutine(algorithm.GetComponent<ITraverse>().Demo(startNode));
+    //}
 
-    private void ShortestPath(GraphAlgorithm algorithm, Node from, Node to)
-    {
-        StartCoroutine(algorithm.GetComponent<IShortestPath>().Demo(from, to));
-
-    }
+    //private void ShortestPath(Node from, Node to)
+    //{
+    //    StartCoroutine(algorithm.GetComponent<IShortestPath>().Demo(from, to));
+    //}
 
 	// Update is called once per frame
 	void Update () {
-        if (userTestReady)
-            Debug.Log("Ready for user test!");
+        //if (userTestReady)
+            
 	}
 
     public void CreateGraph()
     {
         MAX_NODES = GetMaxNumberOfNodes();
         Debug.Log("Max nodes: " + MAX_NODES);
-        CreateNodes("");
-        CreateEdges("");
+        CreateNodes(algorithm.AlgorithmName);
+        CreateEdges(algorithm.AlgorithmName);
     }
 
     // Keeps only one graph structure active
@@ -138,6 +143,7 @@ public abstract class GraphManager : MonoBehaviour {
     {
         ResetGraph();
         userTestReady = true;
+        Debug.Log("Ready for user test!");
     }
 
     // Initialize the setup variables for the graph

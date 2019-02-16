@@ -33,7 +33,7 @@ public class GridManager : GraphManager {
         gridSpace = graphStructure[2];
     }
 
-    protected override void CreateNodes(string structure)
+    protected override void CreateNodes(string s)
     {
         gridNodes = new GridNode[rows, cols];
         int startX = (UtilGraph.GRAPH_MAX_X - ((MAX_ROWS - cols) / 2) * gridSpace);
@@ -47,7 +47,7 @@ public class GridManager : GraphManager {
                 int xPos = startX - x * gridSpace;
                 GameObject node = Instantiate(nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
                 node.AddComponent<GridNode>();
-                node.GetComponent<GridNode>().InitGridNode(new int[2] { z, x });
+                node.GetComponent<GridNode>().InitGridNode(algorithm.AlgorithmName, new int[2] { z, x });
                 gridNodes[z, x] = node.GetComponent<GridNode>();
             }
         }

@@ -51,8 +51,7 @@ public class UtilSort : Util {
     // ******************************************** Visualization ********************************************
     // Colors used
     public static Color PIVOT_COLOR = Color.cyan, COMPARE_COLOR = Color.blue, SORTED_COLOR = Color.green, ERROR_COLOR = Color.red;
-    public static Color MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan, HIGHLIGHT_COLOR = Color.magenta;
-    public static Color BLACKBOARD_TEXT_COLOR = Color.white, HIGHLIGHT_MOVE_COLOR = Color.green;
+    public static Color MOVING_WRONG = Color.yellow, TEST_COLOR = Color.cyan;
 
     // The distance above a holder (when teleporting a element)
     public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f), ABOVE_BUCKET_VR = new Vector3(0f, 1.0f, 0f);
@@ -73,64 +72,14 @@ public class UtilSort : Util {
 
     public static List<string> skipAbleInstructions = new List<string>() { FIRST_INSTRUCTION, FINAL_INSTRUCTION, COMPARE_START_INST, COMPARE_END_INST, UPDATE_LOOP_INST };
 
-
-    /* Creates a list of objects
-     * - Puts them ontop of another object if positions are provided 
-    */
-    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, float spreadDist, GameObject parent)
-    {
-        GameObject[] objects = new GameObject[numberOfElements];
-        GameObject element;
-
-        for (int x = 0; x < numberOfElements; x++)
-        {
-            if (pos.Length == 1)
-                element = Instantiate(prefab, pos[0] + new Vector3(x * spreadDist, 0f, 0f), Quaternion.identity);
-            else
-                element = Instantiate(prefab, pos[x], Quaternion.identity);
-
-            element.GetComponent<IChild>().Parent = parent;
-            objects[x] = element;
-        }
-        return objects;
-    }
-
-    // Destroys all objects in a list
-    public static void DestroyObjects(GameObject[] objects)
-    {
-        if (objects != null)
-        {
-            for (int i = 0; i < objects.Length; i++)
-            {
-                Destroy(objects[i]);
-            }
-        }
-    }
-
-    // Gather positions of one type of GameObject, such that other objects can be put directly above
-    public static Vector3[] GatherPositionsOfListElements(GameObject[] list)
-    {
-        Vector3[] positions = new Vector3[list.Length];
-        for (int x=0; x < list.Length; x++)
-        {
-            positions[x] = list[x].transform.position + new Vector3(0f, 1f, 0f);
-        }
-        return positions;
-    }
-
-    public static string ModifyPluralString(string singular, int number)
-    {
-        return (number > 1) ? singular + "s" : singular;
-    }
-
     public static string TranslateNextHolder(int nextHolderID)
     {
         return (nextHolderID == NO_DESTINATION) ? "N/A" : nextHolderID.ToString();
     }
 
-    public static string EnabledToString(bool enabled)
+    public static void IndicateElement(GameObject obj)
     {
-        return enabled ? "Enabled" : "Disabled";
+        obj.transform.position += ABOVE_HOLDER_VR;
     }
 
     public static string TranslateInstructionForExamination(string instruction)
@@ -145,15 +94,5 @@ public class UtilSort : Util {
             case SWITCH_INST: return "Wrong element moved";
             default: return "Examination error explanation not added (" + instruction + ")";
         }
-    }
-
-    public static void IndicateElement(GameObject obj)
-    {
-        obj.transform.position += ABOVE_HOLDER_VR;
-    }
-
-    public static void ResetRotation(GameObject obj)
-    {
-        obj.transform.rotation = Quaternion.identity;
     }
 }

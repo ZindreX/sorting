@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuickSort : Algorithm {
+public class QuickSort : SortAlgorithm {
 
     [SerializeField]
     private GameObject pivotHolderObject;
@@ -54,7 +54,7 @@ public class QuickSort : Algorithm {
         return list;
     }
 
-    public override IEnumerator Tutorial(GameObject[] list)
+    public override IEnumerator Demo(GameObject[] list)
     {
         Debug.Log("TODO: implement tutorial");
         yield return new WaitForSeconds(seconds);

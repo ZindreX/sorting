@@ -9,8 +9,9 @@ public class GridNode : Node {
     [SerializeField]
     private List<GridNode> neighbors;
     
-    public void InitGridNode(int[] cell)
+    public void InitGridNode(string algorithm, int[] cell)
     {
+        InitNode(algorithm);
         neighbors = new List<GridNode>();
         this.cell = cell;
     }
@@ -43,10 +44,10 @@ public class GridNode : Node {
         }
     }
 
-    public override void UpdateCostText()
+    protected override void UpdateNodeText(string text)
     {
         //Debug.Log(cell[0] + ", " + cell[1] + ": " + totalCost);
-        GetComponentInChildren<TextMesh>().text = UtilGraph.ConvertIfInf(totalCost.ToString()); //"Z=" + cell[0] + ", X=" + cell[1];
+        GetComponentInChildren<TextMesh>().text = text; //"Z=" + cell[0] + ", X=" + cell[1];
     }
 
 }

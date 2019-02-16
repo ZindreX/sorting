@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GraphAlgorithm : MonoBehaviour {
+public abstract class GraphAlgorithm : TeachingAlgorithm {
 
-    protected float seconds;
+    protected bool beginnerWait;
 
+    protected Node node;
 
-    public float Seconds
-    {
-        get { return seconds; }
-        set { seconds = value; }
-    }
+    protected int prevHighlightedLineOfCode;
+
 }

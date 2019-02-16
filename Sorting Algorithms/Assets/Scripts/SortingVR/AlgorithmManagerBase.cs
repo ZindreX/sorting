@@ -7,17 +7,15 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(ElementManager))]
 [RequireComponent(typeof(UserTestManager))]
 [RequireComponent(typeof(StepByStepManager))]
-[RequireComponent(typeof(Algorithm))]
+[RequireComponent(typeof(SortAlgorithm))]
 [RequireComponent(typeof(DisplayUnitManager))]
-public abstract class AlgorithmManagerBase : MonoBehaviour {
+public abstract class AlgorithmManagerBase : MainManager {
 
-    /* -------------------------------------------- Algorithm Manager Base ----------------------------------------------------
-     * The main unit
+    /* -------------------------------------------- Sorting Algorithm Manager Base ----------------------------------------------------
+     * 
      * 
     */
 
-    private string algorithmName;
-    private bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
     private Vector3[] holderPositions;
 
     [SerializeField]
@@ -30,7 +28,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     protected ElementManager elementManager;
     protected UserTestManager userTestManager;
     protected StepByStepManager tutorialStep;
-    protected Algorithm algorithm;
+    protected SortAlgorithm algorithm;
     protected AlgorithmSettings algorithmSettings;
 
     [SerializeField]
@@ -72,7 +70,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         if (userStoppedAlgorithm)
             return;
 
-        if (algorithm.IsSortingComplete)
+        if (algorithm.IsTaskCompleted)
         {
             if (algorithmSettings.IsUserTest() && userTestManager.TimeSpent == 0)
             {
@@ -117,7 +115,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
                         // Checking if all sorting elements are sorted
                         if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                         {
-                            algorithm.IsSortingComplete = true;
+                            algorithm.IsTaskCompleted = true;
                             Debug.LogError("Manage to enter this case???"); // ???
                         }
                         else
@@ -196,7 +194,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
      */
     public void DestroyAndReset()
     {
-        if (algorithmSettings.IsDemo() && !algorithmSettings.IsTutorialStep() && !algorithm.IsSortingComplete)
+        if (algorithmSettings.IsDemo() && !algorithmSettings.IsTutorialStep() && !algorithm.IsTaskCompleted)
         {
             StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", UtilSort.ERROR_COLOR));
         }
@@ -205,8 +203,8 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             userStoppedAlgorithm = true;
             holderManager.DestroyObjects();
             elementManager.DestroyObjects();
-            if (algorithm.IsSortingComplete)
-                algorithm.IsSortingComplete = false;
+            if (algorithm.IsTaskCompleted)
+                algorithm.IsTaskCompleted = false;
 
             algorithm.ResetSetup();
             displayUnitManager.ResetDisplays();
@@ -220,7 +218,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
     // --------------------------------------- Getters and setters ---------------------------------------
 
-    public Algorithm Algorithm
+    public SortAlgorithm Algorithm
     {
         get { return algorithm; }
     }
@@ -237,12 +235,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         set { holderPositions = value; }
     }
 
-    // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
-    public bool BeginnerWait
-    {
-        get { return beginnerWait; }
-        set { beginnerWait = value; }
-    }
+
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
     public virtual HolderBase GetCorrectHolder(int index)
@@ -257,11 +250,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
             tutorialStep.NotifyUserInput(increment);
     }
 
-    public bool ControllerReady
-    {
-        get { return controllerReady; }
-        //set { controllerReady = value; }
-    }
+
 
     /* --------------------------------------- Tutorial ---------------------------------------
      * - Gives a visual presentation of <sorting algorithm>
@@ -271,7 +260,7 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
         elementManager.InteractionWithSortingElements(false);
-        StartCoroutine(algorithm.Tutorial(elementManager.SortingElements));
+        StartCoroutine(algorithm.Demo(elementManager.SortingElements));
     }
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
@@ -308,13 +297,27 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
 
         userTestReady = true; // debugging
     }
-    private bool userTestReady = false; // debugging
+
+    // Finds the number of instructions which the player has to do something to progress0 5   
+    private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
+    {
+        int count = 0;
+        for (int x = 0; x < instructions.Count; x++)
+        {
+            if (algorithm.SkipDict.ContainsKey(UtilSort.SKIP_NO_ELEMENT) && algorithm.SkipDict.ContainsKey(UtilSort.SKIP_NO_DESTINATION))
+            {
+                if (!algorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
+                    count++;
+            }
+        }
+        return count;
+    }
 
     // Give feedback to the user when the sorting task (user test) is completed)
     private IEnumerator FinishUserTest()
     {
         yield return new WaitForSeconds(algorithm.Seconds);
-        algorithm.IsSortingComplete = true;
+        algorithm.IsTaskCompleted = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
 
         // Visual feedback (make each element "jump")
@@ -326,59 +329,14 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
         }
     }
 
-    // Finds the number of instructions which the player has to do something to progress0 5   
-    private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
-    {
-        int count = 0;
-        for (int x=0; x < instructions.Count; x++)
-        {
-            if (algorithm.SkipDict.ContainsKey(UtilSort.SKIP_NO_ELEMENT) && algorithm.SkipDict.ContainsKey(UtilSort.SKIP_NO_DESTINATION)) {
-                if (!algorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
-                    count++;
-            }
-        }
-        return count;
-    }
-
-
     // --------------------------------------- To be implemented in subclasses ---------------------------------------
 
     // Returns the instance of the algorithm being runned 
-    protected abstract Algorithm InstanceOfAlgorithm { get; }
+    protected abstract SortAlgorithm InstanceOfAlgorithm { get; }
 
     // Moves needed to progress to next instruction
     protected abstract int MovesNeeded { get; }
 
-    /* Prepares the next instruction based on the algorithm being runned
-     * - Sends instruction to the next sorting element the user should move
-     * - Beginners (difficulty) will be shown steps on pseudoboard and given some hints
-     * - Skips instructions which doesn't contain any elements nor destination
-    */
-    protected abstract int PrepareNextInstruction(InstructionBase instruction);
-
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     protected abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
-
-
-
-    // --------------------------------------- Debugging ---------------------------------------
-
-    private void DebugCheckInstructions(Dictionary<int, InstructionBase> dict)
-    {
-        for (int x = 0; x < dict.Count; x++)
-        {
-            Debug.Log(dict[x].DebugInfo());
-        }
-        Debug.Log("");
-    }
-
-    private string DebugCheckGameObjects(GameObject[] list)
-    {
-        string result = "";
-        foreach (GameObject obj in list)
-        {
-            result += obj.GetComponent<SortingElementBase>().Value + ", ";
-        }
-        return result;
-    }
 }

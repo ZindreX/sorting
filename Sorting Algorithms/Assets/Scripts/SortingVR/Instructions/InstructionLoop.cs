@@ -6,6 +6,20 @@ public class InstructionLoop : InstructionBase {
 
     protected int i, j, k;
 
+    public InstructionLoop(string instruction, int instructionNr, int i)
+    : base(instruction, instructionNr)
+    {
+        this.i = i;
+    }
+
+
+    public InstructionLoop(string instruction, int instructionNr, int i, int j)
+    : base(instruction, instructionNr)
+    {
+        this.i = i;
+        this.j = j;
+    }
+
     public InstructionLoop(string instruction, int instructionNr, int i, int j, int k)
         : base(instruction, instructionNr)
     {

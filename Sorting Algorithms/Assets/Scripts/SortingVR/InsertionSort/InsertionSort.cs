@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(InsertionSortManager))]
-public class InsertionSort : Algorithm {
+public class InsertionSort : SortAlgorithm {
 
     /* --------------------------------------------------- Insertion Sort --------------------------------------------------- 
      * 1) Starts from 2nd element and checks if it is less than the first
@@ -196,7 +196,7 @@ public class InsertionSort : Algorithm {
     #endregion
 
     #region Insertion Sort: All Moves Tutorial (Visuals)
-    public override IEnumerator Tutorial(GameObject[] list)
+    public override IEnumerator Demo(GameObject[] list)
     {
         // Create pivot holder
         CreatePivotHolder();
@@ -363,7 +363,7 @@ public class InsertionSort : Algorithm {
 
         // Finished off; remove pivot holder
         PivotHolderVisible(false);
-        IsSortingComplete = true;
+        IsTaskCompleted = true;
     }
     #endregion
 

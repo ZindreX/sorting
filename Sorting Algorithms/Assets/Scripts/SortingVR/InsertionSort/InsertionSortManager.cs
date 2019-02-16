@@ -13,7 +13,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         base.Awake();
     }
 
-    protected override Algorithm InstanceOfAlgorithm
+    protected override SortAlgorithm InstanceOfAlgorithm
     {
         get { return insertionSort; }
     }

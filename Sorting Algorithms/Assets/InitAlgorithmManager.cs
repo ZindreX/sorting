@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InitAlgorithmManager : AlgorithmManagerBase
 {
-    protected override Algorithm InstanceOfAlgorithm
+    protected override SortAlgorithm InstanceOfAlgorithm
     {
         get { return null; }
     }

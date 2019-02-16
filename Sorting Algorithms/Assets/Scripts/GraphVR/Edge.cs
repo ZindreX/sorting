@@ -65,7 +65,9 @@ public class Edge : MonoBehaviour {
     /* *** Grid / RandomNode ***
      * node1 --- node2
      * 
+     * 
      * *** Tree ***
+     * 
      *     node1    (parent)
      *      / \
      *     X   X    (one of the X's: child)
@@ -108,25 +110,25 @@ public class Edge : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (graphStructure == UtilGraph.RANDOM_GRAPH)
-        {
-            if (collision.collider.tag == UtilGraph.EDGE) // Hit an edge
-            {
-                Debug.Log("Edge " + edgeID + " collided with Edge " + collision.collider.GetComponentInParent<Edge>().EdgeID);
-                collisionOccured = true;
-            }
+        //if (graphStructure == UtilGraph.RANDOM_GRAPH)
+        //{
+        //    if (collision.collider.tag == UtilGraph.EDGE) // Hit an edge
+        //    {
+        //        Debug.Log("Edge " + edgeID + " collided with Edge " + collision.collider.GetComponentInParent<Edge>().EdgeID);
+        //        collisionOccured = true;
+        //    }
 
-            if (collision.collider.tag == UtilGraph.NODE)
-            {
-                int nodeID = collision.collider.GetComponentInParent<Node>().NodeID; // cube collides, so need to get from object
+        //    if (collision.collider.tag == UtilGraph.NODE)
+        //    {
+        //        int nodeID = collision.collider.GetComponentInParent<Node>().NodeID; // cube collides, so need to get from object
 
-                if (nodeID != node1.NodeID && nodeID != node2.NodeID) // Hit a node (not connecting nodes)
-                {
-                    Debug.Log("Edge " + edgeID + " collided with Node " + nodeID);
-                    collisionOccured = true;
-                }
-            }
-        }
+        //        if (nodeID != node1.NodeID && nodeID != node2.NodeID) // Hit a node (not connecting nodes)
+        //        {
+        //            Debug.Log("Edge " + edgeID + " collided with Node " + nodeID);
+        //            collisionOccured = true;
+        //        }
+        //    }
+        //}
     }
 
 }

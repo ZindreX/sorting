@@ -7,9 +7,9 @@ public class DisplayUnitManager : MonoBehaviour {
     [SerializeField]
     private GameObject leftBlackboard, centerBlackboard, rightBlackboard;
 
-    private Algorithm algorithm;
+    private SortAlgorithm algorithm;
 
-    public Algorithm Algorithm
+    public SortAlgorithm Algorithm
     {
         get { return algorithm; }
         set { algorithm = value; }
@@ -31,7 +31,7 @@ public class DisplayUnitManager : MonoBehaviour {
         get { return rightBlackboard.GetComponent<Blackboard>(); }
     }
 
-    public void SetAlgorithmForPseudo(Algorithm algorithm)
+    public void SetAlgorithmForPseudo(SortAlgorithm algorithm)
     {
         PseudoCodeViewer.SetAlgorithm(algorithm);
         //PseudoCodeViewerFixed.SetAlgorithm(algorithm);

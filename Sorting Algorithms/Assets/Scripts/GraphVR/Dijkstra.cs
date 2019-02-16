@@ -5,6 +5,37 @@ using UnityEngine;
 public class Dijkstra : GraphAlgorithm, IShortestPath {
 
 
+    public override string AlgorithmName
+    {
+        get { return UtilGraph.DIJKSTRA; }
+    }
+
+    public override string CollectLine(int lineNr)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override int FirstInstructionCodeLine()
+    {
+        return 0;
+    }
+
+    public override int FinalInstructionCodeLine()
+    {
+        return 0;
+    }
+
+    public override void AddSkipAbleInstructions()
+    {
+        base.AddSkipAbleInstructions();
+    }
+
+    public override void ResetSetup()
+    {
+        base.ResetSetup();
+    }
+
+    #region Dijkstra Demo
     public IEnumerator Demo(Node startNode, Node endNode)
     {
         // Create list
@@ -28,9 +59,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
             //currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
             yield return new WaitForSeconds(seconds);
-            currentNode.Marked = true;
+            currentNode.Visited = true;
             //currentNode.CurrentColor = UtilGraph.MARKED;
-            
+
+            // Stop search if end node found
+            if (currentNode == endNode)
+                break;
 
             // Check all nodes connected with current node
             List<Edge> edges = currentNode.Edges;
@@ -38,13 +72,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             {
                 // Checking edge
                 Edge currentEdge = edges[edge];
-                currentEdge.CurrentColor = UtilGraph.MARKED;
+                currentEdge.CurrentColor = UtilGraph.VISITED;
                 yield return new WaitForSeconds(seconds);
 
                 // Checking node on the other side of the edge
                 Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
                 //connectedNode.CurrentColor = UtilGraph.MARKED;
-                connectedNode.Marked = true;
+                connectedNode.Visited = true;
 
 
                 // Cost between nodes
@@ -69,6 +103,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         }
         Debug.Log("Dijkstra shortest path demo completed");
 
+        // Start backtracking from end node back to start node
         while (true)
         {
             // Change color of node
@@ -91,5 +126,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         }
         Debug.Log("Shortest path from start node to last node marked");
     }
+    #endregion
+
+    #region User Test Highlight Pseudocode
+    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
+    {
+        throw new System.NotImplementedException();
+    }
+    #endregion
 
 }

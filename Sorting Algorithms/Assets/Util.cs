@@ -13,6 +13,7 @@ public class Util : MonoBehaviour {
 
     // Graph Algorithms
     public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DIJKSTRA = "Dijkstra";
+    //public const string TREE_PRE_ORDER_TRAVERSAL = "Pre order", TREE_IN_ORDER_TRAVERSAL = "In order", TREE_POST_ORDER_TRAVERSAL = "Post order";
 
     // Difficulty
     //public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", ADVANCED = "Advanced", EXAMINATION = "Examination";
@@ -23,8 +24,75 @@ public class Util : MonoBehaviour {
     public const string TUTORIAL = "Tutorial";
 
     // Colors
-    public static Color STANDARD_COLOR = Color.black;
+    public static Color STANDARD_COLOR = Color.black, BLACKBOARD_TEXT_COLOR = Color.white;
+    public static Color HIGHLIGHT_MOVE_COLOR = Color.green, HIGHLIGHT_COLOR = Color.magenta;
 
+
+    // Instruction values (todo: update Utilsort)
+    public const int NO_INDEX_VALUE = -3;
+
+    public const string SPLIT_INST = "::";
+
+
+    /* Creates a list of objects
+     * - Puts them ontop of another object if positions are provided 
+    */
+    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, float spreadDist, GameObject parent)
+    {
+        GameObject[] objects = new GameObject[numberOfElements];
+        GameObject element;
+
+        for (int x = 0; x < numberOfElements; x++)
+        {
+            if (pos.Length == 1)
+                element = Instantiate(prefab, pos[0] + new Vector3(x * spreadDist, 0f, 0f), Quaternion.identity);
+            else
+                element = Instantiate(prefab, pos[x], Quaternion.identity);
+
+            element.GetComponent<IChild>().Parent = parent;
+            objects[x] = element;
+        }
+        return objects;
+    }
+
+    // Destroys all objects in a list
+    public static void DestroyObjects(GameObject[] objects)
+    {
+        if (objects != null)
+        {
+            for (int i = 0; i < objects.Length; i++)
+            {
+                Destroy(objects[i]);
+            }
+        }
+    }
+
+    // Gather positions of one type of GameObject, such that other objects can be put directly above
+    public static Vector3[] GatherPositionsOfListElements(GameObject[] list)
+    {
+        Vector3[] positions = new Vector3[list.Length];
+        for (int x = 0; x < list.Length; x++)
+        {
+            positions[x] = list[x].transform.position + new Vector3(0f, 1f, 0f);
+        }
+        return positions;
+    }
+
+    public static string ModifyPluralString(string singular, int number)
+    {
+        return (number > 1) ? singular + "s" : singular;
+    }
+
+    public static string EnabledToString(bool enabled)
+
+    {
+        return enabled ? "Enabled" : "Disabled";
+    }
+
+    public static void ResetRotation(GameObject obj)
+    {
+        obj.transform.rotation = Quaternion.identity;
+    }
 
     public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)
     {

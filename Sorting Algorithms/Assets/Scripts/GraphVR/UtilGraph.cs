@@ -17,7 +17,15 @@ public class UtilGraph : Util {
 
 
     // Colors
-    public static Color TRAVERSE_COLOR = Color.red, MARKED = Color.yellow, TRAVERSED_COLOR = Color.green;
+    public static Color TRAVERSE_COLOR = Color.red, VISITED = Color.yellow, TRAVERSED_COLOR = Color.green;
+
+    // *** Instructions ***
+    // BFS
+    public const string EMPTY_QUEUE_INST = "Empty queue inst", ENQUEUE_NODE_INST = "Enqueue node inst", MARK_VISITED_INST = "Mark visited inst";
+    public const string WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", DEQUEUE_NODE_INST = "Dequeue node inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";
+    public const string IF_NOT_VISITED_INST = "If not visited inst", END_IF_INST = "End if inst", END_FOR_LOOP_INST = "End for loop inst", END_WHILE_INST = "End while inst";
+
+
 
 
 

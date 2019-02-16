@@ -24,7 +24,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         get { return numberOfBuckets; }
     }
 
-    protected override Algorithm InstanceOfAlgorithm
+    protected override SortAlgorithm InstanceOfAlgorithm
     {
         get { return bucketSort; }
     }

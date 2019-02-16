@@ -11,7 +11,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
 
     [SerializeField]
     protected int totalCost;
-    private bool traversed, marked; // need marked? just check if in list/stack...
+    private bool traversed, visited; // need marked? just check if in list/stack...
 
     protected Color currentColor;
 
@@ -31,6 +31,16 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
         ResetNode();
     }
 
+    protected void InitNode(string algorithm)
+    {
+        switch (algorithm)
+        {
+            case UtilGraph.BFS: case UtilGraph.DFS: UpdateNodeText(nodeID.ToString()); break;
+            case UtilGraph.DIJKSTRA: totalCost = UtilGraph.INF; break;
+            default: Debug.LogError("Node text for '" + algorithm + "' not specified."); break;
+        }
+    }
+
     public int NodeID
     {
         get { return nodeID; }
@@ -39,7 +49,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     public int TotalCost
     {
         get { return totalCost; }
-        set { totalCost = value; UpdateCostText(); }
+        set { totalCost = value; UpdateNodeText(UtilGraph.ConvertIfInf(value.ToString())); }
     }
 
     public bool Traversed
@@ -53,18 +63,18 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
         }
     }
 
-    public bool Marked
+    public bool Visited
     {
-        get { return marked; }
-        set { marked = value;
-            if (marked)
-                CurrentColor = UtilGraph.MARKED;
+        get { return visited; }
+        set { visited = value;
+            if (visited)
+                CurrentColor = UtilGraph.VISITED;
             else
                 CurrentColor = UtilGraph.STANDARD_COLOR;
         }
     }
 
-    public Edge MarkedFrom
+    public Edge VisitedFrom // use prevEdge instead?
     {
         get { return markedFrom; }
         set { markedFrom = value; }
@@ -114,13 +124,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     {
         edges = new List<Edge>();
         traversed = false;
-        marked = false;
-        TotalCost = UtilGraph.INF;
+        visited = false;
+        //TotalCost = UtilGraph.INF;
         prevEdge = null;
         CurrentColor = UtilGraph.STANDARD_COLOR;
     }
 
 
     public abstract string NodeType { get; }
-    public abstract void UpdateCostText();
+    protected abstract void UpdateNodeText(string text);
 }

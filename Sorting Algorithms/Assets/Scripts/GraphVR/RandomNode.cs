@@ -8,8 +8,9 @@ public class RandomNode : Node {
     [SerializeField]
     private List<RandomNode> neighbors;
 
-    public void InitRandomNode()
+    public void InitRandomNode(string algorithm)
     {
+        InitNode(algorithm);
         neighbors = new List<RandomNode>();
     }
 
@@ -18,9 +19,9 @@ public class RandomNode : Node {
         get { return "Random node " + nodeID; }
     }
 
-    public override void UpdateCostText()
+    protected override void UpdateNodeText(string text)
     {
-        GetComponentInChildren<TextMesh>().text = UtilGraph.ConvertIfInf(totalCost.ToString());
+        GetComponentInChildren<TextMesh>().text = text;
     }
 
     public bool IsNeighborWith(RandomNode node)
