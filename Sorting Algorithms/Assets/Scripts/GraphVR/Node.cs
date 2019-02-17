@@ -2,27 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Node : MonoBehaviour, IComparable<Node> {
+public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble {
 
+    // Counter for number of active nodes
     public static int NODE_ID;
 
+    // Basic 
     [SerializeField]
     protected int nodeID;
+    protected Color currentColor;
+    protected Animator animator;
 
+    // Instruction variables
+    protected InstructionBase instruction;
+    protected bool nextMove;
+
+    // Traversal / Shortest path variables
     [SerializeField]
     protected int totalCost;
     private bool traversed, visited; // need marked? just check if in list/stack...
 
-    protected Color currentColor;
-
     [SerializeField]
-    private Edge prevEdge; // shortest path
+    private Edge prevEdge;
 
     [SerializeField]
     protected List<Edge> edges;
-    private Edge markedFrom;
-
-    protected Animator animator;
 
     private void Awake()
     {
@@ -35,7 +39,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     {
         switch (algorithm)
         {
-            case UtilGraph.BFS: case UtilGraph.DFS: UpdateNodeText(nodeID.ToString()); break;
+            case UtilGraph.BFS: case UtilGraph.DFS: UpdateNodeText(ConvertIDToAlphabet().ToString()); break;
             case UtilGraph.DIJKSTRA: totalCost = UtilGraph.INF; break;
             default: Debug.LogError("Node text for '" + algorithm + "' not specified."); break;
         }
@@ -45,6 +49,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
     {
         get { return nodeID; }
     }
+
+    public char ConvertIDToAlphabet()
+    {
+        return Convert.ToChar(nodeID + 65);
+    }
+
 
     public int TotalCost
     {
@@ -72,12 +82,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
             else
                 CurrentColor = UtilGraph.STANDARD_COLOR;
         }
-    }
-
-    public Edge VisitedFrom // use prevEdge instead?
-    {
-        get { return markedFrom; }
-        set { markedFrom = value; }
     }
 
     public Color CurrentColor
@@ -132,5 +136,20 @@ public abstract class Node : MonoBehaviour, IComparable<Node> {
 
 
     public abstract string NodeType { get; }
+
+    public bool NextMove
+    {
+        get { return nextMove; }
+        set { nextMove = value; }
+    }
+
+    public InstructionBase Instruction
+    {
+        get { return instruction; }
+        set { instruction = value; }
+    }
+
     protected abstract void UpdateNodeText(string text);
+
+    // Instructions
 }

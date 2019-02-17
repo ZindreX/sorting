@@ -10,17 +10,15 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     [SerializeField]
     private TextMesh startPosAndMat;
 
-    private float seconds;
+    private float seconds, spaceBetweenLines;
 
     private TeachingAlgorithm algorithm;
 
-    public void SetAlgorithm(TeachingAlgorithm algorithm)
+    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm, float spaceBetweenLines)
     {
         this.algorithm = algorithm;
         seconds = algorithm.Seconds;
-
-        // If pseudo code added, put it to display
-        //PseudoCodeSetup();
+        this.spaceBetweenLines = spaceBetweenLines;
     }
 
     public void PseudoCodeSetup()
@@ -36,7 +34,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
             // Change transformation position and scale //new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), -0.1f);
             Vector3 pos = startPosAndMat.transform.position;
-            codeLine.transform.position = new Vector3(pos.x, pos.y - (x * UtilSort.SPACE_BETWEEN_CODE_LINES), pos.z);
+            codeLine.transform.position = new Vector3(pos.x, pos.y - (x * spaceBetweenLines), pos.z);
             codeLine.transform.eulerAngles = new Vector3(startPosAndMat.transform.eulerAngles.x, startPosAndMat.transform.eulerAngles.y, startPosAndMat.transform.eulerAngles.z);
             codeLine.transform.localScale = startPosAndMat.transform.localScale; // new Vector3(0.05f, 0.05f, 0.05f);
 
@@ -55,7 +53,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         float codeBelowFloor = codeLines[numberOfLines - 1].transform.position.y;
         if (codeBelowFloor < 0.342f)
         {
-            transform.position += new Vector3(0f, 0.5f -codeBelowFloor, 0f);
+            transform.position += new Vector3(0f, 0.5f - codeBelowFloor, 0f);
         }
     }
 
@@ -64,11 +62,18 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         return codeLines[index];
     }
 
-    public void SetCodeLine(int index, string text, Color color)
+    public void SetCodeLine(string text, Color color)
     {
+        string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
+        int index = UtilGraph.ConvertCostToInt(lineOfCodeSplit[0]);
+
         if (ValidIndex(index))
         {
-            codeLines[index].text = text;
+            if (algorithm.IncludeLineNr) // optimize?
+                codeLines[index].text = text;
+            else
+                codeLines[index].text = lineOfCodeSplit[1];
+                
             codeLines[index].color = color;
         }
     }
@@ -88,7 +93,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     {
         for (int x=start; x <= end; x++)
         {
-            ChangeColorOfText(x, UtilSort.BLACKBOARD_TEXT_COLOR);
+            ChangeColorOfText(x, Util.BLACKBOARD_TEXT_COLOR);
         }
     }
 
@@ -121,7 +126,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     {
         foreach (TextMesh line in codeLines)
         {
-            line.color = UtilSort.BLACKBOARD_TEXT_COLOR;
+            line.color = Util.BLACKBOARD_TEXT_COLOR;
         }
     }
 

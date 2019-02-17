@@ -9,7 +9,7 @@ public class Edge : MonoBehaviour {
     [SerializeField]
     private int edgeID, cost;
     private float angle; // needed???
-    private string graphStructure;
+    private string algorithm;
 
     [SerializeField]
     private bool collisionOccured;
@@ -24,10 +24,13 @@ public class Edge : MonoBehaviour {
         edgeID = EDGE_ID++;
         this.node1 = node1;
         this.node2 = node2;
-        Cost = cost;
-        this.graphStructure = graphStructure;
 
-        CurrentColor = UtilSort.STANDARD_COLOR;
+        if (cost != UtilGraph.NO_COST)
+            Cost = cost;
+
+        this.algorithm = graphStructure;
+
+        CurrentColor = Util.STANDARD_COLOR;
         collisionOccured = false;
 
         // Notify nodes (neighbors / parent / child)

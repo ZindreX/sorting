@@ -86,6 +86,9 @@ public class GraphSettings : MonoBehaviour {
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, nodeSpaceX, nodeSpaceZ;
 
+    [SerializeField]
+    private PseudoCodeViewer pseudoCodeViewer;
+
     public void PrepareSettings()
     {
         switch ((int)teachingModeEditor)
@@ -181,6 +184,11 @@ public class GraphSettings : MonoBehaviour {
             case UtilGraph.RANDOM_GRAPH: return new int[3] { 4, 4, 4 };
             default: Debug.LogError("Couldn't setup graph! Unknown graph structure: '" + graphStructure + "'."); return null;
         }
+    }
+
+    public PseudoCodeViewer PseudoCodeViewer
+    {
+        get { return pseudoCodeViewer; }
     }
 
     public GraphAlgorithm GetGraphAlgorithm()

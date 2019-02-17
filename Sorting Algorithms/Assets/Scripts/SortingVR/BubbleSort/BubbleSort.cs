@@ -37,7 +37,7 @@ public class BubbleSort : SortAlgorithm {
 
     public override string CollectLine(int lineNr)
     {
-        string temp = PseudoCode(lineNr, 0, 0, true);
+        string temp = PseudoCode(lineNr, 0, 0);
         switch (lineNr)
         {
             case 0: case 6: case 7: case 8: return temp;
@@ -49,22 +49,24 @@ public class BubbleSort : SortAlgorithm {
         }
     }
 
-    private string PseudoCode(int lineNr, int i, int j, bool increment)
+    private string PseudoCode(int lineNr, int i, int j)
     {
         int n = GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements;
+        string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
         switch (lineNr)
         {
-            case 0: return "BubbleSort( list ):"; // add case for this line(?): BubbleSort(4, 1, 10, ... etc.)
-            case 1: return string.Format("  n = {0}", n); //"n = " + n;
-            case 2: return string.Format("  for i={0} to {1}:", i, (n-1)); //"for i=" + i + " to " + (n - 1) + ":";
-            case 3: return string.Format("      for j={0} to {1}:", j, (n-i-1)); // "    for j=" + j + " to " + (n - i - 1) + ":";
-            case 4: return string.Format("          if ( {0} > {1} ):", value1, value2); //"          if ( " + value1 + " > " + value2 + " ):";
-            case 5: return string.Format("              swap {0} and {1}", value1, value2); //"            swap " + value1 + " and " + value2;
-            case 6: return "          end if";
-            case 7: return "      end for";
-            case 8: return "  end for";
+            case 0: lineOfCode += "BubbleSort( list ):"; break; // add case for this line(?): BubbleSort(4, 1, 10, ... etc.)
+            case 1: lineOfCode += string.Format("  n = {0}", n); break; //"n = " + n;
+            case 2: lineOfCode += string.Format("  for i={0} to {1}:", i, (n-1)); break; //"for i=" + i + " to " + (n - 1) + ":";
+            case 3: lineOfCode += string.Format("      for j={0} to {1}:", j, (n-i-1)); break; // "    for j=" + j + " to " + (n - i - 1) + ":";
+            case 4: lineOfCode += string.Format("          if ( {0} > {1} ):", value1, value2); break; //"          if ( " + value1 + " > " + value2 + " ):";
+            case 5: lineOfCode += string.Format("              swap {0} and {1}", value1, value2); break; //"            swap " + value1 + " and " + value2;
+            case 6: lineOfCode += "          end if"; break;
+            case 7: lineOfCode += "      end for"; break;
+            case 8: lineOfCode += "  end for"; break;
             default: return "lineNr " + lineNr + " not found!";
         }
+        return lineOfCode;
     }
 
     public override int FirstInstructionCodeLine()
@@ -141,23 +143,23 @@ public class BubbleSort : SortAlgorithm {
         int N = list.Length, i = 0, j = 0;
 
         // Display pseudocode (list length)
-        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, i, j), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         for (i=0; i < N; i++)
         {
             // Display outer loop
-            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(2, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(2, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             for (j = 0; j < N - i - 1; j++)
             {
                 // Display pseudocode (update for-loops)
-                pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(3, i, j), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(3, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 // Choose sorting elements to compare
                 BubbleSortElement p1 = list[j].GetComponent<BubbleSortElement>();
@@ -176,9 +178,9 @@ public class BubbleSort : SortAlgorithm {
                 value2 = p2.Value;
 
                 // Display pseudocode (list length)
-                pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(4, i, j), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(4, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 if (value1 > value2)
                 {
@@ -202,14 +204,14 @@ public class BubbleSort : SortAlgorithm {
                     UtilSort.ResetRotation(temp2);
 
                     // Display pseudocode (swap)
-                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(5, i, j), UtilSort.HIGHLIGHT_COLOR);
                     yield return new WaitForSeconds(seconds);
-                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(5, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
                 }
                 // Display pseudocode (comparison/if end)
-                pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(6, i, j), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(6, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 p1.IsCompare = false;
                 if (p1.CurrentStandingOn != null)
@@ -219,9 +221,9 @@ public class BubbleSort : SortAlgorithm {
                     p2.CurrentStandingOn.CurrentColor = UtilSort.STANDARD_COLOR;
             }
             // Display pseudocode (end 2nd for-loop)
-            pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(7, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(7, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
             UtilSort.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
@@ -230,9 +232,9 @@ public class BubbleSort : SortAlgorithm {
         isTaskCompleted = true;
 
         // Display pseudocode (end 1st for-loop)
-        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, j), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
     }
     #endregion
 
@@ -354,7 +356,7 @@ public class BubbleSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), UtilSort.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
@@ -455,7 +457,7 @@ public class BubbleSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), useColor);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), useColor);
         }
 
         yield return new WaitForSeconds(seconds);

@@ -28,6 +28,11 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_VAR_J);
     }
 
+    protected override float GetLineSpacing()
+    {
+        return UtilSort.SPACE_BETWEEN_CODE_LINES;
+    }
+
     public override void ResetSetup()
     {
         value1 = UtilSort.INIT_STATE;

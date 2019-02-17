@@ -73,24 +73,27 @@ public class InsertionSort : SortAlgorithm {
         }
     }
 
-    private string PseudoCode(int lineNr, int i, int j, bool increment)
+    private string PseudoCode(int lineNr, int i, int j)
     {
+        string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
+
         switch (lineNr)
         {
-            case 0: return  "InsertionSort( List<int> list )";
-            case 1: return  "i = 1";
-            case 2: return  "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements + " )";
-            case 3: return  "   " + j + " = " + i  + " - 1";
-            case 4: return  "   pivot = " + value1;
-            case 5: return  "   while ( " + j + " >= 0 and pivot < " + value2 + " )"; //+ value1 + " < " + value2 + " )";
-            case 6: return  "       move " + value2 + " to list[" + (j + 1) + "]";
-            case 7: return  "       " + j + " = " + (j + 1) + " - 1";
-            case 8: return  "   end while";
-            case 9: return  "   list[" + (j + 1) + "] = pivot"; //+ value1;
-            case 10: return "   " + i + " = " + (i - 1) + " + 1";
-            case 11: return "end while";
+            case 0: lineOfCode += "InsertionSort( List<int> list )"; break;
+            case 1: lineOfCode += "i = 1"; break;
+            case 2: lineOfCode += "while ( " + i + " < " + GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements + " )"; break;
+            case 3: lineOfCode += "   " + j + " = " + i  + " - 1"; break;
+            case 4: lineOfCode += "   pivot = " + value1; break;
+            case 5: lineOfCode += "   while ( " + j + " >= 0 and pivot < " + value2 + " )"; break; //+ value1 + " < " + value2 + " )";
+            case 6: lineOfCode += "       move " + value2 + " to list[" + (j + 1) + "]"; break;
+            case 7: lineOfCode += "       " + j + " = " + (j + 1) + " - 1"; break;
+            case 8: lineOfCode += "   end while"; break;
+            case 9: lineOfCode += "   list[" + (j + 1) + "] = pivot"; break; //+ value1;
+            case 10: lineOfCode += "   " + i + " = " + (i - 1) + " + 1"; break;
+            case 11: lineOfCode += "end while"; break;
             default: return "X";
         }
+        return lineOfCode;
     }
 
     public override int FirstInstructionCodeLine()
@@ -195,7 +198,7 @@ public class InsertionSort : SortAlgorithm {
     }
     #endregion
 
-    #region Insertion Sort: All Moves Tutorial (Visuals)
+    #region Insertion Sort: All Moves Demo (Visuals)
     public override IEnumerator Demo(GameObject[] list)
     {
         // Create pivot holder
@@ -209,24 +212,24 @@ public class InsertionSort : SortAlgorithm {
 
         int i = 1, listLength = list.Length;
         // Display pseudocode (set i)
-        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, i, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, i, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, i, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, i, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         while (i < listLength)
         {
             // Display pseudocode (1st while)
-            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(2, i, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(2, i, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             // Get index of first element to the left of the pivot and compare
             int j = i - 1;
 
             // Display pseudocode (set j)
-            pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(3, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(3, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             // Get pivot
             GameObject pivotObj = list[i];
@@ -247,9 +250,9 @@ public class InsertionSort : SortAlgorithm {
             value2 = list[j].GetComponent<InsertionSortElement>().Value;
 
             // Display pseudocode (set pivot)
-            pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(4, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(4, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             // Start comparing until find the correct position is found
             // Prepare the element to compare with
@@ -259,9 +262,9 @@ public class InsertionSort : SortAlgorithm {
             UtilSort.IndicateElement(compare.gameObject);
 
             // Display pseudocode (2nd while)
-            pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(5, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(5, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
             compare.IsCompare = false;
             compare.IsSorted = true;
 
@@ -277,18 +280,18 @@ public class InsertionSort : SortAlgorithm {
                 list[j + 1] = compareObj;
 
                 // Display pseudocode (move compare element)
-                pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(6, i, j), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(6, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 // Preparing for next step
                 temp = temp2;
                 j -= 1;
 
                 // Display pseudocode (update j)
-                pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(7, i, j), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(7, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 // Move pivot out and place it ontop of pivot holder (above holder it check whether it's put the element)
                 pivotHolder.transform.position = temp + pivotHolderPos;
@@ -309,9 +312,9 @@ public class InsertionSort : SortAlgorithm {
                     UtilSort.IndicateElement(compare.gameObject);
 
                     // Display pseudocode (2nd while new compare value)
-                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(5, i, j), UtilSort.HIGHLIGHT_COLOR);
                     yield return new WaitForSeconds(seconds);
-                    pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(5, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
                     compare.IsCompare = false;
                     compare.IsSorted = true;
 
@@ -319,17 +322,17 @@ public class InsertionSort : SortAlgorithm {
                     {
                         UtilSort.IndicateElement(compare.gameObject);
                         // Display pseudocode (end 2nd while)
-                        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                        pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, j), UtilSort.HIGHLIGHT_COLOR);
                         yield return new WaitForSeconds(seconds);
-                        pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                        pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
                     }
                 }
                 else
                 {
                     // Display pseudocode (end 2nd while)
-                    pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, j), UtilSort.HIGHLIGHT_COLOR);
                     yield return new WaitForSeconds(seconds);
-                    pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
                     break;
                 }
             }
@@ -343,20 +346,20 @@ public class InsertionSort : SortAlgorithm {
 
             // Put pivot object back into the list
             list[j + 1] = pivotObj;
-            pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(9, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(9, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             // Display pseudocode (increment i)
             i += 1;
-            pseudoCodeViewer.SetCodeLine(10, PseudoCode(10, i, j, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(10, i, j), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(10, PseudoCode(10, i, j, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(10, i, j), UtilSort.BLACKBOARD_TEXT_COLOR);
         }
         // Display pseudocode (end 1st while)
-        pseudoCodeViewer.SetCodeLine(11, PseudoCode(11, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(11, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(11, PseudoCode(11, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(11, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         // Mark the last element sorted
         list[list.Length - 1].GetComponent<InsertionSortElement>().IsSorted = true;
@@ -520,7 +523,7 @@ public class InsertionSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, increment), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), UtilSort.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
@@ -661,7 +664,7 @@ public class InsertionSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, true), useColor);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), useColor);
         }
 
         yield return new WaitForSeconds(seconds);

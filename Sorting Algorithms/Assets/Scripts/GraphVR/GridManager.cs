@@ -10,11 +10,6 @@ public class GridManager : GraphManager {
 
     private GridNode[,] gridNodes;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     public override int GetMaxNumberOfNodes()
     {
         return rows * cols;

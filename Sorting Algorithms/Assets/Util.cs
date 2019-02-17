@@ -29,9 +29,10 @@ public class Util : MonoBehaviour {
 
 
     // Instruction values (todo: update Utilsort)
-    public const int NO_INDEX_VALUE = -3;
+    public static readonly int NO_VALUE = -3, NO_INDEX_VALUE = -4;
 
     public const string SPLIT_INST = "::";
+    public static readonly char PSEUDO_SPLIT_LINE_ID = ':';
 
 
     /* Creates a list of objects

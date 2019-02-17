@@ -10,4 +10,9 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
 
     protected int prevHighlightedLineOfCode;
 
+    protected override float GetLineSpacing()
+    {
+        return UtilGraph.SPACE_BETWEEN_CODE_LINES;
+    }
+
 }

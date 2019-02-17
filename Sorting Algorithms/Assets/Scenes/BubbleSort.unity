@@ -3786,12 +3786,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  algorithmEditor: 0
   teachingModeEditor: 0
   difficultyEditor: 0
   numberofElementsEditor: 1
   allowDupEditor: 0
   sortingCaseEditor: 0
   tutorialSpeed: 1
+  algorithmManagerObj: {fileID: 0}
+  displayUnitManagerObj: {fileID: 0}
+  settingsObj: {fileID: 0}
+  sortingElementprefab: {fileID: 0}
+  holderPrefab: {fileID: 0}
+  bucketPrefab: {fileID: 0}
   algorithmManager: {fileID: 817656497}
   blackboard: {fileID: 708035025}
   subSettingsTitle: {fileID: 895729021}
@@ -3800,10 +3807,7 @@ MonoBehaviour:
   - {fileID: 1053560506}
   - {fileID: 1893381124}
   - {fileID: 287723355}
-  tutorialSpeedButtons:
-  - {fileID: 453282646}
-  - {fileID: 736443995}
-  - {fileID: 162833193}
+  demoSpeedButtons: []
   numberOfElementsButtons:
   - {fileID: 1493016522}
   - {fileID: 389068232}

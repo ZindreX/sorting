@@ -29,10 +29,15 @@ public abstract class GraphManager : MainManager {
         // Algorithm
         algorithm = gs.GetGraphAlgorithm();
         algorithm.Seconds = gs.AlgorithmSpeed;
+
+        // Pseudocode
+        algorithm.PseudoCodeViewer = gs.PseudoCodeViewer;
     }
 
     // Use this for initialization
     void Start () {
+        gs.PseudoCodeViewer.PseudoCodeSetup();
+
         // Get variables for graph setup
         InitGraph(gs.GraphSetup());
 
@@ -146,6 +151,39 @@ public abstract class GraphManager : MainManager {
         Debug.Log("Ready for user test!");
     }
 
+
+    protected override int PrepareNextInstruction(InstructionBase instruction)
+    {
+        bool gotNode = !algorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        bool noDestination = algorithm.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
+
+        if (gotNode)
+        {
+            TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
+            // Get the Sorting element
+            Node node = null;//elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
+
+            // Hands out the next instruction
+            node.Instruction = traverseInstruction;
+
+            // Give this sorting element permission to give feedback to progress to next intstruction
+            if (instruction.Instruction == UtilSort.PIVOT_START_INST || instruction.Instruction == UtilSort.PIVOT_END_INST || instruction.Instruction == UtilSort.SWITCH_INST)
+                node.NextMove = true;
+        }
+
+        // Display help on blackboard
+        if (true) //algorithmSettings.Difficulty <= UtilSort.BEGINNER)
+        {
+            BeginnerWait = true;
+            StartCoroutine(algorithm.UserTestHighlightPseudoCode(instruction, gotNode));
+        }
+
+
+        if (gotNode && !noDestination)
+            return 0;
+        return 1;
+    }
+
     // Initialize the setup variables for the graph
     protected abstract void InitGraph(int[] graphStructure);
 
@@ -170,4 +208,7 @@ public abstract class GraphManager : MainManager {
 
     // Delete graph
     public abstract void DeleteGraph();
+
+
+
 }

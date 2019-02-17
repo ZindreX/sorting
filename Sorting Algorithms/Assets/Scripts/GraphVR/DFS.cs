@@ -59,9 +59,9 @@ public class DFS : GraphAlgorithm, ITraverse {
             Node currentNode = stack.Pop();
 
             // 
-            if (currentNode.VisitedFrom != null)
+            if (currentNode.PrevEdge != null)
             {
-                currentNode.VisitedFrom.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                currentNode.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
                 yield return new WaitForSeconds(seconds / 2);
             }
 
@@ -91,7 +91,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                     // Mark edge
                     edge.CurrentColor = UtilGraph.VISITED;
-                    checkingNode.VisitedFrom = edge;
+                    checkingNode.PrevEdge = edge;
                 }
             }
 

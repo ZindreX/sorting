@@ -19,7 +19,7 @@ public class UtilSort : Util {
 
     // ******************************************** Instructions ******************************************** 
     // Instructions
-    public static readonly int NO_DESTINATION = -1, INIT_STATE = -2, NO_VALUE = -3;
+    public static readonly int NO_DESTINATION = -1, INIT_STATE = -2;
 
     // Help out, might change later
     public const int OUTER_LOOP = -1, INNER_LOOP = -2;

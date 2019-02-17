@@ -13,7 +13,7 @@ public class UtilGraph : Util {
     public static string NODE = "Node", EDGE = "Edge";
 
     // 
-    public static int INF = int.MaxValue;
+    public static int INF = int.MaxValue, NO_COST = -1;
 
 
     // Colors
@@ -26,9 +26,11 @@ public class UtilGraph : Util {
     public const string IF_NOT_VISITED_INST = "If not visited inst", END_IF_INST = "End if inst", END_FOR_LOOP_INST = "End for loop inst", END_WHILE_INST = "End while inst";
 
 
+    // Spacing
+    public static float SPACE_BETWEEN_CODE_LINES = 0.6f;
 
 
-
+    // Converts cost into 'Inf' if cost is infinity, otherwise return input
     public static string ConvertIfInf(string costText)
     {
         int cost;
@@ -36,7 +38,7 @@ public class UtilGraph : Util {
         return (cost == INF) ? "Inf" : costText;
     }
 
-
+    // Converts cost from string to int
     public static int ConvertCostToInt(string costText)
     {
         int cost;

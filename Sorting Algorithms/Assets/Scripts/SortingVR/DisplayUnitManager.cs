@@ -33,7 +33,7 @@ public class DisplayUnitManager : MonoBehaviour {
 
     public void SetAlgorithmForPseudo(SortAlgorithm algorithm)
     {
-        PseudoCodeViewer.SetAlgorithm(algorithm);
+        PseudoCodeViewer.InitPseudoCodeViewer(algorithm, UtilSort.SPACE_BETWEEN_CODE_LINES);
         //PseudoCodeViewerFixed.SetAlgorithm(algorithm);
     }
 

@@ -65,28 +65,29 @@ public class BucketSort : SortAlgorithm {
 
     // value1 = value of element
     private int bucketIndex, loopRange;
-    private string PseudoCode(int lineNr, int i, int j, int k, bool increment)
+    private string PseudoCode(int lineNr, int i, int j, int k)
     {
+        string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
+
         switch (lineNr)
         {
-            case 0: return string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets);
-            case 1: return string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets);
-            case 2: return string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1));
-            case 3: return string.Format("        {0} = {1} * {2} / {3}", bucketIndex, value1, bucketSortManager.NumberOfBuckets, UtilSort.MAX_VALUE);
-            case 4: return string.Format("        buckets[{0}] <- {1}", bucketIndex, value1);
-            case 5: return "    end for";
-            //case 6: return string.Format("    for i={0} to {1}:", i, j);
-            case 6: return "    Sorting each bucket w/InsertionSort";
-            //case 8: return "    end for";
-            case 7: return "    k = 0";
-            case 8: return string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1));
-            case 9: return string.Format("        for j={0} to {1}:", j, loopRange);
-            case 10: return string.Format("            list[{0}] = " + value1, k);//buckets[{1}][{2}]", k, i, j);
-            case 11: return "            " + k + " = " + (k-1) + " + " + "1";
-            case 12: return "        end for";
-            case 13: return "    end for";
+            case 0: lineOfCode += string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets); break;
+            case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets); break;
+            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1)); break;
+            case 3: lineOfCode += string.Format("        {0} = {1} * {2} / {3}", bucketIndex, value1, bucketSortManager.NumberOfBuckets, UtilSort.MAX_VALUE); break;
+            case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, value1); break;
+            case 5: lineOfCode += "    end for"; break;
+            case 6: lineOfCode += "    Sorting each bucket w/InsertionSort"; break; //case 6: return string.Format("    for i={0} to {1}:", i, j);
+            case 7: lineOfCode += "    k = 0"; break;
+            case 8: lineOfCode += string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1)); break;
+            case 9: lineOfCode += string.Format("        for j={0} to {1}:", j, loopRange); break;
+            case 10: lineOfCode += string.Format("            list[{0}] = " + value1, k); break; //buckets[{1}][{2}]", k, i, j);
+            case 11: lineOfCode += "            " + k + " = " + (k-1) + " + " + "1"; break;
+            case 12: lineOfCode += "        end for"; break;
+            case 13: lineOfCode += "    end for"; break;
             default: return "X";
         }
+        return lineOfCode;
     }
 
     public override int FirstInstructionCodeLine()
@@ -247,7 +248,7 @@ public class BucketSort : SortAlgorithm {
     public override IEnumerator Demo(GameObject[] sortingElements)
     {
         // Line 0 (set parameter)
-        pseudoCodeViewer.SetCodeLine(0, PseudoCode(0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
@@ -255,9 +256,9 @@ public class BucketSort : SortAlgorithm {
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
         // Line 1 (Create buckets)
-        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(1, PseudoCode(1, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         // Buckets
         GameObject[] buckets = bucketManager.Buckets;
@@ -266,9 +267,9 @@ public class BucketSort : SortAlgorithm {
         for (int i = 0; i < sortingElements.Length; i++)
         {
             // Line 2 (Update for-loop)
-            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(2, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(2, PseudoCode(2, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(2, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             // Get element
             GameObject element = sortingElements[i];
@@ -278,9 +279,9 @@ public class BucketSort : SortAlgorithm {
             bucketIndex = BucketIndex(value1, numberOfBuckets);
 
             // Line 3 (Display bucket index)
-            pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(3, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(3, PseudoCode(3, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(3, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             // Get bucket
             Bucket bucket = buckets[bucketIndex].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
@@ -289,15 +290,15 @@ public class BucketSort : SortAlgorithm {
             element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;
 
             // Line 4 (Put element into bucket)
-            pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(4, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(4, PseudoCode(4, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(4, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
         }
 
         // Line 5 (end for-loop)
-        pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(5, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(5, PseudoCode(5, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(5, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         // Display elements
         for (int x=0; x < numberOfBuckets; x++)
@@ -314,9 +315,9 @@ public class BucketSort : SortAlgorithm {
             bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
 
             // Line 6 (Sort elements in bucket)
-            pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, x, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(6, x, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, x, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(6, x, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
 
             // Put elements for display on top of buckets
@@ -337,9 +338,9 @@ public class BucketSort : SortAlgorithm {
         // Put elements back into list
         int k = 0;
         // Line 7 (set k)
-        pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, UtilSort.NO_VALUE, UtilSort.NO_VALUE, 0, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(7, UtilSort.NO_VALUE, UtilSort.NO_VALUE, 0), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(7, PseudoCode(7, UtilSort.NO_VALUE, UtilSort.NO_VALUE, 0, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(7, UtilSort.NO_VALUE, UtilSort.NO_VALUE, 0), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         // Holder positions (where the sorting elements initialized)
         Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
@@ -352,16 +353,16 @@ public class BucketSort : SortAlgorithm {
             loopRange = bucket.CurrenHolding.Count;
 
             // Line 8 (For-loop: Concatenate all buckets)
-            pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, UtilSort.NO_VALUE, k, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, UtilSort.NO_VALUE, k), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, i, UtilSort.NO_VALUE, k, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(8, i, UtilSort.NO_VALUE, k), UtilSort.BLACKBOARD_TEXT_COLOR);
 
             for (int j = 0; j < loopRange; j++)
             {
                 // Line 9 (2nd For-loop: Concatenate all buckets)
-                pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, i, j, k, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(9, i, j, k), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(9, PseudoCode(9, i, j, k, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(9, i, j, k), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
                 
@@ -374,25 +375,25 @@ public class BucketSort : SortAlgorithm {
                 sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
 
                 // Line 10 (Put element back into list)
-                pseudoCodeViewer.SetCodeLine(10, PseudoCode(10, i, j, k, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(10, i, j, k), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(10, PseudoCode(10, i, j, k, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(10, i, j, k), UtilSort.BLACKBOARD_TEXT_COLOR);
 
                 k++;
                 // Line 11 (Update k)
-                pseudoCodeViewer.SetCodeLine(11, PseudoCode(11, i, j, k, true), UtilSort.HIGHLIGHT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(11, i, j, k), UtilSort.HIGHLIGHT_COLOR);
                 yield return new WaitForSeconds(seconds);
-                pseudoCodeViewer.SetCodeLine(11, PseudoCode(11, i, j, k, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(11, i, j, k), UtilSort.BLACKBOARD_TEXT_COLOR);
             }
             // Line 12 (2nd for-inner-loop end)
-            pseudoCodeViewer.SetCodeLine(12, PseudoCode(12, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(12, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
-            pseudoCodeViewer.SetCodeLine(12, PseudoCode(12, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(12, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
         }
         // Line 13 (2nd for-loop end)
-        pseudoCodeViewer.SetCodeLine(13, PseudoCode(13, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(13, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.HIGHLIGHT_COLOR);
         yield return new WaitForSeconds(seconds);
-        pseudoCodeViewer.SetCodeLine(13, PseudoCode(13, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, true), UtilSort.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(13, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE), UtilSort.BLACKBOARD_TEXT_COLOR);
 
         IsTaskCompleted = true;
     }
@@ -536,7 +537,7 @@ public class BucketSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, k, increment), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j, k), UtilSort.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
@@ -695,7 +696,7 @@ public class BucketSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(lineOfCode[x], PseudoCode(lineOfCode[x], i, j, k, true), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j, k), UtilSort.HIGHLIGHT_COLOR);
         }
 
         yield return new WaitForSeconds(seconds);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public abstract class SortingElementBase : MonoBehaviour, IChild {
+public abstract class SortingElementBase : MonoBehaviour, IChild, IInstructionAble {
 
     /* -------------------------------------------- Sorting element (object) --------------------------------------------
      * > Keep an internal status about itself (which the holder checks to determine its color)

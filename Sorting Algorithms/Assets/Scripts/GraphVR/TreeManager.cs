@@ -78,7 +78,11 @@ public class TreeManager : GraphManager {
                 // Instantiate and fix edge
                 Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                 edge.transform.Rotate(0, angle, 0, Space.Self);
-                edge.InitEdge(parent, tree[tree.Count - 1], 0, UtilGraph.TREE); // insert cost
+
+                int edgeCost = UtilGraph.NO_COST;
+                if (algorithm is IShortestPath)
+                    edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
+                edge.InitEdge(parent, tree[tree.Count - 1], edgeCost, UtilGraph.TREE); // insert cost
 
             }
         }

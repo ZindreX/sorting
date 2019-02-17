@@ -445,6 +445,12 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29485d897ad1ca8438c2492b231f63b8, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &548546077 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114186576552053554, guid: 1f156b2565e9c2f4fa6c67557ef59cf1,
+    type: 2}
+  m_PrefabInternal: {fileID: 894096909}
+  m_Script: {fileID: 11500000, guid: b34ebc8e9afca8f4296301e7232c825a, type: 3}
 --- !u!1 &584170878
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,8 +608,8 @@ MonoBehaviour:
     type: 2}
   graphAlgorithmObj: {fileID: 157921380}
   teachingModeEditor: 0
-  graphStructureEditor: 0
-  useAlgorithmEditor: 2
+  graphStructureEditor: 1
+  useAlgorithmEditor: 0
   algorithmSpeedEditor: 2
   gridRowsEditor: 4
   gridColumnsEditor: 4
@@ -613,10 +619,11 @@ MonoBehaviour:
   nodeSpaceXEditor: 1
   nodeSpaceZEditor: 1
   visitLeftFirst: 1
-  x1: 15
-  z1: 15
+  x1: 0
+  z1: 0
   x2: 0
   z2: 0
+  pseudoCodeViewer: {fileID: 548546077}
 --- !u!114 &591449219
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,41 +10,48 @@ public class BFS : GraphAlgorithm, ITraverse {
         get { return UtilGraph.BFS; }
     }
 
-    private string PseudoCode(int lineNr, int i, int j, bool increment)
+    public override string CollectLine(int lineNr)
     {
-        //int n = GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements;
         switch (lineNr)
         {
             case 0: return "BFS(G, s):";
-            case 1: return string.Format("  Q = []"); 
-            case 2: return string.Format("  Q.enqueue({0})", i);
-            case 3: return string.Format("  {0}.visited = true", i);
-            case 4: return string.Format("  while (Q.Count > 0):");
-            case 5: return string.Format("      {0} = Q.dequeue()", i);
-            case 6: return string.Format("      for i={0} to {1}:", i, j);
-            case 7: return string.Format("          if (!{0}.neighbors[{1}].visited):", i, j);
-            case 8: return string.Format("              Q.enqueue({0})", i);
-            case 9: return string.Format("              {0}.visited = true", i);
-            case 10: return string.Format("          end if");
-            case 11: return string.Format("      end for");
-            case 12: return string.Format("  end while");
+            case 1: return "  Q = []";
+            case 2: return "  Q.enqueue(s)";
+            case 3: return "  s.visited = true";
+            case 4: return "  while (Q.Count > 0):";
+            case 5: return "      v = Q.dequeue()";
+            case 6: return "      for all neighbors w of v in Graph G:";
+            case 7: return "          if (!w.visited):";
+            case 8: return "              Q.enqueue(w)";
+            case 9: return "              w.visited = true";
+            case 10: return "          end if";
+            case 11: return "      end for";
+            case 12: return "  end while";
             default: return "lineNr " + lineNr + " not found!";
         }
     }
 
-    public override string CollectLine(int lineNr)
+    private string PseudoCode(int lineNr, int i)
     {
-        string temp = PseudoCode(lineNr, 0, 0, true);
-        //switch (lineNr)
-        //{
-        //    case 0: case 6: case 7: case 8: return temp;
-        //    case 1: return temp.Replace(GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements.ToString(), "len( list )");
-        //    case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1).ToString(), "n-1");
-        //    case 3: return temp.Replace((GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1).ToString(), "n-i-1");
-        //    case 4: case 5: return temp.Replace(UtilSort.INIT_STATE.ToString(), "list[ j ]").Replace((UtilSort.INIT_STATE - 1).ToString(), "list[ j + 1 ]");
-        //    default: return "lineNr " + lineNr + " not found!";
-        //}
-        return temp;
+        string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
+        switch (lineNr)
+        {
+            case 0: lineOfCode += "BFS(G, s):"; break;
+            case 1: lineOfCode += string.Format("  Q = []"); break;
+            case 2: lineOfCode += string.Format("  Q.enqueue({0})", node.ConvertIDToAlphabet()); break;
+            case 3: lineOfCode += string.Format("  {0}.visited = true", node.ConvertIDToAlphabet()); break;
+            case 4: lineOfCode += string.Format("  while ({0} > 0):", i); break;
+            case 5: lineOfCode += string.Format("      v = {0}", node.ConvertIDToAlphabet()); break;
+            case 6: lineOfCode += string.Format("      for i={0} to {1}:", i, node.Edges.Count-1); break;
+            case 7: lineOfCode += string.Format("          if (!v.neighbors[{1}].visited):", node.ConvertIDToAlphabet(), i); break;
+            case 8: lineOfCode += string.Format("              Q.enqueue({0})", node.ConvertIDToAlphabet()); break;
+            case 9: lineOfCode += string.Format("              {0}.visited = true", node.ConvertIDToAlphabet()); break;
+            case 10: lineOfCode += string.Format("          end if"); break;
+            case 11: lineOfCode += string.Format("      end for"); break;
+            case 12: lineOfCode += string.Format("  end while"); break;
+            default: return "lineNr " + lineNr + " not found!";
+        }
+        return lineOfCode;
     }
 
     public override int FirstInstructionCodeLine()
@@ -68,24 +75,47 @@ public class BFS : GraphAlgorithm, ITraverse {
     }
 
     #region BFS Demo
-    public IEnumerator Demo(Node node)
+    public IEnumerator Demo(Node startNode)
     {
-        Debug.Log("Starting BFS demo in 3 seconds");
-
+        // Line 1: Create empty list (queue)
         Queue<Node> queue = new Queue<Node>();
-        queue.Enqueue(node);
-        node.Visited = true;
-        node.CurrentColor = UtilGraph.VISITED;
-        yield return new WaitForSeconds(3f);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(1, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
 
-        Debug.Log("Starting BFS demo");
+        // Line 2: Add start node
+        node = startNode; // Pseudocode
+        queue.Enqueue(startNode);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(2, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(2, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+
+        // Line 3: Mark as visited
+        startNode.Visited = true;
+        pseudoCodeViewer.SetCodeLine(PseudoCode(3, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(3, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+
+        startNode.CurrentColor = UtilGraph.VISITED;
+        yield return new WaitForSeconds(seconds);
+
         while (queue.Count > 0)
         {
-            Node currentNode = queue.Dequeue();
+            // Line 4: Update while loop
+            pseudoCodeViewer.SetCodeLine(PseudoCode(4, queue.Count), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(4, queue.Count), Util.BLACKBOARD_TEXT_COLOR);
 
-            if (currentNode.VisitedFrom != null)
+            // Line 5: Dequeue node from queue
+            Node currentNode = queue.Dequeue();
+            node = currentNode; // Pseudocode
+            pseudoCodeViewer.SetCodeLine(PseudoCode(5, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(5, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+
+            if (currentNode.PrevEdge != null)
             {
-                currentNode.VisitedFrom.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                currentNode.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
                 yield return new WaitForSeconds(seconds / 2);
             }
 
@@ -94,29 +124,61 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
+                node = currentNode; // Pseudocode
+
+                // Line 6: Update for-loop
+                pseudoCodeViewer.SetCodeLine(PseudoCode(6, i), Util.HIGHLIGHT_COLOR);
+                yield return new WaitForSeconds(seconds);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(6, i), Util.BLACKBOARD_TEXT_COLOR);
+
                 Edge edge = currentNode.Edges[i];
                 Node checkingNode = edge.OtherNodeConnected(currentNode);
+                node = checkingNode; // Pseudocode
+
+                // Line 7: If condition
+                pseudoCodeViewer.SetCodeLine(PseudoCode(7, i), Util.HIGHLIGHT_COLOR);
+                yield return new WaitForSeconds(seconds);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(7, i), Util.BLACKBOARD_TEXT_COLOR);
 
                 // Check if node has already been traversed or already is marked
                 if (!checkingNode.Traversed && !checkingNode.Visited) // change?
                 {
-                    // Add to queue
+                    // Line 8: Add to queue
                     queue.Enqueue(checkingNode);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(8, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+                    yield return new WaitForSeconds(seconds);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(8, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
 
-                    // Mark node
+                    // Line 9: Mark node
                     checkingNode.Visited = true;
                     checkingNode.CurrentColor = UtilGraph.VISITED;
                     
                     // Mark edge
                     edge.CurrentColor = UtilGraph.VISITED;
-                    checkingNode.VisitedFrom = edge;
-                }
-            }
+                    checkingNode.PrevEdge = edge;
 
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(9, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+                    yield return new WaitForSeconds(seconds);
+                    pseudoCodeViewer.SetCodeLine(PseudoCode(9, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+                }
+                // Line 10: End if statement
+                pseudoCodeViewer.SetCodeLine(PseudoCode(10, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+                yield return new WaitForSeconds(seconds);
+                pseudoCodeViewer.SetCodeLine(PseudoCode(10, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+            }
             currentNode.Traversed = true;
             currentNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+
+            // Line 11: End for-loop
+            pseudoCodeViewer.SetCodeLine(PseudoCode(11, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
             yield return new WaitForSeconds(seconds);
+            pseudoCodeViewer.SetCodeLine(PseudoCode(11, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+
         }
+        // Line 12: End while-loop
+        pseudoCodeViewer.SetCodeLine(PseudoCode(12, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(12, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
 
         Debug.Log("BFS demo completed");
     }
@@ -231,7 +293,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(lineOfCode, PseudoCode(lineOfCode, i, j, true), Util.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode, i), Util.HIGHLIGHT_COLOR);
 
         yield return new WaitForSeconds(seconds);
         beginnerWait = false;

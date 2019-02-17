@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class TeachingAlgorithm : MonoBehaviour {
 
     protected float seconds = 1f;
-    protected bool isTaskCompleted = false;// isReadyForNextMove = false;
+    protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;
 
     protected Dictionary<string, List<string>> skipDict = new Dictionary<string, List<string>>();
 
@@ -23,6 +23,12 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         set { isTaskCompleted = value; }
     }
 
+    public bool IncludeLineNr
+    {
+        get { return includeLineNr; }
+        set { includeLineNr = value; }
+    }
+
     public Dictionary<string, List<string>> SkipDict
     {
         get { return skipDict; }
@@ -31,7 +37,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public PseudoCodeViewer PseudoCodeViewer
     {
         get { return pseudoCodeViewer; }
-        set { pseudoCodeViewer = value; pseudoCodeViewer.SetAlgorithm(this); }
+        set { pseudoCodeViewer = value; pseudoCodeViewer.InitPseudoCodeViewer(this, GetLineSpacing()); }
     }
 
     // Reach to line of code which are not mentioned in instructions
@@ -55,6 +61,9 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
 
     public abstract string AlgorithmName { get; }
+
+    // Space between lines of code
+    protected abstract float GetLineSpacing();
 
     /* Collects one line of code at a time and rewrites it into pseudocode
      * > a method called PseudoCode(...) must be created aswell (this is where the pseudocode will be placed
