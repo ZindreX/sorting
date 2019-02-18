@@ -609,7 +609,7 @@ MonoBehaviour:
   graphAlgorithmObj: {fileID: 157921380}
   teachingModeEditor: 0
   graphStructureEditor: 1
-  useAlgorithmEditor: 0
+  useAlgorithmEditor: 1
   algorithmSpeedEditor: 2
   gridRowsEditor: 4
   gridColumnsEditor: 4
@@ -621,8 +621,8 @@ MonoBehaviour:
   visitLeftFirst: 1
   x1: 0
   z1: 0
-  x2: 0
-  z2: 0
+  x2: 4
+  z2: 4
   pseudoCodeViewer: {fileID: 548546077}
 --- !u!114 &591449219
 MonoBehaviour:
@@ -828,6 +828,10 @@ Prefab:
     - target: {fileID: 4193877718143564, guid: 1f156b2565e9c2f4fa6c67557ef59cf1, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4825502980987378, guid: 1f156b2565e9c2f4fa6c67557ef59cf1, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 4.13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f156b2565e9c2f4fa6c67557ef59cf1, type: 2}

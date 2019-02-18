@@ -69,7 +69,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             if (traversed)
                 CurrentColor = UtilGraph.TRAVERSED_COLOR;
             else
-                CurrentColor = UtilGraph.STANDARD_COLOR;
+                CurrentColor = Util.STANDARD_COLOR;
         }
     }
 
@@ -80,7 +80,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             if (visited)
                 CurrentColor = UtilGraph.VISITED;
             else
-                CurrentColor = UtilGraph.STANDARD_COLOR;
+                CurrentColor = Util.STANDARD_COLOR;
         }
     }
 
@@ -95,7 +95,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         get { return edges; }
     }
 
-    public void AddEdge(Edge edge)
+    public virtual void AddEdge(Edge edge)
     {
         if (!edges.Contains(edge))
             edges.Add(edge);

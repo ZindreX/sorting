@@ -9,7 +9,7 @@ public class Edge : MonoBehaviour {
     [SerializeField]
     private int edgeID, cost;
     private float angle; // needed???
-    private string algorithm;
+    private string graphStructure;
 
     [SerializeField]
     private bool collisionOccured;
@@ -28,7 +28,7 @@ public class Edge : MonoBehaviour {
         if (cost != UtilGraph.NO_COST)
             Cost = cost;
 
-        this.algorithm = graphStructure;
+        this.graphStructure = graphStructure;
 
         CurrentColor = Util.STANDARD_COLOR;
         collisionOccured = false;
@@ -78,22 +78,23 @@ public class Edge : MonoBehaviour {
     */
     private void NotifyNodes(Node node1, Node node2)
     {
-        node1.AddEdge(this);
-        node2.AddEdge(this);
-
         if (node1.GetComponent(typeof(GridNode)))
         {
             node1.GetComponent<GridNode>().AddNeighbor(node2.GetComponent<GridNode>());
         }
         else if (node1.GetComponent(typeof(TreeNode)))
         {
-            //node2.GetComponent<TreeNode>().Parent = node1.GetComponent<TreeNode>();
-            //node1.GetComponent<TreeNode>().AddChildren(node2.GetComponent<TreeNode>());
+            node2.GetComponent<TreeNode>().Parent = node1.GetComponent<TreeNode>();
+            node1.GetComponent<TreeNode>().AddChildren(node2.GetComponent<TreeNode>());
         }
         else if (node1.GetComponent(typeof(RandomNode)))
         {
             node1.GetComponent<RandomNode>().AddNeighbor(node2.GetComponent<RandomNode>());
         }
+
+        // Add edge in nodes
+        node1.AddEdge(this);
+        node2.AddEdge(this);
     }
 
     public Node OtherNodeConnected(Node node)

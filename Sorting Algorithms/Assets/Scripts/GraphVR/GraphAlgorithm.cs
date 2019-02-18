@@ -4,11 +4,19 @@ using UnityEngine;
 
 public abstract class GraphAlgorithm : TeachingAlgorithm {
 
+    // Demo variables
+    protected Node node1, node2;
+    protected Edge edge;
+
+    // Instruction variables
     protected bool beginnerWait;
-
-    protected Node node;
-
     protected int prevHighlightedLineOfCode;
+
+
+
+
+
+
 
     protected override float GetLineSpacing()
     {

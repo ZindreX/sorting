@@ -46,6 +46,14 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         pseudoCodeViewer.ChangeColorOfText(lineNr, color);
     }
 
+    protected IEnumerator HighlightPseudoCode(string text, Color color)
+    {
+        pseudoCodeViewer.SetCodeLine(text, color);
+        yield return new WaitForSeconds(seconds);
+        pseudoCodeViewer.SetCodeLine(text, Util.BLACKBOARD_TEXT_COLOR);
+    }
+
+
     // ---------------------------- Maybe overriden in the algorithm class which inherite this base class ----------------------------
 
     public virtual void AddSkipAbleInstructions()

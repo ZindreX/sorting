@@ -33,20 +33,25 @@ public class TreeManager : GraphManager {
         // Create root
         tree.Add(GenerateNode(null, new Vector3(0f, 0f, 0f), 0));
 
+        // Number of nodes w/children (aka no leafs included)
         int nonLeafNodes = NumberOfInternalNodes();
+
+        // Set level (starting one level below root)
         int currentLevel = 1;
+        
+        // Variables for x and z position of nodes, and split var
         float xPos = 0, zPos = 0, widthSplit = 0;
         for (int z = 1; z <= nonLeafNodes; z++)
         {
             // Get parent
             TreeNode parent = tree[z-1];
 
-            // 
+            // Fix position variables when next level
             if (parent.TreeLevel != currentLevel)
             {
                 currentLevel = parent.TreeLevel;
 
-                // Next level Z position
+                // Next level Z position (from player towards the blackboard)
                 zPos = UtilGraph.GRAPH_MIN_Z + (currentLevel + 1) * nodeSpaceZ;
 
                 /* Split width of map into pieces for where to place nodes
@@ -72,17 +77,17 @@ public class TreeManager : GraphManager {
                 Vector3 centerPos = new Vector3(parent.transform.position.x + n2.x, 0f, parent.transform.position.z + n2.z) / 2;
 
                 // Find angle
-                //Debug.Log("Angle: " + -Mathf.Atan2(nodeSpaceZ, n2.x - n1.x) * Mathf.Rad2Deg);
                 float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - parent.transform.position.x) * Mathf.Rad2Deg;
 
                 // Instantiate and fix edge
                 Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                 edge.transform.Rotate(0, angle, 0, Space.Self);
 
+                // Set edge cost (no cost unless shortest path)
                 int edgeCost = UtilGraph.NO_COST;
                 if (algorithm is IShortestPath)
                     edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
-                edge.InitEdge(parent, tree[tree.Count - 1], edgeCost, UtilGraph.TREE); // insert cost
+                edge.InitEdge(parent, tree[tree.Count - 1], edgeCost, UtilGraph.TREE);
 
             }
         }

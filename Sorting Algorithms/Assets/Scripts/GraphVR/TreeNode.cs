@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TreeNode : Node {
 
-    private bool isRoot;
     private int treeLevel;
 
     [SerializeField]
@@ -16,14 +15,11 @@ public class TreeNode : Node {
     {
         InitNode(algorithm);
         children = new List<TreeNode>();
-        this.parent = parent;
         this.treeLevel = treeLevel;
 
-        if (parent == null)
-            isRoot = true;
-
-        if (parent != null)
-            parent.AddChildren(this);
+        //this.parent = parent;
+        //if (parent != null)
+        //    parent.AddChildren(this);
     }
 
     public override string NodeType
@@ -55,6 +51,14 @@ public class TreeNode : Node {
     public List<TreeNode> Children
     {
         get { return children; }
+    }
+
+    public override void AddEdge(Edge edge)
+    {
+        if (edge.OtherNodeConnected(this) == parent)
+            PrevEdge = edge;
+        else
+            base.AddEdge(edge);
     }
 
     protected override void UpdateNodeText(string text)
