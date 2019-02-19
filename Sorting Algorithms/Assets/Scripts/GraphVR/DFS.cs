@@ -8,7 +8,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
     public override string AlgorithmName
     {
-        get { return UtilGraph.DFS; }
+        get { return Util.DFS; }
     }
 
     public bool VisistLeftFirst
@@ -18,46 +18,26 @@ public class DFS : GraphAlgorithm, ITraverse {
 
     public override string CollectLine(int lineNr)
     {
-        switch (lineNr)
-        {
-            case 0: return "DFS(G, s):";
-            case 1: return "    Q = []    // empty stack";
-            case 2: return "    Q.Push(s)";
-            case 3: return "    s.visited = true";
-            case 4: return "    while (Q.Count > 0):";
-            case 5: return "        v = Q.Pop()";
-            case 6: return "        for all neighbors w of v in Graph G:";
-            case 7: return "            if (!w.visited):";
-            case 8: return "                Q.Push(w)";
-            case 9: return "                w.visited = true";
-            case 10: return "           end if";
-            case 11: return "       end for";
-            case 12: return "   end while";
-            default: return "lineNr " + lineNr + " not found!";
-        }
-    }
+        string codeLine = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
 
-    private string PseudoCode(int lineNr, int i)
-    {
-        string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
         switch (lineNr)
         {
-            case 0: lineOfCode += "DFS(G, s):"; break;
-            case 1: lineOfCode += string.Format("   Q = []"); break;
-            case 2: lineOfCode += string.Format("   Q.Push({0})", node1.ConvertIDToAlphabet()); break;
-            case 3: lineOfCode += string.Format("   {0}.visited = true", node1.ConvertIDToAlphabet()); break;
-            case 4: lineOfCode += string.Format("   while ({0} > 0):", i); break;
-            case 5: lineOfCode += string.Format("       v = {0}", node1.ConvertIDToAlphabet()); break;
-            case 6: lineOfCode += string.Format("       for i={0} to {1}:", i, node1.Edges.Count - 1); break;
-            case 7: lineOfCode += string.Format("           if (!v.neighbors[{1}].visited):", node1.ConvertIDToAlphabet(), i); break;
-            case 8: lineOfCode += string.Format("               Q.Push({0})", node1.ConvertIDToAlphabet()); break;
-            case 9: lineOfCode += string.Format("               {0}.visited = true", node1.ConvertIDToAlphabet()); break;
-            case 10: lineOfCode += string.Format("          end if"); break;
-            case 11: lineOfCode += string.Format("      end for"); break;
-            case 12: lineOfCode += string.Format("  end while"); break;
+            case 0: codeLine += "DFS(G, s):"; break;
+            case 1: codeLine += "    Q = []    // Q is an empty stack"; break;
+            case 2: codeLine += "    Q.Push(" + node1Alpha+ ")"; break;
+            case 3: codeLine += "    " + node1Alpha + ".visited = true"; break;
+            case 4: codeLine += "    while (" + lengthOfList + " > 0):"; break;
+            case 5: codeLine += "        " + node1Alpha + " = Q.Pop()"; break;
+            case 6: codeLine += "        for all neighbors w of " + node1Alpha + " in Graph G:"; break;
+            case 7: codeLine += "            if (!" + node2Alpha + ".visited):"; break;
+            case 8: codeLine += "                Q.Push(" + node2Alpha + ")"; break;
+            case 9: codeLine += "                " + node2Alpha + ".visited = true"; break;
+            case 10: codeLine += "           end if"; break;
+            case 11: codeLine += "       end for"; break;
+            case 12: codeLine += "   end while"; break;
             default: return "lineNr " + lineNr + " not found!";
         }
-        return lineOfCode;
+        return codeLine;
     }
 
     public override int FirstInstructionCodeLine()
@@ -85,26 +65,27 @@ public class DFS : GraphAlgorithm, ITraverse {
     {
         // Line 1: Create an empty list (stack)
         Stack<Node> stack = new Stack<Node>();
-        yield return HighlightPseudoCode(PseudoCode(1, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         // Line 2: Push start node
         stack.Push(startNode);
-        node1 = startNode; // Pseudocode
-        yield return HighlightPseudoCode(PseudoCode(2, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        SetNodePseudoCode(startNode, 1);
+        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
         startNode.Visited = true;
-        yield return HighlightPseudoCode(PseudoCode(3, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
+        lengthOfList = "1";
         while (stack.Count > 0)
         {
             // Line 4: Update while-loop
-            yield return HighlightPseudoCode(PseudoCode(4, stack.Count), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
 
             // Line 5: Pop node from stack
             Node currentNode = stack.Pop();
-            node1 = currentNode; // Pseudocode
-            yield return HighlightPseudoCode(PseudoCode(5, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            SetNodePseudoCode(currentNode, 1);
+            yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
             // When visiting current node, change color of edge leading to this node
             if (currentNode.PrevEdge != null)
@@ -118,36 +99,38 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             // Line 6: Update for-loop (leaf nodes)
             if (currentNode.Edges.Count == 0)
-                yield return HighlightPseudoCode(PseudoCode(6, 0), Util.HIGHLIGHT_COLOR);
+            {
+                i = 0;
+                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
+            }
 
             // Go through each edge connected to current node
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
-                node1 = currentNode; // Pseudocode
-
                 // Line 6: Update for-loop
-                yield return HighlightPseudoCode(PseudoCode(6, i), Util.HIGHLIGHT_COLOR);
+                this.i = i;
+                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
                 // Fix index according to chosen behavior (e.g. tree: visit left or right child first)
-                int visitNode = i;
-                if (visitLeftFirst)
-                    visitNode = currentNode.Edges.Count - 1 - i;
+                //int visitNode = i;
+                //if (visitLeftFirst)
+                //    visitNode = currentNode.Edges.Count - 1 - i;
 
-                Edge edge = currentNode.Edges[visitNode];                
+                Edge edge = currentNode.Edges[i];// visitNode];                
                 Node checkingNode = edge.OtherNodeConnected(currentNode);
-                node1 = checkingNode; // Pseudocode
+                SetNodePseudoCode(checkingNode, 2);
 
                 // Mark edge
                 edge.CurrentColor = UtilGraph.VISITED;
 
                 // Line 7: If statement (condition)
-                yield return HighlightPseudoCode(PseudoCode(7, i), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
-                if (!checkingNode.Traversed && !checkingNode.Visited) // rather check if checkingNode is in stack? (drop marked?)
+                if (!checkingNode.Visited)
                 {
                     // Line 8: Push node on top of stack
                     stack.Push(checkingNode);
-                    yield return HighlightPseudoCode(PseudoCode(8, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
                     checkingNode.Visited = true;
@@ -155,22 +138,55 @@ public class DFS : GraphAlgorithm, ITraverse {
                     // Previous edge
                     checkingNode.PrevEdge = edge;
 
-                    yield return HighlightPseudoCode(PseudoCode(9, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);                    
+                    yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
                 }
                 // Line 10: End if statement
-                yield return HighlightPseudoCode(PseudoCode(10, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);                    
+                yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);                    
 
             }
             // Line 11: End for-loop
-            yield return HighlightPseudoCode(PseudoCode(11, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);                    
+            yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);                    
 
             currentNode.Traversed = true;
+            lengthOfList = stack.Count.ToString(); // Pseudocode stack size
         }
         // Line 12: End while-loop
-        yield return HighlightPseudoCode(PseudoCode(12, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);                    
+        yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);                    
 
         IsTaskCompleted = true;
     }
+    #endregion
+
+    #region DFS Demo recursive
+    public IEnumerator DemoRecursive(Node node)
+    {
+        //if (node.PrevEdge != null)
+        //    node.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+        node.Visited = true;
+        yield return new WaitForSeconds(seconds);
+        node.Traversed = true;
+
+        for (int i=0; i < node.Edges.Count; i++)
+        {
+            Edge nextEdge = node.Edges[i];
+            Node nextNode = nextEdge.OtherNodeConnected(node);
+            if (!nextNode.Visited)
+            {
+                nextEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                yield return DemoRecursive(nextNode);
+            }
+            //else
+            //{
+            //    nextEdge.CurrentColor = UtilGraph.VISITED;
+            //    nextNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+            //    yield return new WaitForSeconds(seconds);
+            //    nextNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+            //}
+
+        }
+    }
+
+
     #endregion
 
     #region User Test instructions

@@ -45,7 +45,11 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
 
             // Get line of code from algorithm
-            codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x); // ***
+            if (algorithm.IncludeLineNr)
+                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x);
+            else
+                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1];
+
             codeLines[x] = codeLine.GetComponent<TextMesh>();
         }
 

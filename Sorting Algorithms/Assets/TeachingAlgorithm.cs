@@ -4,12 +4,18 @@ using UnityEngine;
 
 public abstract class TeachingAlgorithm : MonoBehaviour {
 
+    // Basis variables for all modes
     protected float seconds = 1f;
     protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;
+    protected PseudoCodeViewer pseudoCodeViewer;
 
+    // Demo variables
+    protected int i, j, k;
+    protected string lengthOfList = "len(Q)";
+
+    // User Test
     protected Dictionary<string, List<string>> skipDict = new Dictionary<string, List<string>>();
 
-    protected PseudoCodeViewer pseudoCodeViewer;
 
     public float Seconds
     {
@@ -46,6 +52,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         pseudoCodeViewer.ChangeColorOfText(lineNr, color);
     }
 
+    // Used in Demo for highlighting pseudo code line for <seconds> then go back to normal color
     protected IEnumerator HighlightPseudoCode(string text, Color color)
     {
         pseudoCodeViewer.SetCodeLine(text, color);
@@ -63,7 +70,10 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     public virtual void ResetSetup()
     {
-
+        i = 0;
+        j = 0;
+        k = 0;
+        lengthOfList = "len(Q)";
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
@@ -74,8 +84,8 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected abstract float GetLineSpacing();
 
     /* Collects one line of code at a time and rewrites it into pseudocode
-     * > a method called PseudoCode(...) must be created aswell (this is where the pseudocode will be placed
-     * 
+     * - Sort: old system in use (todo: fix)
+     * - Graph: uses pseudocode update dict + variables
     */
     public abstract string CollectLine(int lineNr);
 

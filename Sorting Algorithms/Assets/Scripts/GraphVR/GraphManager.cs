@@ -54,7 +54,8 @@ public abstract class GraphManager : MainManager {
                     case UtilGraph.BFS: StartCoroutine(((BFS)algorithm).Demo(GetNode(startNode[0], startNode[1]))); break;
                     case UtilGraph.DFS:
                         ((DFS)algorithm).VisistLeftFirst = gs.VisitLeftFirst;
-                        StartCoroutine(((DFS)algorithm).Demo(GetNode(startNode[0], startNode[1])));
+                        //StartCoroutine(((DFS)algorithm).Demo(GetNode(startNode[0], startNode[1])));
+                        StartCoroutine(((DFS)algorithm).DemoRecursive(GetNode(startNode[0], startNode[1])));
                         break;
 
 

@@ -10,6 +10,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     // Basic 
     [SerializeField]
     protected int nodeID;
+    protected char nodeAlphaID;
     protected Color currentColor;
     protected Animator animator;
 
@@ -19,8 +20,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     // Traversal / Shortest path variables
     [SerializeField]
-    protected int totalCost;
-    private bool traversed, visited; // need marked? just check if in list/stack...
+    protected int dist;
+    private bool traversed, visited; // need traversed? just check if in list/stack...
 
     [SerializeField]
     private Edge prevEdge;
@@ -32,6 +33,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     {
         animator = GetComponent<Animator>();
         nodeID = NODE_ID++;
+        nodeAlphaID = UtilGraph.ConvertIDToAlphabet(nodeID);
         ResetNode();
     }
 
@@ -39,8 +41,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     {
         switch (algorithm)
         {
-            case UtilGraph.BFS: case UtilGraph.DFS: UpdateNodeText(ConvertIDToAlphabet().ToString()); break;
-            case UtilGraph.DIJKSTRA: totalCost = UtilGraph.INF; break;
+            case UtilGraph.BFS: case UtilGraph.DFS: UpdateNodeText(nodeAlphaID.ToString()); break;
+            case UtilGraph.DIJKSTRA: dist = UtilGraph.INF; break;
             default: Debug.LogError("Node text for '" + algorithm + "' not specified."); break;
         }
     }
@@ -50,16 +52,15 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         get { return nodeID; }
     }
 
-    public char ConvertIDToAlphabet()
+    public char NodeAlphaID
     {
-        return Convert.ToChar(nodeID + 65);
+        get { return nodeAlphaID; }
     }
-
-
-    public int TotalCost
+       
+    public int Dist
     {
-        get { return totalCost; }
-        set { totalCost = value; UpdateNodeText(UtilGraph.ConvertIfInf(value.ToString())); }
+        get { return dist; }
+        set { dist = value; UpdateNodeText(UtilGraph.ConvertIfInf(value.ToString())); }
     }
 
     public bool Traversed
@@ -116,10 +117,10 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     // ******************************************************************* OBS: inverted
     public int CompareTo(Node other)
     {
-        int otherTotalCost = other.TotalCost;
-        if (totalCost < otherTotalCost)
+        int otherTotalCost = other.Dist;
+        if (dist < otherTotalCost)
             return 1;
-        else if (totalCost > otherTotalCost)
+        else if (dist > otherTotalCost)
             return -1;
         return 0;
     }
@@ -134,9 +135,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         CurrentColor = UtilGraph.STANDARD_COLOR;
     }
 
-
-    public abstract string NodeType { get; }
-
+    // *** Instructions ***
     public bool NextMove
     {
         get { return nextMove; }
@@ -149,7 +148,9 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         set { instruction = value; }
     }
 
+    // Instruction methods end
+
+    public abstract string NodeType { get; }
     protected abstract void UpdateNodeText(string text);
 
-    // Instructions
 }

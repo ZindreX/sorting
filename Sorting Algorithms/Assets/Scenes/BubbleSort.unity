@@ -3787,7 +3787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   algorithmEditor: 0
-  teachingModeEditor: 0
+  teachingModeEditor: 2
   difficultyEditor: 0
   numberofElementsEditor: 1
   allowDupEditor: 0

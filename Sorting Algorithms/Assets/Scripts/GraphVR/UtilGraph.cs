@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,11 +10,13 @@ public class UtilGraph : Util {
     public const string GRID = "Grid", TREE = "Tree", RANDOM_GRAPH = "Random graph";
 
     // Graph objects
-    public static string NODE = "Node", EDGE = "Edge";
+    public static string NODE_TAG = "Node", EDGE_TAG = "Edge";
 
     // 
     public static int INF = int.MaxValue, NO_COST = -1;
 
+    // Pseudo code stuff
+    public static readonly string START_NODE = "Start node", LENGTH_OF_LIST = "Length of list", NODE = "vertice", NEIGHBOR = "neighbor";
 
     // Colors
     public static Color TRAVERSE_COLOR = Color.red, VISITED = Color.yellow, TRAVERSED_COLOR = Color.green;
@@ -45,7 +47,11 @@ public class UtilGraph : Util {
         bool isNumberic = int.TryParse(costText, out cost); // C# 7:         var isNumeric = int.TryParse("123", out int n);
 
         return (isNumberic) ? cost : INF;
+    }
 
+    public static char ConvertIDToAlphabet(int nr)
+    {
+        return Convert.ToChar(nr + 65);
     }
 
     public static float DistanceBetweenNodes(Transform n1, Transform n2)

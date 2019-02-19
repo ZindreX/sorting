@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Edge : MonoBehaviour {
 
+    /* -------------------------------------------- Edge ----------------------------------------------------
+     * - A connection between two nodes in a graph
+     * - When an edge is initialized it notifies the two nodes automatically
+    */
+
+
     public static int EDGE_ID;
 
     [SerializeField]
     private int edgeID, cost;
-    private float angle; // needed???
     private string graphStructure;
-
-    [SerializeField]
-    private bool collisionOccured;
-
     private Color currentColor;
 
     [SerializeField]
@@ -28,10 +29,7 @@ public class Edge : MonoBehaviour {
         if (cost != UtilGraph.NO_COST)
             Cost = cost;
 
-        this.graphStructure = graphStructure;
-
-        CurrentColor = Util.STANDARD_COLOR;
-        collisionOccured = false;
+        this.graphStructure = graphStructure; // need???
 
         // Notify nodes (neighbors / parent / child)
         NotifyNodes(node1, node2);
@@ -50,7 +48,6 @@ public class Edge : MonoBehaviour {
 
     private void SetAngle(float angle)
     {
-        this.angle = angle;
         transform.Rotate(0f, angle, 0f);
     }
 
@@ -97,42 +94,17 @@ public class Edge : MonoBehaviour {
         node2.AddEdge(this);
     }
 
+    // Returns the node on the other side of this edge
     public Node OtherNodeConnected(Node node)
     {
         return (node == node1) ? node2 : node1;
     }
 
+    // Returns the total cost of parameter node + edge cost
     public int EdgeAndOtherNodeCombinedCost(Node fromNode)
     {
-        return (fromNode == node1) ? (cost + node2.TotalCost) : (cost + node1.TotalCost);
+        return (fromNode == node1) ? (cost + node2.Dist) : (cost + node1.Dist);
     }
 
-    public bool CollisionOccured
-    {
-        get { return collisionOccured; }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        //if (graphStructure == UtilGraph.RANDOM_GRAPH)
-        //{
-        //    if (collision.collider.tag == UtilGraph.EDGE) // Hit an edge
-        //    {
-        //        Debug.Log("Edge " + edgeID + " collided with Edge " + collision.collider.GetComponentInParent<Edge>().EdgeID);
-        //        collisionOccured = true;
-        //    }
-
-        //    if (collision.collider.tag == UtilGraph.NODE)
-        //    {
-        //        int nodeID = collision.collider.GetComponentInParent<Node>().NodeID; // cube collides, so need to get from object
-
-        //        if (nodeID != node1.NodeID && nodeID != node2.NodeID) // Hit a node (not connecting nodes)
-        //        {
-        //            Debug.Log("Edge " + edgeID + " collided with Node " + nodeID);
-        //            collisionOccured = true;
-        //        }
-        //    }
-        //}
-    }
 
 }

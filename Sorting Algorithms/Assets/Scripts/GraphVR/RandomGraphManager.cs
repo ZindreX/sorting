@@ -145,13 +145,13 @@ public class RandomGraphManager : GraphManager {
         edge.InitEdge(node1, node2, Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT), UtilGraph.RANDOM_GRAPH);
 
         // Check if any overlaps occured
-        Debug.Log("Test: " + edge.CollisionOccured);
-        if (edge.CollisionOccured)
-        {
-            Debug.Log(">>>>>>>>>>>>>>>>> Destroying edge!!");
-            Destroy(edge.gameObject);
-            return false;
-        }
+        //Debug.Log("Test: " + edge.CollisionOccured);
+        //if (edge.CollisionOccured)
+        //{
+        //    Debug.Log(">>>>>>>>>>>>>>>>> Destroying edge!!");
+        //    Destroy(edge.gameObject);
+        //    return false;
+        //}
         edge.SetLength(UtilGraph.DistanceBetweenNodes(node1.transform, node2.transform));
         return true;
     }
