@@ -69,6 +69,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
         // Line 3: Add starting node and set its cost to 0
         list.Add(startNode);
+        listVisual.PriorityAdd(startNode.NodeAlphaID, 0, 0); // List visual
         SetNodePseudoCode(startNode, 1, 0); // PseudoCode (line 3+4)
         yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
@@ -84,6 +85,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             // Line 6: Pull out the element with lowest cost
             Node currentNode = list[list.Count - 1];
             list.RemoveAt(list.Count - 1);
+            listVisual.RemoveAndMoveElementOut(); // List visual
             SetNodePseudoCode(currentNode, 1, currentNode.Dist); // PseudoCode
             yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
@@ -148,10 +150,15 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 }
 
                 if (!connectedNode.Traversed && !list.Contains(connectedNode))
+                {
                     list.Add(connectedNode);
+                    // Sort list (inverted)
+                    list.Sort();
 
-                // Sort list (inverted)
-                list.Sort();
+                    // List visual
+                    int index = (list.Count - 1 ) - list.IndexOf(connectedNode); // OBS: list is inverted (removes the last element instead of index 0)
+                    listVisual.PriorityAdd(connectedNode.NodeAlphaID, connectedNode.Dist, index);
+                }
 
                 // Line 13: End if
                 yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
@@ -160,6 +167,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
 
             lengthOfList = list.Count.ToString(); // PseudoCode
+            listVisual.DestroyOutElement(); // List visual
         }
         // Line 15: End while-loop
         yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
