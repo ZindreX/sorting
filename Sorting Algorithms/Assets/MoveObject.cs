@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ListElement : MonoBehaviour {
+public class MoveObject : MonoBehaviour {
 
     [SerializeField]
-    private float speed = 0.1f;
+    private float speed = 5f;
 
     [SerializeField]
     private Vector3 destination;

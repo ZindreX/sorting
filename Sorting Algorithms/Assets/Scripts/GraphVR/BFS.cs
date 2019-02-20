@@ -61,6 +61,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
         // Line 2: Add start node
         queue.Enqueue(startNode);
+        listVisual.AddListObject(startNode.NodeAlphaID); // List visual
         SetNodePseudoCode(startNode, 1); // Pseudocode
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
@@ -76,6 +77,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Dequeue node from queue
             Node currentNode = queue.Dequeue();
+            listVisual.RemoveAndMoveElementOut(); // List visual
             SetNodePseudoCode(currentNode, 1); // Pseudocode
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -117,6 +119,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Add to queue
                     queue.Enqueue(checkingNode);
+                    listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -134,6 +137,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
 
             lengthOfList = queue.Count.ToString(); // Pseudo code
+            listVisual.DestroyOutElement(); // List visual
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);

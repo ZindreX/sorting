@@ -69,6 +69,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         // Line 2: Push start node
         stack.Push(startNode);
+        listVisual.AddListObject(startNode.NodeAlphaID); // List visual
         SetNodePseudoCode(startNode, 1);
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
@@ -84,6 +85,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Pop node from stack
             Node currentNode = stack.Pop();
+            listVisual.RemoveAndMoveElementOut(); // List visual
             SetNodePseudoCode(currentNode, 1);
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -130,6 +132,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Push node on top of stack
                     stack.Push(checkingNode);
+                    listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -149,6 +152,8 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             currentNode.Traversed = true;
             lengthOfList = stack.Count.ToString(); // Pseudocode stack size
+
+            listVisual.DestroyOutElement(); // List visual
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);                    
@@ -162,6 +167,7 @@ public class DFS : GraphAlgorithm, ITraverse {
     {
         //if (node.PrevEdge != null)
         //    node.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+        listVisual.RemoveAndMoveElementOut(); // List visual
         node.Visited = true;
         yield return new WaitForSeconds(seconds);
         node.Traversed = true;
@@ -172,6 +178,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             Node nextNode = nextEdge.OtherNodeConnected(node);
             if (!nextNode.Visited)
             {
+                listVisual.AddListObject(nextNode.NodeAlphaID); // Visual list
                 nextEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
                 yield return DemoRecursive(nextNode);
             }
@@ -184,6 +191,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             //}
 
         }
+        listVisual.DestroyOutElement();
     }
 
 

@@ -14,6 +14,10 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected bool beginnerWait;
     protected int prevHighlightedLineOfCode;
 
+
+    // List visual
+    protected ListVisual listVisual;
+
     protected void SetNodePseudoCode(Node node, int nr)
     {
         switch (nr)
@@ -42,6 +46,12 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected override float GetLineSpacing()
     {
         return UtilGraph.SPACE_BETWEEN_CODE_LINES;
+    }
+
+    public ListVisual ListVisual
+    {
+        get { return listVisual; }
+        set { listVisual = value; }
     }
 
 

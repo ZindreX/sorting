@@ -10,6 +10,9 @@ public class GraphSettings : MonoBehaviour {
     [SerializeField]
     private GameObject graphAlgorithmObj;
 
+    [SerializeField]
+    private ListVisual listVisual;
+
     [Header("Overall settings")]
     [SerializeField]
     private TeachingModeEditor teachingModeEditor;
@@ -191,6 +194,11 @@ public class GraphSettings : MonoBehaviour {
         get { return pseudoCodeViewer; }
     }
 
+    public ListVisual ListVisual
+    {
+        get { return listVisual; }
+    }
+
     public GraphAlgorithm GetGraphAlgorithm()
     {
         switch (useAlgorithm)
@@ -199,18 +207,21 @@ public class GraphSettings : MonoBehaviour {
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
+                listVisual.SetListType(Util.QUEUE);
                 return graphAlgorithmObj.GetComponent<BFS>();
 
             case UtilGraph.DFS:
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
+                listVisual.SetListType(Util.STACK);
                 return graphAlgorithmObj.GetComponent<DFS>();
 
             case UtilGraph.DIJKSTRA:
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
+                listVisual.SetListType(Util.PRIORITY_LIST);
                 return graphAlgorithmObj.GetComponent<Dijkstra>();
 
             //case UtilGraph.TREE_PRE_ORDER_TRAVERSAL:

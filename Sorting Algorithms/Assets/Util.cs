@@ -14,6 +14,7 @@ public class Util : MonoBehaviour {
     // Graph Algorithms
     public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DIJKSTRA = "Dijkstra";
     //public const string TREE_PRE_ORDER_TRAVERSAL = "Pre order", TREE_IN_ORDER_TRAVERSAL = "In order", TREE_POST_ORDER_TRAVERSAL = "Post order";
+    public const string QUEUE = "Queue", STACK = "Stack", PRIORITY_LIST = "Priority";
 
     // Difficulty
     //public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", ADVANCED = "Advanced", EXAMINATION = "Examination";

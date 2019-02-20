@@ -142,7 +142,12 @@ public class RandomGraphManager : GraphManager {
         // Instantiate and fix edge
         Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
         edge.transform.Rotate(0, angle, 0, Space.Self);
-        edge.InitEdge(node1, node2, Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT), UtilGraph.RANDOM_GRAPH);
+
+        int edgeCost = UtilGraph.NO_COST; // do this inside edge instead? (incase: fix in tree/grid as well)
+        if (algorithm is IShortestPath)
+            edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
+
+        edge.InitEdge(node1, node2, edgeCost, UtilGraph.RANDOM_GRAPH);
 
         // Check if any overlaps occured
         //Debug.Log("Test: " + edge.CollisionOccured);
