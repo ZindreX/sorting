@@ -79,7 +79,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         get { return visited; }
         set { visited = value;
             if (visited)
-                CurrentColor = UtilGraph.VISITED;
+                CurrentColor = UtilGraph.VISITED_COLOR;
             else
                 CurrentColor = Util.STANDARD_COLOR;
         }
@@ -117,12 +117,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     // ******************************************************************* OBS: inverted
     public int CompareTo(Node other)
     {
-        int otherTotalCost = other.Dist;
-        if (dist < otherTotalCost)
-            return 1;
-        else if (dist > otherTotalCost)
-            return -1;
-        return 0;
+        return (dist <= other.Dist) ? 1 : -1;
+        //if (dist < other.Dist)
+        //    return 1;
+        //else if (dist > other.Dist)
+        //    return -1;
+        //return 0;
     }
 
     public virtual void ResetNode()

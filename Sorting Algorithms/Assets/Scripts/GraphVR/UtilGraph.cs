@@ -19,7 +19,7 @@ public class UtilGraph : Util {
     public static readonly string START_NODE = "Start node", LENGTH_OF_LIST = "Length of list", NODE = "vertice", NEIGHBOR = "neighbor";
 
     // Colors
-    public static Color TRAVERSE_COLOR = Color.red, VISITED = Color.yellow, TRAVERSED_COLOR = Color.green;
+    public static Color TRAVERSE_COLOR = Color.red, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green;
 
     // *** Instructions ***
     // BFS

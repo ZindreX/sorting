@@ -612,20 +612,20 @@ MonoBehaviour:
   listVisual: {fileID: 1415126236}
   teachingModeEditor: 0
   graphStructureEditor: 0
-  useAlgorithmEditor: 2
-  algorithmSpeedEditor: 1
-  gridRowsEditor: 4
-  gridColumnsEditor: 4
+  useAlgorithmEditor: 0
+  algorithmSpeedEditor: 3
+  gridRowsEditor: 5
+  gridColumnsEditor: 5
   gridSpaceEditor: 0
-  treeDepthEditor: 2
+  treeDepthEditor: 3
   nTreeEditor: 0
   nodeSpaceXEditor: 1
   nodeSpaceZEditor: 1
-  visitLeftFirst: 0
+  visitLeftFirst: 1
   x1: 0
   z1: 0
-  x2: 4
-  z2: 4
+  x2: 1
+  z2: 1
   pseudoCodeViewer: {fileID: 548546077}
 --- !u!114 &591449219
 MonoBehaviour:
@@ -911,6 +911,11 @@ Prefab:
     - target: {fileID: 4539198725591652, guid: 5038125895bab364d927cb32cb0b755a, type: 2}
       propertyPath: m_RootOrder
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 23630836250621820, guid: 5038125895bab364d927cb32cb0b755a,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5038125895bab364d927cb32cb0b755a, type: 2}

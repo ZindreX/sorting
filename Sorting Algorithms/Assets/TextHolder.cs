@@ -26,4 +26,12 @@ public class TextHolder : MonoBehaviour {
         }
     }
 
+    public void ChangeColor(Color color)
+    {
+        foreach (TextMesh textMesh in surfaceTexts)
+        {
+            textMesh.color = color;
+        }
+    }
+
 }

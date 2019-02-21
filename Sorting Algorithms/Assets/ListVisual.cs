@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class ListVisual : MonoBehaviour {
 
+    /* -------------------------------------------- List representation ----------------------------------------------------
+     * > Gives a visual representation of the nodes in the algorithms
+     *  - DFS: Stack
+     *  - BFS: Queue
+     *  - Dijkstra: Priority list
+     * > Nodes are put on top of each other, where
+     *  - Stack: removes the object on top
+     *  - Queue/Priority list: removes the object on the bottom
+     * 
+     * > Note:
+     *  - Priority list keeps elements sorted from least (index 0) to biggest (index -1) element (index opposite of Dijkstra's list) : fix?
+    */
+
     [SerializeField]
-    private GameObject listObjPrefab;
+    private GameObject listObjPrefab, listRoof;
 
     [SerializeField]
     private TextMesh listTypeTitle;
@@ -15,6 +28,8 @@ public class ListVisual : MonoBehaviour {
 
     private GameObject outElement;
     private List<GameObject> listObjects;
+
+    private char searchForID;
 
     private void Awake()
     {
@@ -27,22 +42,42 @@ public class ListVisual : MonoBehaviour {
         listTypeTitle.text = listType;
     }
 
+    private void MoveListRoof(bool increase)
+    {
+        if (increase)
+            listRoof.transform.position += new Vector3(0f, 1f, 0f);
+        else
+            listRoof.transform.position -= new Vector3(0f, 1f, 0f);
+    }
+
+    private void UpdateListRoofPosition()
+    {
+        listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, listObjects.Count + 2f, spawnPointList.transform.position.z);
+    }
+
     public void AddListObject(char id)
     {
+        // Update roof to prevent list element to become buggy (jumping, shaking etc.)
+        UpdateListRoofPosition();
+
+        // Instantiate element
         Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * listObjects.Count;
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
         listObject.GetComponent<TextHolder>().SetSurfaceText(id.ToString());
         listObject.GetComponent<MoveObject>().SetDestination(pos);
+
+        // Add to list
         listObjects.Add(listObject);
     }
 
     public void PriorityAdd(char id, int value, int index)
     {
-        Debug.Log("List size: " + listObjects.Count + ", trying to insert '" + id + "' into index=" + index);
+        UpdateListRoofPosition();
+
         // Move all existing list elements up (from the point where we want to insert the new element)
         for (int i=listObjects.Count-1; i >= index; i--)
         {
-            // Remove gravity to make it easier
+            // Remove gravity to make it easier to move the objects
             listObjects[i].GetComponent<Rigidbody>().useGravity = false;
             // Find new position and move it
             Vector3 newPos = listObjects[i].transform.position + new Vector3(0f, 1f, 0f);
@@ -52,9 +87,13 @@ public class ListVisual : MonoBehaviour {
         // Add new element into the open slot
         Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * index;
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
+        
         listObject.GetComponent<TextHolder>().SetSurfaceText(id, value);
+        if (id == searchForID)
+            listObject.GetComponent<TextHolder>().ChangeColor(UtilGraph.TRAVERSED_COLOR);
+
         listObject.GetComponent<MoveObject>().SetDestination(pos);
-        listObjects.Add(listObject);
+        listObjects.Insert(index, listObject);
 
         // Enable gravity again
         foreach (GameObject obj in listObjects)
@@ -68,6 +107,7 @@ public class ListVisual : MonoBehaviour {
         switch (listTypeTitle.text)
         {
             case Util.QUEUE:
+            case Util.PRIORITY_LIST:
                 outElement = listObjects[0];
                 listObjects.RemoveAt(0);
                 MoveObjectOut(outElement, true);
@@ -79,11 +119,11 @@ public class ListVisual : MonoBehaviour {
                 MoveObjectOut(outElement, false);
                 break;
 
-            case Util.PRIORITY_LIST:
-                outElement = listObjects[listObjects.Count - 1];
-                listObjects.RemoveAt(listObjects.Count - 1);
-                MoveObjectOut(outElement, true);
-                break;
+            //case Util.PRIORITY_LIST:
+            //    outElement = listObjects[listObjects.Count - 1];
+            //    listObjects.RemoveAt(listObjects.Count - 1);
+            //    MoveObjectOut(outElement, true);
+            //    break;
         }
     }
 
@@ -105,6 +145,11 @@ public class ListVisual : MonoBehaviour {
     public void DestroyOutElement()
     {
         Destroy(outElement);
+    }
+
+    public char SearchingForID
+    {
+        set { searchForID = value; }
     }
 
 }

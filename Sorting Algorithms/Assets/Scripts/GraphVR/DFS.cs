@@ -118,12 +118,12 @@ public class DFS : GraphAlgorithm, ITraverse {
                 //if (visitLeftFirst)
                 //    visitNode = currentNode.Edges.Count - 1 - i;
 
-                Edge edge = currentNode.Edges[i];// visitNode];                
+                Edge edge = currentNode.Edges[i]; // visitNode];                
                 Node checkingNode = edge.OtherNodeConnected(currentNode);
-                SetNodePseudoCode(checkingNode, 2);
+                SetNodePseudoCode(checkingNode, 2); // Pseudocode
 
                 // Mark edge
-                edge.CurrentColor = UtilGraph.VISITED;
+                edge.CurrentColor = UtilGraph.VISITED_COLOR;
 
                 // Line 7: If statement (condition)
                 yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
@@ -165,22 +165,38 @@ public class DFS : GraphAlgorithm, ITraverse {
     #region DFS Demo recursive
     public IEnumerator DemoRecursive(Node node)
     {
-        //if (node.PrevEdge != null)
-        //    node.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+        if (node.PrevEdge != null)
+            node.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+
+        SetNodePseudoCode(node, 1);
         listVisual.RemoveAndMoveElementOut(); // List visual
+        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+
+        // Line 3: Mark as visited
         node.Visited = true;
-        yield return new WaitForSeconds(seconds);
-        node.Traversed = true;
+        yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+
+        node.Traversed = true; // ??
 
         for (int i=0; i < node.Edges.Count; i++)
         {
             Edge nextEdge = node.Edges[i];
             Node nextNode = nextEdge.OtherNodeConnected(node);
+            SetNodePseudoCode(nextNode, 2); // Pseudocode
+
             if (!nextNode.Visited)
             {
+                // Line 8: Push node on top of stack
+                nextEdge.CurrentColor = UtilGraph.VISITED_COLOR;
                 listVisual.AddListObject(nextNode.NodeAlphaID); // Visual list
-                nextEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+
+                // Line 9: Mark node
+                nextNode.Visited = true;
+                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+
                 yield return DemoRecursive(nextNode);
+                listVisual.DestroyOutElement(); // List visual
             }
             //else
             //{
