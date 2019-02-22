@@ -62,7 +62,7 @@ public class RandomGraphManager : GraphManager {
     {
         GameObject node = Instantiate(nodePrefab, pos, Quaternion.identity);
         node.AddComponent<RandomNode>();
-        node.GetComponent<RandomNode>().InitRandomNode(algorithm.AlgorithmName);
+        node.GetComponent<RandomNode>().InitRandomNode(algorithm.AlgorithmName, listVisual);
         return node.GetComponent<RandomNode>();
     }
 

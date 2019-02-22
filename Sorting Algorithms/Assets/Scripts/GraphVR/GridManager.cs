@@ -42,7 +42,7 @@ public class GridManager : GraphManager {
                 int xPos = startX - x * gridSpace;
                 GameObject node = Instantiate(nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
                 node.AddComponent<GridNode>();
-                node.GetComponent<GridNode>().InitGridNode(algorithm.AlgorithmName, new int[2] { z, x });
+                node.GetComponent<GridNode>().InitGridNode(algorithm.AlgorithmName, listVisual, new int[2] { z, x });
                 gridNodes[z, x] = node.GetComponent<GridNode>();
             }
         }

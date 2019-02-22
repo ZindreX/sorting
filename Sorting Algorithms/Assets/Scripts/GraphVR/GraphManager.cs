@@ -12,6 +12,7 @@ public abstract class GraphManager : MainManager {
 
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
+    protected ListVisual listVisual;
 
     protected virtual void Awake()
     {
@@ -26,11 +27,14 @@ public abstract class GraphManager : MainManager {
         nodePrefab = gs.nodePrefab;
         edgePrefab = gs.edgePrefab;
 
+
         // Algorithm
         algorithm = gs.GetGraphAlgorithm();
+        algorithm.GraphStructure = gs.Graphstructure;
         algorithm.Seconds = gs.AlgorithmSpeed;
-        algorithm.ListVisual = gs.ListVisual;
 
+        listVisual = gs.ListVisual;
+        
         // Pseudocode
         algorithm.PseudoCodeViewer = gs.PseudoCodeViewer;
 
@@ -57,11 +61,11 @@ public abstract class GraphManager : MainManager {
                     case UtilGraph.DFS:
                         ((DFS)algorithm).VisistLeftFirst = gs.VisitLeftFirst;
 
-                        if (false)
+                        if (true)
                             StartCoroutine(((DFS)algorithm).Demo(GetNode(startNode[0], startNode[1])));
                         else
                         {
-                            algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
+                            //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
                             StartCoroutine(((DFS)algorithm).DemoRecursive(GetNode(startNode[0], startNode[1])));
                         }                   
                         break;
@@ -119,8 +123,6 @@ public abstract class GraphManager : MainManager {
 
     public void CreateGraph()
     {
-        MAX_NODES = GetMaxNumberOfNodes();
-        Debug.Log("Max nodes: " + MAX_NODES);
         CreateNodes(algorithm.AlgorithmName);
         CreateEdges(algorithm.AlgorithmName);
     }

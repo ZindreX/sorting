@@ -19,19 +19,19 @@ public class DFS : GraphAlgorithm, ITraverse {
     public override string CollectLine(int lineNr)
     {
         string codeLine = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
-
+        
         switch (lineNr)
         {
-            case 0: codeLine += "DFS(G, s):"; break;
-            case 1: codeLine += "    Q = []    // Q is an empty stack"; break;
-            case 2: codeLine += "    Q.Push(" + node1Alpha+ ")"; break;
-            case 3: codeLine += "    " + node1Alpha + ".visited = true"; break;
-            case 4: codeLine += "    while (" + lengthOfList + " > 0):"; break;
-            case 5: codeLine += "        " + node1Alpha + " = Q.Pop()"; break;
-            case 6: codeLine += "        for all neighbors w of " + node1Alpha + " in Graph G:"; break;
-            case 7: codeLine += "            if (!" + node2Alpha + ".visited):"; break;
-            case 8: codeLine += "                Q.Push(" + node2Alpha + ")"; break;
-            case 9: codeLine += "                " + node2Alpha + ".visited = true"; break;
+            case 0: codeLine += string.Format("DFS({0}, {1}):", graphStructure, node1Alpha); break;
+            case 1: codeLine += "    stack = [ ]"; break;
+            case 2: codeLine += string.Format("    stack.Push({0})", node1Alpha); break;
+            case 3: codeLine += string.Format("    {0}.visited = true", node1Alpha); break;
+            case 4: codeLine += string.Format("    while ({0} > 0):", lengthOfList); break;
+            case 5: codeLine += string.Format("        {0} <- stack.Pop()", node1Alpha); break;
+            case 6: codeLine += string.Format("        for all neighbors of {0} in Graph:", node1Alpha); break;
+            case 7: codeLine += string.Format("            if (!{0}.visited):", node2Alpha); break;
+            case 8: codeLine += string.Format("                stack.Push({0})", node2Alpha); break;
+            case 9: codeLine += string.Format("                {0}.visited = true", node2Alpha); break;
             case 10: codeLine += "           end if"; break;
             case 11: codeLine += "       end for"; break;
             case 12: codeLine += "   end while"; break;
@@ -63,14 +63,17 @@ public class DFS : GraphAlgorithm, ITraverse {
     #region DFS Demo
     public IEnumerator Demo(Node startNode)
     {
+        // Line 0: Set graph/start node
+        SetNodePseudoCode(startNode, 1);
+        yield return HighlightPseudoCode(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
+
         // Line 1: Create an empty list (stack)
         Stack<Node> stack = new Stack<Node>();
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         // Line 2: Push start node
         stack.Push(startNode);
-        listVisual.AddListObject(startNode.NodeAlphaID); // List visual
-        SetNodePseudoCode(startNode, 1);
+        startNode.AddTraversalNodeRepresentation(); //listVisual.AddListObject(startNode.NodeAlphaID); // List visual
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
@@ -85,7 +88,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Pop node from stack
             Node currentNode = stack.Pop();
-            listVisual.RemoveAndMoveElementOut(); // List visual
+            currentNode.RemovedFromList(); //listVisual.RemoveAndMoveElementOut(); // List visual
             SetNodePseudoCode(currentNode, 1);
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -132,7 +135,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Push node on top of stack
                     stack.Push(checkingNode);
-                    listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
+                    checkingNode.AddTraversalNodeRepresentation(); //listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -153,7 +156,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
             lengthOfList = stack.Count.ToString(); // Pseudocode stack size
 
-            listVisual.DestroyOutElement(); // List visual
+            //listVisual.DestroyOutElement(); // List visual
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);                    
@@ -169,7 +172,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             node.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
 
         SetNodePseudoCode(node, 1);
-        listVisual.RemoveAndMoveElementOut(); // List visual
+        //listVisual.RemoveAndMoveElementOut(); // List visual
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
@@ -188,7 +191,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             {
                 // Line 8: Push node on top of stack
                 nextEdge.CurrentColor = UtilGraph.VISITED_COLOR;
-                listVisual.AddListObject(nextNode.NodeAlphaID); // Visual list
+                //listVisual.AddListObject(nextNode.NodeAlphaID); // Visual list
                 yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                 // Line 9: Mark node
@@ -196,7 +199,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
 
                 yield return DemoRecursive(nextNode);
-                listVisual.DestroyOutElement(); // List visual
+                //listVisual.DestroyOutElement(); // List visual
             }
             //else
             //{
@@ -207,7 +210,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             //}
 
         }
-        listVisual.DestroyOutElement();
+        //listVisual.DestroyOutElement();
     }
 
 

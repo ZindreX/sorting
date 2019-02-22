@@ -8,20 +8,15 @@ public class RandomNode : Node {
     [SerializeField]
     private List<RandomNode> neighbors;
 
-    public void InitRandomNode(string algorithm)
+    public void InitRandomNode(string algorithm, ListVisual listVisual)
     {
-        InitNode(algorithm);
+        InitNode(algorithm, listVisual);
         neighbors = new List<RandomNode>();
     }
 
     public override string NodeType
     {
         get { return "Random node " + nodeID; }
-    }
-
-    protected override void UpdateNodeText(string text)
-    {
-        GetComponentInChildren<TextMesh>().text = text;
     }
 
     public bool IsNeighborWith(RandomNode node)

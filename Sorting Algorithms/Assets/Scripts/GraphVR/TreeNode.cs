@@ -11,9 +11,9 @@ public class TreeNode : Node {
     [SerializeField]
     private List<TreeNode> children;
 
-    public void InitTreeNode(string algorithm, TreeNode parent, int treeLevel)
+    public void InitTreeNode(string algorithm, ListVisual listVisual, TreeNode parent, int treeLevel)
     {
-        InitNode(algorithm);
+        InitNode(algorithm, listVisual);
         children = new List<TreeNode>();
         this.treeLevel = treeLevel;
 
@@ -60,10 +60,4 @@ public class TreeNode : Node {
         else
             base.AddEdge(edge);
     }
-
-    protected override void UpdateNodeText(string text)
-    {
-        GetComponentInChildren<TextMesh>().text = text;
-    }
-
 }

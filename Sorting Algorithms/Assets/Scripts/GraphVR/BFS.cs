@@ -14,15 +14,15 @@ public class BFS : GraphAlgorithm, ITraverse {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
         switch (lineNr)
         {
-            case 0: lineOfCode += "BFS(G, s):"; break;
-            case 1: lineOfCode += string.Format("   Q = []"); break;
-            case 2: lineOfCode += string.Format("   Q.enqueue({0})", node1Alpha); break;
+            case 0: lineOfCode += string.Format("BFS({0}, {1}):", graphStructure, node1Alpha); break;
+            case 1: lineOfCode += string.Format("   queue = [ ]"); break;
+            case 2: lineOfCode += string.Format("   queue.Enqueue({0})", node1Alpha); break;
             case 3: lineOfCode += string.Format("   {0}.visited = true", node1Alpha); break;
             case 4: lineOfCode += string.Format("   while ({0} > 0):", lengthOfList); break;
-            case 5: lineOfCode += string.Format("       v = {0}", node1Alpha); break;
-            case 6: lineOfCode += string.Format("       for all neighbors w of {0} in Graph G:", node1Alpha); break; //case 6: lineOfCode += string.Format("       for i={0} to {1}:", i, node1.Edges.Count-1); break;
-            case 7: lineOfCode += string.Format("           if (!v.neighbors[{0}].visited):", i); break;
-            case 8: lineOfCode += string.Format("               Q.enqueue({0})", node2Alpha); break;
+            case 5: lineOfCode += string.Format("       {0} <- queue.Dequeue()", node1Alpha); break;
+            case 6: lineOfCode += string.Format("       for all neighbors of {0} in Graph:", node1Alpha); break; //case 6: lineOfCode += string.Format("       for i={0} to {1}:", i, node1.Edges.Count-1); break;
+            case 7: lineOfCode += string.Format("           if (!{0}.visited):", node2Alpha); break;
+            case 8: lineOfCode += string.Format("               queue.Enqueue({0})", node2Alpha); break;
             case 9: lineOfCode += string.Format("               {0}.visited = true", node2Alpha); break;
             case 10: lineOfCode += string.Format("          end if"); break;
             case 11: lineOfCode += string.Format("      end for"); break;
@@ -55,14 +55,17 @@ public class BFS : GraphAlgorithm, ITraverse {
     #region BFS Demo
     public IEnumerator Demo(Node startNode)
     {
+        // Line 0: Set graph/start node
+        SetNodePseudoCode(startNode, 1); // Pseudocode
+        yield return HighlightPseudoCode(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
+        
         // Line 1: Create empty list (queue)
         Queue<Node> queue = new Queue<Node>();
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         // Line 2: Add start node
         queue.Enqueue(startNode);
-        listVisual.AddListObject(startNode.NodeAlphaID); // List visual
-        SetNodePseudoCode(startNode, 1); // Pseudocode
+        startNode.AddTraversalNodeRepresentation(); //listVisual.AddListObject(startNode.NodeAlphaID); // List visual
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
@@ -77,7 +80,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Dequeue node from queue
             Node currentNode = queue.Dequeue();
-            listVisual.RemoveAndMoveElementOut(); // List visual
+            currentNode.RemovedFromList(); //listVisual.RemoveAndMoveElementOut(); // List visual
             SetNodePseudoCode(currentNode, 1); // Pseudocode
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -119,7 +122,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Add to queue
                     queue.Enqueue(checkingNode);
-                    listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
+                    checkingNode.AddTraversalNodeRepresentation(); //listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -137,7 +140,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
 
             lengthOfList = queue.Count.ToString(); // Pseudo code
-            listVisual.DestroyOutElement(); // List visual
+            //listVisual.DestroyOutElement(); // List visual
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);

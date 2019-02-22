@@ -119,7 +119,7 @@ public class GraphSettings : MonoBehaviour {
         {
             case 0: algorithmSpeed = 3f; break;
             case 1: algorithmSpeed = 1f; break;
-            case 2: algorithmSpeed = 0.5f; break;
+            case 2: algorithmSpeed = 0.1f; break;
             case 4: algorithmSpeed = 0f; break;
         }
 

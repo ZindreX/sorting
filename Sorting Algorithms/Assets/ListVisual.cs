@@ -55,7 +55,7 @@ public class ListVisual : MonoBehaviour {
         listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, listObjects.Count + 2f, spawnPointList.transform.position.z);
     }
 
-    public void AddListObject(char id)
+    public void AddListObject(Node node)
     {
         // Update roof to prevent list element to become buggy (jumping, shaking etc.)
         UpdateListRoofPosition();
@@ -63,19 +63,20 @@ public class ListVisual : MonoBehaviour {
         // Instantiate element
         Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * listObjects.Count;
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
-        listObject.GetComponent<TextHolder>().SetSurfaceText(id.ToString());
+        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, listObjects.Count);
+        listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID.ToString());
         listObject.GetComponent<MoveObject>().SetDestination(pos);
 
         // Add to list
         listObjects.Add(listObject);
     }
 
-    public void PriorityAdd(char id, int value, int index)
+    public void PriorityAdd(Node node, int pushValue, int index)
     {
         UpdateListRoofPosition();
 
         // Move all existing list elements up (from the point where we want to insert the new element)
-        for (int i=listObjects.Count-1; i >= index; i--)
+        for (int i=0; i < index; i++) //for (int i=listObjects.Count-1; i >= index; i--)
         {
             // Remove gravity to make it easier to move the objects
             listObjects[i].GetComponent<Rigidbody>().useGravity = false;
@@ -85,12 +86,12 @@ public class ListVisual : MonoBehaviour {
         }
 
         // Add new element into the open slot
-        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * index;
+        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * (listObjects.Count - index);
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
         
-        listObject.GetComponent<TextHolder>().SetSurfaceText(id, value);
-        if (id == searchForID)
-            listObject.GetComponent<TextHolder>().ChangeColor(UtilGraph.TRAVERSED_COLOR);
+        listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID, pushValue);
+        if (node.NodeAlphaID == searchForID)
+            listObject.GetComponent<TextHolder>().ChangeColor(UtilGraph.SHORTEST_PATH_COLOR);
 
         listObject.GetComponent<MoveObject>().SetDestination(pos);
         listObjects.Insert(index, listObject);
@@ -107,8 +108,7 @@ public class ListVisual : MonoBehaviour {
         switch (listTypeTitle.text)
         {
             case Util.QUEUE:
-            case Util.PRIORITY_LIST:
-                outElement = listObjects[0];
+                outElement = listObjects[0]; // change to queue for dequeuing instead?
                 listObjects.RemoveAt(0);
                 MoveObjectOut(outElement, true);
                 break;
@@ -119,11 +119,11 @@ public class ListVisual : MonoBehaviour {
                 MoveObjectOut(outElement, false);
                 break;
 
-            //case Util.PRIORITY_LIST:
-            //    outElement = listObjects[listObjects.Count - 1];
-            //    listObjects.RemoveAt(listObjects.Count - 1);
-            //    MoveObjectOut(outElement, true);
-            //    break;
+            case Util.PRIORITY_LIST:
+                outElement = listObjects[listObjects.Count - 1];
+                listObjects.RemoveAt(listObjects.Count - 1);
+                MoveObjectOut(outElement, true);
+                break;
         }
     }
 
@@ -139,6 +139,17 @@ public class ListVisual : MonoBehaviour {
             {
                 otherobj.GetComponent<MoveObject>().SetDestination(otherobj.transform.position - new Vector3(0f, 1f, 0f));
             }
+        }
+    }
+
+    public void UpdateNodeRepresentation(Node node)
+    {
+        int index = listObjects.IndexOf(node.gameObject);
+        Debug.Log("Updating representation of '" + node.NodeAlphaID + "': index=" + index + ", list size: " + listObjects.Count);
+
+        if (index != -1)
+        {
+            listObjects[index].GetComponent<NodeRepresentation>().ValueChanged(index);
         }
     }
 

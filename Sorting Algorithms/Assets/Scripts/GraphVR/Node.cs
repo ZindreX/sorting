@@ -11,8 +11,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     [SerializeField]
     protected int nodeID;
     protected char nodeAlphaID;
+    protected string algorithm;
+
     protected Color currentColor;
     protected Animator animator;
+    protected TextMesh textNodeID, textNodeDist;
+    protected ListVisual listVisual;
 
     // Instruction variables
     protected InstructionBase instruction;
@@ -32,19 +36,29 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
+        Component[] textHolders = GetComponentsInChildren(typeof(TextMesh));
+        textNodeID = textHolders[0].GetComponent<TextMesh>();
+        textNodeDist = textHolders[1].GetComponent<TextMesh>();
+
         nodeID = NODE_ID++;
-        nodeAlphaID = UtilGraph.ConvertIDToAlphabet(nodeID);
+        NodeAlphaID = UtilGraph.ConvertIDToAlphabet(nodeID);
         ResetNode();
     }
 
-    protected void InitNode(string algorithm)
+    protected void InitNode(string algorithm, ListVisual listVisual)
     {
-        switch (algorithm)
-        {
-            case UtilGraph.BFS: case UtilGraph.DFS: UpdateNodeText(nodeAlphaID.ToString()); break;
-            case UtilGraph.DIJKSTRA: dist = UtilGraph.INF; break;
-            default: Debug.LogError("Node text for '" + algorithm + "' not specified."); break;
-        }
+        SetNodeTextID(true);
+
+        if (listVisual != null)
+            this.listVisual = listVisual;
+
+        this.algorithm = algorithm;
+        if (algorithm == Util.DIJKSTRA)
+            Dist = UtilGraph.INF;
+        else
+            textNodeDist.text = "";
+
     }
 
     public int NodeID
@@ -55,34 +69,39 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public char NodeAlphaID
     {
         get { return nodeAlphaID; }
+        set { nodeAlphaID = value; }
+    }
+
+    private void SetNodeTextID(bool useAlpha)
+    {
+        if (useAlpha)
+            textNodeID.text = UtilGraph.ConvertIDToAlphabet(nodeID).ToString();
+        else
+            textNodeID.text = nodeID.ToString();
     }
        
     public int Dist
     {
         get { return dist; }
-        set { dist = value; UpdateNodeText(UtilGraph.ConvertIfInf(value.ToString())); }
+        set { dist = value; UpdateNodeDist(value); }
+    }
+
+    private void UpdateNodeDist(int newDist)
+    {
+        textNodeDist.text = UtilGraph.ConvertIfInf(newDist);
+        listVisual.UpdateNodeRepresentation(this);
     }
 
     public bool Traversed
     {
         get { return traversed; }
-        set { traversed = value;
-            if (traversed)
-                CurrentColor = UtilGraph.TRAVERSED_COLOR;
-            else
-                CurrentColor = Util.STANDARD_COLOR;
-        }
+        set { traversed = value; CurrentColor = UtilGraph.TRAVERSED_COLOR; listVisual.DestroyOutElement(); }
     }
 
     public bool Visited
     {
         get { return visited; }
-        set { visited = value;
-            if (visited)
-                CurrentColor = UtilGraph.VISITED_COLOR;
-            else
-                CurrentColor = Util.STANDARD_COLOR;
-        }
+        set { visited = value; CurrentColor = UtilGraph.VISITED_COLOR; }
     }
 
     public Color CurrentColor
@@ -114,15 +133,14 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         set { prevEdge = value; }
     }
 
-    // ******************************************************************* OBS: inverted
+    // Obs: inverted [biggest, ..., smallest]
     public int CompareTo(Node other)
     {
-        return (dist <= other.Dist) ? 1 : -1;
-        //if (dist < other.Dist)
-        //    return 1;
-        //else if (dist > other.Dist)
-        //    return -1;
-        //return 0;
+        if (dist < other.Dist)
+            return 1;
+        else if (dist > other.Dist)
+            return -1;
+        return 0;
     }
 
     public virtual void ResetNode()
@@ -133,6 +151,23 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         //TotalCost = UtilGraph.INF;
         prevEdge = null;
         CurrentColor = UtilGraph.STANDARD_COLOR;
+    }
+
+    public void AddTraversalNodeRepresentation()
+    {
+        listVisual.AddListObject(this);
+    }
+
+    // List visual
+    public void AddShortestPathNodeRepresentation(int pushValue, int index)
+    {
+        dist = pushValue;
+        listVisual.PriorityAdd(this, pushValue, index);
+    }
+
+    public void RemovedFromList()
+    {
+        listVisual.RemoveAndMoveElementOut();
     }
 
     // *** Instructions ***
@@ -151,6 +186,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     // Instruction methods end
 
     public abstract string NodeType { get; }
-    protected abstract void UpdateNodeText(string text);
+  
 
 }

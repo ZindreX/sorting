@@ -19,7 +19,7 @@ public class UtilGraph : Util {
     public static readonly string START_NODE = "Start node", LENGTH_OF_LIST = "Length of list", NODE = "vertice", NEIGHBOR = "neighbor";
 
     // Colors
-    public static Color TRAVERSE_COLOR = Color.red, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green;
+    public static Color TRAVERSE_COLOR = Color.red, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green, SHORTEST_PATH_COLOR = Color.magenta;
 
     // *** Instructions ***
     // BFS
@@ -33,11 +33,9 @@ public class UtilGraph : Util {
 
 
     // Converts cost into 'Inf' if cost is infinity, otherwise return input
-    public static string ConvertIfInf(string costText)
+    public static string ConvertIfInf(int value)
     {
-        int cost;
-        bool isNumberic = int.TryParse(costText, out cost);
-        return (cost == INF) ? "Inf" : costText;
+        return (value == INF) ? "Inf" : value.ToString();
     }
 
     // Converts cost from string to int

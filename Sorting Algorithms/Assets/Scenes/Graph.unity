@@ -613,9 +613,9 @@ MonoBehaviour:
   teachingModeEditor: 0
   graphStructureEditor: 0
   useAlgorithmEditor: 0
-  algorithmSpeedEditor: 3
-  gridRowsEditor: 5
-  gridColumnsEditor: 5
+  algorithmSpeedEditor: 2
+  gridRowsEditor: 4
+  gridColumnsEditor: 4
   gridSpaceEditor: 0
   treeDepthEditor: 3
   nTreeEditor: 0
@@ -624,8 +624,8 @@ MonoBehaviour:
   visitLeftFirst: 1
   x1: 0
   z1: 0
-  x2: 1
-  z2: 1
+  x2: 4
+  z2: 4
   pseudoCodeViewer: {fileID: 548546077}
 --- !u!114 &591449219
 MonoBehaviour:

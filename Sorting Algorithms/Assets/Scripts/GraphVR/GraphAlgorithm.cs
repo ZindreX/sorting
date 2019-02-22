@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class GraphAlgorithm : TeachingAlgorithm {
 
+    protected string graphStructure = "Graph";
+
     // Demo variables
     protected Node node1, node2;
     protected Edge edge;
@@ -15,31 +17,25 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected int prevHighlightedLineOfCode;
 
 
-    // List visual
-    protected ListVisual listVisual;
+    public string GraphStructure
+    {
+        get { return graphStructure; }
+        set { graphStructure = value; }
+    }
 
     protected void SetNodePseudoCode(Node node, int nr)
     {
         switch (nr)
         {
-            case 1: node1 = node; node1Alpha = node.NodeAlphaID; break;
-            case 2: node2 = node; node2Alpha = node.NodeAlphaID; break;
-        }
-    }
-
-    protected void SetNodePseudoCode(Node node, int nr, int value)
-    {
-        SetNodePseudoCode(node, nr);
-        switch (nr)
-        {
-            case 1: node1.Dist = value; node1Dist = value; break;
-            case 2: node2.Dist = value; node2Dist = value; break;
+            case 1: node1 = node; node1Dist = node.Dist; node1Alpha = node.NodeAlphaID; break;
+            case 2: node2 = node; node2Dist = node.Dist; node2Alpha = node.NodeAlphaID; break;
         }
     }
 
     protected void SetEdge(Edge edge)
     {
         this.edge = edge;
+        edge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
         edgeCost = edge.Cost;
     }
 
@@ -47,13 +43,6 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     {
         return UtilGraph.SPACE_BETWEEN_CODE_LINES;
     }
-
-    public ListVisual ListVisual
-    {
-        get { return listVisual; }
-        set { listVisual = value; }
-    }
-
 
     public override void ResetSetup()
     {

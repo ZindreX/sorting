@@ -17,7 +17,7 @@ public class TextHolder : MonoBehaviour {
 
     public void SetSurfaceText(char id, int value)
     {
-        for (int i=0; i < surfaceTexts.Length; i++)
+        for (int i = 0; i < surfaceTexts.Length; i++)
         {
             if (i % 2 == 0)
                 surfaceTexts[i].text = id.ToString();
@@ -33,5 +33,4 @@ public class TextHolder : MonoBehaviour {
             textMesh.color = color;
         }
     }
-
 }
