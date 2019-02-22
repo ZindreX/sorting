@@ -29,8 +29,6 @@ public class ListVisual : MonoBehaviour {
     private GameObject outElement;
     private List<GameObject> listObjects;
 
-    private char searchForID;
-
     private void Awake()
     {
         listObjects = new List<GameObject>();
@@ -88,9 +86,11 @@ public class ListVisual : MonoBehaviour {
         // Add new element into the open slot
         Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * (listObjects.Count - index);
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
-        
+        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, listObjects.Count);
         listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID, pushValue);
-        if (node.NodeAlphaID == searchForID)
+
+        // Change color of the node representation we are looking for
+        if (node.IsEndNode)
             listObject.GetComponent<TextHolder>().ChangeColor(UtilGraph.SHORTEST_PATH_COLOR);
 
         listObject.GetComponent<MoveObject>().SetDestination(pos);
@@ -101,6 +101,7 @@ public class ListVisual : MonoBehaviour {
         {
             obj.GetComponent<Rigidbody>().useGravity = true;
         }
+        Debug.Log("Finish adding priority element");
     }
 
     public void RemoveAndMoveElementOut()
@@ -144,23 +145,26 @@ public class ListVisual : MonoBehaviour {
 
     public void UpdateNodeRepresentation(Node node)
     {
-        int index = listObjects.IndexOf(node.gameObject);
-        Debug.Log("Updating representation of '" + node.NodeAlphaID + "': index=" + index + ", list size: " + listObjects.Count);
+        int index = -1;
+        Debug.Log(listObjects.Count);
+        for (int i=0; i < listObjects.Count; i++)
+        {
+            if (listObjects[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
+            {
+                index = i;
+                break;
+            }
+
+        }
+        //Debug.Log("Updating representation of '" + node.NodeAlphaID + "': index=" + index + ", list size: " + listObjects.Count);
 
         if (index != -1)
-        {
             listObjects[index].GetComponent<NodeRepresentation>().ValueChanged(index);
-        }
+
     }
 
     public void DestroyOutElement()
     {
         Destroy(outElement);
     }
-
-    public char SearchingForID
-    {
-        set { searchForID = value; }
-    }
-
 }

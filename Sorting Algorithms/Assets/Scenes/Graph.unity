@@ -612,7 +612,7 @@ MonoBehaviour:
   listVisual: {fileID: 1415126236}
   teachingModeEditor: 0
   graphStructureEditor: 0
-  useAlgorithmEditor: 0
+  useAlgorithmEditor: 2
   algorithmSpeedEditor: 2
   gridRowsEditor: 4
   gridColumnsEditor: 4

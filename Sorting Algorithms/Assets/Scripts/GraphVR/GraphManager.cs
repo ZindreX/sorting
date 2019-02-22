@@ -51,29 +51,32 @@ public abstract class GraphManager : MainManager {
         CreateGraph();
 
         // Init teaching mode
-        int[] startNode = gs.StartNode();
+        int[] startNodeCell = gs.StartNode();
+        Node startNode = GetNode(startNodeCell[0], startNodeCell[1]);
         switch (gs.TeachingMode)
         {
             case UtilGraph.DEMO:
                 switch (gs.UseAlgorithm)
                 {
-                    case UtilGraph.BFS: StartCoroutine(((BFS)algorithm).Demo(GetNode(startNode[0], startNode[1]))); break;
+                    case UtilGraph.BFS: StartCoroutine(((BFS)algorithm).Demo(startNode)); break;
                     case UtilGraph.DFS:
                         ((DFS)algorithm).VisistLeftFirst = gs.VisitLeftFirst;
 
                         if (true)
-                            StartCoroutine(((DFS)algorithm).Demo(GetNode(startNode[0], startNode[1])));
+                            StartCoroutine(((DFS)algorithm).Demo(startNode));
                         else
                         {
                             //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
-                            StartCoroutine(((DFS)algorithm).DemoRecursive(GetNode(startNode[0], startNode[1])));
+                            StartCoroutine(((DFS)algorithm).DemoRecursive(startNode));
                         }                   
                         break;
 
 
                     case UtilGraph.DIJKSTRA:
-                        int[] endNode = gs.EndNode();
-                        StartCoroutine(((Dijkstra)algorithm).Demo(GetNode(startNode[0], startNode[1]), GetNode(endNode[0], endNode[1])));
+                        int[] endNodeCell = gs.EndNode();
+                        Node endNode = GetNode(endNodeCell[0], endNodeCell[1]);
+                        endNode.IsEndNode = true;
+                        StartCoroutine(((Dijkstra)algorithm).Demo(startNode, endNode));
                         break;
 
                     //case UtilGraph.TREE_PRE_ORDER_TRAVERSAL:
