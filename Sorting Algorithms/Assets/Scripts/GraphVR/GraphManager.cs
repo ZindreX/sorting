@@ -12,7 +12,6 @@ public abstract class GraphManager : MainManager {
 
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
-    protected ListVisual listVisual;
 
     protected virtual void Awake()
     {
@@ -32,8 +31,7 @@ public abstract class GraphManager : MainManager {
         algorithm = gs.GetGraphAlgorithm();
         algorithm.GraphStructure = gs.Graphstructure;
         algorithm.Seconds = gs.AlgorithmSpeed;
-
-        listVisual = gs.ListVisual;
+        algorithm.ListVisual = gs.ListVisual;
         
         // Pseudocode
         algorithm.PseudoCodeViewer = gs.PseudoCodeViewer;

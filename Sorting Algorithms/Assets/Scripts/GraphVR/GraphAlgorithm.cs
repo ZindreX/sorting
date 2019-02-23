@@ -16,6 +16,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected bool beginnerWait;
     protected int prevHighlightedLineOfCode;
 
+    protected ListVisual listVisual;
 
     public string GraphStructure
     {
@@ -29,6 +30,17 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         {
             case 1: node1 = node; node1Dist = node.Dist; node1Alpha = node.NodeAlphaID; break;
             case 2: node2 = node; node2Dist = node.Dist; node2Alpha = node.NodeAlphaID; break;
+        }
+    }
+
+    protected void SetNodePseudoCode(Node node, int nr, int value)
+    {
+        SetNodePseudoCode(node, nr);
+        node.Dist = value;
+        switch (nr)
+        {
+            case 1: node1Dist = value; break;
+            case 2: node2Dist = value; break;
         }
     }
 
@@ -54,6 +66,12 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         node1Dist = 0;
         edgeCost = 0;
         numberOfEdges = 0;
+    }
+
+    public ListVisual ListVisual
+    {
+        get { return listVisual; }
+        set { listVisual = value; }
     }
 
 

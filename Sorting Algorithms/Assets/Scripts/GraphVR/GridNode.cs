@@ -9,9 +9,9 @@ public class GridNode : Node {
     [SerializeField]
     private List<GridNode> neighbors;
     
-    public void InitGridNode(string algorithm, ListVisual listVisual, int[] cell)
+    public void InitGridNode(string algorithm, int[] cell)
     {
-        InitNode(algorithm, listVisual);
+        InitNode(algorithm);
         neighbors = new List<GridNode>();
         this.cell = cell;
     }

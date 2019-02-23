@@ -73,7 +73,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         // Line 2: Push start node
         stack.Push(startNode);
-        startNode.AddTraversalNodeRepresentation(); //listVisual.AddListObject(startNode.NodeAlphaID); // List visual
+        listVisual.AddListObject(startNode); // Node Representation
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
@@ -88,7 +88,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Pop node from stack
             Node currentNode = stack.Pop();
-            currentNode.RemovedFromList(); //listVisual.RemoveAndMoveElementOut(); // List visual
+            listVisual.RemoveCurrentNode(); // Node Representation
             SetNodePseudoCode(currentNode, 1);
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -135,7 +135,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Push node on top of stack
                     stack.Push(checkingNode);
-                    checkingNode.AddTraversalNodeRepresentation(); //listVisual.AddListObject(checkingNode.NodeAlphaID); // List visual
+                    listVisual.AddListObject(checkingNode); // Node Representation
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -156,7 +156,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
             lengthOfList = stack.Count.ToString(); // Pseudocode stack size
 
-            //listVisual.DestroyOutElement(); // List visual
+            listVisual.DestroyOutElement(); // Node Representation
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);                    

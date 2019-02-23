@@ -17,7 +17,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected Color currentColor;
     protected Animator animator;
     protected TextMesh textNodeID, textNodeDist;
-    protected ListVisual listVisual;
 
     // Instruction variables
     protected InstructionBase instruction;
@@ -47,12 +46,9 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         ResetNode();
     }
 
-    protected void InitNode(string algorithm, ListVisual listVisual)
+    protected void InitNode(string algorithm)
     {
         SetNodeTextID(true);
-
-        if (listVisual != null)
-            this.listVisual = listVisual;
 
         this.algorithm = algorithm;
         if (algorithm == Util.DIJKSTRA)
@@ -95,13 +91,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     private void UpdateTextNodeDist(int newDist)
     {
         textNodeDist.text = UtilGraph.ConvertIfInf(newDist);
-        listVisual.UpdateNodeRepresentation(this);
     }
 
     public bool Traversed
     {
         get { return traversed; }
-        set { traversed = value; CurrentColor = UtilGraph.TRAVERSED_COLOR; listVisual.DestroyOutElement(); }
+        set { traversed = value; CurrentColor = UtilGraph.TRAVERSED_COLOR; }
     }
 
     public bool Visited
@@ -158,29 +153,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         prevEdge = null;
         CurrentColor = UtilGraph.STANDARD_COLOR;
         isEndNode = false;
-    }
-
-    // *** List visualization ***
-
-    public void AddTraversalNodeRepresentation()
-    {
-        listVisual.AddListObject(this);
-    }
-
-    public void AddShortestPathNodeRepresentation(int pushValue, int index)
-    {
-        listVisual.PriorityAdd(this, pushValue, index);
-        Dist = pushValue;
-    }
-
-    private void UpdateNodeRepresentation()
-    {
-        listVisual.UpdateNodeRepresentation(this);
-    }
-
-    public void RemovedFromList()
-    {
-        listVisual.RemoveAndMoveElementOut();
     }
 
     // *** Instructions ***

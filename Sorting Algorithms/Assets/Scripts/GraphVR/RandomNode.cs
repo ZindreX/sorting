@@ -8,9 +8,9 @@ public class RandomNode : Node {
     [SerializeField]
     private List<RandomNode> neighbors;
 
-    public void InitRandomNode(string algorithm, ListVisual listVisual)
+    public void InitRandomNode(string algorithm)
     {
-        InitNode(algorithm, listVisual);
+        InitNode(algorithm);
         neighbors = new List<RandomNode>();
     }
 

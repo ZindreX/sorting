@@ -503,6 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617192ac1cef85d41be9e0971e2426c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinateIndex: {x: 0, y: 0, z: 0}
 --- !u!114 &114725062199401462
 MonoBehaviour:
   m_ObjectHideFlags: 1

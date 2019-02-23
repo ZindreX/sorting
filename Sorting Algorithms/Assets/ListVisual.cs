@@ -26,12 +26,12 @@ public class ListVisual : MonoBehaviour {
     [SerializeField]
     private Transform spawnPointList, outPoint;
 
-    private GameObject outElement;
-    private List<GameObject> listObjects;
+    private NodeRepresentation currentNode;
+    private List<NodeRepresentation> nodeRepresentations;
 
     private void Awake()
     {
-        listObjects = new List<GameObject>();
+        nodeRepresentations = new List<NodeRepresentation>();
     }
 
 
@@ -40,36 +40,59 @@ public class ListVisual : MonoBehaviour {
         listTypeTitle.text = listType;
     }
 
-    private void MoveListRoof(bool increase)
+    public bool NodeHasRepresentation(Node node)
     {
-        if (increase)
-            listRoof.transform.position += new Vector3(0f, 1f, 0f);
-        else
-            listRoof.transform.position -= new Vector3(0f, 1f, 0f);
+        for (int i = 0; i < nodeRepresentations.Count; i++)
+        {
+            if (nodeRepresentations[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
+                return true;
+        }
+        return false;
     }
+
+    public int ListIndexOf(Node node)
+    {
+        for (int i = 0; i < nodeRepresentations.Count; i++)
+        {
+            if (nodeRepresentations[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
+                return i;
+        }
+        return -1;
+    }
+
+    //private void MoveListRoof(bool increase)
+    //{
+    //    if (increase)
+    //        listRoof.transform.position += new Vector3(0f, 1f, 0f);
+    //    else
+    //        listRoof.transform.position -= new Vector3(0f, 1f, 0f);
+    //}
 
     private void UpdateListRoofPosition()
     {
-        listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, listObjects.Count + 2f, spawnPointList.transform.position.z);
+        listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, nodeRepresentations.Count + 2f, spawnPointList.transform.position.z);
     }
 
+
+    // Adding a visual representation of the node
     public void AddListObject(Node node)
     {
         // Update roof to prevent list element to become buggy (jumping, shaking etc.)
         UpdateListRoofPosition();
 
         // Instantiate element
-        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * listObjects.Count;
+        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * nodeRepresentations.Count;
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
-        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, listObjects.Count);
+        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, nodeRepresentations.Count);
         listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID.ToString());
         listObject.GetComponent<MoveObject>().SetDestination(pos);
 
         // Add to list
-        listObjects.Add(listObject);
+        nodeRepresentations.Add(listObject.GetComponent<NodeRepresentation>());
     }
 
-    public void PriorityAdd(Node node, int pushValue, int index)
+    // Adding a visual representation of the node, with priority based on its distance value)
+    public void PriorityAdd(Node node, int index)
     {
         UpdateListRoofPosition();
 
@@ -77,94 +100,190 @@ public class ListVisual : MonoBehaviour {
         for (int i=0; i < index; i++) //for (int i=listObjects.Count-1; i >= index; i--)
         {
             // Remove gravity to make it easier to move the objects
-            listObjects[i].GetComponent<Rigidbody>().useGravity = false;
+            nodeRepresentations[i].GetComponent<Rigidbody>().useGravity = false;
             // Find new position and move it
-            Vector3 newPos = listObjects[i].transform.position + new Vector3(0f, 1f, 0f);
-            listObjects[i].GetComponent<MoveObject>().SetDestination(newPos);
+            Vector3 newPos = nodeRepresentations[i].transform.position + new Vector3(0f, 1f, 0f);
+            nodeRepresentations[i].GetComponent<MoveObject>().SetDestination(newPos);
         }
 
         // Add new element into the open slot
-        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * (listObjects.Count - index);
+        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * (nodeRepresentations.Count - index);
         GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
-        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, listObjects.Count);
-        listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID, pushValue);
+        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, index); // nodeRepresentations.Count);
+        listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID, node.Dist);
 
         // Change color of the node representation we are looking for
         if (node.IsEndNode)
             listObject.GetComponent<TextHolder>().ChangeColor(UtilGraph.SHORTEST_PATH_COLOR);
 
         listObject.GetComponent<MoveObject>().SetDestination(pos);
-        listObjects.Insert(index, listObject);
+        nodeRepresentations.Insert(index, listObject.GetComponent<NodeRepresentation>());
 
         // Enable gravity again
-        foreach (GameObject obj in listObjects)
+        foreach (NodeRepresentation nodeRep in nodeRepresentations)
         {
-            obj.GetComponent<Rigidbody>().useGravity = true;
+            nodeRep.GetComponent<Rigidbody>().useGravity = true;
         }
-        Debug.Log("Finish adding priority element");
     }
 
-    public void RemoveAndMoveElementOut()
+    // Prepares the moving of the 'current node', removing it from the list/queue/stack
+    public void RemoveCurrentNode()
     {
         switch (listTypeTitle.text)
         {
             case Util.QUEUE:
-                outElement = listObjects[0]; // change to queue for dequeuing instead?
-                listObjects.RemoveAt(0);
-                MoveObjectOut(outElement, true);
+                currentNode = nodeRepresentations[0]; // change to queue for dequeuing instead?
+                nodeRepresentations.RemoveAt(0);
+                MoveCurrentNode(currentNode, true);
                 break;
 
             case Util.STACK:
-                outElement = listObjects[listObjects.Count - 1];
-                listObjects.RemoveAt(listObjects.Count - 1);
-                MoveObjectOut(outElement, false);
+                currentNode = nodeRepresentations[nodeRepresentations.Count - 1];
+                nodeRepresentations.RemoveAt(nodeRepresentations.Count - 1);
+                MoveCurrentNode(currentNode, false);
                 break;
 
             case Util.PRIORITY_LIST:
-                outElement = listObjects[listObjects.Count - 1];
-                listObjects.RemoveAt(listObjects.Count - 1);
-                MoveObjectOut(outElement, true);
+                currentNode = nodeRepresentations[nodeRepresentations.Count - 1];
+                nodeRepresentations.RemoveAt(nodeRepresentations.Count - 1);
+                MoveCurrentNode(currentNode, true);
                 break;
         }
     }
 
-    private void MoveObjectOut(GameObject currentObj, bool moveOther)
+    // Does the actual moving of the node
+    private void MoveCurrentNode(NodeRepresentation currentObj, bool moveOther)
     {
         // Move object to current node location
-        currentObj.GetComponent<MoveObject>().SetDestination(outPoint.position);
+        currentObj.MoveNodeRepresentation(outPoint.position);
         
         if (moveOther)
         {
             // Move other elements in Queue/Priority list
-            foreach (GameObject otherobj in listObjects)
+            foreach (NodeRepresentation otherobj in nodeRepresentations)
             {
-                otherobj.GetComponent<MoveObject>().SetDestination(otherobj.transform.position - new Vector3(0f, 1f, 0f));
+                otherobj.MoveNodeRepresentation(otherobj.transform.position - new Vector3(0f, 1f, 0f));
             }
         }
     }
 
-    public void UpdateNodeRepresentation(Node node)
+    public void HelpUpdateNodeRepresentation(bool before)
     {
-        int index = -1;
-        Debug.Log(listObjects.Count);
-        for (int i=0; i < listObjects.Count; i++)
+        foreach (NodeRepresentation nodeRep in nodeRepresentations)
         {
-            if (listObjects[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
+            nodeRep.EnableGravity(!before);
+
+            if (before)
             {
-                index = i;
-                break;
+                Vector3 pos = nodeRep.transform.position + new Vector3(-1f, 0f, 0f);
+                nodeRep.MoveNodeRepresentation(pos);
             }
-
         }
-        //Debug.Log("Updating representation of '" + node.NodeAlphaID + "': index=" + index + ", list size: " + listObjects.Count);
-
-        if (index != -1)
-            listObjects[index].GetComponent<NodeRepresentation>().ValueChanged(index);
-
     }
+
+    public void MoveUpdatedNode(Node node, int index, int nodeRepIndex)
+    {
+        Debug.LogError("TODO: FIKS HER");
+        int swaps = Mathf.Abs(index - nodeRepIndex);
+        int direction = (index - nodeRepIndex) / swaps;
+
+        NodeRepresentation nodeRep = FindNodeRepresentation(node);
+        while (swaps > 0)
+        {
+            int newIndex = nodeRepIndex + direction;
+            NodeRepresentation temp = nodeRepresentations[newIndex];
+            nodeRepresentations[newIndex] = nodeRep;
+            nodeRep.UpdateIndexPosition(newIndex);
+
+            //temp.UpdateIndexPosition()
+
+            swaps--;
+        }
+    }
+
+    // Updates one node represenation at a time
+    public IEnumerator UpdateNodeRepresentation(Node node, int index, bool updateValue)
+    {
+        NodeRepresentation nodeRep = FindNodeRepresentation(node);
+
+        // Check if index changed
+        if (nodeRep.ListIndex - index != 0)
+        {
+            // Moving from index
+            int prevIndex = nodeRepresentations.IndexOf(nodeRep);
+
+            // Update coordinate position
+            nodeRep.UpdateIndexPosition(index);
+
+            // Swapping
+            NodeRepresentation temp = nodeRepresentations[index];
+            //temp.MoveNodeRepresentation(temp.transform.position + new Vector3(-1f, 0f, 0f)); // Push slightly to the side
+            nodeRepresentations[index] = nodeRep;
+            nodeRepresentations[prevIndex] = temp;
+        }
+
+        // Update surface text if value (dist) changed
+        if (updateValue)
+            yield return nodeRep.UpdateSurfaceText();
+
+        yield return null;
+    }
+
+    public NodeRepresentation FindNodeRepresentation(Node node)
+    {
+        for (int i=0; i < nodeRepresentations.Count; i++)
+        {
+            if (nodeRepresentations[i].Node.NodeAlphaID == node.NodeAlphaID)
+                return nodeRepresentations[i];
+        }
+        return null;
+    }
+
+    // Updates node representation according to the algorithm (priority list value updates)
+    //public IEnumerator UpdateNodeRepresentation(List<Node> list, Node valueUpdateNode)
+    //{
+    //    Debug.Log("Updating node representation!");
+    //    Dictionary<char, int> updatedIndexes = new Dictionary<char, int>();
+
+    //    // Collect ID and new indexes
+    //    for (int i=0; i < list.Count; i++)
+    //    {
+    //        updatedIndexes.Add(list[i].NodeAlphaID, i);
+    //    }
+
+    //    foreach (NodeRepresentation obj in nodeRepresentations)
+    //    {
+    //        NodeRepresentation nodeRep = obj.GetComponent<NodeRepresentation>();
+    //        char nodeID = nodeRep.Node.NodeAlphaID;
+
+    //        if (nodeRep.ListIndex - updatedIndexes[nodeID] != 0)
+    //            nodeRep.UpdateIndexPosition(updatedIndexes[nodeID]);
+
+    //        if (valueUpdateNode.NodeAlphaID == nodeID)
+    //            nodeRep.UpdateSurfaceText();
+
+    //        yield return null;
+    //    }
+    //    nodeRepresentations.Sort();
+    //    Debug.Log("Done updating");
+    //}
 
     public void DestroyOutElement()
     {
-        Destroy(outElement);
+        Destroy(currentNode.gameObject);
+    }
+
+
+    // *** Debugging ***
+
+    public string PrintList()
+    {
+        string result = "Node Representation: ";
+        foreach (NodeRepresentation obj in nodeRepresentations)
+        {
+            Node node = obj.GetComponent<NodeRepresentation>().Node;
+            result += "[" + node.NodeAlphaID + "," + node.Dist + "], ";
+        }
+        return result + "\n";
     }
 }

@@ -11,9 +11,9 @@ public class TreeNode : Node {
     [SerializeField]
     private List<TreeNode> children;
 
-    public void InitTreeNode(string algorithm, ListVisual listVisual, TreeNode parent, int treeLevel)
+    public void InitTreeNode(string algorithm, TreeNode parent, int treeLevel)
     {
-        InitNode(algorithm, listVisual);
+        InitNode(algorithm);
         children = new List<TreeNode>();
         this.treeLevel = treeLevel;
 
