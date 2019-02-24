@@ -9,6 +9,9 @@ public class NodeRepresentation : MonoBehaviour {
     private MoveObject moveObject;
     private TextHolder textHolder;
     private Node node;
+    private Color currentColor;
+
+    [SerializeField]
     private int listIndex;
 
     [SerializeField]
@@ -18,6 +21,7 @@ public class NodeRepresentation : MonoBehaviour {
     {
         moveObject = GetComponent(typeof(MoveObject)) as MoveObject;
         textHolder = GetComponent(typeof(TextHolder)) as TextHolder;
+        currentColor = Color.white;
     }
 
     public void InitNodeRepresentation(Node node, int index)
@@ -32,18 +36,29 @@ public class NodeRepresentation : MonoBehaviour {
         get { return node; }
     }
 
+    public Color CurrentColor
+    {
+        get { return currentColor; }
+        set { currentColor = value; GetComponent<TextHolder>().ChangeColor(value); }
+    }
+
     public int ListIndex
     {
         get { return listIndex; }
         set { listIndex = value; }
     }
 
-    public IEnumerator UpdateSurfaceText()
+    public IEnumerator HighlightNodeRepresentation(Color color, float seconds)
+    {
+        textHolder.ChangeColor(color);
+        yield return new WaitForSeconds(seconds);
+        textHolder.ChangeColor(currentColor);
+    }
+
+    public void UpdateSurfaceText(Color color)
     {
         textHolder.SetSurfaceText(node.NodeAlphaID, node.Dist);
-        textHolder.ChangeColor(UtilGraph.DIST_UPDATE_COLOR);
-        yield return new WaitForSeconds(0.25f);
-        textHolder.ChangeColor(Color.white);
+        StartCoroutine(HighlightNodeRepresentation(color, 1f));
     }
 
     public void MoveNodeRepresentation(Vector3 pos)
@@ -66,7 +81,7 @@ public class NodeRepresentation : MonoBehaviour {
         MoveNodeRepresentation(coordinateIndex);
     }
 
-    public void EnableGravity(bool enabled)
+    public void SetGravity(bool enabled)
     {
         GetComponent<Rigidbody>().useGravity = enabled;
     }

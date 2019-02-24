@@ -87,6 +87,7 @@ public class GridManager : GraphManager {
                         // Instantiate and fix edge
                         Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
                         edge.transform.Rotate(0, angle, 0, Space.Self);
+
                         int edgeCost = UtilGraph.NO_COST;
                         if (algorithm is IShortestPath)
                             edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);

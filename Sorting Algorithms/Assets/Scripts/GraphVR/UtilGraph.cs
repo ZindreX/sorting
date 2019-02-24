@@ -20,7 +20,7 @@ public class UtilGraph : Util {
 
     // Colors
     public static Color TRAVERSE_COLOR = Color.red, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green, SHORTEST_PATH_COLOR = Color.magenta;
-    public static Color DIST_UPDATE_COLOR = Color.red;
+    public static Color CURRENT_NODE_COLOR = Color.red, DIST_UPDATE_COLOR = Color.cyan;
 
     // *** Instructions ***
     // BFS

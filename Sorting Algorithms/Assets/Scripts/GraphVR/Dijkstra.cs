@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dijkstra : GraphAlgorithm, IShortestPath {
 
-    private bool shortestPathAll = false, objectiveFound = false;
+    private bool shortestPathAll = true, objectiveFound = false;
 
     public override string AlgorithmName
     {
@@ -150,27 +150,19 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                            list.Add(connectedNode);
 
                         list.Sort();
-                        Debug.Log(PrintList(list));
+                        //Debug.Log(PrintList(list));
 
                         // List visual
                         int index = list.IndexOf(connectedNode); //(list.Count - 1 ) - list.IndexOf(connectedNode); // OBS: list is inverted (removes the last element instead of index 0)
-                        int nodeRepIndex = listVisual.ListIndexOf(connectedNode);
+                        int currentNodeRepIndex = listVisual.ListIndexOf(connectedNode);
 
-                        if (!listVisual.NodeHasRepresentation(connectedNode))
+                        if (!listVisual.HasNodeRepresentation(connectedNode))
                             listVisual.PriorityAdd(connectedNode, index); // Node representation
-                        else if (index != nodeRepIndex)
-                        {
-                            Debug.Log("Dijkstra request updating node representation");
-                            //foreach (Node node in list)
-                            //{
-                            //    bool updateValue = (connectedNode == node);
-                            //    yield return listVisual.UpdateNodeRepresentation(node, list.IndexOf(node), updateValue); // Node representation
-                            //}
-                            listVisual.MoveUpdatedNode(connectedNode, index, nodeRepIndex);
-                            Debug.Log("Dijkstra continues");
-                        }
+                        else
+                            yield return listVisual.UpdateValueAndPositionOf(connectedNode, index);
 
-                        Debug.Log(listVisual.PrintList());
+
+                        //Debug.Log(listVisual.PrintList());
 
                         // Line 11: Add to list
                         yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
