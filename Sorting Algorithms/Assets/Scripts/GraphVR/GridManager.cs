@@ -58,49 +58,158 @@ public class GridManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
-        Vector3 n1, n2;
-
         for (int row=0; row < rows; row++)
         {
             for (int col=0; col < cols; col++)
             {
-                // Adding edges to odd rows and even columns, or even rows and odd columns
-                if (row % 2 != 0 && col % 2 == 0 || row % 2 == 0 && col % 2 != 0)
+                switch (mode)
                 {
-                    n1 = gridNodes[row, col].transform.position;
-                    List<GridNode> neighbors = GetCompassNeighbors(gridNodes[row, col]); //GetAllNeighbors(gridNodes[row, col]);
-
-                    for (int i=0; i < neighbors.Count; i++)
-                    {
-                        GridNode neighbor = neighbors[i];
-                        if (neighbor != null)
-                            n2 = neighbors[i].transform.position;
-                        else
-                            continue;
-
-                        // Find center between nodes
-                        Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
-
-                        // Find angle
-                        float angle = 0f;
-                        if (row == neighbors[i].Cell[0])
-                            angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
-                        else
-                            angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
-
-                        // Initialize edge
-                        // Fix: South pointing directed egdes swapped nodes
-                        if (i == 2)
-                            CreateEdge(neighbors[i], gridNodes[row, col], centerPos, angle);
-                        else
-                            CreateEdge(gridNodes[row, col], neighbors[i], centerPos, angle);
-
-
-                    }
+                    case UtilGraph.FULL_EDGES: FullGrid(row, col); break;
+                    case UtilGraph.PARTIAL_EDGES: PartialGrid2(row, col); break;
+                    default: Debug.LogError("'" + mode + "' mode not implemented!"); break;
                 }
             }
         }
     }
+
+    // Builds efficiently a full grid
+    private void FullGrid(int row, int col)
+    {
+        Vector3 n1, n2;
+
+        // Adding edges to odd rows and even columns, or even rows and odd columns
+        if (row % 2 != 0 && col % 2 == 0 || row % 2 == 0 && col % 2 != 0)
+        {
+            n1 = gridNodes[row, col].transform.position;
+            List<GridNode> neighbors = GetCompassNeighbors(gridNodes[row, col]); //GetAllNeighbors(gridNodes[row, col]);
+
+            for (int i = 0; i < neighbors.Count; i++)
+            {
+                GridNode neighbor = neighbors[i];
+                if (neighbor != null)
+                    n2 = neighbors[i].transform.position;
+                else
+                    continue;
+
+                // Find center between nodes
+                Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
+
+                // Find angle
+                float angle = 0f;
+                if (row == neighbors[i].Cell[0])
+                    angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
+                else
+                    angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
+
+                // Initialize edge
+                // Fix: South pointing directed egdes swapped nodes
+                if (i == 2)
+                    CreateEdge(neighbors[i], gridNodes[row, col], centerPos, angle);
+                else
+                    CreateEdge(gridNodes[row, col], neighbors[i], centerPos, angle);
+            }
+        }
+    }
+
+    // TESTING *****
+    private void PartialGrid2(int row, int col)
+    {
+        Vector3 n1, n2;
+        GridNode[,] neighbors = GetNeighbors(gridNodes[row, col], false);
+        n1 = gridNodes[row, col].transform.position;
+
+        for (int i=0; i < neighbors.GetLength(0); i++)
+        {
+            for (int j=0; j < neighbors.GetLength(1); j++)
+            {
+                GridNode neighbor = neighbors[i, j];
+
+                // 2nd node cant be the same as the 1st
+                if (neighbor == gridNodes[row, col] || neighbor == null)
+                    continue;
+
+                // Making things a bit random, build if...
+                bool buildEdge = Random.Range(0, 10) < 5;
+                if (!buildEdge)
+                    continue;
+
+                buildEdge = true;
+                for (int k=0; k < neighbor.Edges.Count; k++) // need some optimization and changes
+                {
+                    if (neighbor.Edges[k].OtherNodeConnected(gridNodes[row, col]))
+                    {
+                        buildEdge = false;
+                        break;
+                    }
+                }
+
+                // Blocks building edges ontop of each other
+                if (!buildEdge)
+                    continue;
+
+                // Build to 2nd node in position n2
+                n2 = neighbors[i, j].transform.position;
+
+                // Find center between nodes
+                Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
+
+                // Find angle
+                float angle = 0f;
+                if (row == neighbors[i, j].Cell[0])
+                    angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
+                else
+                    angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
+
+                // Initialize edge
+                // Fix: South pointing directed egdes swapped nodes
+                if (i == 2)
+                    CreateEdge(neighbors[i, j], gridNodes[row, col], centerPos, angle);
+                else
+                    CreateEdge(gridNodes[row, col], neighbors[i, j], centerPos, angle);
+            }
+        }
+    }
+
+    // Goes through each node and tries to build edges from it (random chance for building*)
+    private void PartialGrid(int row, int col)
+    {
+        Vector3 n1, n2;
+
+        n1 = gridNodes[row, col].transform.position;
+        List<GridNode> neighbors = GetAllNeighbors(gridNodes[row, col]);
+
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            GridNode neighbor = neighbors[i];
+            bool buildEdge = Random.Range(0, 10) < 5;
+
+            if (neighbor != null && buildEdge)
+                n2 = neighbors[i].transform.position;
+            else
+                continue;
+
+            // Find center between nodes
+            Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
+
+            // Find angle
+            float angle = 0f;
+            if (row == neighbors[i].Cell[0])
+                angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
+            else
+                angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
+
+            // Initialize edge
+            // Fix: South pointing directed egdes swapped nodes
+            if (i == 2)
+                CreateEdge(neighbors[i], gridNodes[row, col], centerPos, angle);
+            else
+                CreateEdge(gridNodes[row, col], neighbors[i], centerPos, angle);
+        }
+    }
+
+
+
+
 
     /* Returns a matrix of the neighboors of parameter node
      * 
@@ -140,11 +249,13 @@ public class GridManager : GraphManager {
                 if (IsValidNeighbor(z, x, cellZ, cellX, doubleDepth))
                 {
                     neighbors[i, j] = gridNodes[cellZ, cellX];
-                    gridNodes[cellZ, cellX].CurrentColor = Color.red; // Debugging color
+                    //gridNodes[cellZ, cellX].CurrentColor = Color.red; // Debugging color
                 }
+                else
+                    neighbors[i, j] = null; // ?
             }
         }
-        gridNodes[z, x].CurrentColor = Color.green; // Debugging color
+        //gridNodes[z, x].CurrentColor = Color.green; // Debugging color
         return neighbors;
     }
 
@@ -183,7 +294,7 @@ public class GridManager : GraphManager {
             }
         }
 
-        //for (int q=0; q < neighbors.Count; q++)
+        //for (int q = 0; q < neighbors.Count; q++)
         //{
         //    neighbors[q].CurrentColor = Color.red;
         //}
@@ -262,12 +373,12 @@ public class GridManager : GraphManager {
             {
                 Node node = gridNodes[z, x];
 
-                if (node == null)
-                    continue;
-
                 // Start backtracking from end node back to start node
-                while (true)
+                while (node != null)
                 {
+                    if (node.CurrentColor == null)
+                        Debug.LogError("WTF!?!?");
+
                     // Change color of node
                     node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
 
@@ -285,7 +396,6 @@ public class GridManager : GraphManager {
                     // Set "next" node
                     node = backtrackEdge.OtherNodeConnected(node);
                     yield return new WaitForSeconds(seconds);
-
                 }
             }
         }

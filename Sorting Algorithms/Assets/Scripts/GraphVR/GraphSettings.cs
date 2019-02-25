@@ -26,6 +26,10 @@ public class GraphSettings : MonoBehaviour {
     private enum EdgeTypeEditor { Undirected, Directed }
 
     [SerializeField]
+    private EdgeModeEditor edgeModeEditor;
+    private enum EdgeModeEditor { Full, Partial, Minimum }
+
+    [SerializeField]
     private UseAlgorithmEditor useAlgorithmEditor;
     private enum UseAlgorithmEditor { BFS, DFS, Dijkstra, PreOrder }
 
@@ -88,7 +92,7 @@ public class GraphSettings : MonoBehaviour {
     private int z2;
 
     private float algorithmSpeed;
-    private string teachingMode, graphStructure, edgeType, useAlgorithm;
+    private string teachingMode, graphStructure, edgeType, edgeMode, useAlgorithm;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, nodeSpaceX, nodeSpaceZ;
 
@@ -105,7 +109,7 @@ public class GraphSettings : MonoBehaviour {
 
         switch ((int)graphStructureEditor)
         {
-            case 0: graphStructure = UtilGraph.GRID_GRAD; break;
+            case 0: graphStructure = UtilGraph.GRID_GRAPH; break;
             case 1: graphStructure = UtilGraph.TREE_GRAPH; break;
             case 2: graphStructure = UtilGraph.RANDOM_GRAPH; break;
         }
@@ -114,6 +118,13 @@ public class GraphSettings : MonoBehaviour {
         {
             case 0: edgeType = UtilGraph.UNDIRECTED_EDGE; break;
             case 1: edgeType = UtilGraph.DIRECED_EDGE; break;
+        }
+
+        switch ((int)edgeModeEditor)
+        {
+            case 0: edgeMode = UtilGraph.FULL_EDGES; break;
+            case 1: edgeMode = UtilGraph.PARTIAL_EDGES; break;
+            case 2: edgeMode = UtilGraph.MINIMUM_EDGES; break;
         }
 
         switch ((int)useAlgorithmEditor)
@@ -132,7 +143,7 @@ public class GraphSettings : MonoBehaviour {
             case 4: algorithmSpeed = 0f; break;
         }
 
-        if (graphStructure.Equals(UtilGraph.GRID_GRAD))
+        if (graphStructure.Equals(UtilGraph.GRID_GRAPH))
         {
             gridRows = (int)gridRowsEditor + 1;
             gridColumns = (int)gridColumnsEditor + 1;
@@ -167,6 +178,11 @@ public class GraphSettings : MonoBehaviour {
         get { return edgeType; }
     }
 
+    public string EdgeMode
+    {
+        get { return edgeMode; }
+    }
+
     public string UseAlgorithm
     {
         get { return useAlgorithm; }
@@ -196,7 +212,7 @@ public class GraphSettings : MonoBehaviour {
     {
         switch (graphStructure)
         {
-            case UtilGraph.GRID_GRAD: return new int[3] { gridRows, gridColumns, gridSpace };
+            case UtilGraph.GRID_GRAPH: return new int[3] { gridRows, gridColumns, gridSpace };
             case UtilGraph.TREE_GRAPH: return new int[4] { treeDepth, nTree, nodeSpaceX, nodeSpaceZ };
             case UtilGraph.RANDOM_GRAPH: return new int[3] { 5, 6, 2 };
             default: Debug.LogError("Couldn't setup graph! Unknown graph structure: '" + graphStructure + "'."); return null;

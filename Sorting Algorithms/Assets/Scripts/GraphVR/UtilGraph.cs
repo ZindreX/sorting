@@ -7,7 +7,8 @@ public class UtilGraph : Util {
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
 
     // Graph structures
-    public const string GRID_GRAD = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge";
+    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge";
+    public const string FULL_EDGES = "Full edges", PARTIAL_EDGES = "Partial edges", MINIMUM_EDGES = "Minimum edges";
 
     // Graph objects
     public static string NODE_TAG = "Node", EDGE_TAG = "Edge";

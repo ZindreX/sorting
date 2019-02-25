@@ -131,7 +131,7 @@ public abstract class GraphManager : MainManager {
     public void CreateGraph()
     {
         CreateNodes(algorithm.AlgorithmName);
-        CreateEdges(gs.EdgeType);
+        CreateEdges(gs.EdgeMode);
     }
 
     // Keeps only one graph structure active
@@ -139,7 +139,7 @@ public abstract class GraphManager : MainManager {
     {
         switch (graphStructure)
         {
-            case UtilGraph.GRID_GRAD:
+            case UtilGraph.GRID_GRAPH:
                 GetComponent<GridManager>().enabled = true;
                 GetComponent<TreeManager>().enabled = false;
                 GetComponent<RandomGraphManager>().enabled = false;
@@ -220,7 +220,7 @@ public abstract class GraphManager : MainManager {
             case UtilGraph.UNDIRECTED_EDGE:
                 edge = Instantiate(undirectedEdgePrefab, centerPos, Quaternion.identity);
                 edge.AddComponent<UnDirectedEdge>();
-                edge.GetComponent<UnDirectedEdge>().InitUndirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAD);
+                edge.GetComponent<UnDirectedEdge>().InitUndirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH);
                 break;
 
             case UtilGraph.DIRECED_EDGE:
@@ -232,7 +232,7 @@ public abstract class GraphManager : MainManager {
                     edge = Instantiate(directedEdgePrefab, centerPos, Quaternion.identity);
 
                 edge.AddComponent<DirectedEdge>();
-                edge.GetComponent<DirectedEdge>().InitDirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAD, pathBothWaysActive);
+                edge.GetComponent<DirectedEdge>().InitDirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH, pathBothWaysActive);
                 break;
         }
         edge.transform.Rotate(0, angle, 0, Space.Self);
@@ -243,7 +243,7 @@ public abstract class GraphManager : MainManager {
     {
         switch (gs.Graphstructure)
         {
-            case UtilGraph.GRID_GRAD: case UtilGraph.RANDOM_GRAPH: return Random.Range(0, 10) < 7;
+            case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Random.Range(0, 10) < 4;
             case UtilGraph.TREE_GRAPH: return false;
             default: Debug.LogError("Symmetric option not set for '" + gs.Graphstructure + "'."); break;
         }

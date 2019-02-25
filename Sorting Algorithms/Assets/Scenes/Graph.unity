@@ -617,8 +617,9 @@ MonoBehaviour:
   teachingModeEditor: 0
   graphStructureEditor: 0
   edgeTypeEditor: 1
+  edgeModeEditor: 1
   useAlgorithmEditor: 2
-  algorithmSpeedEditor: 3
+  algorithmSpeedEditor: 2
   gridRowsEditor: 4
   gridColumnsEditor: 4
   gridSpaceEditor: 0
