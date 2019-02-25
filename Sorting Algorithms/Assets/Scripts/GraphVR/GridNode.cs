@@ -31,7 +31,7 @@ public class GridNode : Node {
         if (!neighbors.Contains(node))
         {
             neighbors.Add(node);
-            node.AddNeighbor(this);
+            //node.AddNeighbor(this);
         }
     }
 

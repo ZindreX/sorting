@@ -606,12 +606,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 2}
-  edgePrefab: {fileID: 114671887172887022, guid: ff074d0e0445e98499e329801ffdf459,
+  undirectedEdgePrefab: {fileID: 1280941747897418, guid: 8af68416d4f8a2147824ca6da27ff252,
+    type: 2}
+  directedEdgePrefab: {fileID: 1770646654971108, guid: 9b25191081ffccb4197a0266527e3878,
+    type: 2}
+  symmetricDirectedEdgePrefab: {fileID: 1434581048115598, guid: 0890964e700f0f048903c3dc19b2ce9e,
     type: 2}
   graphAlgorithmObj: {fileID: 157921380}
   listVisual: {fileID: 1415126236}
   teachingModeEditor: 0
   graphStructureEditor: 0
+  edgeTypeEditor: 1
   useAlgorithmEditor: 2
   algorithmSpeedEditor: 3
   gridRowsEditor: 4

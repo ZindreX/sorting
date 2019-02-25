@@ -7,8 +7,7 @@ public abstract class GraphManager : MainManager {
 
     protected int MAX_NODES;
 
-    protected GameObject nodePrefab;
-    protected Edge edgePrefab;
+    protected GameObject nodePrefab, undirectedEdgePrefab, directedEdgePrefab, symmetricDirectedEdgePrefab;
 
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
@@ -24,8 +23,9 @@ public abstract class GraphManager : MainManager {
 
         // Prefabs (editor clean up)
         nodePrefab = gs.nodePrefab;
-        edgePrefab = gs.edgePrefab;
-
+        undirectedEdgePrefab = gs.undirectedEdgePrefab;
+        directedEdgePrefab = gs.directedEdgePrefab;
+        symmetricDirectedEdgePrefab = gs.symmetricDirectedEdgePrefab;
 
         // Algorithm
         algorithm = gs.GetGraphAlgorithm();
@@ -116,16 +116,22 @@ public abstract class GraphManager : MainManager {
     //    StartCoroutine(algorithm.GetComponent<IShortestPath>().Demo(from, to));
     //}
 
-	// Update is called once per frame
+    // Update is called once per frame
+    private bool backtracking = false;
 	void Update () {
-        //if (userTestReady)
+        if (algorithm.IsTaskCompleted && !backtracking)
+        {
+            Debug.Log("Starting backtracking");
+            StartCoroutine(BacktrackShortestPaths(algorithm.Seconds));
+            backtracking = true;
+        }
             
 	}
 
     public void CreateGraph()
     {
         CreateNodes(algorithm.AlgorithmName);
-        CreateEdges(algorithm.AlgorithmName);
+        CreateEdges(gs.EdgeType);
     }
 
     // Keeps only one graph structure active
@@ -133,13 +139,13 @@ public abstract class GraphManager : MainManager {
     {
         switch (graphStructure)
         {
-            case UtilGraph.GRID:
+            case UtilGraph.GRID_GRAD:
                 GetComponent<GridManager>().enabled = true;
                 GetComponent<TreeManager>().enabled = false;
                 GetComponent<RandomGraphManager>().enabled = false;
                 break;
 
-            case UtilGraph.TREE:
+            case UtilGraph.TREE_GRAPH:
                 GetComponent<TreeManager>().enabled = true;
                 GetComponent<GridManager>().enabled = false;
                 GetComponent<RandomGraphManager>().enabled = false;
@@ -196,6 +202,54 @@ public abstract class GraphManager : MainManager {
         return 1;
     }
 
+
+    protected void CreateEdge(Node node1, Node node2, Vector3 centerPos, float angle)
+    {
+        // Instantiate and fix edge
+        GameObject edge = null;
+        float length = UtilGraph.DistanceBetweenNodes(node1.transform, node2.transform);
+
+        // Set cost if algorithm requires it
+        int edgeCost = UtilGraph.NO_COST;
+        if (algorithm is IShortestPath)
+            edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
+
+        // Initialize edge
+        switch (gs.EdgeType)
+        {
+            case UtilGraph.UNDIRECTED_EDGE:
+                edge = Instantiate(undirectedEdgePrefab, centerPos, Quaternion.identity);
+                edge.AddComponent<UnDirectedEdge>();
+                edge.GetComponent<UnDirectedEdge>().InitUndirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAD);
+                break;
+
+            case UtilGraph.DIRECED_EDGE:
+                bool pathBothWaysActive = RollSymmetric();
+
+                if (pathBothWaysActive)
+                    edge = Instantiate(symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
+                else
+                    edge = Instantiate(directedEdgePrefab, centerPos, Quaternion.identity);
+
+                edge.AddComponent<DirectedEdge>();
+                edge.GetComponent<DirectedEdge>().InitDirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAD, pathBothWaysActive);
+                break;
+        }
+        edge.transform.Rotate(0, angle, 0, Space.Self);
+        edge.GetComponent<Edge>().SetLength(length);   
+    }
+
+    private bool RollSymmetric()
+    {
+        switch (gs.Graphstructure)
+        {
+            case UtilGraph.GRID_GRAD: case UtilGraph.RANDOM_GRAPH: return Random.Range(0, 10) < 7;
+            case UtilGraph.TREE_GRAPH: return false;
+            default: Debug.LogError("Symmetric option not set for '" + gs.Graphstructure + "'."); break;
+        }
+        return false;
+    }
+
     // Initialize the setup variables for the graph
     protected abstract void InitGraph(int[] graphStructure);
 
@@ -220,6 +274,8 @@ public abstract class GraphManager : MainManager {
 
     // Delete graph
     public abstract void DeleteGraph();
+
+    protected abstract IEnumerator BacktrackShortestPaths(float seconds);
 
 
 

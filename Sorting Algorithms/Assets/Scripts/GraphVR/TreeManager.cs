@@ -13,6 +13,21 @@ public class TreeManager : GraphManager {
         return (int)Mathf.Pow(nTree, treeLevel + 1) - 1;
     }
 
+    private int NumberOfInternalNodes()
+    {
+        return (int)Mathf.Pow(nTree, treeLevel) - 1;
+    }
+
+    public override int GetNumberOfEdges()
+    {
+        return tree.Count - 1;
+    }
+
+    public int NumberOfLeafs()
+    {
+        return GetMaxNumberOfNodes() - NumberOfInternalNodes();
+    }
+
     public List<TreeNode> Tree
     {
         get { return tree; }
@@ -26,7 +41,7 @@ public class TreeManager : GraphManager {
         nodeSpaceZ = graphStructure[3];
     }
 
-    protected override void CreateNodes(string s)
+    protected override void CreateNodes(string mode)
     {
         tree = new List<TreeNode>();
 
@@ -80,15 +95,15 @@ public class TreeManager : GraphManager {
                 float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - parent.transform.position.x) * Mathf.Rad2Deg;
 
                 // Instantiate and fix edge
-                Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
-                edge.transform.Rotate(0, angle, 0, Space.Self);
+                GameObject edge = null;
 
                 // Set edge cost (no cost unless shortest path)
                 int edgeCost = UtilGraph.NO_COST;
                 if (algorithm is IShortestPath)
                     edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
-                edge.InitEdge(parent, tree[tree.Count - 1], edgeCost, UtilGraph.TREE);
 
+                // Initialize edge
+                CreateEdge(parent, tree[tree.Count - 1], centerPos, angle);
             }
         }
     }
@@ -99,16 +114,6 @@ public class TreeManager : GraphManager {
         node.AddComponent<TreeNode>();
         node.GetComponent<TreeNode>().InitTreeNode(algorithm.AlgorithmName, parent, treeLevel);
         return node.GetComponent<TreeNode>();
-    }
-
-    private int NumberOfInternalNodes()
-    {
-        return (int)Mathf.Pow(nTree, treeLevel) - 1;
-    }
-
-    public override int GetNumberOfEdges()
-    {
-        return tree.Count - 1;
     }
 
     protected override void CreateEdges(string mode)
@@ -168,6 +173,37 @@ public class TreeManager : GraphManager {
         for (int i=0; i < tree.Count; i++)
         {
             Destroy(tree[i]);
+        }
+    }
+
+    protected override IEnumerator BacktrackShortestPaths(float seconds)
+    {
+        int numberOfInternalNodes = NumberOfInternalNodes();
+        for (int i=tree.Count-1; i >= numberOfInternalNodes; i--)
+        {
+            Node node = tree[i];
+
+            // Start backtracking from end node back to start node
+            while (true)
+            {
+                // Change color of node
+                node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                // Change color of edge leading to previous node
+                Edge backtrackEdge = node.PrevEdge;
+
+                if (node.PrevEdge == null || node.PrevEdge.CurrentColor == UtilGraph.SHORTEST_PATH_COLOR)
+                {
+                    node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                    break;
+                }
+
+                backtrackEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                // Set "next" node
+                node = backtrackEdge.OtherNodeConnected(node);
+                yield return new WaitForSeconds(seconds);
+            }
         }
     }
 }

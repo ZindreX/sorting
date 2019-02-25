@@ -58,45 +58,45 @@ public class GridManager : GraphManager {
 
     protected override void CreateEdges(string mode)
     {
-        int edgeNr = 0;
         Vector3 n1, n2;
 
         for (int row=0; row < rows; row++)
         {
             for (int col=0; col < cols; col++)
             {
+                // Adding edges to odd rows and even columns, or even rows and odd columns
                 if (row % 2 != 0 && col % 2 == 0 || row % 2 == 0 && col % 2 != 0)
                 {
                     n1 = gridNodes[row, col].transform.position;
                     List<GridNode> neighbors = GetCompassNeighbors(gridNodes[row, col]); //GetAllNeighbors(gridNodes[row, col]);
 
-                    for (int neighbor=0; neighbor < neighbors.Count; neighbor++)
+                    for (int i=0; i < neighbors.Count; i++)
                     {
-                        n2 = neighbors[neighbor].transform.position;
+                        GridNode neighbor = neighbors[i];
+                        if (neighbor != null)
+                            n2 = neighbors[i].transform.position;
+                        else
+                            continue;
 
-                        // Find center between node and child
+                        // Find center between nodes
                         Vector3 centerPos = new Vector3(n1.x + n2.x, 0f, n1.z + n2.z) / 2;
 
                         // Find angle
                         float angle = 0f;
-                        if (row == neighbors[neighbor].Cell[0])
+                        if (row == neighbors[i].Cell[0])
                             angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
                         else
                             angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
 
-                        // Instantiate and fix edge
-                        Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
-                        edge.transform.Rotate(0, angle, 0, Space.Self);
+                        // Initialize edge
+                        // Fix: South pointing directed egdes swapped nodes
+                        if (i == 2)
+                            CreateEdge(neighbors[i], gridNodes[row, col], centerPos, angle);
+                        else
+                            CreateEdge(gridNodes[row, col], neighbors[i], centerPos, angle);
 
-                        int edgeCost = UtilGraph.NO_COST;
-                        if (algorithm is IShortestPath)
-                            edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
-                        edge.InitEdge(gridNodes[row, col], neighbors[neighbor], edgeCost, UtilGraph.GRID);
 
-                        edgeNr++;
                     }
-
-
                 }
             }
         }
@@ -195,14 +195,30 @@ public class GridManager : GraphManager {
         List<GridNode> neighbors = new List<GridNode>();
         int z = node.Cell[0], x = node.Cell[1];
 
+        // West
         if (x - 1 >= 0)
             neighbors.Add(gridNodes[z, x - 1]);
+        else
+            neighbors.Add(null);
+
+        // North
         if (z - 1 >= 0)
             neighbors.Add(gridNodes[z - 1, x]);
+        else
+            neighbors.Add(null);
+
+        // South
         if (z + 1 < rows)
             neighbors.Add(gridNodes[z + 1, x]);
+        else
+            neighbors.Add(null);
+
+        // West
         if (x + 1 < cols)
             neighbors.Add(gridNodes[z, x + 1]);
+        else
+            neighbors.Add(null);
+
         return neighbors;
     }
 
@@ -234,6 +250,43 @@ public class GridManager : GraphManager {
             for (int j = 0; j < cols; j++)
             {
                 Destroy(gridNodes[i, j]);
+            }
+        }
+    }
+
+    protected override IEnumerator BacktrackShortestPaths(float seconds)
+    {
+        for (int z=rows-1; z >= 0; z--)
+        {
+            for (int x=cols-1; x >= 0; x--)
+            {
+                Node node = gridNodes[z, x];
+
+                if (node == null)
+                    continue;
+
+                // Start backtracking from end node back to start node
+                while (true)
+                {
+                    // Change color of node
+                    node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                    // Change color of edge leading to previous node
+                    Edge backtrackEdge = node.PrevEdge;
+
+                    if (node.PrevEdge == null || node.PrevEdge.CurrentColor == UtilGraph.SHORTEST_PATH_COLOR)
+                    {
+                        node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                        break;
+                    }
+
+                    backtrackEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                    // Set "next" node
+                    node = backtrackEdge.OtherNodeConnected(node);
+                    yield return new WaitForSeconds(seconds);
+
+                }
             }
         }
     }

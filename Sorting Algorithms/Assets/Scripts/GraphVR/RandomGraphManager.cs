@@ -139,15 +139,8 @@ public class RandomGraphManager : GraphManager {
         float angle = -Mathf.Atan2(n2.z - n1.z, n2.x - n1.x) * Mathf.Rad2Deg;
         //Debug.Log(node1.NodeType + " connecting to " + node2.NodeType + ", angle=" + angle + ", dist=" + UtilGraph.DistanceBetweenNodes(node1.transform, node2.transform));
 
-        // Instantiate and fix edge
-        Edge edge = Instantiate(edgePrefab, centerPos, Quaternion.identity);
-        edge.transform.Rotate(0, angle, 0, Space.Self);
-
-        int edgeCost = UtilGraph.NO_COST; // do this inside edge instead? (incase: fix in tree/grid as well)
-        if (algorithm is IShortestPath)
-            edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
-
-        edge.InitEdge(node1, node2, edgeCost, UtilGraph.RANDOM_GRAPH);
+        // Initialize edge
+        CreateEdge(node1, node2, centerPos, angle);
 
         // Check if any overlaps occured
         //Debug.Log("Test: " + edge.CollisionOccured);
@@ -157,7 +150,6 @@ public class RandomGraphManager : GraphManager {
         //    Destroy(edge.gameObject);
         //    return false;
         //}
-        edge.SetLength(UtilGraph.DistanceBetweenNodes(node1.transform, node2.transform));
         return true;
     }
 
@@ -182,6 +174,36 @@ public class RandomGraphManager : GraphManager {
         for (int i = 0; i < nodes.Count; i++)
         {
             nodes[i].ResetNode();
+        }
+    }
+
+    protected override IEnumerator BacktrackShortestPaths(float seconds)
+    {
+        for (int i=nodes.Count-1; i >= 0; i--)
+        {
+            Node node = nodes[i];
+
+            // Start backtracking from end node back to start node
+            while (true)
+            {
+                // Change color of node
+                node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                // Change color of edge leading to previous node
+                Edge backtrackEdge = node.PrevEdge;
+
+                if (node.PrevEdge == null || node.PrevEdge.CurrentColor == UtilGraph.SHORTEST_PATH_COLOR)
+                {
+                    node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                    break;
+                }
+
+                backtrackEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                // Set "next" node
+                node = backtrackEdge.OtherNodeConnected(node);
+                yield return new WaitForSeconds(seconds);
+            }
         }
     }
 }

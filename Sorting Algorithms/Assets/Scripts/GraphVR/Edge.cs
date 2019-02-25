@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Edge : MonoBehaviour {
+public abstract class Edge : MonoBehaviour {
 
     /* -------------------------------------------- Edge ----------------------------------------------------
      * - A connection between two nodes in a graph
@@ -13,14 +13,14 @@ public class Edge : MonoBehaviour {
     public static int EDGE_ID;
 
     [SerializeField]
-    private int edgeID, cost;
-    private string graphStructure;
-    private Color currentColor;
+    protected int edgeID, cost;
+    protected string graphStructure;
+    protected Color currentColor;
 
     [SerializeField]
-    private Node node1, node2;
+    protected Node node1, node2;
 
-    public void InitEdge(Node node1, Node node2, int cost, string graphStructure)
+    protected void InitEdge(Node node1, Node node2, int cost, string graphStructure)
     {
         edgeID = EDGE_ID++;
         this.node1 = node1;
@@ -46,6 +46,8 @@ public class Edge : MonoBehaviour {
         set { cost = value; GetComponentInChildren<TextMesh>().text = value.ToString(); }
     }
 
+    // *** Object settings ***
+
     private void SetAngle(float angle)
     {
         transform.Rotate(0f, angle, 0f);
@@ -56,11 +58,19 @@ public class Edge : MonoBehaviour {
         GetComponentInChildren<MeshRenderer>().transform.localScale += new Vector3(length - 5f, 0f, 0f);
     }
 
-    public Color CurrentColor
+    public virtual Color CurrentColor
     {
         get { return currentColor; }
         set { currentColor = value; GetComponentInChildren<Renderer>().material.color = value; }
     }
+
+    // *** Object settings end ***
+
+    // Returns the total cost of parameter node + edge cost
+    public abstract int EdgeAndOtherNodeCombinedCost(Node fromNode);
+
+    // Returns the node on the other side of this edge
+    public abstract Node OtherNodeConnected(Node node);
 
     /* *** Grid / RandomNode ***
      * node1 --- node2
@@ -73,38 +83,5 @@ public class Edge : MonoBehaviour {
      *     X   X    (one of the X's: child)
      * 
     */
-    private void NotifyNodes(Node node1, Node node2)
-    {
-        if (node1.GetComponent(typeof(GridNode)))
-        {
-            node1.GetComponent<GridNode>().AddNeighbor(node2.GetComponent<GridNode>());
-        }
-        else if (node1.GetComponent(typeof(TreeNode)))
-        {
-            node2.GetComponent<TreeNode>().Parent = node1.GetComponent<TreeNode>();
-            node1.GetComponent<TreeNode>().AddChildren(node2.GetComponent<TreeNode>());
-        }
-        else if (node1.GetComponent(typeof(RandomNode)))
-        {
-            node1.GetComponent<RandomNode>().AddNeighbor(node2.GetComponent<RandomNode>());
-        }
-
-        // Add edge in nodes
-        node1.AddEdge(this);
-        node2.AddEdge(this);
-    }
-
-    // Returns the node on the other side of this edge
-    public Node OtherNodeConnected(Node node)
-    {
-        return (node == node1) ? node2 : node1;
-    }
-
-    // Returns the total cost of parameter node + edge cost
-    public int EdgeAndOtherNodeCombinedCost(Node fromNode)
-    {
-        return (fromNode == node1) ? (cost + node2.Dist) : (cost + node1.Dist);
-    }
-
-
+    protected abstract void NotifyNodes(Node node1, Node node2);
 }

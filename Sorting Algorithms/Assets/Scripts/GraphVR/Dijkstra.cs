@@ -122,6 +122,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
                 // Checking node on the other side of the edge
                 Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
+                if (connectedNode == null)
+                {
+                    currentEdge.CurrentColor = UtilGraph.STANDARD_COLOR;
+                    continue;
+                }
+
                 SetNodePseudoCode(connectedNode, 2); // PseudoCode
 
                 if (!connectedNode.Visited)
@@ -188,28 +194,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         }
         // Line 14: End while-loop
         yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
-
-        // Start backtracking from end node back to start node
-        while (true)
-        {
-            // Change color of node
-            endNode.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
-
-            // Change color of edge leading to previous node
-            Edge backtrackEdge = endNode.PrevEdge;
-            backtrackEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
-
-            // Set "next" node
-            endNode = backtrackEdge.OtherNodeConnected(endNode);
-            yield return new WaitForSeconds(seconds);
-
-
-            if (endNode.PrevEdge == null)
-            {
-                endNode.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
-                break;
-            }
-        }
         IsTaskCompleted = true;
     }
     #endregion

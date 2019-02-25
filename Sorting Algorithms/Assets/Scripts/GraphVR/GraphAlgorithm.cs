@@ -75,11 +75,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     }
 
 
-    //public void NodeRepTest()
-    //{
-    //    Dictionary<Node, NodeRepresentation> t = new Dictionary<Node, NodeRepresentation>();
-    //    Node n;
-    //    t[n].ValueChanged()
-    //}
+
+
 
 }
