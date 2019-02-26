@@ -24,7 +24,7 @@ public class TreeNode : Node {
 
     public override string NodeType
     {
-        get { return "Tree node " + nodeID; }
+        get { return UtilGraph.TREE_NODE; }
     }
 
     public void AddChildren(TreeNode child)

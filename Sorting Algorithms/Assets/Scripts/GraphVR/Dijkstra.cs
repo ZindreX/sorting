@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dijkstra : GraphAlgorithm, IShortestPath {
 
-    private bool shortestPathAll = true, objectiveFound = false;
+    private bool objectiveFound = false;
 
     public override string AlgorithmName
     {
@@ -93,6 +93,10 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             // Line 6: Remove element with lowest distance
             yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
+            // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
+            if (!shortestPathOnToAll && currentNode == endNode)
+                objectiveFound = true;
+
             // Check all nodes connected with current node
             List<Edge> edges = currentNode.Edges;
             numberOfEdges = edges.Count; // Pseudocode
@@ -172,10 +176,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
                         // Line 11: Add to list
                         yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
-
-                        // Stop search if end node found and we dont want shortest path to all
-                        if (!shortestPathAll && connectedNode == endNode)
-                            objectiveFound = true;
                     }
                 }
 
@@ -194,6 +194,82 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         }
         // Line 14: End while-loop
         yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
+        IsTaskCompleted = true;
+    }
+    #endregion
+
+    // Dijkstra on Tree: must start at 0, or atleast have end node in the same subtree underneath start node
+    #region Dijkstra Demo No pseudocode for fast runthrough
+    public IEnumerator DemoNoPseudocode(Node startNode, Node endNode)
+    {
+        // Line 2: Create (priority) list
+        List<Node> list = new List<Node>();
+
+        // Line 3: Add starting node and set its cost to 0
+        list.Add(startNode);
+        startNode.Dist = 0;
+        startNode.Visited = true;
+
+        while (list.Count > 0 && !objectiveFound)
+        {
+            //
+            yield return new WaitForSeconds(seconds);
+
+            Node currentNode = list[list.Count - 1];
+            list.RemoveAt(list.Count - 1);
+            currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+
+            // Stop search if end node found and we dont want shortest path to all
+            if (!shortestPathOnToAll && currentNode == endNode)
+                objectiveFound = true;
+
+            // Check all nodes connected with current node
+            List<Edge> edges = currentNode.Edges;
+            for (int i = 0; i < edges.Count; i++)
+            {
+                // Checking edge
+                Edge currentEdge = edges[i];
+
+                // Dont check edge we came from
+                if (currentEdge == currentNode.PrevEdge)
+                    continue;
+
+                // Checking node on the other side of the edge
+                Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
+                if (connectedNode == null)
+                {
+                    currentEdge.CurrentColor = UtilGraph.STANDARD_COLOR;
+                    continue;
+                }
+
+                if (!connectedNode.Visited)
+                    connectedNode.Visited = true;
+
+                // Cost between nodes
+                int currentDistAndEdgeCost = currentNode.Dist + currentEdge.Cost;
+
+                // Update cost of connected node
+                if (currentDistAndEdgeCost < connectedNode.Dist)
+                {
+                    // Line 9: Update total cost (Dist) of connected node (w)
+                    connectedNode.Dist = currentDistAndEdgeCost;
+
+                    // Line 10: Update prev edge (Prev) of connected node (w)
+                    connectedNode.PrevEdge = currentEdge;
+
+                    if (!connectedNode.Traversed) // && !list.Contains(connectedNode)) // was outside if
+                    {
+                        if (!list.Contains(connectedNode))
+                            list.Add(connectedNode);
+
+                        list.Sort();
+                    }
+                }
+                currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+            }
+            currentNode.Traversed = true;
+        }
+        // Line 14: End while-loop
         IsTaskCompleted = true;
     }
     #endregion

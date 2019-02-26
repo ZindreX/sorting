@@ -5,10 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(GraphSettings))]
 public abstract class GraphManager : MainManager {
 
-    protected int MAX_NODES;
-
-    protected GameObject nodePrefab, undirectedEdgePrefab, directedEdgePrefab, symmetricDirectedEdgePrefab;
-
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
 
@@ -21,17 +17,13 @@ public abstract class GraphManager : MainManager {
         // Activate/deactivate components (Grid / Tree / Random)
         ActivateDeactivateGraphComponents(gs.Graphstructure);
 
-        // Prefabs (editor clean up)
-        nodePrefab = gs.nodePrefab;
-        undirectedEdgePrefab = gs.undirectedEdgePrefab;
-        directedEdgePrefab = gs.directedEdgePrefab;
-        symmetricDirectedEdgePrefab = gs.symmetricDirectedEdgePrefab;
-
         // Algorithm
         algorithm = gs.GetGraphAlgorithm();
         algorithm.GraphStructure = gs.Graphstructure;
         algorithm.Seconds = gs.AlgorithmSpeed;
         algorithm.ListVisual = gs.ListVisual;
+        algorithm.ShortestPathOneToAll = gs.ShortestPathOneToAll;
+        algorithm.VisitLeftFirst = gs.VisitLeftFirst;
         
         // Pseudocode
         algorithm.PseudoCodeViewer = gs.PseudoCodeViewer;
@@ -51,36 +43,30 @@ public abstract class GraphManager : MainManager {
         // Init teaching mode
         int[] startNodeCell = gs.StartNode();
         Node startNode = GetNode(startNodeCell[0], startNodeCell[1]);
+        startNode.IsStartNode = true;
         switch (gs.TeachingMode)
         {
             case UtilGraph.DEMO:
                 switch (gs.UseAlgorithm)
                 {
-                    case UtilGraph.BFS: StartCoroutine(((BFS)algorithm).Demo(startNode)); break;
-                    case UtilGraph.DFS:
-                        ((DFS)algorithm).VisistLeftFirst = gs.VisitLeftFirst;
+                    case Util.BFS: StartCoroutine(((BFS)algorithm).Demo(startNode)); break;
 
-                        if (true)
-                            StartCoroutine(((DFS)algorithm).Demo(startNode));
-                        else
-                        {
-                            //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
-                            StartCoroutine(((DFS)algorithm).DemoRecursive(startNode));
-                        }                   
+                    case Util.DFS:
+                        StartCoroutine(((DFS)algorithm).Demo(startNode));
                         break;
 
+                    case Util.DFS_RECURSIVE:
+                        //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
+                        StartCoroutine(((DFS)algorithm).DemoRecursive(startNode));
+                        break;
 
-                    case UtilGraph.DIJKSTRA:
+                    case Util.DIJKSTRA:
                         int[] endNodeCell = gs.EndNode();
                         Node endNode = GetNode(endNodeCell[0], endNodeCell[1]);
                         endNode.IsEndNode = true;
                         StartCoroutine(((Dijkstra)algorithm).Demo(startNode, endNode));
+                        //StartCoroutine(((Dijkstra)algorithm).DemoNoPseudocode(startNode, endNode));
                         break;
-
-                    //case UtilGraph.TREE_PRE_ORDER_TRAVERSAL:
-                    //    Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                    //    TraverseGraph(algorithm, GetNode(startNode[0], startNode[1]));
-                    //    break;
                 }
                 break;
 
@@ -120,9 +106,16 @@ public abstract class GraphManager : MainManager {
     private bool backtracking = false;
 	void Update () {
         if (algorithm.IsTaskCompleted && !backtracking)
-        {
+        {   
             Debug.Log("Starting backtracking");
-            StartCoroutine(BacktrackShortestPaths(algorithm.Seconds));
+            if (algorithm.ShortestPathOneToAll)
+                StartCoroutine(BacktrackShortestPathsAll(algorithm.Seconds));
+            else
+            {
+                int[] endNodeCell = gs.EndNode();
+                Node endNode = GetNode(endNodeCell[0], endNodeCell[1]);
+                StartCoroutine(BacktrackShortestPath(endNode, algorithm.Seconds));
+            }
             backtracking = true;
         }
             
@@ -130,7 +123,7 @@ public abstract class GraphManager : MainManager {
 
     public void CreateGraph()
     {
-        CreateNodes(algorithm.AlgorithmName);
+        CreateNodes(gs.EdgeMode);
         CreateEdges(gs.EdgeMode);
     }
 
@@ -202,7 +195,7 @@ public abstract class GraphManager : MainManager {
         return 1;
     }
 
-
+    private bool testIsland = false;
     protected void CreateEdge(Node node1, Node node2, Vector3 centerPos, float angle)
     {
         // Instantiate and fix edge
@@ -218,7 +211,7 @@ public abstract class GraphManager : MainManager {
         switch (gs.EdgeType)
         {
             case UtilGraph.UNDIRECTED_EDGE:
-                edge = Instantiate(undirectedEdgePrefab, centerPos, Quaternion.identity);
+                edge = Instantiate(gs.undirectedEdgePrefab, centerPos, Quaternion.identity);
                 edge.AddComponent<UnDirectedEdge>();
                 edge.GetComponent<UnDirectedEdge>().InitUndirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH);
                 break;
@@ -227,28 +220,72 @@ public abstract class GraphManager : MainManager {
                 bool pathBothWaysActive = RollSymmetric();
 
                 if (pathBothWaysActive)
-                    edge = Instantiate(symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
+                    edge = Instantiate(gs.symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
                 else
-                    edge = Instantiate(directedEdgePrefab, centerPos, Quaternion.identity);
+                    edge = Instantiate(gs.directedEdgePrefab, centerPos, Quaternion.identity);
 
                 edge.AddComponent<DirectedEdge>();
                 edge.GetComponent<DirectedEdge>().InitDirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH, pathBothWaysActive);
                 break;
         }
-        edge.transform.Rotate(0, angle, 0, Space.Self);
-        edge.GetComponent<Edge>().SetLength(length);   
+        edge.GetComponent<Edge>().SetAngle(angle);   
+        edge.GetComponent<Edge>().SetLength(length);
+
+        if (testIsland)
+        {
+            int[] cell = ((GridNode)node1).Cell;
+            int nodeID = node1.NodeID;
+
+            if (cell[0] >= 5 && cell[0] <= 25 && cell[1] >= 5 && cell[1] <= 25)
+            //if (nodeID > 500 && nodeID < 550)
+            {
+                edge.GetComponent<Edge>().Cost = 100000;
+                edge.GetComponent<Edge>().CurrentColor = Color.white;
+            }
+        }
     }
 
     private bool RollSymmetric()
     {
         switch (gs.Graphstructure)
         {
-            case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Random.Range(0, 10) < 4;
+            case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Random.Range(UtilGraph.ROLL_MIN, UtilGraph.ROLL_MAX) < UtilGraph.SYMMETRIC_EDGE_CHANCE;
             case UtilGraph.TREE_GRAPH: return false;
             default: Debug.LogError("Symmetric option not set for '" + gs.Graphstructure + "'."); break;
         }
         return false;
     }
+
+    // Backtracks the path from input node
+    protected IEnumerator BacktrackShortestPath(Node node, float seconds)
+    {
+        // Start backtracking from end node back to start node
+        while (node != null)
+        {
+            // Change color of node
+            node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+            // Change color of edge leading to previous node
+            Edge backtrackEdge = node.PrevEdge;
+
+            if (backtrackEdge == null)
+                break;
+
+            backtrackEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+            // Set "next" node
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
+
+            node = backtrackEdge.OtherNodeConnected(node);
+
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
+            yield return new WaitForSeconds(seconds);
+        }
+    }
+
+    // ************************************ Abstract methods ************************************ 
 
     // Initialize the setup variables for the graph
     protected abstract void InitGraph(int[] graphStructure);
@@ -275,7 +312,8 @@ public abstract class GraphManager : MainManager {
     // Delete graph
     public abstract void DeleteGraph();
 
-    protected abstract IEnumerator BacktrackShortestPaths(float seconds);
+    // Backtracks from all nodes in the given graph
+    protected abstract IEnumerator BacktrackShortestPathsAll(float seconds);
 
 
 

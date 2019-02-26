@@ -6,9 +6,20 @@ public class UtilGraph : Util {
 
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
 
+    // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
+    public static readonly int ROLL_MIN = 0, ROLL_MAX = 10, SYMMETRIC_EDGE_CHANCE = 10, PARTIAL_BUILD_TREE_CHILD_CHANCE = 4, BUILD_EDGE_CHANCE = 3;
+
     // Graph structures
-    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge";
-    public const string FULL_EDGES = "Full edges", PARTIAL_EDGES = "Partial edges", MINIMUM_EDGES = "Minimum edges";
+    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge", SYMMETRIC_EDGE = "Symmetric edge";
+    public const string FULL_EDGES = "Full edges", FULL_EDGES_NO_CROSSING = "Full edges no crossing", PARTIAL_EDGES = "Partial edges", PARTIAL_EDGES_NO_CROSSING = "Partial edges no crossing ";
+    public const string MINIMUM_EDGES = "Minimum edges";
+
+    // Node types
+    public const string GRID_NODE = "Grid node", TREE_NODE = "Tree node", RANDOM_NODE = "Random node";
+
+    // Compass
+    public const string NORTH = "North", NORTH_WEST = "North west", NORTH_EAST = "North east", SOUTH = "South", SOUTH_WEST = "South west", SOUTH_EAST = "South east";
+    public const string WEST = "West", EAST = "East";
 
     // Graph objects
     public static string NODE_TAG = "Node", EDGE_TAG = "Edge";
@@ -59,4 +70,55 @@ public class UtilGraph : Util {
         return Mathf.Sqrt(Mathf.Pow(n1.position.x - n2.position.x, 2) + Mathf.Pow(n1.position.z - n2.position.z, 2));
     }
 
+    public static string GetCompassDirection(int i, int j)
+    {
+        switch (i)
+        {
+            case 0:
+                switch (j)
+                {
+                    case 0: return NORTH_WEST;
+                    case 1: return NORTH;
+                    case 2: return NORTH_EAST;
+                }
+                break;
+
+            case 1:
+                switch (j)
+                {
+                    case 0: return WEST;
+                    case 1: return null;
+                    case 2: return EAST;
+                }
+                break;
+
+            case 2:
+                switch (j)
+                {
+                    case 0: return SOUTH_WEST;
+                    case 1: return SOUTH;
+                    case 2: return SOUTH_EAST;
+                }
+                break;
+        }
+        return null;
+    }
+
+    //string compassDir = UtilGraph.GetCompassDirection(i, j);
+    //switch (compassDir)
+    //{
+    //    case UtilGraph.NORTH: case UtilGraph.SOUTH:
+    //        angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
+    //        break;
+
+    //    case UtilGraph.NORTH_WEST: case UtilGraph.NORTH_EAST: case UtilGraph.EAST: case UtilGraph.WEST:
+    //        angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
+    //        break;
+
+    //    case UtilGraph.SOUTH_WEST: case UtilGraph.SOUTH_EAST:
+    //        angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
+    //        break;
+    //    default: Debug.LogError("Compass direction unknown!"); break;
+    //}
 }
+

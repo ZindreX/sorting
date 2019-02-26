@@ -18,12 +18,22 @@ public class GridNode : Node {
 
     public override string NodeType
     {
-        get { return "Grid node " + nodeID; }
+        get { return UtilGraph.GRID_NODE; }
     }
 
     public int[] Cell
     {
         get { return cell; }
+    }
+
+    public int NumberOfNeighbors()
+    {
+        return neighbors.Count;
+    }
+
+    public bool IsAlreadyNeighbor(GridNode node)
+    {
+        return neighbors.Contains(node);
     }
 
     public void AddNeighbor(GridNode node)

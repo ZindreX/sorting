@@ -15,6 +15,12 @@ public class UnDirectedEdge : Edge {
         InitEdge(node1, node2, cost, graphStructure);
     }
 
+    public override string EdgeType
+    {
+        get { return UtilGraph.UNDIRECTED_EDGE; }
+    }
+
+
     public override Node OtherNodeConnected(Node node)
     {
         return (node == node1) ? node2 : node1;

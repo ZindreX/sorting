@@ -60,7 +60,7 @@ public class RandomGraphManager : GraphManager {
 
     private RandomNode GenerateNode(Vector3 pos)
     {
-        GameObject node = Instantiate(nodePrefab, pos, Quaternion.identity);
+        GameObject node = Instantiate(gs.nodePrefab, pos, Quaternion.identity);
         node.AddComponent<RandomNode>();
         node.GetComponent<RandomNode>().InitRandomNode(algorithm.AlgorithmName);
         return node.GetComponent<RandomNode>();
@@ -177,7 +177,7 @@ public class RandomGraphManager : GraphManager {
         }
     }
 
-    protected override IEnumerator BacktrackShortestPaths(float seconds)
+    protected override IEnumerator BacktrackShortestPathsAll(float seconds)
     {
         for (int i=nodes.Count-1; i >= 0; i--)
         {

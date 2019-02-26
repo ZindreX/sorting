@@ -12,6 +12,12 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected char node1Alpha = 's', node2Alpha = 'w';
     protected int node1Dist, node2Dist, edgeCost, numberOfEdges;
 
+    // Traverse shared variables
+    private bool visitLeftFirst;
+
+    // Shortest path shared variables
+    protected bool shortestPathOnToAll;
+
     // Instruction variables
     protected bool beginnerWait;
     protected int prevHighlightedLineOfCode;
@@ -66,6 +72,18 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         node1Dist = 0;
         edgeCost = 0;
         numberOfEdges = 0;
+    }
+
+    public bool VisitLeftFirst
+    {
+        get { return visitLeftFirst; }
+        set { visitLeftFirst = value; }
+    }
+
+    public bool ShortestPathOneToAll
+    {
+        get { return shortestPathOnToAll; }
+        set { shortestPathOnToAll = value; }
     }
 
     public ListVisual ListVisual

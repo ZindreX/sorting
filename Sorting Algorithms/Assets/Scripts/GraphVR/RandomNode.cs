@@ -16,7 +16,7 @@ public class RandomNode : Node {
 
     public override string NodeType
     {
-        get { return "Random node " + nodeID; }
+        get { return UtilGraph.RANDOM_NODE; }
     }
 
     public bool IsNeighborWith(RandomNode node)

@@ -26,6 +26,7 @@ public class ListVisual : MonoBehaviour {
     [SerializeField]
     private Transform spawnPointList, currentNodePoint;
 
+    private float seconds;
     private NodeRepresentation currentNode;
     private List<NodeRepresentation> nodeRepresentations;
 
@@ -38,6 +39,11 @@ public class ListVisual : MonoBehaviour {
     public void SetListType(string listType)
     {
         listTypeTitle.text = listType;
+    }
+
+    public float SetAlgorithmSpeed
+    {
+        set { seconds = value; }
     }
 
     // Check whether a node has a visual representation of itself
@@ -185,6 +191,8 @@ public class ListVisual : MonoBehaviour {
     // Updates value and position of one node representation and other involved node reps.
     public IEnumerator UpdateValueAndPositionOf(Node node, int index)
     {
+        Color prevColor = node.CurrentColor;
+        node.CurrentColor = UtilGraph.DIST_UPDATE_COLOR;
         // Node representation we want to move
         NodeRepresentation mainNodeRep = FindNodeRepresentation(node);
 
@@ -223,7 +231,7 @@ public class ListVisual : MonoBehaviour {
                 involvedNodeRep.ListIndex = i - 1;
                 nodeRepresentations[i - 1] = involvedNodeRep;
                 //Debug.Log("Moving up node '" + nodeRepresentations[i].Node.NodeAlphaID + "' to index=" + (i - 1));
-                involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, 1f);
+                involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
             }
 
             // Move back into list
@@ -232,11 +240,12 @@ public class ListVisual : MonoBehaviour {
             mainNodeRep.MoveNodeRepresentation(backInTheList); //nodeRep.UpdateIndexPosition(index);
             mainNodeRep.ListIndex = index;
             nodeRepresentations[index] = mainNodeRep;
-            yield return mainNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, 1f);
+            yield return mainNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
 
             // Enable gravity again
             SetGravityForMultipleNodeReps(0, index, true);
         }
+        node.CurrentColor = prevColor;
     }
 
     public NodeRepresentation FindNodeRepresentation(Node node)

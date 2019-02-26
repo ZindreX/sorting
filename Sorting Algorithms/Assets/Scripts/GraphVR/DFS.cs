@@ -4,16 +4,9 @@ using UnityEngine;
 
 public class DFS : GraphAlgorithm, ITraverse {
 
-    private bool visitLeftFirst;
-
     public override string AlgorithmName
     {
         get { return Util.DFS; }
-    }
-
-    public bool VisistLeftFirst
-    {
-        set { visitLeftFirst = value; }
     }
 
     public override string CollectLine(int lineNr)
@@ -176,8 +169,8 @@ public class DFS : GraphAlgorithm, ITraverse {
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
-        node.Visited = true;
-        yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+        //node.Visited = true;
+        //yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
         node.Traversed = true; // ??
 
@@ -185,18 +178,18 @@ public class DFS : GraphAlgorithm, ITraverse {
         {
             Edge nextEdge = node.Edges[i];
             Node nextNode = nextEdge.OtherNodeConnected(node);
-            SetNodePseudoCode(nextNode, 2); // Pseudocode
+            //SetNodePseudoCode(nextNode, 2); // Pseudocode
 
             if (!nextNode.Visited)
             {
                 // Line 8: Push node on top of stack
                 nextEdge.CurrentColor = UtilGraph.VISITED_COLOR;
                 //listVisual.AddListObject(nextNode.NodeAlphaID); // Visual list
-                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+                //yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                 // Line 9: Mark node
                 nextNode.Visited = true;
-                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+                //yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
 
                 yield return DemoRecursive(nextNode);
                 //listVisual.DestroyOutElement(); // List visual

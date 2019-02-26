@@ -10,6 +10,9 @@ public class GraphSettings : MonoBehaviour {
     private GameObject graphAlgorithmObj;
 
     [SerializeField]
+    private PseudoCodeViewer pseudoCodeViewer;
+
+    [SerializeField]
     private ListVisual listVisual;
 
     [Header("Overall settings")]
@@ -22,20 +25,22 @@ public class GraphSettings : MonoBehaviour {
     private enum GraphStructureEditor { Grid, Tree, Random }
 
     [SerializeField]
+    private UseAlgorithmEditor useAlgorithmEditor;
+    private enum UseAlgorithmEditor { BFS, DFS, DFSRecursive, Dijkstra }
+
+    [SerializeField]
+    private AlgorithmSpeedEditor algorithmSpeedEditor;
+    private enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
+
+    [Space(2)]
+    [Header("Edge settings")]
+    [SerializeField]
     private EdgeTypeEditor edgeTypeEditor;
     private enum EdgeTypeEditor { Undirected, Directed }
 
     [SerializeField]
     private EdgeModeEditor edgeModeEditor;
-    private enum EdgeModeEditor { Full, Partial, Minimum }
-
-    [SerializeField]
-    private UseAlgorithmEditor useAlgorithmEditor;
-    private enum UseAlgorithmEditor { BFS, DFS, Dijkstra, PreOrder }
-
-    [SerializeField]
-    private AlgorithmSpeedEditor algorithmSpeedEditor;
-    private enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
+    private enum EdgeModeEditor { Full, FullNoCrossing, Partial, PartialNoCrossing }
 
 
     // *** Grid graph ***
@@ -66,12 +71,8 @@ public class GraphSettings : MonoBehaviour {
     private enum NTree { Binary, Ternary }
 
     [SerializeField]
-    private NodeSpaceX nodeSpaceXEditor;
-    private enum NodeSpaceX { Two, Four }
-
-    [SerializeField]
-    private NodeSpaceZ nodeSpaceZEditor;
-    private enum NodeSpaceZ { Two, Four }
+    private LevelDepthLengthEditor levelDepthLengthEditor;
+    private enum LevelDepthLengthEditor { Two, Four }
 
     [SerializeField]
     private bool visitLeftFirst;
@@ -91,20 +92,20 @@ public class GraphSettings : MonoBehaviour {
     [SerializeField]
     private int z2;
 
+    [SerializeField]
+    private bool shortestPathOneToAll;
+
     private float algorithmSpeed;
     private string teachingMode, graphStructure, edgeType, edgeMode, useAlgorithm;
     private int gridRows, gridColumns, gridSpace;
-    private int treeDepth, nTree, nodeSpaceX, nodeSpaceZ;
-
-    [SerializeField]
-    private PseudoCodeViewer pseudoCodeViewer;
+    private int treeDepth, nTree, levelDepthLength;
 
     public void PrepareSettings()
     {
         switch ((int)teachingModeEditor)
         {
-            case 0: teachingMode = UtilGraph.DEMO; break;
-            case 1: teachingMode = UtilGraph.USER_TEST; break;
+            case 0: teachingMode = Util.DEMO; break;
+            case 1: teachingMode = Util.USER_TEST; break;
         }
 
         switch ((int)graphStructureEditor)
@@ -123,16 +124,17 @@ public class GraphSettings : MonoBehaviour {
         switch ((int)edgeModeEditor)
         {
             case 0: edgeMode = UtilGraph.FULL_EDGES; break;
-            case 1: edgeMode = UtilGraph.PARTIAL_EDGES; break;
-            case 2: edgeMode = UtilGraph.MINIMUM_EDGES; break;
+            case 1: edgeMode = UtilGraph.FULL_EDGES_NO_CROSSING; break;
+            case 2: edgeMode = UtilGraph.PARTIAL_EDGES; break;
+            case 3: edgeMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
         }
 
         switch ((int)useAlgorithmEditor)
         {
-            case 0: useAlgorithm = UtilGraph.BFS; break;
-            case 1: useAlgorithm = UtilGraph.DFS; break;
-            case 2: useAlgorithm = UtilGraph.DIJKSTRA; break;
-            //case 3: useAlgorithm = UtilGraph.TREE_PRE_ORDER_TRAVERSAL; break;
+            case 0: useAlgorithm = Util.BFS; break;
+            case 1: useAlgorithm = Util.DFS; break;
+            case 2: useAlgorithm = Util.DFS_RECURSIVE; break;
+            case 3: useAlgorithm = Util.DIJKSTRA; break;
         }
 
         switch ((int)algorithmSpeedEditor)
@@ -158,8 +160,7 @@ public class GraphSettings : MonoBehaviour {
         {
             treeDepth = (int)treeDepthEditor;
             nTree = ((int)nTreeEditor + 2);
-            nodeSpaceX = ((int)nodeSpaceXEditor + 2) + (int)nodeSpaceXEditor * 2;
-            nodeSpaceZ = ((int)nodeSpaceZEditor + 2) + (int)nodeSpaceZEditor * 2;
+            levelDepthLength = ((int)levelDepthLengthEditor + 2) + (int)levelDepthLengthEditor * 2;
         }
     }
 
@@ -203,6 +204,11 @@ public class GraphSettings : MonoBehaviour {
         return new int[2] { x2, z2 };
     }
 
+    public bool ShortestPathOneToAll
+    {
+        get { return shortestPathOneToAll; }
+    }
+
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }
@@ -213,7 +219,7 @@ public class GraphSettings : MonoBehaviour {
         switch (graphStructure)
         {
             case UtilGraph.GRID_GRAPH: return new int[3] { gridRows, gridColumns, gridSpace };
-            case UtilGraph.TREE_GRAPH: return new int[4] { treeDepth, nTree, nodeSpaceX, nodeSpaceZ };
+            case UtilGraph.TREE_GRAPH: return new int[3] { treeDepth, nTree, levelDepthLength };
             case UtilGraph.RANDOM_GRAPH: return new int[3] { 5, 6, 2 };
             default: Debug.LogError("Couldn't setup graph! Unknown graph structure: '" + graphStructure + "'."); return null;
         }
@@ -231,31 +237,29 @@ public class GraphSettings : MonoBehaviour {
 
     public GraphAlgorithm GetGraphAlgorithm()
     {
+        listVisual.SetAlgorithmSpeed = algorithmSpeed;
         switch (useAlgorithm)
         {
-            case UtilGraph.BFS:
+            case Util.BFS:
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
                 listVisual.SetListType(Util.QUEUE);
                 return graphAlgorithmObj.GetComponent<BFS>();
 
-            case UtilGraph.DFS:
+            case Util.DFS: case Util.DFS_RECURSIVE:
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
                 listVisual.SetListType(Util.STACK);
                 return graphAlgorithmObj.GetComponent<DFS>();
 
-            case UtilGraph.DIJKSTRA:
+            case Util.DIJKSTRA:
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
                 listVisual.SetListType(Util.PRIORITY_LIST);
                 return graphAlgorithmObj.GetComponent<Dijkstra>();
-
-            //case UtilGraph.TREE_PRE_ORDER_TRAVERSAL:
-            //    return graphAlgorithmObj.GetComponent<TreePreOrderTraversal>();
 
             default: return null;
         }

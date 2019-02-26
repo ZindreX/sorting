@@ -12,7 +12,7 @@ public class Util : MonoBehaviour {
     public const string BUCKET_SORT = "Bucket sort";
 
     // Graph Algorithms
-    public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DIJKSTRA = "Dijkstra";
+    public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DFS_RECURSIVE = "DFS recursive", DIJKSTRA = "Dijkstra";
     //public const string TREE_PRE_ORDER_TRAVERSAL = "Pre order", TREE_IN_ORDER_TRAVERSAL = "In order", TREE_POST_ORDER_TRAVERSAL = "Post order";
     public const string QUEUE = "Queue", STACK = "Stack", PRIORITY_LIST = "Priority";
 

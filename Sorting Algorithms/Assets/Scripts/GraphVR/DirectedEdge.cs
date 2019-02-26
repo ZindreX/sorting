@@ -5,8 +5,12 @@ using UnityEngine;
 public class DirectedEdge : Edge {
 
     /* -------------------------------------------- Directed Edge ----------------------------------------------------
-     * Node1 ------> Node2 (Node1 can reach node2, not vice versa)
+     * > PathBothWaysActive = false
+     *   Node1 ------> Node2 (Node1 can reach node2, not vice versa)
      * 
+     * > PathBothWaysActive = true
+     *   Node1 <-----> Node2 (Node1 can reach node2, and vice versa)
+     *  
      * 
     */
 
@@ -21,6 +25,16 @@ public class DirectedEdge : Edge {
             OpenPathBothWays();
     }
 
+    public override string EdgeType
+    {
+        get { return pathBothWaysActive ? UtilGraph.SYMMETRIC_EDGE : UtilGraph.DIRECED_EDGE; }
+    }
+
+    public bool IsPointingAwayFrom(Node node)
+    {
+        return node == node1;
+    }
+
     public override Color CurrentColor
     {
         get { return currentColor; }
@@ -32,6 +46,12 @@ public class DirectedEdge : Edge {
                 arrow[i].GetComponent<Renderer>().material.color = value;
             }
         }
+    }
+
+    public bool PathBothWaysActive
+    {
+        get { return pathBothWaysActive; }
+        set { pathBothWaysActive = value; }
     }
 
     public void OpenPathBothWays()
@@ -114,6 +134,5 @@ public class DirectedEdge : Edge {
             return (fromNode == node1) ? (node1.Dist + cost) : (node2.Dist + cost);
         return (fromNode == node1) ? (node1.Dist + cost) : UtilGraph.INF;
     }
-
 
 }

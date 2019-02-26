@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TreeManager : GraphManager {
 
-    private int treeLevel, nTree, nodeSpaceX, nodeSpaceZ;
+    private int treeLevel, nTree, levelDepthLength;
     private List<TreeNode> tree;
  
     // N^(L+1) - 1. || (N^L-1) / (N-1).
@@ -37,8 +37,7 @@ public class TreeManager : GraphManager {
     {
         treeLevel = graphStructure[0];
         nTree = graphStructure[1];
-        nodeSpaceX = graphStructure[2];
-        nodeSpaceZ = graphStructure[3];
+        levelDepthLength = graphStructure[2];
     }
 
     protected override void CreateNodes(string mode)
@@ -61,13 +60,16 @@ public class TreeManager : GraphManager {
             // Get parent
             TreeNode parent = tree[z-1];
 
+            if (parent == null)
+                continue;
+
             // Fix position variables when next level
             if (parent.TreeLevel != currentLevel)
             {
                 currentLevel = parent.TreeLevel;
 
                 // Next level Z position (from player towards the blackboard)
-                zPos = UtilGraph.GRAPH_MIN_Z + (currentLevel + 1) * nodeSpaceZ;
+                zPos = UtilGraph.GRAPH_MIN_Z + (currentLevel + 1) * levelDepthLength;
 
                 /* Split width of map into pieces for where to place nodes
                  * |--------O--------|
@@ -82,6 +84,13 @@ public class TreeManager : GraphManager {
             // Create children w/edge
             for (int x = 0; x < nTree; x++)
             {
+                if (mode == UtilGraph.PARTIAL_EDGES && Random.Range(UtilGraph.ROLL_MIN, UtilGraph.ROLL_MAX) < UtilGraph.PARTIAL_BUILD_TREE_CHILD_CHANCE)
+                {
+                    tree.Add(null);
+                    xPos -= widthSplit;
+                    continue;
+                }
+
                 tree.Add(GenerateNode(parent, new Vector3(xPos, 0f, zPos), parent.TreeLevel + 1));
                 xPos -= widthSplit;
 
@@ -92,15 +101,7 @@ public class TreeManager : GraphManager {
                 Vector3 centerPos = new Vector3(parent.transform.position.x + n2.x, 0f, parent.transform.position.z + n2.z) / 2;
 
                 // Find angle
-                float angle = -Mathf.Atan2(nodeSpaceZ, n2.x - parent.transform.position.x) * Mathf.Rad2Deg;
-
-                // Instantiate and fix edge
-                GameObject edge = null;
-
-                // Set edge cost (no cost unless shortest path)
-                int edgeCost = UtilGraph.NO_COST;
-                if (algorithm is IShortestPath)
-                    edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
+                float angle = -Mathf.Atan2(levelDepthLength, n2.x - parent.transform.position.x) * Mathf.Rad2Deg;
 
                 // Initialize edge
                 CreateEdge(parent, tree[tree.Count - 1], centerPos, angle);
@@ -110,7 +111,7 @@ public class TreeManager : GraphManager {
 
     private TreeNode GenerateNode(TreeNode parent, Vector3 pos, int treeLevel)
     {
-        GameObject node = Instantiate(nodePrefab, pos, Quaternion.identity);
+        GameObject node = Instantiate(gs.nodePrefab, pos, Quaternion.identity);
         node.AddComponent<TreeNode>();
         node.GetComponent<TreeNode>().InitTreeNode(algorithm.AlgorithmName, parent, treeLevel);
         return node.GetComponent<TreeNode>();
@@ -176,7 +177,7 @@ public class TreeManager : GraphManager {
         }
     }
 
-    protected override IEnumerator BacktrackShortestPaths(float seconds)
+    protected override IEnumerator BacktrackShortestPathsAll(float seconds)
     {
         int numberOfInternalNodes = NumberOfInternalNodes();
         for (int i=tree.Count-1; i >= numberOfInternalNodes; i--)

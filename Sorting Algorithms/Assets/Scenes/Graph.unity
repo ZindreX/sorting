@@ -613,26 +613,26 @@ MonoBehaviour:
   symmetricDirectedEdgePrefab: {fileID: 1434581048115598, guid: 0890964e700f0f048903c3dc19b2ce9e,
     type: 2}
   graphAlgorithmObj: {fileID: 157921380}
+  pseudoCodeViewer: {fileID: 548546077}
   listVisual: {fileID: 1415126236}
   teachingModeEditor: 0
   graphStructureEditor: 0
-  edgeTypeEditor: 1
-  edgeModeEditor: 1
-  useAlgorithmEditor: 2
+  useAlgorithmEditor: 3
   algorithmSpeedEditor: 2
+  edgeTypeEditor: 1
+  edgeModeEditor: 2
   gridRowsEditor: 4
   gridColumnsEditor: 4
   gridSpaceEditor: 0
   treeDepthEditor: 3
   nTreeEditor: 0
-  nodeSpaceXEditor: 1
-  nodeSpaceZEditor: 1
+  levelDepthLengthEditor: 0
   visitLeftFirst: 0
   x1: 0
   z1: 0
   x2: 4
   z2: 4
-  pseudoCodeViewer: {fileID: 548546077}
+  shortestPathOneToAll: 0
 --- !u!114 &591449219
 MonoBehaviour:
   m_ObjectHideFlags: 0

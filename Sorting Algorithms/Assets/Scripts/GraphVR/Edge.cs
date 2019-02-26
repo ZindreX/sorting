@@ -18,11 +18,15 @@ public abstract class Edge : MonoBehaviour {
     protected Color currentColor;
 
     [SerializeField]
+    protected float angle;
+
+    [SerializeField]
     protected Node node1, node2;
 
     protected void InitEdge(Node node1, Node node2, int cost, string graphStructure)
     {
         edgeID = EDGE_ID++;
+        name = EdgeType + edgeID + " [" + node1.NodeAlphaID + ", " + node2.NodeAlphaID + "]";
         this.node1 = node1;
         this.node2 = node2;
 
@@ -48,9 +52,15 @@ public abstract class Edge : MonoBehaviour {
 
     // *** Object settings ***
 
-    private void SetAngle(float angle)
+    public void SetAngle(float angle)
     {
+        // Avoid overlap of crossing edges
+        //if (angle == -45f || angle == -135f)
+        //    GetComponentInChildren<TextMesh>().transform.position += new Vector3(0f, 1f, 0f);
+
+        this.angle = angle;
         transform.Rotate(0f, angle, 0f);
+        //transform.Rotate(0, angle, 0, Space.Self);
     }
 
     public void SetLength(float length)
@@ -65,6 +75,10 @@ public abstract class Edge : MonoBehaviour {
     }
 
     // *** Object settings end ***
+
+
+    // Edge type
+    public abstract string EdgeType { get; }
 
     // Returns the total cost of parameter node + edge cost
     public abstract int EdgeAndOtherNodeCombinedCost(Node fromNode);

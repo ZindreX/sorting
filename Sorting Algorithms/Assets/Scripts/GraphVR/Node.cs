@@ -12,7 +12,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected int nodeID;
     protected char nodeAlphaID;
     protected string algorithm;
-    protected bool isEndNode;
+    protected bool isStartNode, isEndNode;
 
     protected Color currentColor;
     protected Animator animator;
@@ -43,6 +43,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
         nodeID = NODE_ID++;
         NodeAlphaID = UtilGraph.ConvertIDToAlphabet(nodeID);
+        name = NodeType + nodeID + "(" + nodeAlphaID + ")";
         ResetNode();
     }
 
@@ -74,6 +75,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             textNodeID.text = UtilGraph.ConvertIDToAlphabet(nodeID).ToString();
         else
             textNodeID.text = nodeID.ToString();
+    }
+
+    public bool IsStartNode
+    {
+        get { return isStartNode; }
+        set { isStartNode = value; }
     }
 
     public bool IsEndNode
