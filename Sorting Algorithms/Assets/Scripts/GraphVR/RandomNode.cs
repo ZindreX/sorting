@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class RandomNode : Node {
 
-
+    [Space(2)]
+    [Header("Random node variables")]
     [SerializeField]
     private List<RandomNode> neighbors;
 

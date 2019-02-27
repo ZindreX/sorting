@@ -20,7 +20,7 @@ public class GridManager : GraphManager {
         get { return gridNodes; }
     }
 
-    protected override void InitGraph(int[] graphStructure)
+    public override void InitGraph(int[] graphStructure)
     {
         // Init graph strucutre values
         rows = graphStructure[0];
@@ -328,7 +328,7 @@ public class GridManager : GraphManager {
         }
     }
 
-    protected override IEnumerator BacktrackShortestPathsAll(float seconds)
+    public override IEnumerator BacktrackShortestPathsAll(float seconds)
     {
         for (int z=rows-1; z >= 0; z--)
         {

@@ -259,7 +259,7 @@ public class ListVisual : MonoBehaviour {
     }
 
 
-    public void DestroyOutElement()
+    public void DestroyCurrentNode()
     {
         Destroy(currentNode.gameObject);
     }

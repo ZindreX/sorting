@@ -8,6 +8,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected float seconds = 1f;
     protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;
     protected PseudoCodeViewer pseudoCodeViewer;
+    protected MainManager mainManager;
 
     // Demo variables
     protected int i, j, k;
@@ -16,6 +17,16 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     // User Test
     protected Dictionary<string, List<string>> skipDict = new Dictionary<string, List<string>>();
 
+    protected virtual void Awake()
+    {
+        AddSkipAbleInstructions();
+    }
+
+    public MainManager MainManager
+    {
+        get { return mainManager; }
+        set { mainManager = value; }
+    }
 
     public float Seconds
     {
@@ -63,9 +74,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // ---------------------------- Maybe overriden in the algorithm class which inherite this base class ----------------------------
 
+    // Instructions which the user don't need to perform any actions to proceed
     public virtual void AddSkipAbleInstructions()
     {
-        // Insert base skip instructions
+        // Insert base skip instructions (any common sort/graph???)
+        skipDict.Add(Util.SKIP_NO_ELEMENT, new List<string>());
     }
 
     public virtual void ResetSetup()

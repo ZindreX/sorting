@@ -548,10 +548,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 591449216}
+  - component: {fileID: 591449220}
   - component: {fileID: 591449215}
   - component: {fileID: 591449217}
   - component: {fileID: 591449219}
   - component: {fileID: 591449218}
+  - component: {fileID: 591449221}
   m_Layer: 0
   m_Name: GraphManager
   m_TagString: Untagged
@@ -615,23 +617,23 @@ MonoBehaviour:
   graphAlgorithmObj: {fileID: 157921380}
   pseudoCodeViewer: {fileID: 548546077}
   listVisual: {fileID: 1415126236}
-  teachingModeEditor: 0
-  graphStructureEditor: 0
-  useAlgorithmEditor: 3
-  algorithmSpeedEditor: 2
-  edgeTypeEditor: 1
-  edgeModeEditor: 2
+  teachingModeEditor: 1
+  graphStructureEditor: 1
+  useAlgorithmEditor: 0
+  algorithmSpeedEditor: 0
+  edgeTypeEditor: 0
+  edgeModeEditor: 1
   gridRowsEditor: 4
   gridColumnsEditor: 4
   gridSpaceEditor: 0
   treeDepthEditor: 3
   nTreeEditor: 0
-  levelDepthLengthEditor: 0
+  levelDepthLengthEditor: 1
   visitLeftFirst: 0
   x1: 0
   z1: 0
-  x2: 4
-  z2: 4
+  x2: 0
+  z2: 0
   shortestPathOneToAll: 0
 --- !u!114 &591449219
 MonoBehaviour:
@@ -642,6 +644,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a780cb66949dd5e48aac71c28a273b67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &591449220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 591449214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2910371e242b11c4eb5b00b4ce6f099e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &591449221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 591449214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c358a60e3db0dc44699ff05baf808a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &668667158

@@ -149,7 +149,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
             lengthOfList = stack.Count.ToString(); // Pseudocode stack size
 
-            listVisual.DestroyOutElement(); // Node Representation
+            listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);                    

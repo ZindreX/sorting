@@ -6,6 +6,8 @@ public class TreeNode : Node {
 
     private int treeLevel;
 
+    [Space(2)]
+    [Header("Tree node variables")]
     [SerializeField]
     private TreeNode parent;
     [SerializeField]

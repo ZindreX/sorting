@@ -33,7 +33,7 @@ public class TreeManager : GraphManager {
         get { return tree; }
     }
 
-    protected override void InitGraph(int[] graphStructure)
+    public override void InitGraph(int[] graphStructure)
     {
         treeLevel = graphStructure[0];
         nTree = graphStructure[1];
@@ -177,7 +177,7 @@ public class TreeManager : GraphManager {
         }
     }
 
-    protected override IEnumerator BacktrackShortestPathsAll(float seconds)
+    public override IEnumerator BacktrackShortestPathsAll(float seconds)
     {
         int numberOfInternalNodes = NumberOfInternalNodes();
         for (int i=tree.Count-1; i >= numberOfInternalNodes; i--)

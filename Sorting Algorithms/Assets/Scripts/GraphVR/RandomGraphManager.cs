@@ -8,7 +8,7 @@ public class RandomGraphManager : GraphManager {
 
     private List<RandomNode> nodes;
 
-    protected override void InitGraph(int[] graphStructure)
+    public override void InitGraph(int[] graphStructure)
     {
         nodes = new List<RandomNode>();
 
@@ -177,7 +177,7 @@ public class RandomGraphManager : GraphManager {
         }
     }
 
-    protected override IEnumerator BacktrackShortestPathsAll(float seconds)
+    public override IEnumerator BacktrackShortestPathsAll(float seconds)
     {
         for (int i=nodes.Count-1; i >= 0; i--)
         {

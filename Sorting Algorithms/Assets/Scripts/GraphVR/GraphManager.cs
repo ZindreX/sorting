@@ -2,197 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(GraphSettings))]
-public abstract class GraphManager : MainManager {
+
+public abstract class GraphManager : MonoBehaviour {
 
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
 
-    protected virtual void Awake()
+    public void InitGraphManager(GraphSettings gs, GraphAlgorithm algorithm)
     {
-        // Get settings from editor
-        gs = GetComponent(typeof(GraphSettings)) as GraphSettings;
-        gs.PrepareSettings();
-
-        // Activate/deactivate components (Grid / Tree / Random)
-        ActivateDeactivateGraphComponents(gs.Graphstructure);
-
-        // Algorithm
-        algorithm = gs.GetGraphAlgorithm();
-        algorithm.GraphStructure = gs.Graphstructure;
-        algorithm.Seconds = gs.AlgorithmSpeed;
-        algorithm.ListVisual = gs.ListVisual;
-        algorithm.ShortestPathOneToAll = gs.ShortestPathOneToAll;
-        algorithm.VisitLeftFirst = gs.VisitLeftFirst;
-        
-        // Pseudocode
-        algorithm.PseudoCodeViewer = gs.PseudoCodeViewer;
-
+        this.gs = gs;
+        this.algorithm = algorithm;
     }
-
-    // Use this for initialization
-    void Start () {
-        gs.PseudoCodeViewer.PseudoCodeSetup();
-
-        // Get variables for graph setup
-        InitGraph(gs.GraphSetup());
-
-        // Create graph based on init variables
-        CreateGraph();
-
-        // Init teaching mode
-        int[] startNodeCell = gs.StartNode();
-        Node startNode = GetNode(startNodeCell[0], startNodeCell[1]);
-        startNode.IsStartNode = true;
-        switch (gs.TeachingMode)
-        {
-            case UtilGraph.DEMO:
-                switch (gs.UseAlgorithm)
-                {
-                    case Util.BFS: StartCoroutine(((BFS)algorithm).Demo(startNode)); break;
-
-                    case Util.DFS:
-                        StartCoroutine(((DFS)algorithm).Demo(startNode));
-                        break;
-
-                    case Util.DFS_RECURSIVE:
-                        //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
-                        StartCoroutine(((DFS)algorithm).DemoRecursive(startNode));
-                        break;
-
-                    case Util.DIJKSTRA:
-                        int[] endNodeCell = gs.EndNode();
-                        Node endNode = GetNode(endNodeCell[0], endNodeCell[1]);
-                        endNode.IsEndNode = true;
-                        StartCoroutine(((Dijkstra)algorithm).Demo(startNode, endNode));
-                        //StartCoroutine(((Dijkstra)algorithm).DemoNoPseudocode(startNode, endNode));
-                        break;
-                }
-                break;
-
-            case UtilGraph.USER_TEST:
-                if (gs.UseAlgorithm == UtilGraph.BFS)
-                {
-                    List<int> visitOrder = null; // ((BFS)algorithm).UserTestInstructions(GetNode(startNode[0], startNode[1]));
-
-                    string result = "";
-                    for (int x = 0; x < visitOrder.Count; x++)
-                    {
-                        result += visitOrder[x].ToString() + " -> ";
-                    }
-                    result.Substring(0, result.Length - 4);
-                    Debug.Log(result);
-                }
-
-                PerformUserTest();
-                break;
-        }
-    }
-
-    // Bugged?
-    //private void TraverseGraph(Node startNode)
-    //{
-    //    Debug.Log(">>> Algorithm: " + algorithm.AlgorithmName);
-    //    Debug.Log("Test: " + algorithm.GetComponent(typeof(DFS)));
-    //    StartCoroutine(algorithm.GetComponent<ITraverse>().Demo(startNode));
-    //}
-
-    //private void ShortestPath(Node from, Node to)
-    //{
-    //    StartCoroutine(algorithm.GetComponent<IShortestPath>().Demo(from, to));
-    //}
-
-    // Update is called once per frame
-    private bool backtracking = false;
-	void Update () {
-        if (algorithm.IsTaskCompleted && !backtracking)
-        {   
-            Debug.Log("Starting backtracking");
-            if (algorithm.ShortestPathOneToAll)
-                StartCoroutine(BacktrackShortestPathsAll(algorithm.Seconds));
-            else
-            {
-                int[] endNodeCell = gs.EndNode();
-                Node endNode = GetNode(endNodeCell[0], endNodeCell[1]);
-                StartCoroutine(BacktrackShortestPath(endNode, algorithm.Seconds));
-            }
-            backtracking = true;
-        }
-            
-	}
 
     public void CreateGraph()
     {
         CreateNodes(gs.EdgeMode);
         CreateEdges(gs.EdgeMode);
-    }
-
-    // Keeps only one graph structure active
-    private void ActivateDeactivateGraphComponents(string graphStructure)
-    {
-        switch (graphStructure)
-        {
-            case UtilGraph.GRID_GRAPH:
-                GetComponent<GridManager>().enabled = true;
-                GetComponent<TreeManager>().enabled = false;
-                GetComponent<RandomGraphManager>().enabled = false;
-                break;
-
-            case UtilGraph.TREE_GRAPH:
-                GetComponent<TreeManager>().enabled = true;
-                GetComponent<GridManager>().enabled = false;
-                GetComponent<RandomGraphManager>().enabled = false;
-                break;
-
-            case UtilGraph.RANDOM_GRAPH:
-                GetComponent<RandomGraphManager>().enabled = true;
-                GetComponent<TreeManager>().enabled = false;
-                GetComponent<GridManager>().enabled = false;
-                break;
-
-            default: Debug.Log("Graph structure '" + graphStructure + "' not found."); break;
-        }
-    }
-
-
-    private void PerformUserTest()
-    {
-        ResetGraph();
-        userTestReady = true;
-        Debug.Log("Ready for user test!");
-    }
-
-
-    protected override int PrepareNextInstruction(InstructionBase instruction)
-    {
-        bool gotNode = !algorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-        bool noDestination = algorithm.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
-
-        if (gotNode)
-        {
-            TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
-            // Get the Sorting element
-            Node node = null;//elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
-
-            // Hands out the next instruction
-            node.Instruction = traverseInstruction;
-
-            // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilSort.PIVOT_START_INST || instruction.Instruction == UtilSort.PIVOT_END_INST || instruction.Instruction == UtilSort.SWITCH_INST)
-                node.NextMove = true;
-        }
-
-        // Display help on blackboard
-        if (true) //algorithmSettings.Difficulty <= UtilSort.BEGINNER)
-        {
-            BeginnerWait = true;
-            StartCoroutine(algorithm.UserTestHighlightPseudoCode(instruction, gotNode));
-        }
-
-
-        if (gotNode && !noDestination)
-            return 0;
-        return 1;
     }
 
     private bool testIsland = false;
@@ -257,7 +82,7 @@ public abstract class GraphManager : MainManager {
     }
 
     // Backtracks the path from input node
-    protected IEnumerator BacktrackShortestPath(Node node, float seconds)
+    public IEnumerator BacktrackShortestPath(Node node, float seconds)
     {
         // Start backtracking from end node back to start node
         while (node != null)
@@ -288,7 +113,7 @@ public abstract class GraphManager : MainManager {
     // ************************************ Abstract methods ************************************ 
 
     // Initialize the setup variables for the graph
-    protected abstract void InitGraph(int[] graphStructure);
+    public abstract void InitGraph(int[] graphStructure);
 
     // Creates the nodes (and edges*)
     protected abstract void CreateNodes(string structure);
@@ -298,7 +123,6 @@ public abstract class GraphManager : MainManager {
 
     // Get specific node
     public abstract Node GetNode(int a, int b);
-
 
     // Creates the edges of the graph (in case not already done)
     protected abstract void CreateEdges(string mode);
@@ -313,7 +137,7 @@ public abstract class GraphManager : MainManager {
     public abstract void DeleteGraph();
 
     // Backtracks from all nodes in the given graph
-    protected abstract IEnumerator BacktrackShortestPathsAll(float seconds);
+    public abstract IEnumerator BacktrackShortestPathsAll(float seconds);
 
 
 

@@ -28,7 +28,7 @@ public abstract class AlgorithmManagerBase : MainManager {
     protected ElementManager elementManager;
     protected UserTestManager userTestManager;
     protected StepByStepManager tutorialStep;
-    protected SortAlgorithm algorithm;
+    protected SortAlgorithm sortAlgorithm;
     protected AlgorithmSettings algorithmSettings;
 
     [SerializeField]
@@ -46,12 +46,13 @@ public abstract class AlgorithmManagerBase : MainManager {
         tutorialStep = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
 
         // Setup algorithm in their respective <Algorithm name>Manager
-        algorithm = InstanceOfAlgorithm;
-        algorithmName = algorithm.AlgorithmName;
+        teachingAlgorithm = InstanceOfAlgorithm;
+        sortAlgorithm = InstanceOfAlgorithm;
+        algorithmName = sortAlgorithm.AlgorithmName;
 
         // Set displays
-        algorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
-        displayUnitManager.SetAlgorithmForPseudo(algorithm);
+        sortAlgorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
+        displayUnitManager.SetAlgorithmForPseudo(sortAlgorithm);
     }
 
 
@@ -70,7 +71,7 @@ public abstract class AlgorithmManagerBase : MainManager {
         if (userStoppedAlgorithm)
             return;
 
-        if (algorithm.IsTaskCompleted)
+        if (sortAlgorithm.IsTaskCompleted)
         {
             if (algorithmSettings.IsUserTest() && userTestManager.TimeSpent == 0)
             {
@@ -82,7 +83,7 @@ public abstract class AlgorithmManagerBase : MainManager {
         }
         else
         {
-            if (algorithmSettings.IsTutorialStep())
+            if (algorithmSettings.IsStepByStep())
             {
                 if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
                 {
@@ -93,8 +94,8 @@ public abstract class AlgorithmManagerBase : MainManager {
                     //Debug.Log(tutorialStep.CurrentInstructionNr);
 
 
-                    bool gotSortingElement = !algorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-                    algorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
+                    bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+                    sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
                 }
             }
             else if (algorithmSettings.IsUserTest()) // User test
@@ -115,7 +116,7 @@ public abstract class AlgorithmManagerBase : MainManager {
                         // Checking if all sorting elements are sorted
                         if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                         {
-                            algorithm.IsTaskCompleted = true;
+                            sortAlgorithm.IsTaskCompleted = true;
                             Debug.LogError("Manage to enter this case???"); // ???
                         }
                         else
@@ -178,8 +179,8 @@ public abstract class AlgorithmManagerBase : MainManager {
 
         switch (algorithmSettings.TeachingMode)
         {
-            case UtilSort.DEMO: PerformAlgorithmTutorial(); break;
-            case UtilSort.STEP_BY_STEP: PerformAlgorithmTutorialStep(); break;
+            case UtilSort.DEMO: PerformAlgorithmDemo(); break;
+            case UtilSort.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
             case UtilSort.USER_TEST: PerformAlgorithmUserTest(); break;
         }
         userStoppedAlgorithm = false;
@@ -194,7 +195,7 @@ public abstract class AlgorithmManagerBase : MainManager {
      */
     public void DestroyAndReset()
     {
-        if (algorithmSettings.IsDemo() && !algorithmSettings.IsTutorialStep() && !algorithm.IsTaskCompleted)
+        if (algorithmSettings.IsDemo() && !algorithmSettings.IsStepByStep() && !sortAlgorithm.IsTaskCompleted)
         {
             StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", UtilSort.ERROR_COLOR));
         }
@@ -203,10 +204,10 @@ public abstract class AlgorithmManagerBase : MainManager {
             userStoppedAlgorithm = true;
             holderManager.DestroyObjects();
             elementManager.DestroyObjects();
-            if (algorithm.IsTaskCompleted)
-                algorithm.IsTaskCompleted = false;
+            if (sortAlgorithm.IsTaskCompleted)
+                sortAlgorithm.IsTaskCompleted = false;
 
-            algorithm.ResetSetup();
+            sortAlgorithm.ResetSetup();
             displayUnitManager.ResetDisplays();
             settingsObj.SetActive(true);
             controllerReady = false;
@@ -220,7 +221,7 @@ public abstract class AlgorithmManagerBase : MainManager {
 
     public SortAlgorithm Algorithm
     {
-        get { return algorithm; }
+        get { return sortAlgorithm; }
     }
 
     public AlgorithmSettings AlgorithmSettings
@@ -252,15 +253,15 @@ public abstract class AlgorithmManagerBase : MainManager {
 
 
 
-    /* --------------------------------------- Tutorial ---------------------------------------
+    /* --------------------------------------- Demo ---------------------------------------
      * - Gives a visual presentation of <sorting algorithm>
      * - Player can't interact with sorting elements (*fix)
     */
-    public void PerformAlgorithmTutorial()
+    public override void PerformAlgorithmDemo()
     {
         Debug.Log(">>> Performing " + algorithmName + " tutorial.");
         elementManager.InteractionWithSortingElements(false);
-        StartCoroutine(algorithm.Demo(elementManager.SortingElements));
+        StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
     }
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
@@ -268,24 +269,24 @@ public abstract class AlgorithmManagerBase : MainManager {
      * - Player can't directly interact with sorting elements, but can use controllers to progress
      *   one step of a time / or back
     */
-    public void PerformAlgorithmTutorialStep()
+    public override void PerformAlgorithmStepByStep()
     {
         // Getting instructions for this sample of sorting elements
         elementManager.InteractionWithSortingElements(false);
-        tutorialStep.Init(algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements)));
+        tutorialStep.Init(sortAlgorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements)));
     }
 
     /* --------------------------------------- User Test ---------------------------------------
      * - Gives a visual presentation of elements used in <sorting algorithm>
      * - Player needs to interact with the sorting elements to progress through the algorithm
     */
-    public void PerformAlgorithmUserTest()
+    public override void PerformAlgorithmUserTest()
     {
         Debug.Log(">>> Performing " + algorithmName + " user test.");
         elementManager.InteractionWithSortingElements(true);
         
         // Getting instructions for this sample of sorting elements
-        Dictionary<int, InstructionBase> instructions = algorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
+        Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(CopyFirstState(elementManager.SortingElements));
 
         // Initialize user test
         userTestManager.InitUserTest(instructions, MovesNeeded, FindNumberOfUserAction(instructions));
@@ -298,26 +299,11 @@ public abstract class AlgorithmManagerBase : MainManager {
         userTestReady = true; // debugging
     }
 
-    // Finds the number of instructions which the player has to do something to progress0 5   
-    private int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
-    {
-        int count = 0;
-        for (int x = 0; x < instructions.Count; x++)
-        {
-            if (algorithm.SkipDict.ContainsKey(UtilSort.SKIP_NO_ELEMENT) && algorithm.SkipDict.ContainsKey(UtilSort.SKIP_NO_DESTINATION))
-            {
-                if (!algorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !algorithm.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
-                    count++;
-            }
-        }
-        return count;
-    }
-
     // Give feedback to the user when the sorting task (user test) is completed)
     private IEnumerator FinishUserTest()
     {
-        yield return new WaitForSeconds(algorithm.Seconds);
-        algorithm.IsTaskCompleted = true;
+        yield return new WaitForSeconds(sortAlgorithm.Seconds);
+        sortAlgorithm.IsTaskCompleted = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
 
         // Visual feedback (make each element "jump")
@@ -325,7 +311,7 @@ public abstract class AlgorithmManagerBase : MainManager {
         {
             UtilSort.IndicateElement(elementManager.GetSortingElement(x));
             elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
-            yield return new WaitForSeconds(algorithm.Seconds / 2);
+            yield return new WaitForSeconds(sortAlgorithm.Seconds / 2);
         }
     }
 

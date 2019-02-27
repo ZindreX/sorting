@@ -67,7 +67,7 @@ public class AlgorithmUserController : MonoBehaviour {
             else if (Input.GetKey(KeyCode.I))
             {
                 algorithmManager.InstantiateSetup();
-                algorithmManager.PerformAlgorithmTutorialStep();
+                algorithmManager.PerformAlgorithmStepByStep();
                 StartCoroutine(DebugWait());
             }
             else if (Input.GetKey(KeyCode.O))

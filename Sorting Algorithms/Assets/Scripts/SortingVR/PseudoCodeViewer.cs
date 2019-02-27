@@ -48,7 +48,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             if (algorithm.IncludeLineNr)
                 codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x);
             else
-                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1];
+                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1]; // Insertionsort / bucketsort: update pseudocode (as in bubble-/graph)
 
             codeLines[x] = codeLine.GetComponent<TextMesh>();
         }

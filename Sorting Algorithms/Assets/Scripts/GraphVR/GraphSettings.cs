@@ -214,6 +214,16 @@ public class GraphSettings : MonoBehaviour {
         get { return visitLeftFirst; }
     }
 
+    public bool IsDemo()
+    {
+        return teachingMode == Util.DEMO;
+    }
+
+    public bool IsUserTest()
+    {
+        return teachingMode == Util.USER_TEST;
+    }
+
     public int[] GraphSetup()
     {
         switch (graphStructure)

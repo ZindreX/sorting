@@ -6,9 +6,11 @@ public class GridNode : Node {
 
     private int[] cell;
 
+    [Space(2)]
+    [Header("Grid node variables")]
     [SerializeField]
     private List<GridNode> neighbors;
-    
+
     public void InitGridNode(string algorithm, int[] cell)
     {
         InitNode(algorithm);

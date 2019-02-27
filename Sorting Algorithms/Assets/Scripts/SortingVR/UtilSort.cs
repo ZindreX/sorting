@@ -35,9 +35,6 @@ public class UtilSort : Util {
     // Other instructions
     public const string INCREMENT = "Incremenet", DECREMENT = "Decrement";
 
-    // Skip words
-    public static readonly string SKIP_NO_ELEMENT = "Skip no element", SKIP_NO_DESTINATION = "Skip no destination";
-
     // Checking instruction (strings)
     public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";

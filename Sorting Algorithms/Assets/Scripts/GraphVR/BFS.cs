@@ -45,6 +45,11 @@ public class BFS : GraphAlgorithm, ITraverse {
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
+        skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.ENQUEUE_NODE_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.MARK_VISITED_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_NOT_VISITED_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.FOR_ALL_NEIGHBORS_INST);
     }
 
     public override void ResetSetup()
@@ -140,7 +145,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
 
             lengthOfList = queue.Count.ToString(); // Pseudo code
-            listVisual.DestroyOutElement(); // Node Representation
+            listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
@@ -154,7 +159,6 @@ public class BFS : GraphAlgorithm, ITraverse {
     {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instNr = 0;
-        List<int> visitOrder = new List<int>();
 
         // Line 1: Create emtpy list (queue)
         Queue<Node> queue = new Queue<Node>();
@@ -162,7 +166,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
         // Line 2: Enqueue first node
         queue.Enqueue(startNode);
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, startNode, false));
+        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, 0, startNode, false));
 
         // Line 3: Mark node as visited
         startNode.Visited = true;
@@ -176,8 +180,6 @@ public class BFS : GraphAlgorithm, ITraverse {
             // Line 5: Dequeue node
             Node currentNode = queue.Dequeue();
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, true));
-
-            visitOrder.Add(currentNode.NodeID); // Extra (remove?)
 
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
@@ -213,9 +215,9 @@ public class BFS : GraphAlgorithm, ITraverse {
     #region User Test Highlight Pseudocode
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
     {
-        // Gather information from instruction
-        //int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
+        Debug.Log("Starting highlighting pseudocode");
 
+        // Gather information from instruction
         if (gotNode)
             node1 = ((TraverseInstruction)instruction).Node;
 
@@ -235,21 +237,41 @@ public class BFS : GraphAlgorithm, ITraverse {
         {
             case UtilGraph.EMPTY_QUEUE_INST: lineOfCode = 1; break;
             case UtilGraph.ENQUEUE_NODE_INST:
+                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
                 if (i == 0)
                     lineOfCode = 2;
                 else
                     lineOfCode = 8;
                 break;
+
             case UtilGraph.MARK_VISITED_INST:
+                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
                 if (i == 0)
                     lineOfCode = 3;
                 else
                     lineOfCode = 9;
                 break;
-            case UtilGraph.WHILE_LIST_NOT_EMPTY_INST: lineOfCode = 4; break;
-            case UtilGraph.DEQUEUE_NODE_INST: lineOfCode = 5; break;
-            case UtilGraph.FOR_ALL_NEIGHBORS_INST: lineOfCode = 6; break;
-            case UtilGraph.IF_NOT_VISITED_INST: lineOfCode = 7; break;
+
+            case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
+                lineOfCode = 4;
+                lengthOfList = i.ToString();
+                break;
+
+            case UtilGraph.DEQUEUE_NODE_INST:
+                lineOfCode = 5;
+                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+                break;
+
+            case UtilGraph.FOR_ALL_NEIGHBORS_INST:
+                lineOfCode = 6;
+                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+                break;
+
+            case UtilGraph.IF_NOT_VISITED_INST:
+                lineOfCode = 7;
+                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 2);
+                break;
+
             case UtilGraph.END_IF_INST: lineOfCode = 10; break;
             case UtilGraph.END_FOR_LOOP_INST: lineOfCode = 11; break;
             case UtilGraph.END_WHILE_INST: lineOfCode = 12; break;
@@ -260,7 +282,8 @@ public class BFS : GraphAlgorithm, ITraverse {
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
 
         yield return new WaitForSeconds(seconds);
-        beginnerWait = false;
+        mainManager.BeginnerWait = false;
+        Debug.Log("Pseudocode highlighted!");
     }
     #endregion
 }

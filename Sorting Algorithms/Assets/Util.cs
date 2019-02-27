@@ -35,6 +35,9 @@ public class Util : MonoBehaviour {
     public const string SPLIT_INST = "::";
     public static readonly char PSEUDO_SPLIT_LINE_ID = ':';
 
+    // Skip words
+    public static readonly string SKIP_NO_ELEMENT = "Skip no element", SKIP_NO_DESTINATION = "Skip no destination";
+
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 

@@ -55,6 +55,7 @@ public class InsertionSort : SortAlgorithm {
 
     public override string CollectLine(int lineNr)
     {
+        Debug.LogError("UPDATE PSEUDOCODE!!!!");
         switch (lineNr)
         {
             case 0: return  "InsertionSort( list ):";

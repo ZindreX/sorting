@@ -8,6 +8,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public static int NODE_ID;
 
     // Basic 
+    [Header("Basic")]
     [SerializeField]
     protected int nodeID;
     protected char nodeAlphaID;
@@ -19,10 +20,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected TextMesh textNodeID, textNodeDist;
 
     // Instruction variables
-    protected InstructionBase instruction;
     protected bool nextMove;
+    protected TraverseInstruction nodeInstruction;
+
 
     // Traversal / Shortest path variables
+    [Space(2)]
+    [Header("Traversal / Shortest path")]
     [SerializeField]
     protected int dist;
     private bool traversed, visited; // need traversed? just check if in list/stack...
@@ -32,6 +36,19 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     [SerializeField]
     protected List<Edge> edges;
+
+    // Debugging
+    #region Debugging variables:
+    [Space(5)]
+    [Header("Debugging")]
+    [SerializeField]
+    protected string instruction;
+    [SerializeField]
+    protected string status;
+
+    [SerializeField]
+    protected bool nextNode;
+    #endregion
 
     private void Awake()
     {
@@ -162,7 +179,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         isEndNode = false;
     }
 
-    // *** Instructions ***
+    // --------------------------------------- User test ---------------------------------------
+
     public bool NextMove
     {
         get { return nextMove; }
@@ -171,13 +189,50 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     public InstructionBase Instruction
     {
-        get { return instruction; }
-        set { instruction = value; }
+        get { return nodeInstruction; }
+        set { nodeInstruction = (TraverseInstruction)value; UpdateNodeState(); }
+    }
+
+    protected void UpdateNodeState()
+    {
+        if (nodeInstruction != null)
+        {
+            // Debugging
+            instruction = nodeInstruction.Instruction;
+
+            if (instruction == UtilGraph.DEQUEUE_NODE_INST)
+                nextNode = true;
+            
+
+            switch (instruction)
+            {
+                case UtilSort.INIT_INSTRUCTION: status = "Init pos"; break;
+                case UtilGraph.DEQUEUE_NODE_INST: status = "Come here"; break;
+
+                case UtilSort.EXECUTED_INST: status = UtilSort.EXECUTED_INST; break;
+                default: Debug.LogError("UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
+            }
+
+        //    if (bubbleSortInstruction.IsCompare)
+        //        IsCompare = true;
+        //    else
+        //        IsCompare = false;
+
+        //    if (bubbleSortInstruction.IsElementSorted(sortingElementID))
+        //        IsSorted = true;
+        //    else
+        //        IsSorted = false;
+        }
     }
 
     // Instruction methods end
 
+
+
+    // Abstract methods
+
     public abstract string NodeType { get; }
+
   
 
 }

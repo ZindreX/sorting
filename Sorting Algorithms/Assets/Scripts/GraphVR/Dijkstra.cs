@@ -190,7 +190,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             currentNode.Traversed = true;
 
             lengthOfList = list.Count.ToString(); // PseudoCode
-            listVisual.DestroyOutElement(); // Node Representation
+            listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 14: End while-loop
         yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);

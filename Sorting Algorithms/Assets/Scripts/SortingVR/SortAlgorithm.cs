@@ -9,15 +9,9 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     protected List<int> prevHighlight = new List<int>();
 
-    protected virtual void Awake()
-    {
-        AddSkipAbleInstructions();
-    }
-
-    // Instructions which the user don't need to perform any actions to proceed
     public override void AddSkipAbleInstructions()
     {
-        skipDict.Add(UtilSort.SKIP_NO_ELEMENT, new List<string>());
+        base.AddSkipAbleInstructions();
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_INSTRUCTION);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_LOOP);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_LOOP_INST);

@@ -206,7 +206,7 @@ public class AlgorithmSettings : MonoBehaviour {
     }
 
     // Check if it's StepByStep (not used?)
-    public bool IsTutorialStep()
+    public bool IsStepByStep()
     {
         return teachingMode == UtilSort.STEP_BY_STEP;
     }
