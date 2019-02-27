@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     //[SerializeField]
-    private TextMesh[] codeLines;
+    private TextMeshPro[] codeLines;
 
     [SerializeField]
-    private TextMesh startPosAndMat;
+    private TextMeshPro startPosAndMat;
 
     private float seconds, spaceBetweenLines;
 
@@ -24,7 +25,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     public void PseudoCodeSetup()
     {
         int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;
-        codeLines = new TextMesh[numberOfLines];
+        codeLines = new TextMeshPro[numberOfLines];
 
         for (int x = 0; x < numberOfLines; x++)
         {
@@ -39,18 +40,20 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             codeLine.transform.localScale = startPosAndMat.transform.localScale; // new Vector3(0.05f, 0.05f, 0.05f);
 
             // Change material and font
-            codeLine.AddComponent<MeshRenderer>();
-            codeLine.GetComponent<MeshRenderer>().material = startPosAndMat.GetComponent<MeshRenderer>().material; //material;
-            codeLine.AddComponent<TextMesh>();
-            codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
+            //codeLine.AddComponent<MeshRenderer>();
+            //codeLine.GetComponent<MeshRenderer>().material = startPosAndMat.GetComponent<MeshRenderer>().material; //material;
+            codeLine.AddComponent<TextMeshPro>(); //codeLine.AddComponent<TextMesh>();
+            TextMeshPro codelinePro = codeLine.GetComponent<TextMeshPro>();
+            //codelinePro.font = startPosAndMat.font; //codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
+            codelinePro.fontSize = startPosAndMat.fontSize;
 
             // Get line of code from algorithm
             if (algorithm.IncludeLineNr)
-                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x);
+                codeLine.GetComponent<TextMeshPro>().text = algorithm.CollectLine(x);
             else
-                codeLine.GetComponent<TextMesh>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1]; // Insertionsort / bucketsort: update pseudocode (as in bubble-/graph)
+                codeLine.GetComponent<TextMeshPro>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1]; // Insertionsort / bucketsort: update pseudocode (as in bubble-/graph)
 
-            codeLines[x] = codeLine.GetComponent<TextMesh>();
+            codeLines[x] = codeLine.GetComponent<TextMeshPro>();
         }
 
         // Move/extend blackboard up if the pseudocode goes below the floor
@@ -61,7 +64,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    public TextMesh CodeLine(int index)
+    public TextMeshPro CodeLine(int index)
     {
         return codeLines[index];
     }
@@ -120,7 +123,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     public void EmptyContent()
     {
-        foreach (TextMesh line in codeLines)
+        foreach (TextMeshPro line in codeLines)
         {
             line.text = "";
         }
@@ -128,7 +131,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     public void RemoveHightlight()
     {
-        foreach (TextMesh line in codeLines)
+        foreach (TextMeshPro line in codeLines)
         {
             line.color = Util.BLACKBOARD_TEXT_COLOR;
         }

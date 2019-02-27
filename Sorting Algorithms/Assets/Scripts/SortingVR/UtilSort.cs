@@ -54,7 +54,7 @@ public class UtilSort : Util {
     public static Vector3 ABOVE_HOLDER_VR = new Vector3(0f, 0.06f, 0f), ABOVE_BUCKET_VR = new Vector3(0f, 1.0f, 0f);
 
     // Spacing
-    public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, SPACE_BETWEEN_CODE_LINES = 0.25f;
+    public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, SPACE_BETWEEN_CODE_LINES = 0.4f;
 
     // Timing
     public static float COLOR_CHANGE_TIMER = 0.25f;

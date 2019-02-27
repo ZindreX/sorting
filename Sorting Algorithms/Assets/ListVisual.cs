@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ListVisual : MonoBehaviour {
 
@@ -21,7 +22,7 @@ public class ListVisual : MonoBehaviour {
     public GameObject listObjPrefab, listRoof;
 
     [SerializeField]
-    private TextMesh listTypeTitle;
+    private TextMeshPro listTypeTitle;
 
     [SerializeField]
     private Transform spawnPointList, currentNodePoint;
