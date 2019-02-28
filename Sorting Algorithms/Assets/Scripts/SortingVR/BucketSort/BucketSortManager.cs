@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BucketSort))]
-[RequireComponent(typeof(BucketManager))]
+//[RequireComponent(typeof(BucketSort))]
+//[RequireComponent(typeof(BucketManager))]
 public class BucketSortManager : AlgorithmManagerBase {
 
     [SerializeField]

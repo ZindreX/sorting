@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlgorithmSettings : MonoBehaviour {
+public class SortSettings : MonoBehaviour {
 
     /* -------------------------------------------- Algorithm settings ----------------------------------------------------
      * Takes all input from the settings walls in the VR environment and forwards it to the main unit
@@ -267,7 +267,9 @@ public class AlgorithmSettings : MonoBehaviour {
         switch (algorithm)
         {
             case UtilSort.BUBBLE_SORT:
-                // TODO
+                //sortAlgorithm = sortingAlgorithms.GetComponent<BubbleSort>();
+                // sortingAlgorithms.GetComponent<BubbleSortManager>();
+
                 break;
 
             case UtilSort.INSERTION_SORT:
@@ -280,6 +282,11 @@ public class AlgorithmSettings : MonoBehaviour {
 
             default: Debug.LogError("'" + algorithm + "' not valid"); break;
         }
+    }
+
+    public GameObject GetSortingAlgorithms()
+    {
+        return algorithmManagerObj;
     }
 
 }

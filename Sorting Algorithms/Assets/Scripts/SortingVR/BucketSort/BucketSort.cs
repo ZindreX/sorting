@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BucketManager))]
-[RequireComponent(typeof(BucketSortManager))]
+//[RequireComponent(typeof(BucketManager))]
+//[RequireComponent(typeof(BucketSortManager))]
 public class BucketSort : SortAlgorithm {
 
     public const string CHOOSE_BUCKET = "Choose bucket", PUT_BACK_TO_HOLDER = "Put back to holder", NONE = "None";

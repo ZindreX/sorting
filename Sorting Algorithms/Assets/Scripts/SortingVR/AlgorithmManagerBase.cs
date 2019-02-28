@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
-[RequireComponent(typeof(HolderManager))]
-[RequireComponent(typeof(ElementManager))]
-[RequireComponent(typeof(UserTestManager))]
-[RequireComponent(typeof(StepByStepManager))]
-[RequireComponent(typeof(SortAlgorithm))]
-[RequireComponent(typeof(DisplayUnitManager))]
+//[RequireComponent(typeof(HolderManager))]
+//[RequireComponent(typeof(ElementManager))]
+//[RequireComponent(typeof(UserTestManager))]
+//[RequireComponent(typeof(StepByStepManager))]
+//[RequireComponent(typeof(SortAlgorithm))]
+//[RequireComponent(typeof(DisplayUnitManager))]
 public abstract class AlgorithmManagerBase : MainManager {
 
     /* -------------------------------------------- Sorting Algorithm Manager Base ----------------------------------------------------
@@ -24,12 +24,14 @@ public abstract class AlgorithmManagerBase : MainManager {
 
     // Base object instances
     protected DisplayUnitManager displayUnitManager;
+
     protected HolderManager holderManager;
     protected ElementManager elementManager;
+
     protected UserTestManager userTestManager;
     protected StepByStepManager tutorialStep;
     protected SortAlgorithm sortAlgorithm;
-    protected AlgorithmSettings algorithmSettings;
+    protected SortSettings algorithmSettings;
 
     [SerializeField]
     protected AlgorithmUserController algorithmUserController;
@@ -37,18 +39,37 @@ public abstract class AlgorithmManagerBase : MainManager {
     protected virtual void Awake()
     {
         // *** Objects ***
-        algorithmSettings = settingsObj.GetComponent(typeof(AlgorithmSettings)) as AlgorithmSettings;
+        algorithmSettings = settingsObj.GetComponent(typeof(SortSettings)) as SortSettings;
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
 
-        holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
-        elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
-        userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
-        tutorialStep = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
+
+        // New updated stuff
+        algorithmName = AlgorithmSettings.Algorithm;
+
+        GameObject sortingAlgorithms = algorithmSettings.GetSortingAlgorithms();
+        holderManager = sortingAlgorithms.GetComponent(typeof(HolderManager)) as HolderManager;
+        elementManager = sortingAlgorithms.GetComponent(typeof(ElementManager)) as ElementManager;
+        userTestManager = sortingAlgorithms.GetComponent(typeof(UserTestManager)) as UserTestManager;
+        tutorialStep = sortingAlgorithms.GetComponent(typeof(StepByStepManager)) as StepByStepManager;
 
         // Setup algorithm in their respective <Algorithm name>Manager
-        teachingAlgorithm = InstanceOfAlgorithm;
-        sortAlgorithm = InstanceOfAlgorithm;
-        algorithmName = sortAlgorithm.AlgorithmName;
+        //teachingAlgorithm = InstanceOfAlgorithm;
+        switch (algorithmName)
+        {
+            case Util.BUBBLE_SORT:
+                sortAlgorithm = sortingAlgorithms.GetComponent(typeof(BubbleSort)) as BubbleSort; //InstanceOfAlgorithm;
+                gameObject.AddComponent<BubbleSortManager>();
+                break;
+
+            case Util.INSERTION_SORT:
+                sortAlgorithm = sortingAlgorithms.GetComponent(typeof(InsertionSort)) as InsertionSort; //InstanceOfAlgorithm;
+                break;
+
+            case Util.BUCKET_SORT:
+                sortAlgorithm = sortingAlgorithms.GetComponent(typeof(BucketSort)) as BucketSort; //InstanceOfAlgorithm;
+                break;
+            default: Debug.LogError("'" + algorithmName + "' unknown."); break;
+        }
 
         // Set displays
         sortAlgorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
@@ -224,7 +245,7 @@ public abstract class AlgorithmManagerBase : MainManager {
         get { return sortAlgorithm; }
     }
 
-    public AlgorithmSettings AlgorithmSettings
+    public SortSettings AlgorithmSettings
     {
         get { return algorithmSettings; }
     }

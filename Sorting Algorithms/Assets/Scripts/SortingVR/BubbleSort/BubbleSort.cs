@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BubbleSortManager))]
+//[RequireComponent(typeof(BubbleSortManager))]
 public class BubbleSort : SortAlgorithm {
 
     /* --------------------------------------------------- Bubble Sort --------------------------------------------------- 

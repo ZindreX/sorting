@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(InsertionSort))]
+//[RequireComponent(typeof(InsertionSort))]
 public class InsertionSortManager : AlgorithmManagerBase {
 
     private InsertionSort insertionSort;
