@@ -95,6 +95,15 @@ public class GraphSettings : MonoBehaviour {
     [SerializeField]
     private bool shortestPathOneToAll;
 
+    // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
+    [Header("RNG stuff")]
+    [SerializeField]
+    private int symmetricEdgeChance = 10;
+    [SerializeField]
+    private int partialBuildTreeChildChance = 4;
+    [SerializeField]
+    private int buildEdgeChance = 1;
+
     private float algorithmSpeed;
     private string teachingMode, graphStructure, edgeType, edgeMode, useAlgorithm;
     private int gridRows, gridColumns, gridSpace;
@@ -233,6 +242,15 @@ public class GraphSettings : MonoBehaviour {
             case UtilGraph.RANDOM_GRAPH: return new int[3] { 5, 6, 2 };
             default: Debug.LogError("Couldn't setup graph! Unknown graph structure: '" + graphStructure + "'."); return null;
         }
+    }
+
+    public Dictionary<string, int> RNGDict()
+    {
+        Dictionary<string, int> rngDict = new Dictionary<string, int>();
+        rngDict.Add(UtilGraph.SYMMETRIC_EDGE_CHANCE, symmetricEdgeChance);
+        rngDict.Add(UtilGraph.PARTIAL_BUILD_TREE_CHILD_CHANCE, partialBuildTreeChildChance);
+        rngDict.Add(UtilGraph.BUILD_EDGE_CHANCE, buildEdgeChance);
+        return rngDict;
     }
 
     public PseudoCodeViewer PseudoCodeViewer

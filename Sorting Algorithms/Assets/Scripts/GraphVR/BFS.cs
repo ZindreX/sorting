@@ -123,7 +123,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
                 // Check if node has already been traversed or already is marked
-                if (!checkingNode.Traversed && !checkingNode.Visited) // change?
+                if (!checkingNode.Visited)
                 {
                     // Line 8: Add to queue
                     queue.Enqueue(checkingNode);
@@ -192,7 +192,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 // Line 7: check neighbor
                 instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, checkingNode, !checkingNode.Visited)); // check if correct ***
                 // Check if node has already been traversed or already is marked
-                if (!checkingNode.Traversed && !checkingNode.Visited)
+                if (!checkingNode.Visited)
                 {
                     // Line 8: Enqueue node
                     queue.Enqueue(checkingNode);

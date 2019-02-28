@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Bucket : MonoBehaviour, IChild {
 
@@ -16,7 +17,7 @@ public class Bucket : MonoBehaviour, IChild {
     private MeshRenderer innerBucket;
 
     [SerializeField]
-    private TextMesh text;
+    private TextMeshPro text;
 
     private int bucketID;
     private bool displayElements = false;

@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TextHolder : MonoBehaviour {
 
     [SerializeField]
-    private TextMesh[] surfaceTexts;
+    private TextMeshPro[] surfaceTexts;
 
     public void SetSurfaceText(string text)
     {
-        foreach (TextMesh textMesh in surfaceTexts)
+        foreach (TextMeshPro textMesh in surfaceTexts)
         {
             textMesh.text = text;
         }
@@ -28,7 +29,7 @@ public class TextHolder : MonoBehaviour {
 
     public void ChangeColor(Color color)
     {
-        foreach (TextMesh textMesh in surfaceTexts)
+        foreach (TextMeshPro textMesh in surfaceTexts)
         {
             textMesh.color = color;
         }

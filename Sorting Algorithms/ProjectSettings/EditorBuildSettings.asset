@@ -23,13 +23,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BucketSort.unity
     guid: 819dbc0ca40c98a4997ce7e60eee7522
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/MergeSort.unity
-    guid: fe6ecca21f3ed3e4eb3b72d76c86b8a8
-  - enabled: 1
-    path: Assets/Scenes/QuickSort.unity
-    guid: c11afc797e089c344aa7df178f389f76
-  - enabled: 1
-    path: Assets/Scenes/TestRoomVR.unity
+    path: Assets/Scenes/Old/TestRoomVR.unity
     guid: 0e5baae5b8c17834c80acc95b2692636
   m_configObjects: {}

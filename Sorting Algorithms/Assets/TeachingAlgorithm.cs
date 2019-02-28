@@ -4,6 +4,13 @@ using UnityEngine;
 
 public abstract class TeachingAlgorithm : MonoBehaviour {
 
+    /* -------------------------------------------- Teaching Algorithm ----------------------------------------------------
+     * The base class of teaching algoritms.
+     * - SortAlgorithm
+     * - GraphAlgorithm
+     * 
+    */
+
     // Basis variables for all modes
     protected float seconds = 1f;
     protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;

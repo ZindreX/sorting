@@ -38,6 +38,9 @@ public class Util : MonoBehaviour {
     // Skip words
     public static readonly string SKIP_NO_ELEMENT = "Skip no element", SKIP_NO_DESTINATION = "Skip no destination";
 
+    // Roll for
+    public static readonly int ROLL_MIN = 0, ROLL_MAX = 10;
+
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 
@@ -112,5 +115,10 @@ public class Util : MonoBehaviour {
             default: return "X";
 
         }
+    }
+
+    public static bool RollRandom(int below)
+    {
+        return Random.Range(ROLL_MIN, ROLL_MAX) < below;
     }
 }

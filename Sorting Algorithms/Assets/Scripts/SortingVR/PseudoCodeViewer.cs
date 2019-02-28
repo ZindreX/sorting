@@ -46,6 +46,11 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             TextMeshPro codelinePro = codeLine.GetComponent<TextMeshPro>();
             //codelinePro.font = startPosAndMat.font; //codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
             codelinePro.fontSize = startPosAndMat.fontSize;
+            
+
+            // Rectangle shape
+            RectTransform rt = codelinePro.rectTransform;
+            rt.sizeDelta = new Vector2(20, 2);
 
             // Get line of code from algorithm
             if (algorithm.IncludeLineNr)

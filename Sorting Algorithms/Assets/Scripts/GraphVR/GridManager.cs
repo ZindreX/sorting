@@ -64,10 +64,10 @@ public class GridManager : GraphManager {
             {
                 switch (mode)
                 {
-                    case UtilGraph.FULL_EDGES: BuildEdges(row, col, false, UtilGraph.ROLL_MAX); break;
-                    case UtilGraph.FULL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(row, col, UtilGraph.ROLL_MAX); break;
-                    case UtilGraph.PARTIAL_EDGES: BuildEdges(row, col, false, UtilGraph.BUILD_EDGE_CHANCE); break;
-                    case UtilGraph.PARTIAL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(row, col, UtilGraph.ROLL_MAX); break;
+                    case UtilGraph.FULL_EDGES: BuildEdges(row, col, false, Util.ROLL_MAX); break;
+                    case UtilGraph.FULL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(row, col, Util.ROLL_MAX); break;
+                    case UtilGraph.PARTIAL_EDGES: BuildEdges(row, col, false, LookUpRNGDict(UtilGraph.BUILD_EDGE_CHANCE)); break;
+                    case UtilGraph.PARTIAL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(row, col, Util.ROLL_MAX); break;
                     default: Debug.LogError("'" + mode + "' mode not implemented!"); break;
                 }
             }
@@ -94,7 +94,7 @@ public class GridManager : GraphManager {
 
             for (int i = 0; i < neighbors.Count; i++)
             {
-                if (Random.Range(UtilGraph.ROLL_MIN, UtilGraph.ROLL_MAX) >= chance)
+                if (Util.RollRandom(Util.ROLL_MAX - chance))
                     continue;
 
                 GridNode neighbor = neighbors[i];
@@ -133,8 +133,11 @@ public class GridManager : GraphManager {
                     continue;
 
                 // Making things a bit random, build if...
-                bool buildEdge = Random.Range(UtilGraph.ROLL_MIN, UtilGraph.ROLL_MAX) < chance;
-                //if (currentNode.NodeID == 0) // fix: !currentNode.IsStartNode)
+                bool buildEdge = true;
+                if (row == START_Z && col == START_X || row == END_Z && col == END_X)
+                    buildEdge = true;
+                else
+                    buildEdge = Util.RollRandom(chance);
 
                 if (!buildEdge)
                     continue;
@@ -161,6 +164,7 @@ public class GridManager : GraphManager {
                 CreateEdge(currentNode, neighbor, centerPos, -angle);
             }
         }
+        // Destroy nodes with no connected neighbors
         if (currentNode.NumberOfNeighbors() == 0)
         {
             Destroy(currentNode.gameObject);

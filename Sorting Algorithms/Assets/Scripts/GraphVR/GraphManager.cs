@@ -8,10 +8,51 @@ public abstract class GraphManager : MonoBehaviour {
     protected GraphSettings gs;
     protected GraphAlgorithm algorithm;
 
-    public void InitGraphManager(GraphSettings gs, GraphAlgorithm algorithm)
+    protected int START_X, START_Z, END_X, END_Z;
+    private Node startNode, endNode;
+    private Dictionary<string, int> rngDict;
+
+    public void InitGraphManager(GraphSettings gs, GraphAlgorithm algorithm, Dictionary<string, int> rngDict)
     {
         this.gs = gs;
         this.algorithm = algorithm;
+        this.rngDict = rngDict;
+    }
+
+    public int LookUpRNGDict(string key)
+    {
+        return rngDict.ContainsKey(key) ? rngDict[key] : Util.NO_VALUE;
+    }
+
+    public Node StartNode
+    {
+        get { return startNode; }
+    }
+
+    public Node EndNode
+    {
+        get { return endNode; }
+    }
+
+    public void SetupImportantNodes(int[] startNodeCell, int[] endNodeCell, bool beforeNodesExist)
+    {
+        if (beforeNodesExist)
+        {
+            START_X = startNodeCell[0];
+            START_Z = startNodeCell[1];
+            END_X = endNodeCell[0];
+            END_Z = endNodeCell[1];
+        }
+        else
+        {
+            // Start node
+            startNode = GetNode(START_X, START_Z);
+            startNode.IsStartNode = true;
+
+            // End node
+            endNode = GetNode(END_X, END_Z);
+            endNode.IsEndNode = true;
+        }
     }
 
     public void CreateGraph()
@@ -42,7 +83,7 @@ public abstract class GraphManager : MonoBehaviour {
                 break;
 
             case UtilGraph.DIRECED_EDGE:
-                bool pathBothWaysActive = RollSymmetric();
+                bool pathBothWaysActive = RollSymmetricEdge();
 
                 if (pathBothWaysActive)
                     edge = Instantiate(gs.symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
@@ -65,16 +106,16 @@ public abstract class GraphManager : MonoBehaviour {
             //if (nodeID > 500 && nodeID < 550)
             {
                 edge.GetComponent<Edge>().Cost = 100000;
-                edge.GetComponent<Edge>().CurrentColor = Color.white;
+                //edge.GetComponent<Edge>().CurrentColor = Color.white;
             }
         }
     }
 
-    private bool RollSymmetric()
+    private bool RollSymmetricEdge()
     {
         switch (gs.Graphstructure)
         {
-            case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Random.Range(UtilGraph.ROLL_MIN, UtilGraph.ROLL_MAX) < UtilGraph.SYMMETRIC_EDGE_CHANCE;
+            case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Util.RollRandom(LookUpRNGDict(UtilGraph.SYMMETRIC_EDGE_CHANCE));
             case UtilGraph.TREE_GRAPH: return false;
             default: Debug.LogError("Symmetric option not set for '" + gs.Graphstructure + "'."); break;
         }

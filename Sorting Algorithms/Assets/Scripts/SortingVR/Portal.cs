@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Portal : MonoBehaviour {
@@ -17,7 +18,7 @@ public class Portal : MonoBehaviour {
     private int sceneBuildIndex;
 
     [SerializeField]
-    private TextMesh portalTitle;
+    private TextMeshPro portalTitle;
 
     private Rigidbody rb;
 

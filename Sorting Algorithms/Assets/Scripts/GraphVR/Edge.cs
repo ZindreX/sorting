@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public abstract class Edge : MonoBehaviour {
 
@@ -47,7 +48,7 @@ public abstract class Edge : MonoBehaviour {
     public int Cost
     {
         get { return cost; }
-        set { cost = value; GetComponentInChildren<TextMesh>().text = value.ToString(); }
+        set { cost = value; GetComponentInChildren<TextMeshPro>().text = value.ToString(); }
     }
 
     // *** Object settings ***

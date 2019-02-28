@@ -7,13 +7,13 @@ using UnityEngine;
 [RequireComponent(typeof(UserTestManager))]
 public class GraphMain : MainManager {
 
-    private GraphSettings gs;
+    private GraphSettings graphSettings;
     private GraphAlgorithm graphAlgorithm;
-    private GraphManager gm;
+    private GraphManager graphManager;
 
     private UserTestManager userTestManager;
+    private PositionManager posManager;
 
-    private Node startNode, endNode;
     private bool backtracking = false;
 
 
@@ -21,54 +21,58 @@ public class GraphMain : MainManager {
     {
         // Basic components
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
+        posManager = FindObjectOfType<PositionManager>();
 
 
         // Get settings from editor
-        gs = GetComponent(typeof(GraphSettings)) as GraphSettings;
-        gs.PrepareSettings();
+        graphSettings = GetComponent(typeof(GraphSettings)) as GraphSettings;
+        graphSettings.PrepareSettings();
 
         // Algorithm
-        graphAlgorithm = gs.GetGraphAlgorithm();
+        graphAlgorithm = graphSettings.GetGraphAlgorithm();
         teachingAlgorithm = graphAlgorithm; // clean up
         teachingAlgorithm.MainManager = this; // clean up (use only this instead of graphAl?
 
-        graphAlgorithm.GraphStructure = gs.Graphstructure;
-        graphAlgorithm.Seconds = gs.AlgorithmSpeed;
-        graphAlgorithm.ListVisual = gs.ListVisual;
-        graphAlgorithm.ShortestPathOneToAll = gs.ShortestPathOneToAll;
-        graphAlgorithm.VisitLeftFirst = gs.VisitLeftFirst;
+        graphAlgorithm.GraphStructure = graphSettings.Graphstructure;
+        graphAlgorithm.Seconds = graphSettings.AlgorithmSpeed;
+        graphAlgorithm.ListVisual = graphSettings.ListVisual;
+        graphAlgorithm.ShortestPathOneToAll = graphSettings.ShortestPathOneToAll;
+        graphAlgorithm.VisitLeftFirst = graphSettings.VisitLeftFirst;
         algorithmName = graphAlgorithm.AlgorithmName;
 
         // Setup graph manager + Activate/deactivate components (Grid / Tree / Random)
-        gm = ActivateDeactivateGraphComponents(gs.Graphstructure);
-        gm.InitGraphManager(gs, graphAlgorithm);
+        graphManager = ActivateDeactivateGraphComponents(graphSettings.Graphstructure);
+        graphManager.InitGraphManager(graphSettings, graphAlgorithm, graphSettings.RNGDict());
 
         // Pseudocode
-        graphAlgorithm.PseudoCodeViewer = gs.PseudoCodeViewer;
+        graphAlgorithm.PseudoCodeViewer = graphSettings.PseudoCodeViewer;
 
     }
 
     // Use this for initialization
     void Start()
     {
-        gs.PseudoCodeViewer.PseudoCodeSetup();
+        graphSettings.PseudoCodeViewer.PseudoCodeSetup();
 
         // Get variables for graph setup
-        gm.InitGraph(gs.GraphSetup());
+        graphManager.InitGraph(graphSettings.GraphSetup());
+        graphManager.SetupImportantNodes(graphSettings.StartNode(), graphSettings.EndNode(), true);
 
         // Create graph based on init variables
-        gm.CreateGraph();
+        graphManager.CreateGraph();
 
-        // Set startnode ( and endnode)
-        SetupImportantNodes();
+        // Mark start-/end nodes
+        graphManager.SetupImportantNodes(null, null, false);
+
+
 
         // Init teaching mode
-        switch (gs.TeachingMode)
+        switch (graphSettings.TeachingMode)
         {
             case Util.DEMO: PerformAlgorithmDemo(); break;
             case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
-            default: Debug.LogError("Teaching mode '" + gs.TeachingMode + "' unknown."); break;
+            default: Debug.LogError("Teaching mode '" + graphSettings.TeachingMode + "' unknown."); break;
         }
     }
 
@@ -77,22 +81,21 @@ public class GraphMain : MainManager {
     {
         if (graphAlgorithm.IsTaskCompleted && !backtracking)
         {
-            Debug.Log("Starting backtracking");
-
             if (graphAlgorithm is IShortestPath)
             {
+                Debug.Log("Starting backtracking");
                 if (graphAlgorithm.ShortestPathOneToAll)
-                    StartCoroutine(gm.BacktrackShortestPathsAll(graphAlgorithm.Seconds));
+                    StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.Seconds));
                 else
-                    StartCoroutine(gm.BacktrackShortestPath(endNode, graphAlgorithm.Seconds));
+                    StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.Seconds));
                 backtracking = true;
             }
         }
-        else if (gs.IsDemo())
+        else if (graphSettings.IsDemo())
         {
 
         }
-        else if (gs.IsUserTest())
+        else if (graphSettings.IsUserTest())
         {
             // First check if user test setup is complete
             if (userTestManager.HasInstructions() && !beginnerWait)
@@ -161,34 +164,24 @@ public class GraphMain : MainManager {
         return null;
     }
 
-    private void SetupImportantNodes()
-    {
-        int[] startNodeCell = gs.StartNode();
-        startNode = gm.GetNode(startNodeCell[0], startNodeCell[1]);
-        startNode.IsStartNode = true;
-        int[] endNodeCell = gs.EndNode();
-        Node endNode = gm.GetNode(endNodeCell[0], endNodeCell[1]);
-        endNode.IsEndNode = true;
-    }
-
     public override void PerformAlgorithmDemo()
     {
-        switch (algorithmName)
+        switch (graphSettings.UseAlgorithm)
         {
-            case Util.BFS: StartCoroutine(((BFS)graphAlgorithm).Demo(startNode)); break;
+            case Util.BFS: StartCoroutine(((BFS)graphAlgorithm).Demo(graphManager.StartNode)); break;
 
             case Util.DFS:
-                StartCoroutine(((DFS)graphAlgorithm).Demo(startNode));
+                StartCoroutine(((DFS)graphAlgorithm).Demo(graphManager.StartNode));
                 break;
 
             case Util.DFS_RECURSIVE:
                 //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
-                StartCoroutine(((DFS)graphAlgorithm).DemoRecursive(startNode));
+                StartCoroutine(((DFS)graphAlgorithm).DemoRecursive(graphManager.StartNode));
                 break;
 
             case Util.DIJKSTRA:
-                StartCoroutine(((Dijkstra)graphAlgorithm).Demo(startNode, endNode));
-                //StartCoroutine(((Dijkstra)algorithm).DemoNoPseudocode(startNode, endNode));
+                StartCoroutine(((Dijkstra)graphAlgorithm).Demo(graphManager.StartNode, graphManager.EndNode));
+                //StartCoroutine(((Dijkstra)graphAlgorithm).DemoNoPseudocode(startNode, endNode));
                 break;
 
             default: Debug.LogError("'" + algorithmName + "' unknown."); break;
@@ -205,7 +198,7 @@ public class GraphMain : MainManager {
         Debug.Log(">>> Performing " + algorithmName + " user test.");
 
         // Getting instructions for this sample of sorting elements
-        Dictionary<int, InstructionBase> instructions = ((BFS)graphAlgorithm).UserTestInstructions(startNode);
+        Dictionary<int, InstructionBase> instructions = ((BFS)graphAlgorithm).UserTestInstructions(graphManager.StartNode);
 
         // Initialize user test
         int movesNeeded = 1;
@@ -214,7 +207,7 @@ public class GraphMain : MainManager {
         // Set start time
         userTestManager.SetStartTime();
 
-        if (gs.UseAlgorithm == Util.BFS)
+        if (graphSettings.UseAlgorithm == Util.BFS)
         {
             string result = "";
             foreach (KeyValuePair<int, InstructionBase> entry in instructions)
@@ -231,7 +224,7 @@ public class GraphMain : MainManager {
             Debug.Log(result);
         }
 
-        gm.ResetGraph();
+        graphManager.ResetGraph();
         userTestReady = true;
         Debug.Log("Ready for user test!");
     }
@@ -252,6 +245,9 @@ public class GraphMain : MainManager {
 
             // Hands out the next instruction
             node.Instruction = traverseInstruction;
+
+            // Set goal
+            posManager.CurrentGoal = node.gameObject;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
             if (instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)

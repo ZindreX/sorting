@@ -5,9 +5,7 @@ using UnityEngine;
 public class UtilGraph : Util {
 
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
-
-    // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
-    public static readonly int ROLL_MIN = 0, ROLL_MAX = 10, SYMMETRIC_EDGE_CHANCE = 10, PARTIAL_BUILD_TREE_CHILD_CHANCE = 4, BUILD_EDGE_CHANCE = 3;
+    public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
     // Graph structures
     public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge", SYMMETRIC_EDGE = "Symmetric edge";

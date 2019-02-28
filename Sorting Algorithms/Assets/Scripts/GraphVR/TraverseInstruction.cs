@@ -3,7 +3,7 @@
 public class TraverseInstruction : InstructionLoop {
 
     private Node node;
-    private bool visited;
+    private bool visited, traversed;
 
     public TraverseInstruction(string instruction, int instructionNr, Node node, bool visited) : base(instruction, instructionNr, Util.NO_INDEX_VALUE)
     {
@@ -32,6 +32,18 @@ public class TraverseInstruction : InstructionLoop {
     public Node Node
     {
         get { return node; }
+    }
+
+    public bool Visited
+    {
+        get { return visited; }
+        set { visited = value; }
+    }
+
+    public bool Traversed
+    {
+        get { return traversed; }
+        set { traversed = value; }
     }
 
     public override string DebugInfo()

@@ -84,7 +84,7 @@ public class TreeManager : GraphManager {
             // Create children w/edge
             for (int x = 0; x < nTree; x++)
             {
-                if (mode == UtilGraph.PARTIAL_EDGES && Random.Range(UtilGraph.ROLL_MIN, UtilGraph.ROLL_MAX) < UtilGraph.PARTIAL_BUILD_TREE_CHILD_CHANCE)
+                if (mode == UtilGraph.PARTIAL_EDGES && Util.RollRandom(LookUpRNGDict(UtilGraph.PARTIAL_BUILD_TREE_CHILD_CHANCE)))
                 {
                     tree.Add(null);
                     xPos -= widthSplit;
