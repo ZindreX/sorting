@@ -34,7 +34,7 @@ public class GraphMain : MainManager {
         teachingAlgorithm.MainManager = this; // clean up (use only this instead of graphAl?
 
         graphAlgorithm.GraphStructure = graphSettings.Graphstructure;
-        graphAlgorithm.Seconds = graphSettings.AlgorithmSpeed;
+        graphAlgorithm.DemoStepDuration = new WaitForSeconds(graphSettings.AlgorithmSpeed);
         graphAlgorithm.ListVisual = graphSettings.ListVisual;
         graphAlgorithm.ShortestPathOneToAll = graphSettings.ShortestPathOneToAll;
         graphAlgorithm.VisitLeftFirst = graphSettings.VisitLeftFirst;
@@ -85,9 +85,9 @@ public class GraphMain : MainManager {
             {
                 Debug.Log("Starting backtracking");
                 if (graphAlgorithm.ShortestPathOneToAll)
-                    StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.Seconds));
+                    StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
                 else
-                    StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.Seconds));
+                    StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
                 backtracking = true;
             }
         }

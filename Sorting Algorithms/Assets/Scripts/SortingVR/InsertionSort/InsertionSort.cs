@@ -209,7 +209,7 @@ public class InsertionSort : SortAlgorithm {
         // Testing
         list[0].GetComponent<SortingElementBase>().IsSorted = true;
         UtilSort.IndicateElement(list[0]);
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
 
         int i = 1, listLength = list.Length;
         // Display pseudocode (set i)
@@ -285,7 +285,7 @@ public class InsertionSort : SortAlgorithm {
                 pivot.transform.position = temp + tutorialPivotElementHeight;
 
                 // Wait to show the pivot being moved
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
 
                 // Check if there are more elements to compare the pivot with
                 if (j >= 0)
@@ -642,7 +642,7 @@ public class InsertionSort : SortAlgorithm {
             pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), useColor);
         }
 
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
         insertionSortManager.BeginnerWait = false;
     }
     #endregion

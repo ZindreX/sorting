@@ -207,7 +207,7 @@ public class BubbleSort : SortAlgorithm {
 
             list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
             UtilSort.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
         }
         isTaskCompleted = true;
 
@@ -438,7 +438,7 @@ public class BubbleSort : SortAlgorithm {
             pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), useColor);
         }
 
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
         bubbleSortManager.BeginnerWait = false;
     }
     #endregion

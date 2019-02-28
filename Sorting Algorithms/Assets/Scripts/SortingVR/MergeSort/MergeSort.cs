@@ -247,7 +247,7 @@ public class MergeSort : SortAlgorithm {
             rightTemp = new GameObject[temp];
 
             splits--;
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
         }
     }
     #endregion
@@ -257,7 +257,7 @@ public class MergeSort : SortAlgorithm {
     #region Test 2
     public IEnumerator TutorialTest2(GameObject[] list)
     {
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
 
     }
     #endregion
@@ -319,13 +319,13 @@ public class MergeSort : SortAlgorithm {
                 {
                     temp[LEFT][x] = list[x];
                     list[x].transform.position = leftPos + increaseHeight * 2;
-                    yield return new WaitForSeconds(seconds);
+                    yield return demoStepDuration;
                 }
                 else
                 {
                     temp[RIGHT][x - rightLength] = list[x];
                     list[x].transform.position = rightPos + increaseHeight * 2;
-                    yield return new WaitForSeconds(seconds);
+                    yield return demoStepDuration;
                 }
             }
 
@@ -381,8 +381,8 @@ public class MergeSort : SortAlgorithm {
             r += 1;
         }
 
-        yield return new WaitForSeconds(seconds);
-        
+        yield return demoStepDuration;
+
         // Make visible the new combined list
         //return result;
     }
@@ -409,14 +409,14 @@ public class MergeSort : SortAlgorithm {
             {
                 //Debug.Log("X=" + x + ", l=" + l + ", m=" + m);
                 arr[x].transform.position = extras[extras.Count - 2].transform.position + increaseHeight * 2;
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
             }
 
             for (int y=m; y < r; y++)
             {
                 //Debug.Log("Y=" + y);
                 arr[y].transform.position = extras[extras.Count - 1].transform.position + increaseHeight * 2;
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
             }
 
             Debug.Log("Starting MergeSort on left: [" + l + " -> " + m + "]");
@@ -438,7 +438,7 @@ public class MergeSort : SortAlgorithm {
             
 
         }
-        yield return new WaitForSeconds(seconds * 4);
+        yield return demoStepDuration; // * 4
     }
 
     /* Function to merge the two haves 
@@ -472,14 +472,14 @@ public class MergeSort : SortAlgorithm {
             {
                 arr[k] = L[i];
                 arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
                 i++;
             }
             else
             {
                 arr[k] = R[j];
                 arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
                 j++;
             }
             k++;
@@ -491,7 +491,7 @@ public class MergeSort : SortAlgorithm {
         {
             arr[k] = L[i];
             arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
             i++;
             k++;
         }
@@ -502,11 +502,11 @@ public class MergeSort : SortAlgorithm {
         {
             arr[k] = R[j];
             arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
             j++;
             k++;
         }
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
     }
 
     private GameObject CreateHolder(int q)

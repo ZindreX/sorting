@@ -84,9 +84,9 @@ public class AlgorithmSettings : MonoBehaviour {
 
         switch ((int)tutorialSpeed)
         {
-            case 0: algorithmManager.Algorithm.Seconds = 2f; break;
-            case 1: algorithmManager.Algorithm.Seconds = 1f; break;
-            case 2: algorithmManager.Algorithm.Seconds = 0.5f; break;
+            case 0: algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(2f); break;
+            case 1: algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(1f); break;
+            case 2: algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(0.5f); break;
         }
 
         allowDuplicates = allowDupEditor;
@@ -98,6 +98,7 @@ public class AlgorithmSettings : MonoBehaviour {
     // Algorithm settings
     private int numberOfElements = 8, difficulty = UtilSort.BEGINNER;
     private string algorithm = UtilSort.BUBBLE_SORT, teachingMode = UtilSort.DEMO, sortingCase = UtilSort.NONE;
+    private float demoStepDuration;
     private bool allowDuplicates = true;
 
     [Header("New setup")]
@@ -184,8 +185,8 @@ public class AlgorithmSettings : MonoBehaviour {
 
     public float DemoSpeed
     {
-        get { return algorithmManager.Algorithm.Seconds; }
-        set { algorithmManager.Algorithm.Seconds = value; blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
+        //get { return algorithmManager.Algorithm.Seconds; }
+        set { algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(value); blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
     }
 
 
@@ -229,12 +230,12 @@ public class AlgorithmSettings : MonoBehaviour {
             case UtilSort.STEP_BY_STEP:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "";
                 ActiveButtons(false, false);
-                algorithmManager.Algorithm.Seconds = 0.5f;
+                algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(0.5f);
                 break;
             case UtilSort.USER_TEST:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Difficulty";
                 ActiveButtons(true, false);
-                algorithmManager.Algorithm.Seconds = 0.5f;
+                algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(0.5f);
                 break;
         }
     }

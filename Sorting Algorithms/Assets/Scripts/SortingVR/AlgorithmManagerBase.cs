@@ -302,7 +302,7 @@ public abstract class AlgorithmManagerBase : MainManager {
     // Give feedback to the user when the sorting task (user test) is completed)
     private IEnumerator FinishUserTest()
     {
-        yield return new WaitForSeconds(sortAlgorithm.Seconds);
+        yield return sortAlgorithm.DemoStepDuration;
         sortAlgorithm.IsTaskCompleted = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
 
@@ -311,7 +311,7 @@ public abstract class AlgorithmManagerBase : MainManager {
         {
             UtilSort.IndicateElement(elementManager.GetSortingElement(x));
             elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
-            yield return new WaitForSeconds(sortAlgorithm.Seconds / 2);
+            yield return sortAlgorithm.DemoStepDuration; // 1/2
         }
     }
 

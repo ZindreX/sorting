@@ -110,7 +110,7 @@ public class BucketManager : MonoBehaviour, IManager {
                 element.CanEnterBucket = false;
                 
                 element.transform.position = new Vector3(0f, 2f, 0f);
-                yield return new WaitForSeconds(GetComponent<SortAlgorithm>().Seconds);
+                yield return GetComponent<SortAlgorithm>().DemoStepDuration;
             }
         }
     }

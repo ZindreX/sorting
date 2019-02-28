@@ -122,7 +122,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     continue;
 
                 SetEdge(currentEdge); // Pseudocode
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
 
                 // Checking node on the other side of the edge
                 Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
@@ -213,7 +213,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         while (list.Count > 0 && !objectiveFound)
         {
             //
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
 
             Node currentNode = list[list.Count - 1];
             list.RemoveAt(list.Count - 1);

@@ -123,7 +123,7 @@ public abstract class GraphManager : MonoBehaviour {
     }
 
     // Backtracks the path from input node
-    public IEnumerator BacktrackShortestPath(Node node, float seconds)
+    public IEnumerator BacktrackShortestPath(Node node, WaitForSeconds demoStepDuration)
     {
         // Start backtracking from end node back to start node
         while (node != null)
@@ -147,7 +147,7 @@ public abstract class GraphManager : MonoBehaviour {
 
             if (backtrackEdge is DirectedEdge)
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
         }
     }
 
@@ -178,7 +178,7 @@ public abstract class GraphManager : MonoBehaviour {
     public abstract void DeleteGraph();
 
     // Backtracks from all nodes in the given graph
-    public abstract IEnumerator BacktrackShortestPathsAll(float seconds);
+    public abstract IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration);
 
 
 

@@ -11,14 +11,15 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     [SerializeField]
     private TextMeshPro startPosAndMat;
 
-    private float seconds, spaceBetweenLines;
+    private float spaceBetweenLines;
+    private WaitForSeconds demoStepDuration;
 
     private TeachingAlgorithm algorithm;
 
     public void InitPseudoCodeViewer(TeachingAlgorithm algorithm, float spaceBetweenLines)
     {
         this.algorithm = algorithm;
-        seconds = algorithm.Seconds;
+        demoStepDuration = algorithm.DemoStepDuration;
         this.spaceBetweenLines = spaceBetweenLines;
     }
 

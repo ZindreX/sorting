@@ -12,7 +12,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     */
 
     // Basis variables for all modes
-    protected float seconds = 1f;
+    protected WaitForSeconds demoStepDuration;
     protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;
     protected PseudoCodeViewer pseudoCodeViewer;
     protected MainManager mainManager;
@@ -35,10 +35,10 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         set { mainManager = value; }
     }
 
-    public float Seconds
+    public WaitForSeconds DemoStepDuration
     {
-        get { return seconds; }
-        set { seconds = value; }
+        get { return demoStepDuration; }
+        set { demoStepDuration = value; }
     }
 
     public bool IsTaskCompleted
@@ -74,7 +74,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected IEnumerator HighlightPseudoCode(string text, Color color)
     {
         pseudoCodeViewer.SetCodeLine(text, color);
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
         pseudoCodeViewer.SetCodeLine(text, Util.BLACKBOARD_TEXT_COLOR);
     }
 

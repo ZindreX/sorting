@@ -332,7 +332,7 @@ public class GridManager : GraphManager {
         }
     }
 
-    public override IEnumerator BacktrackShortestPathsAll(float seconds)
+    public override IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration)
     {
         for (int z=rows-1; z >= 0; z--)
         {
@@ -359,7 +359,7 @@ public class GridManager : GraphManager {
 
                     // Set "next" node
                     node = backtrackEdge.OtherNodeConnected(node);
-                    yield return new WaitForSeconds(seconds);
+                    yield return demoStepDuration;
                 }
             }
         }

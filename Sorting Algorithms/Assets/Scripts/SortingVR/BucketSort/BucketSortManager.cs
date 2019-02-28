@@ -118,7 +118,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             {
                 SortingElementBase element = bucket.RemoveSoringElement();
                 element.transform.position = new Vector3(0f, 2f, 0f);
-                yield return new WaitForSeconds(bucketSort.Seconds);
+                yield return bucketSort.DemoStepDuration;
             }
         }
     }

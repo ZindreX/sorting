@@ -177,7 +177,7 @@ public class RandomGraphManager : GraphManager {
         }
     }
 
-    public override IEnumerator BacktrackShortestPathsAll(float seconds)
+    public override IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration)
     {
         for (int i=nodes.Count-1; i >= 0; i--)
         {
@@ -202,7 +202,7 @@ public class RandomGraphManager : GraphManager {
 
                 // Set "next" node
                 node = backtrackEdge.OtherNodeConnected(node);
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
             }
         }
     }

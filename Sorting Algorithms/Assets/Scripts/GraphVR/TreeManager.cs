@@ -177,7 +177,7 @@ public class TreeManager : GraphManager {
         }
     }
 
-    public override IEnumerator BacktrackShortestPathsAll(float seconds)
+    public override IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration)
     {
         int numberOfInternalNodes = NumberOfInternalNodes();
         for (int i=tree.Count-1; i >= numberOfInternalNodes; i--)
@@ -203,7 +203,7 @@ public class TreeManager : GraphManager {
 
                 // Set "next" node
                 node = backtrackEdge.OtherNodeConnected(node);
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
             }
         }
     }

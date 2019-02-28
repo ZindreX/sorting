@@ -314,7 +314,7 @@ public class BucketSort : SortAlgorithm {
                 SortingElementBase element = bucket.GetElementForDisplay(y);
                 element.gameObject.active = true;
                 element.transform.position += UtilSort.ABOVE_BUCKET_VR;
-                yield return new WaitForSeconds(seconds);
+                yield return demoStepDuration;
             }
         }
         // Line 8 (end for loop)
@@ -672,7 +672,7 @@ public class BucketSort : SortAlgorithm {
             pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j, k), UtilSort.HIGHLIGHT_COLOR);
         }
 
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
         bucketSortManager.BeginnerWait = false;
     }
     #endregion

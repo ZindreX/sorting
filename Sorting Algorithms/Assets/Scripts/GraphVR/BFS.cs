@@ -92,11 +92,11 @@ public class BFS : GraphAlgorithm, ITraverse {
             if (currentNode.PrevEdge != null)
             {
                 currentNode.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-                yield return new WaitForSeconds(seconds / 2);
+                yield return demoStepDuration;
             }
 
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-            yield return new WaitForSeconds(seconds);
+            yield return demoStepDuration;
 
             // Line 6: Update for-loop (leaf nodes)
             if (currentNode.Edges.Count == 0)
@@ -281,7 +281,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         // Highlight part of code in pseudocode
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
 
-        yield return new WaitForSeconds(seconds);
+        yield return demoStepDuration;
         mainManager.BeginnerWait = false;
         Debug.Log("Pseudocode highlighted!");
     }
