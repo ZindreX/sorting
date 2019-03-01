@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class HolderBase : MonoBehaviour, IChild {
+public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
     /* -------------------------------------------- Holder (object) --------------------------------------------
      * 
@@ -15,7 +15,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
     protected Color currentColor, prevColor;
     protected bool errorNotified = false, hasPermission = true;
 
-    protected GameObject parent;
+    protected SortMain parent;
     protected SortingElementBase currentHolding;
 
     void Awake()
@@ -25,13 +25,13 @@ public abstract class HolderBase : MonoBehaviour, IChild {
 
     void Update()
     {
-        if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsUserTest())
+        if (parent.SortSettings.IsUserTest())
         {
             // Always checking the status of the sorting element this holder is holding, and changing color thereafter
             if (isValidSortingElement(currentHolding))
                 UpdateColorOfHolder();
         }
-        else if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo() && currentHolding != null)
+        else if (parent.SortSettings.IsDemo() && currentHolding != null)
         {
             if (currentHolding.IsSorted)
                 UpdateColorOfHolder();
@@ -48,7 +48,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
         return UtilSort.HOLDER_TAG + holderID;
     }
 
-    public GameObject Parent
+    public SortMain SuperElement
     {
         get { return parent; }
         set { parent = value; }
@@ -63,7 +63,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
     {
         get { return GetComponentInChildren<Renderer>().material.color; }
         set {
-            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.Difficulty < UtilSort.EXAMINATION || parent.GetComponent<AlgorithmManagerBase>().Algorithm.IsTaskCompleted)
+            if (parent.SortSettings.Difficulty < UtilSort.EXAMINATION || parent.GetTeachingAlgorithm().IsTaskCompleted)
             {
                 prevColor = currentColor;
                 GetComponentInChildren<Renderer>().material.color = value;
@@ -91,7 +91,7 @@ public abstract class HolderBase : MonoBehaviour, IChild {
         if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo())
+            if (parent.SortSettings.IsDemo())
             {
 
             }

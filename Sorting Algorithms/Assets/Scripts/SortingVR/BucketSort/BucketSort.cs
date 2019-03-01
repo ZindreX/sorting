@@ -6,15 +6,20 @@ using UnityEngine;
 //[RequireComponent(typeof(BucketSortManager))]
 public class BucketSort : SortAlgorithm {
 
+    // value1 = value of element
+    private int bucketIndex, loopRange;
+
     public const string CHOOSE_BUCKET = "Choose bucket", PUT_BACK_TO_HOLDER = "Put back to holder", NONE = "None";
     private Dictionary<int, string> pseudoCode;
+
+
+    [SerializeField]
     private BucketManager bucketManager;
     private BucketSortManager bucketSortManager;
 
     protected override void Awake()
     {
-        bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
-        bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
+        bucketSortManager = (BucketSortManager)GetComponentInParent<SortMain>().AlgorithmManagerBase;
         base.Awake();
     }
 
@@ -25,55 +30,13 @@ public class BucketSort : SortAlgorithm {
 
     public override string CollectLine(int lineNr)
     {
-        switch (lineNr)
-        {
-            case 0: return "BucketSort(list, n)";
-            case 1: return "    buckets = new array of n empty lists";
-            case 2: return "    for i=0 to len(list)-1:";
-            case 3: return "        index = list[i] * n / MAX_VALUE";
-            case 4: return "        buckets[index] <- list[i]";
-            case 5: return "    end for";
-            //case 6: return "    for i=0 to n-1:";
-            case 6: return "    Sorting each bucket w/InsertionSort";
-            //case 8: return "    end for";
-            case 7: return "    k = 0";
-            case 8: return "    for i=0 to n:";
-            case 9: return "        for j={0} to len(buckets[i]):";
-            case 10: return "            list[k] = buckets[i][j]";
-            case 11: return "            k++";
-            case 12: return "        end for";
-            case 13: return "    end for";
-            default: return "X";
-        }
-
-        //string temp = PseudoCode(lineNr, 0, 0, 0, true);
-        //switch (lineNr)
-        //{
-        //    case 0: case 1: return temp.Replace(bucketSortManager.NumberOfBuckets.ToString(), "n");
-        //    case 5: case 8: case 13: return temp;
-        //    case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().NumberOfElements - 1).ToString(), "(len( list ) - 1)");
-        //    case 3: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ] * n / max_value");
-        //    case 4: return temp.Replace((Util.INIT_STATE - 1).ToString(), "index").Replace(Util.INIT_STATE.ToString(), "list[ i ]");
-        //    case 6: return temp.Replace((bucketSortManager.NumberOfBuckets - 1).ToString(), "n-1");
-        //    case 7: case 10: return temp.Replace("0", "i");
-        //    case 11: return temp.Replace("0", "j");
-        //    case 12: return temp.Replace("0", "j");
-
-        //    default: return "lineNr " + lineNr + " not found!";
-        //}
-    }
-
-    // value1 = value of element
-    private int bucketIndex, loopRange;
-    private string PseudoCode(int lineNr, int i, int j, int k)
-    {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
 
         switch (lineNr)
         {
             case 0: lineOfCode += string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets); break;
             case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets); break;
-            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, (GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1)); break;
+            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, (sortMain.SortSettings.NumberOfElements - 1)); break;
             case 3: lineOfCode += string.Format("        {0} = {1} * {2} / {3}", bucketIndex, value1, bucketSortManager.NumberOfBuckets, UtilSort.MAX_VALUE); break;
             case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, value1); break;
             case 5: lineOfCode += "    end for"; break;
@@ -89,6 +52,26 @@ public class BucketSort : SortAlgorithm {
         }
         return lineOfCode;
     }
+        //switch (lineNr)
+        //{
+        //    case 0: return "BucketSort(list, n)";
+        //    case 1: return "    buckets = new array of n empty lists";
+        //    case 2: return "    for i=0 to len(list)-1:";
+        //    case 3: return "        index = list[i] * n / MAX_VALUE";
+        //    case 4: return "        buckets[index] <- list[i]";
+        //    case 5: return "    end for";
+        //    //case 6: return "    for i=0 to n-1:";
+        //    case 6: return "    Sorting each bucket w/InsertionSort";
+        //    //case 8: return "    end for";
+        //    case 7: return "    k = 0";
+        //    case 8: return "    for i=0 to n:";
+        //    case 9: return "        for j={0} to len(buckets[i]):";
+        //    case 10: return "            list[k] = buckets[i][j]";
+        //    case 11: return "            k++";
+        //    case 12: return "        end for";
+        //    case 13: return "    end for";
+        //    default: return "X";
+        //}
 
     public override int FirstInstructionCodeLine()
     {
@@ -103,7 +86,7 @@ public class BucketSort : SortAlgorithm {
     public override void ResetSetup()
     {
         base.ResetSetup();
-        Debug.Log("Nothing to reset?");
+        bucketManager.ResetSetup();
     }
 
     public override void AddSkipAbleInstructions()
@@ -247,25 +230,28 @@ public class BucketSort : SortAlgorithm {
     #region Bucket Sort: Demo (Visual)
     public override IEnumerator Demo(GameObject[] sortingElements)
     {
+        i = 0;
+        j = 0;
+
         // Line 0 (set parameter)
-        pseudoCodeViewer.SetCodeLine(PseudoCode(0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE), Util.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
-        int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
+        int numberOfBuckets = bucketSortManager.NumberOfBuckets;
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
         // Line 1 (Create buckets)
-        yield return HighlightPseudoCode(PseudoCode(1, UtilSort.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         // Buckets
         GameObject[] buckets = bucketManager.Buckets;
 
         // Add elements to buckets
-        for (int i = 0; i < sortingElements.Length; i++)
+        for (i = 0; i < sortingElements.Length; i++)
         {
             // Line 2 (Update for-loop)
-            yield return HighlightPseudoCode(PseudoCode(2, i, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
             // Get element
             GameObject element = sortingElements[i];
@@ -275,7 +261,7 @@ public class BucketSort : SortAlgorithm {
             bucketIndex = BucketIndex(value1, numberOfBuckets);
 
             // Line 3 (Display bucket index)
-            yield return HighlightPseudoCode(PseudoCode(3, i, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
             // Get bucket
             Bucket bucket = buckets[bucketIndex].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
@@ -284,11 +270,11 @@ public class BucketSort : SortAlgorithm {
             element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;
 
             // Line 4 (Put element into bucket)
-            yield return HighlightPseudoCode(PseudoCode(4, i, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
         }
 
         // Line 5 (end for-loop)
-        yield return HighlightPseudoCode(PseudoCode(5, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
         // Display elements
         for (int x=0; x < numberOfBuckets; x++)
@@ -305,7 +291,8 @@ public class BucketSort : SortAlgorithm {
             bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
 
             // Line 6 (Sort elements in bucket)
-            yield return HighlightPseudoCode(PseudoCode(6, x, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            i = x;
+            yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
             // Put elements for display on top of buckets
             int numberOfElementsInBucket = bucket.CurrenHolding.Count;
@@ -323,14 +310,14 @@ public class BucketSort : SortAlgorithm {
         //pseudoCodeViewer.SetCodeLine(8, PseudoCode(8, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
 
         // Put elements back into list
-        int k = 0;
+        k = 0;
         // Line 7 (set k)
-        yield return HighlightPseudoCode(PseudoCode(7, Util.NO_VALUE, Util.NO_VALUE, 0), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
         // Holder positions (where the sorting elements initialized)
-        Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
+        Vector3[] holderPos = sortMain.HolderManager.GetHolderPositions();
         // while (k < sortingElements.Length && i < numberOfBuckets)
-        for (int i = 0; i < numberOfBuckets; i++)
+        for (i = 0; i < numberOfBuckets; i++)
         {
             Bucket bucket = buckets[i].GetComponent<Bucket>();
 
@@ -338,12 +325,12 @@ public class BucketSort : SortAlgorithm {
             loopRange = bucket.CurrenHolding.Count;
 
             // Line 8 (For-loop: Concatenate all buckets)
-            yield return HighlightPseudoCode(PseudoCode(8, i, Util.NO_VALUE, k), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
-            for (int j = 0; j < loopRange; j++)
+            for (j = 0; j < loopRange; j++)
             {
                 // Line 9 (2nd For-loop: Concatenate all buckets)
-                yield return HighlightPseudoCode(PseudoCode(9, i, j, k), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
 
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
                 
@@ -356,17 +343,17 @@ public class BucketSort : SortAlgorithm {
                 sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
 
                 // Line 10 (Put element back into list)
-                yield return HighlightPseudoCode(PseudoCode(10, i, j, k), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
 
                 k++;
                 // Line 11 (Update k)
-                yield return HighlightPseudoCode(PseudoCode(11, i, j, k), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
             }
             // Line 12 (2nd for-inner-loop end)
-            yield return HighlightPseudoCode(PseudoCode(12, i, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
         }
         // Line 13 (2nd for-loop end)
-        yield return HighlightPseudoCode(PseudoCode(13, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
 
         IsTaskCompleted = true;
     }
@@ -387,7 +374,7 @@ public class BucketSort : SortAlgorithm {
             Debug.Log("Debug: " + bucketInstruction.DebugInfo() + "\n");
 
             // Change internal state of sorting element
-            sortingElement = GetComponent<ElementManager>().GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
+            sortingElement = sortMain.ElementManager.GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
         }
 
         if (instruction is InstructionLoop)
@@ -510,7 +497,7 @@ public class BucketSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j, k), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
@@ -570,7 +557,7 @@ public class BucketSort : SortAlgorithm {
             Debug.Log("Debug: " + bucketInstruction.DebugInfo() + "\n");
 
             // Change internal state of sorting element
-            sortingElement = GetComponent<ElementManager>().GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
+            sortingElement = sortMain.ElementManager.GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
         }
 
         if (instruction is InstructionLoop)
@@ -669,11 +656,11 @@ public class BucketSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j, k), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
         }
 
         yield return demoStepDuration;
-        bucketSortManager.BeginnerWait = false;
+        sortMain.BeginnerWait = false;
     }
     #endregion
 
@@ -689,7 +676,7 @@ public class BucketSort : SortAlgorithm {
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
-        int numberOfBuckets = GetComponent<BucketSortManager>().NumberOfBuckets;
+        int numberOfBuckets = bucketSortManager.NumberOfBuckets;
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
         // Line 1 (Create buckets)
@@ -756,7 +743,7 @@ public class BucketSort : SortAlgorithm {
         instructions.Add(instructionNr++, new InstructionBase(UtilSort.SET_VAR_J, instructionNr)); // new InstructionBase(Util.SET_VAR_J, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
 
         // Holder positions (where the sorting elements initialized)
-        Vector3[] holderPos = GetComponent<HolderManager>().GetHolderPositions();
+        Vector3[] holderPos = sortMain.HolderManager.GetHolderPositions();
         for (int i = 0; i < numberOfBuckets; i++)
         {
             List<BucketSortInstruction> bucket = buckets[i];

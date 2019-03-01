@@ -9,16 +9,6 @@ public class BubbleSort : SortAlgorithm {
      * Comparing 2 elements at a time
      * Moves the biggest until it reaches the end of the list
     */
-    private Dictionary<int, string> pseudoCode;
-
-    private BubbleSortManager bubbleSortManager;
-    private List<string> pseudoCodeLines;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        bubbleSortManager = GetComponent(typeof(BubbleSortManager)) as BubbleSortManager;
-    }
 
     public override string AlgorithmName
     {
@@ -37,21 +27,7 @@ public class BubbleSort : SortAlgorithm {
 
     public override string CollectLine(int lineNr)
     {
-        string temp = PseudoCode(lineNr, 0, 0);
-        switch (lineNr)
-        {
-            case 0: case 6: case 7: case 8: return temp;
-            case 1: return temp.Replace(GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements.ToString(), "len( list )");
-            case 2: return temp.Replace((GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1).ToString(), "n-1");
-            case 3: return temp.Replace((GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements - 1).ToString(), "n-i-1");
-            case 4: case 5: return temp.Replace(UtilSort.INIT_STATE.ToString(), "list[ j ]").Replace((UtilSort.INIT_STATE - 1).ToString(), "list[ j + 1 ]");
-            default: return "lineNr " + lineNr + " not found!";
-        }
-    }
-
-    private string PseudoCode(int lineNr, int i, int j)
-    {
-        int n = GetComponent<AlgorithmManagerBase>().AlgorithmSettings.NumberOfElements;
+        int n = sortMain.SortSettings.NumberOfElements;
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
         switch (lineNr)
         {
@@ -67,6 +43,7 @@ public class BubbleSort : SortAlgorithm {
             default: return "lineNr " + lineNr + " not found!";
         }
         return lineOfCode;
+
     }
 
     public override int FirstInstructionCodeLine()
@@ -140,20 +117,22 @@ public class BubbleSort : SortAlgorithm {
     #region Bubble Sort: All Moves Demo (Visual)
     public override IEnumerator Demo(GameObject[] list)
     {
-        int N = list.Length, i = 0, j = 0;
+        int N = list.Length;
+        i = 0;
+        j = 0;
 
         // Display pseudocode (list length)
-        yield return HighlightPseudoCode(PseudoCode(1, i, j), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         for (i=0; i < N; i++)
         {
             // Display outer loop
-            yield return HighlightPseudoCode(PseudoCode(2, i, j), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
             for (j = 0; j < N - i - 1; j++)
             {
                 // Display pseudocode (update for-loops)
-                yield return HighlightPseudoCode(PseudoCode(3, i, j), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
                 // Choose sorting elements to compare
                 BubbleSortElement p1 = list[j].GetComponent<BubbleSortElement>();
@@ -172,7 +151,7 @@ public class BubbleSort : SortAlgorithm {
                 value2 = p2.Value;
 
                 // Display pseudocode (list length)
-                yield return HighlightPseudoCode(PseudoCode(4, i, j), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
 
                 if (value1 > value2)
                 {
@@ -190,10 +169,10 @@ public class BubbleSort : SortAlgorithm {
                     UtilSort.ResetRotation(temp2);
 
                     // Display pseudocode (swap)
-                    yield return HighlightPseudoCode(PseudoCode(5, i, j), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
                 }
                 // Display pseudocode (comparison/if end)
-                yield return HighlightPseudoCode(PseudoCode(6, i, j), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
                 p1.IsCompare = false;
                 if (p1.CurrentStandingOn != null)
@@ -203,7 +182,7 @@ public class BubbleSort : SortAlgorithm {
                     p2.CurrentStandingOn.CurrentColor = UtilSort.STANDARD_COLOR;
             }
             // Display pseudocode (end 2nd for-loop)
-            yield return HighlightPseudoCode(PseudoCode(7, i, j), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
             list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
             UtilSort.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
@@ -212,7 +191,7 @@ public class BubbleSort : SortAlgorithm {
         isTaskCompleted = true;
 
         // Display pseudocode (end 1st for-loop)
-        yield return HighlightPseudoCode(PseudoCode(8, i, j), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
     }
     #endregion
 
@@ -334,7 +313,7 @@ public class BubbleSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
         }
 
         // Move sorting element
@@ -345,13 +324,13 @@ public class BubbleSort : SortAlgorithm {
                 case UtilSort.SWITCH_INST:
                     if (increment)
                     {
-                        se1.transform.position = bubbleSortManager.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + UtilSort.ABOVE_HOLDER_VR;
-                        se2.transform.position = bubbleSortManager.GetCorrectHolder(bubbleInstruction.HolderID1).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se1.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se2.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID1).transform.position + UtilSort.ABOVE_HOLDER_VR;
                     }
                     else
                     {
-                        se1.transform.position = bubbleSortManager.GetCorrectHolder(bubbleInstruction.HolderID1).transform.position + UtilSort.ABOVE_HOLDER_VR;
-                        se2.transform.position = bubbleSortManager.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se1.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID1).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se2.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + UtilSort.ABOVE_HOLDER_VR;
                     }
                     break;
             }
@@ -435,11 +414,11 @@ public class BubbleSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(PseudoCode(lineOfCode[x], i, j), useColor);
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), useColor);
         }
 
         yield return demoStepDuration;
-        bubbleSortManager.BeginnerWait = false;
+        sortMain.BeginnerWait = false;
     }
     #endregion
 

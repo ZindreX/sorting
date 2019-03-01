@@ -5,25 +5,15 @@ using UnityEngine;
 //[RequireComponent(typeof(InsertionSort))]
 public class InsertionSortManager : AlgorithmManagerBase {
 
+    [SerializeField]
     private InsertionSort insertionSort;
 
-    protected override void Awake()
-    {
-        insertionSort = GetComponent(typeof(InsertionSort)) as InsertionSort;
-        base.Awake();
-    }
-
-    protected override SortAlgorithm InstanceOfAlgorithm
-    {
-        get { return insertionSort; }
-    }
-
-    protected override int MovesNeeded
+    public override int MovesNeeded
     {
         get { return 1; }
     }
 
-    protected override int PrepareNextInstruction(InstructionBase instruction)
+    public override int PrepareNextInstruction(InstructionBase instruction)
     {
         bool gotSortingElement = !insertionSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
         bool noDestination = insertionSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
@@ -32,7 +22,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         {
             InsertionSortInstruction insertionSortInstruction = (InsertionSortInstruction)instruction;
             // Get the Sorting element
-            InsertionSortElement sortingElement = elementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
+            InsertionSortElement sortingElement = sortMain.ElementManager.GetSortingElement(insertionSortInstruction.SortingElementID).GetComponent<InsertionSortElement>();
 
             // Hands out the next instruction
             sortingElement.Instruction = insertionSortInstruction;
@@ -43,10 +33,10 @@ public class InsertionSortManager : AlgorithmManagerBase {
         }
 
         // Display help on blackboard
-        if (algorithmSettings.Difficulty <= UtilSort.BEGINNER)
+        if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
         {
-            BeginnerWait = true;
-            StartCoroutine(sortAlgorithm.UserTestHighlightPseudoCode(instruction, gotSortingElement));
+            sortMain.BeginnerWait = true;
+            StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
 
 
@@ -57,11 +47,11 @@ public class InsertionSortManager : AlgorithmManagerBase {
 
     public override HolderBase GetCorrectHolder(int index)
     {
-        HolderBase getHolder = holderManager.GetHolder(index);
+        HolderBase getHolder = sortMain.HolderManager.GetHolder(index);
         return (getHolder != null) ? getHolder : insertionSort.PivotHolder;
     }
 
-    protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
+    public override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
         InsertionSortInstruction[] elementStates = new InsertionSortInstruction[sortingElements.Length];
 

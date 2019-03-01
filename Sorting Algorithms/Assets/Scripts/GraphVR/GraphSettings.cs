@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GraphSettings : MonoBehaviour {
+public class GraphSettings : MonoBehaviour, ISettings {
 
     public GameObject nodePrefab, undirectedEdgePrefab, directedEdgePrefab, symmetricDirectedEdgePrefab;
 
@@ -263,7 +263,7 @@ public class GraphSettings : MonoBehaviour {
         get { return listVisual; }
     }
 
-    public GraphAlgorithm GetGraphAlgorithm()
+    public TeachingAlgorithm GetAlgorithm()
     {
         listVisual.SetAlgorithmSpeed = algorithmSpeed;
         switch (useAlgorithm)

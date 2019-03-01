@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Blackboard : MonoBehaviour, IDisplay {
 
@@ -10,7 +11,7 @@ public class Blackboard : MonoBehaviour, IDisplay {
     */
 
     [SerializeField]
-    private TextMesh[] texts;
+    private TextMeshPro[] texts;
     private int titleIndex = 0, textIndex = 1;
 
     public int TitleIndex
@@ -34,7 +35,7 @@ public class Blackboard : MonoBehaviour, IDisplay {
 
     public void EmptyContent()
     {
-        foreach (TextMesh text in texts)
+        foreach (TextMeshPro text in texts)
         {
             text.text = "";
         }
@@ -42,7 +43,7 @@ public class Blackboard : MonoBehaviour, IDisplay {
 
     public void RemoveHightlight()
     {
-        foreach (TextMesh line in texts)
+        foreach (TextMeshPro line in texts)
         {
             line.color = UtilSort.BLACKBOARD_TEXT_COLOR;
         }

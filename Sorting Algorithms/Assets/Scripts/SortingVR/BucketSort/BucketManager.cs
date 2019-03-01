@@ -8,22 +8,22 @@ public class BucketManager : MonoBehaviour, IManager {
     private GameObject bucketPrefab;
 
     [SerializeField]
-    private GameObject firstBucketPosition;
-
-    [SerializeField]
-    private Transform firstRowUserTest, secondRowUserTest;
+    private Transform firstBucketPosition, firstRowUserTest, secondRowUserTest;
 
     private GameObject[] buckets;
     private bool containsBuckets = false;
 
+    private SortMain superElement;
+
     void Awake()
     {
         buckets = new GameObject[GetComponent<BucketSortManager>().NumberOfBuckets];
+        superElement = GetComponentInParent<SortMain>();
     }
 
     public Vector3 FirstBucketPosition
     {
-        get { return firstBucketPosition.transform.position; }
+        get { return firstBucketPosition.position; }
     }
 
     public Transform UserTestBucketRowPosition(int rowId)
@@ -40,9 +40,9 @@ public class BucketManager : MonoBehaviour, IManager {
         if (containsBuckets)
             return;
 
-        if (!GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsUserTest())
+        if (!superElement.SortSettings.IsUserTest())
         {
-            buckets = UtilSort.CreateObjects(bucketPrefab, numberOfElements, position, UtilSort.SPACE_BETWEEN_BUCKETS, gameObject);
+            buckets = UtilSort.CreateObjects(bucketPrefab, numberOfElements, position, UtilSort.SPACE_BETWEEN_BUCKETS, superElement);
         }
         else
         {
@@ -53,13 +53,15 @@ public class BucketManager : MonoBehaviour, IManager {
                 if (x < (numberOfElements/2))
                 {
                     bucket = Instantiate(bucketPrefab, firstRowUserTest.position + new Vector3(0f, 0f, x * UtilSort.SPACE_BETWEEN_BUCKETS), Quaternion.identity);
-                    bucket.GetComponent<IChild>().Parent = gameObject;
+                    bucket.transform.Rotate(0f, -90f, 0f);
+                    bucket.GetComponent<ISortSubElement>().SuperElement = superElement;
                     buckets[x] = bucket;
                 }
                 else
                 {
                     bucket = Instantiate(bucketPrefab, secondRowUserTest.position + new Vector3(0f, 0f, (x - (numberOfElements/2)) * UtilSort.SPACE_BETWEEN_BUCKETS), Quaternion.identity);
-                    bucket.GetComponent<IChild>().Parent = gameObject;
+                    bucket.GetComponent<ISortSubElement>().SuperElement = superElement;
+                    bucket.transform.Rotate(0f, 90f, 0f);
                     buckets[x] = bucket;
                 }
             }
@@ -68,6 +70,11 @@ public class BucketManager : MonoBehaviour, IManager {
 
 
         containsBuckets = true;
+    }
+
+    public void ResetSetup()
+    {
+        DestroyObjects();
     }
 
     public void DestroyObjects()

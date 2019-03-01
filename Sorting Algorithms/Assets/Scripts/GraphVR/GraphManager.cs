@@ -5,17 +5,18 @@ using UnityEngine;
 
 public abstract class GraphManager : MonoBehaviour {
 
-    protected GraphSettings gs;
-    protected GraphAlgorithm algorithm;
+    protected GraphMain graphMain;
+    protected GraphSettings graphSettings;
+    protected GraphAlgorithm graphAlgorithm;
 
     protected int START_X, START_Z, END_X, END_Z;
     private Node startNode, endNode;
     private Dictionary<string, int> rngDict;
 
-    public void InitGraphManager(GraphSettings gs, GraphAlgorithm algorithm, Dictionary<string, int> rngDict)
+    public void InitGraphManager(GraphSettings graphSettings, GraphAlgorithm graphAlgorithm, Dictionary<string, int> rngDict)
     {
-        this.gs = gs;
-        this.algorithm = algorithm;
+        this.graphSettings = graphSettings;
+        this.graphAlgorithm = graphAlgorithm;
         this.rngDict = rngDict;
     }
 
@@ -57,8 +58,8 @@ public abstract class GraphManager : MonoBehaviour {
 
     public void CreateGraph()
     {
-        CreateNodes(gs.EdgeMode);
-        CreateEdges(gs.EdgeMode);
+        CreateNodes(graphSettings.EdgeMode);
+        CreateEdges(graphSettings.EdgeMode);
     }
 
     private bool testIsland = false;
@@ -70,14 +71,14 @@ public abstract class GraphManager : MonoBehaviour {
 
         // Set cost if algorithm requires it
         int edgeCost = UtilGraph.NO_COST;
-        if (algorithm is IShortestPath)
+        if (graphAlgorithm is IShortestPath)
             edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
 
         // Initialize edge
-        switch (gs.EdgeType)
+        switch (graphSettings.EdgeType)
         {
             case UtilGraph.UNDIRECTED_EDGE:
-                edge = Instantiate(gs.undirectedEdgePrefab, centerPos, Quaternion.identity);
+                edge = Instantiate(graphSettings.undirectedEdgePrefab, centerPos, Quaternion.identity);
                 edge.AddComponent<UnDirectedEdge>();
                 edge.GetComponent<UnDirectedEdge>().InitUndirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH);
                 break;
@@ -86,9 +87,9 @@ public abstract class GraphManager : MonoBehaviour {
                 bool pathBothWaysActive = RollSymmetricEdge();
 
                 if (pathBothWaysActive)
-                    edge = Instantiate(gs.symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
+                    edge = Instantiate(graphSettings.symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
                 else
-                    edge = Instantiate(gs.directedEdgePrefab, centerPos, Quaternion.identity);
+                    edge = Instantiate(graphSettings.directedEdgePrefab, centerPos, Quaternion.identity);
 
                 edge.AddComponent<DirectedEdge>();
                 edge.GetComponent<DirectedEdge>().InitDirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH, pathBothWaysActive);
@@ -113,11 +114,11 @@ public abstract class GraphManager : MonoBehaviour {
 
     private bool RollSymmetricEdge()
     {
-        switch (gs.Graphstructure)
+        switch (graphSettings.Graphstructure)
         {
             case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Util.RollRandom(LookUpRNGDict(UtilGraph.SYMMETRIC_EDGE_CHANCE));
             case UtilGraph.TREE_GRAPH: return false;
-            default: Debug.LogError("Symmetric option not set for '" + gs.Graphstructure + "'."); break;
+            default: Debug.LogError("Symmetric option not set for '" + graphSettings.Graphstructure + "'."); break;
         }
         return false;
     }
@@ -151,6 +152,54 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
+    public int PrepareNextInstruction(InstructionBase instruction)
+    {
+        Debug.Log("Preparing next instruction: " + instruction.Instruction);
+        Node node = null;
+        bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
+
+        if (gotNode)
+        {
+            TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
+
+            // Get the Sorting element
+            node = traverseInstruction.Node;
+
+            // Hands out the next instruction
+            node.Instruction = traverseInstruction;
+
+            // Set goal
+            //posManager.CurrentGoal = node.gameObject;
+
+            // Give this sorting element permission to give feedback to progress to next intstruction
+            if (instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
+                node.NextMove = true;
+        }
+
+        // Display help on blackboard
+        if (true) //algorithmSettings.Difficulty <= UtilSort.BEGINNER)
+        {
+            Debug.Log("Fixing pseudocode!");
+            graphMain.BeginnerWait = true;
+            StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
+
+            // Node representation
+            switch (instruction.Instruction)
+            {
+                case UtilGraph.ENQUEUE_NODE_INST: graphAlgorithm.ListVisual.AddListObject(node); break;
+                case UtilGraph.DEQUEUE_NODE_INST: graphAlgorithm.ListVisual.RemoveCurrentNode(); break;
+                case UtilGraph.END_FOR_LOOP_INST: graphAlgorithm.ListVisual.DestroyCurrentNode(); break;
+            }
+        }
+
+        Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
+        if (gotNode && !noDestination)
+            return 0;
+        Debug.Log("Nothing to do for player, get another instruction");
+        return 1;
+    }
+
     // ************************************ Abstract methods ************************************ 
 
     // Initialize the setup variables for the graph
@@ -179,7 +228,5 @@ public abstract class GraphManager : MonoBehaviour {
 
     // Backtracks from all nodes in the given graph
     public abstract IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration);
-
-
 
 }

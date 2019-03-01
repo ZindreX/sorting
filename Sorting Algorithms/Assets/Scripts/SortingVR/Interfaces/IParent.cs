@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IChild {
+public interface ISortSubElement {
 
-    GameObject Parent { get; set; }
+    SortMain SuperElement { get; set; }
     string MyRole();
 
 }

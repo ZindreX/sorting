@@ -2152,6 +2152,16 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 33261205544509484, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114857202093164314, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: sceneBuildIndex
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
   m_IsPrefabAsset: 0
@@ -2236,6 +2246,11 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 33261205544509484, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
   m_IsPrefabAsset: 0
@@ -2319,6 +2334,11 @@ Prefab:
         type: 2}
       propertyPath: sceneBuildIndex
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 33261205544509484, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
@@ -2739,6 +2759,11 @@ Prefab:
       propertyPath: sceneBuildIndex
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 33261205544509484, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}
   m_IsPrefabAsset: 0
@@ -2818,6 +2843,11 @@ Prefab:
         type: 2}
       propertyPath: sceneBuildIndex
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 33261205544509484, guid: 81f45eded87f0014e894ca6d1b6edb32,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 2}

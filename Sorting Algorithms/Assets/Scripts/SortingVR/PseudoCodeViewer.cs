@@ -15,12 +15,14 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     private WaitForSeconds demoStepDuration;
 
     private TeachingAlgorithm algorithm;
+    private Vector2 rtDelta;
 
-    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm, float spaceBetweenLines)
+    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm, float spaceBetweenLines, Vector2 rtDelta)
     {
         this.algorithm = algorithm;
         demoStepDuration = algorithm.DemoStepDuration;
         this.spaceBetweenLines = spaceBetweenLines;
+        this.rtDelta = rtDelta;
     }
 
     public void PseudoCodeSetup()
@@ -48,10 +50,10 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             //codelinePro.font = startPosAndMat.font; //codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
             codelinePro.fontSize = startPosAndMat.fontSize;
             
-
             // Rectangle shape
             RectTransform rt = codelinePro.rectTransform;
-            rt.sizeDelta = new Vector2(20, 2);
+            rt.sizeDelta = rtDelta;
+            rt.transform.position = new Vector3(rt.position.x + 1f, rt.position.y, rt.position.z);
 
             // Get line of code from algorithm
             if (algorithm.IncludeLineNr)
@@ -63,11 +65,11 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
 
         // Move/extend blackboard up if the pseudocode goes below the floor
-        float codeBelowFloor = codeLines[numberOfLines - 1].transform.position.y;
-        if (codeBelowFloor < 0.342f)
-        {
-            transform.position += new Vector3(0f, 0.5f - codeBelowFloor, 0f);
-        }
+        //float codeBelowFloor = codeLines[numberOfLines - 1].transform.position.y;
+        //if (codeBelowFloor < 0.342f)
+        //{
+        //    transform.position += new Vector3(0f, 0.5f - codeBelowFloor, 0f);
+        //}
     }
 
     public TextMeshPro CodeLine(int index)

@@ -9,32 +9,24 @@ public class BucketSortManager : AlgorithmManagerBase {
     [SerializeField]
     private int numberOfBuckets = 10;
 
+    [SerializeField]
     private BucketSort bucketSort;
+
+    [SerializeField]
     private BucketManager bucketManager;
 
-    protected override void Awake()
-    {
-        bucketSort = GetComponent(typeof(BucketSort)) as BucketSort;
-        bucketManager = GetComponent(typeof(BucketManager)) as BucketManager;
-        base.Awake();
-    }
 
     public int NumberOfBuckets
     {
         get { return numberOfBuckets; }
     }
 
-    protected override SortAlgorithm InstanceOfAlgorithm
-    {
-        get { return bucketSort; }
-    }
-
-    protected override int MovesNeeded
+    public override int MovesNeeded
     {
         get { return 1; }
     }
 
-    protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
+    public override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
         BucketSortInstruction[] elementStates = new BucketSortInstruction[sortingElements.Length];
 
@@ -52,7 +44,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         return elementStates;
     }
 
-    protected override int PrepareNextInstruction(InstructionBase instruction)
+    public override int PrepareNextInstruction(InstructionBase instruction)
     {
         bool gotSortingElement = !bucketSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
         bool noDestination = bucketSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
@@ -74,7 +66,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
 
             // Get the Sorting element
-            BucketSortElement sortingElement = elementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<BucketSortElement>();
+            BucketSortElement sortingElement = sortMain.ElementManager.GetSortingElement(bucketSortInstruction.SortingElementID).GetComponent<BucketSortElement>();
 
             // Hands out the next instruction
             sortingElement.Instruction = bucketSortInstruction;
@@ -85,10 +77,10 @@ public class BucketSortManager : AlgorithmManagerBase {
         }
 
         // Display help on blackboard
-        if (algorithmSettings.Difficulty <= UtilSort.BEGINNER)
+        if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
         {
-            BeginnerWait = true;
-            StartCoroutine(sortAlgorithm.UserTestHighlightPseudoCode(instruction, gotSortingElement));
+            sortMain.BeginnerWait = true;
+            StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
         if (gotSortingElement && !noDestination)
             return 0;

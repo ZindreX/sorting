@@ -60,9 +60,9 @@ public class RandomGraphManager : GraphManager {
 
     private RandomNode GenerateNode(Vector3 pos)
     {
-        GameObject node = Instantiate(gs.nodePrefab, pos, Quaternion.identity);
+        GameObject node = Instantiate(graphSettings.nodePrefab, pos, Quaternion.identity);
         node.AddComponent<RandomNode>();
-        node.GetComponent<RandomNode>().InitRandomNode(algorithm.AlgorithmName);
+        node.GetComponent<RandomNode>().InitRandomNode(graphAlgorithm.AlgorithmName);
         return node.GetComponent<RandomNode>();
     }
 

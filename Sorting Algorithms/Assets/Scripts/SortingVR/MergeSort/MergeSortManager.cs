@@ -7,23 +7,12 @@ public class MergeSortManager : AlgorithmManagerBase {
 
     private MergeSort mergeSort;
 
-    protected override void Awake()
-    {
-        mergeSort = GetComponent(typeof(MergeSort)) as MergeSort;
-        base.Awake();
-    }
-
-    protected override SortAlgorithm InstanceOfAlgorithm
-    {
-        get { return mergeSort; }
-    }
-
-    protected override int MovesNeeded
+    public override int MovesNeeded
     {
         get { return 1; }
     }
 
-    protected override int PrepareNextInstruction(InstructionBase instruction)
+    public override int PrepareNextInstruction(InstructionBase instruction)
     {
         MergeSortInstruction mergeSortInstruction = (MergeSortInstruction)instruction;
         Debug.Log("FIX");
@@ -47,11 +36,11 @@ public class MergeSortManager : AlgorithmManagerBase {
 
     public override HolderBase GetCorrectHolder(int index)
     {
-        MergeSortHolder holder = (MergeSortHolder)holderManager.GetHolder(index);
+        MergeSortHolder holder = (MergeSortHolder)sortMain.HolderManager.GetHolder(index);
         return (holder != null) ? holder : mergeSort.GetExtraHolder(index).GetComponent<MergeSortHolder>();
     }
 
-    protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
+    public override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
         MergeSortInstruction[] elementStates = new MergeSortInstruction[sortingElements.Length];
 

@@ -15,21 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenuVR.unity
     guid: b08f0c5efc4dc4b46baed4dec0d8ebdc
   - enabled: 1
-    path: Assets/Scenes/BubbleSort.unity
-    guid: 21e7c23f7fc941346ace4541e86fa999
+    path: Assets/Scenes/SortingAlgorithmRoom.unity
+    guid: 79b2ae9413d877c4193f570c50fca737
   - enabled: 1
-    path: Assets/Scenes/InsertionSort.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
-    path: Assets/Scenes/BucketSort.unity
-    guid: 819dbc0ca40c98a4997ce7e60eee7522
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/Old/TestRoomVR.unity
-    guid: 0e5baae5b8c17834c80acc95b2692636
+    path: Assets/Scenes/Graph.unity
+    guid: 97ad2f4d742977c4fa5ae8088e168909
   m_configObjects: {}

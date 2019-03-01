@@ -12,7 +12,7 @@ public class Portal : MonoBehaviour {
      * 
     */
 
-    private static int LARGEST_BUILD_INDEX = 5;
+    private static int LARGEST_BUILD_INDEX = 4;
 
     [SerializeField]
     private int sceneBuildIndex;
@@ -26,12 +26,27 @@ public class Portal : MonoBehaviour {
     private void Awake()
     {
         rb = GetComponent(typeof(Rigidbody)) as Rigidbody;
-        portalTitle.text = UtilSort.ConvertSceneBuildIndexToName(sceneBuildIndex);
+        portalTitle.text = ConvertSceneBuildIndexToName(sceneBuildIndex);
     }
 
     private void LoadLevel()
     {
         SceneManager.LoadScene(sceneBuildIndex);
+    }
+
+    public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)
+    {
+        switch (sceneBuildIndex)
+        {
+            case 0: return Util.START_ROOM;
+            case 1: return Util.TUTORIAL_ROOM;
+            case 2: return Util.MAIN_MENU;
+            case 3: return Util.SORTING_ALGORITHMS;
+            case 4: return Util.GRAPH_ALGORITHMS;
+            case 5: return "Don't enter";
+            default: return "X";
+
+        }
     }
 
 

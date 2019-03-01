@@ -16,6 +16,12 @@ public class ElementManager : MonoBehaviour, IManager {
 
     private SortingElementBase currentMoving;
     private bool containsElements = false;
+    private SortMain superElement;
+
+    private void Awake()
+    {
+        superElement = GetComponent<SortMain>();
+    }
 
 
     public GameObject[] SortingElements
@@ -40,7 +46,7 @@ public class ElementManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfElements; x++)
         {
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + UtilSort.ABOVE_HOLDER_VR, Quaternion.identity);
-            switch (GetComponent<AlgorithmManagerBase>().Algorithm.AlgorithmName)
+            switch (superElement.GetTeachingAlgorithm().AlgorithmName)
             {
                 case UtilSort.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
                 case UtilSort.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
@@ -49,7 +55,7 @@ public class ElementManager : MonoBehaviour, IManager {
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = Random.Range(0, UtilSort.MAX_VALUE);
-            sortingElements[x].GetComponent<IChild>().Parent = gameObject;
+            sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
 
         }
 
@@ -81,7 +87,7 @@ public class ElementManager : MonoBehaviour, IManager {
             usedValues.Add(newValue);
 
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + UtilSort.ABOVE_HOLDER_VR, Quaternion.identity);
-            switch (GetComponent<AlgorithmManagerBase>().Algorithm.AlgorithmName)
+            switch (superElement.GetTeachingAlgorithm().AlgorithmName)
             {
                 case UtilSort.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
                 case UtilSort.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
@@ -90,7 +96,7 @@ public class ElementManager : MonoBehaviour, IManager {
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;
-            sortingElements[x].GetComponent<IChild>().Parent = gameObject;
+            sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
         }
 
         if (sortingCase != UtilSort.NONE)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Bucket : MonoBehaviour, IChild {
+public class Bucket : MonoBehaviour, ISortSubElement {
 
     /* ---------------------------------------- Bucket object ----------------------------------------
      * bucket index = value * numberOfBuckets / (maxSize + 1)
@@ -21,10 +21,11 @@ public class Bucket : MonoBehaviour, IChild {
 
     private int bucketID;
     private bool displayElements = false;
-    private GameObject parent;
+    private SortMain parent;
 
     private int[] bucketCapacity;
     private List<SortingElementBase> currentHolding;
+    private WaitForSeconds colorChangeDuration = new WaitForSeconds(UtilSort.COLOR_CHANGE_TIMER);
 
     void Awake()
     {
@@ -35,7 +36,7 @@ public class Bucket : MonoBehaviour, IChild {
         displayElements = false;
     }
 
-    public GameObject Parent
+    public SortMain SuperElement
     {
         get { return parent; }
         set { parent = value; }
@@ -112,13 +113,12 @@ public class Bucket : MonoBehaviour, IChild {
     public IEnumerator ChangeColor(Color color)
     {
         Color prevColor = innerBucket.material.color;
-        innerBucket.material.color = color;
-        yield return new WaitForSeconds(UtilSort.COLOR_CHANGE_TIMER);
-        innerBucket.material.color = prevColor;
-        yield return new WaitForSeconds(UtilSort.COLOR_CHANGE_TIMER);
-        innerBucket.material.color = color;
-        yield return new WaitForSeconds(UtilSort.COLOR_CHANGE_TIMER);
-        innerBucket.material.color = prevColor;
+        for (int i=0; i < 3; i++)
+        {
+            innerBucket.material.color = color;
+            yield return colorChangeDuration;
+            innerBucket.material.color = prevColor;
+        }
     }
 
     private int prevSortingElementID = -1;
@@ -138,7 +138,7 @@ public class Bucket : MonoBehaviour, IChild {
                 return;
             }
 
-            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo())
+            if (parent.SortSettings.IsDemo())
             {
                 if (!displayElements && ValidateSortingElement(sortingElement))
                 {

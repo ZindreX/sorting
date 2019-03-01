@@ -15,7 +15,8 @@ public class HolderManager : MonoBehaviour, IManager {
     // GameObject
     private GameObject[] holders;
 
-    private Vector3 firstHolderPosition; // -2.092, 2.1, 29.5
+    [SerializeField]
+    private Transform firstHolderPosition;
     private bool containsHolders = false;
 
     public GameObject[] Holders
@@ -34,13 +35,13 @@ public class HolderManager : MonoBehaviour, IManager {
         if (containsHolders)
             return;
 
-        firstHolderPosition = new Vector3(gameObject.transform.position.x + (UtilSort.MAX_NUMBER_OF_ELEMENTS - numberOfHolders) * (UtilSort.SPACE_BETWEEN_HOLDERS/2), gameObject.transform.position.y, gameObject.transform.position.z);
+        Vector3 firstHolderPos = new Vector3(firstHolderPosition.position.x + (UtilSort.MAX_NUMBER_OF_ELEMENTS - numberOfHolders) * (UtilSort.SPACE_BETWEEN_HOLDERS/2), firstHolderPosition.position.y, firstHolderPosition.position.z);
 
        holders = new GameObject[numberOfHolders]; // ***
         for (int x = 0; x < numberOfHolders; x++)
         {
-            holders[x] = Instantiate(holderPrefab, firstHolderPosition + new Vector3((x * UtilSort.SPACE_BETWEEN_HOLDERS), 0f, 0f), Quaternion.identity);
-            switch (GetComponent<AlgorithmManagerBase>().Algorithm.AlgorithmName)
+            holders[x] = Instantiate(holderPrefab, firstHolderPos + new Vector3((x * UtilSort.SPACE_BETWEEN_HOLDERS), 0f, 0f), Quaternion.identity);
+            switch (GetComponent<SortMain>().GetTeachingAlgorithm().AlgorithmName)
             {
                 case UtilSort.BUBBLE_SORT: holders[x].AddComponent<BubbleSortHolder>(); break;
                 case UtilSort.INSERTION_SORT: holders[x].AddComponent<InsertionSortHolder>(); break;
@@ -49,7 +50,7 @@ public class HolderManager : MonoBehaviour, IManager {
                 default: Debug.LogError("Add subclass for holder!"); break;
             }
             
-            holders[x].GetComponent<HolderBase>().Parent = gameObject; // null(?): add C# script to holder / sorting elements
+            holders[x].GetComponent<HolderBase>().SuperElement = GetComponent<SortMain>(); // null(?): add C# script to holder / sorting elements
         }
         containsHolders = true;
     }

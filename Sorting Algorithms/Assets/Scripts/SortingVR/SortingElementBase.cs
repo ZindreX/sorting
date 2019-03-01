@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public abstract class SortingElementBase : MonoBehaviour, IChild, IInstructionAble {
+public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInstructionAble {
 
     /* -------------------------------------------- Sorting element (object) --------------------------------------------
      * > Keep an internal status about itself (which the holder checks to determine its color)
@@ -20,7 +20,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild, IInstructionAb
     // User test
     protected bool moving = false, standingInCorrectHolder = true, intermediateMove = false, nextMove = false;
 
-    protected GameObject parent;
+    protected SortMain parent;
     protected HolderBase currentStandingOn;
     protected Vector3 placementAboveHolder;
 
@@ -39,7 +39,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild, IInstructionAb
 
     // --------------------------------------- Sorting element info ---------------------------------------
 
-    public GameObject Parent
+    public SortMain SuperElement
     {
         get { return parent; }
         set { parent = value; }
@@ -186,7 +186,7 @@ public abstract class SortingElementBase : MonoBehaviour, IChild, IInstructionAb
         if (collision.collider.tag == UtilSort.HOLDER_TAG)
         {
             HolderBase holder = collision.collider.GetComponent<HolderBase>();
-            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo())
+            if (parent.SortSettings.IsDemo())
             {
                 CurrentStandingOn = holder;
             }

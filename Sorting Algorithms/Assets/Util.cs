@@ -7,6 +7,9 @@ public class Util : MonoBehaviour {
     // Teaching modes
     public const string DEMO = "Demo", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
 
+    // Algorithms
+    public const string SORTING_ALGORITHMS = "Sorting algorithms", GRAPH_ALGORITHMS = "Graph algorithms";
+        
     // Sorting Algorithms
     public const string BUBBLE_SORT = "Bubble sort", INSERTION_SORT = "Insertion sort", MERGE_SORT = "Merge sort", QUICK_SORT = "Quick sort";
     public const string BUCKET_SORT = "Bucket sort";
@@ -45,7 +48,7 @@ public class Util : MonoBehaviour {
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 
     */
-    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, float spreadDist, GameObject parent)
+    public static GameObject[] CreateObjects(GameObject prefab, int numberOfElements, Vector3[] pos, float spreadDist, SortMain superElement)
     {
         GameObject[] objects = new GameObject[numberOfElements];
         GameObject element;
@@ -57,7 +60,7 @@ public class Util : MonoBehaviour {
             else
                 element = Instantiate(prefab, pos[x], Quaternion.identity);
 
-            element.GetComponent<IChild>().Parent = parent;
+            element.GetComponent<ISortSubElement>().SuperElement = superElement;
             objects[x] = element;
         }
         return objects;
@@ -100,21 +103,6 @@ public class Util : MonoBehaviour {
     public static void ResetRotation(GameObject obj)
     {
         obj.transform.rotation = Quaternion.identity;
-    }
-
-    public static string ConvertSceneBuildIndexToName(int sceneBuildIndex)
-    {
-        switch (sceneBuildIndex)
-        {
-            case 0: return START_ROOM;
-            case 1: return TUTORIAL_ROOM;
-            case 2: return MAIN_MENU;
-            case 3: return BUBBLE_SORT;
-            case 4: return INSERTION_SORT;
-            case 5: return BUCKET_SORT;
-            default: return "X";
-
-        }
     }
 
     public static bool RollRandom(int below)

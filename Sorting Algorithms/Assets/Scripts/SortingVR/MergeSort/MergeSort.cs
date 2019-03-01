@@ -293,8 +293,8 @@ public class MergeSort : SortAlgorithm {
             // Find positions for the new holders
             if (split < 1)
             {
-                leftPos = GetComponent<AlgorithmManagerBase>().HolderPositions[split * 2] + increaseHeight;
-                rightPos = GetComponent<AlgorithmManagerBase>().HolderPositions[(split * 2) + 4] + increaseHeight;
+                //leftPos = GetComponent<AlgorithmManagerBase>().HolderPositions[split * 2] + increaseHeight;
+                //rightPos = GetComponent<AlgorithmManagerBase>().HolderPositions[(split * 2) + 4] + increaseHeight;
             }
             else
             {
@@ -302,7 +302,7 @@ public class MergeSort : SortAlgorithm {
             }
 
             // Create two new holders to split the input list
-            extraHolders[split] = UtilSort.CreateObjects(holderPrefab, 2, new Vector3[] { leftPos, rightPos }, 0f, GetComponent<AlgorithmManagerBase>().gameObject);
+            //extraHolders[split] = UtilSort.CreateObjects(holderPrefab, 2, new Vector3[] { leftPos, rightPos }, 0f, GetComponent<AlgorithmManagerBase>().gameObject);
 
             // Start splitting list in to two equal* size lists
             // Find the size of each list
@@ -471,14 +471,14 @@ public class MergeSort : SortAlgorithm {
             if (L[i].GetComponent<SortingElementBase>().Value <= R[j].GetComponent<SortingElementBase>().Value)
             {
                 arr[k] = L[i];
-                arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
+                //arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
                 yield return demoStepDuration;
                 i++;
             }
             else
             {
                 arr[k] = R[j];
-                arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
+                //arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
                 yield return demoStepDuration;
                 j++;
             }
@@ -490,7 +490,7 @@ public class MergeSort : SortAlgorithm {
         while (i < n1)
         {
             arr[k] = L[i];
-            arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
+            //arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
             yield return demoStepDuration;
             i++;
             k++;
@@ -501,7 +501,7 @@ public class MergeSort : SortAlgorithm {
         while (j < n2)
         {
             arr[k] = R[j];
-            arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
+            //arr[k].transform.position = GetComponent<AlgorithmManagerBase>().HolderPositions[k]; // testing
             yield return demoStepDuration;
             j++;
             k++;
@@ -511,10 +511,10 @@ public class MergeSort : SortAlgorithm {
 
     private GameObject CreateHolder(int q)
     {
-        Vector3 pos = GetComponent<AlgorithmManagerBase>().HolderPositions[q] + increaseHeight;
-        GameObject holder = Instantiate(holderPrefab, pos, Quaternion.identity);
-        holder.GetComponent<HolderBase>().Parent = gameObject;
-        return holder;
+        //Vector3 pos = GetComponent<AlgorithmManagerBase>().HolderPositions[q] + increaseHeight;
+        //GameObject holder = Instantiate(holderPrefab, pos, Quaternion.identity);
+        //holder.GetComponent<HolderBase>().Parent = gameObject;
+        return null;// holder;
     }
 
 

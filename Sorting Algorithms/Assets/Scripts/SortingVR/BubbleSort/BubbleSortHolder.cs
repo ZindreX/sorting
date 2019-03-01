@@ -30,7 +30,7 @@ public class BubbleSortHolder : HolderBase {
             currentHolding = collision.collider.GetComponent<BubbleSortElement>();
 
             // Tutorial
-            if (parent.GetComponent<AlgorithmManagerBase>().AlgorithmSettings.IsDemo())
+            if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
             {
                 if (currentHolding.IsCompare)
                     CurrentColor = UtilSort.COMPARE_COLOR;

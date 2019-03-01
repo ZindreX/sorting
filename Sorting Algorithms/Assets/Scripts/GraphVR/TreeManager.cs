@@ -111,9 +111,9 @@ public class TreeManager : GraphManager {
 
     private TreeNode GenerateNode(TreeNode parent, Vector3 pos, int treeLevel)
     {
-        GameObject node = Instantiate(gs.nodePrefab, pos, Quaternion.identity);
+        GameObject node = Instantiate(graphSettings.nodePrefab, pos, Quaternion.identity);
         node.AddComponent<TreeNode>();
-        node.GetComponent<TreeNode>().InitTreeNode(algorithm.AlgorithmName, parent, treeLevel);
+        node.GetComponent<TreeNode>().InitTreeNode(graphAlgorithm.AlgorithmName, parent, treeLevel);
         return node.GetComponent<TreeNode>();
     }
 

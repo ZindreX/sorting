@@ -40,9 +40,9 @@ public class GridManager : GraphManager {
             for (int x = 0; x < cols; x++)
             {
                 int xPos = startX - x * gridSpace;
-                GameObject node = Instantiate(gs.nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
+                GameObject node = Instantiate(graphSettings.nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
                 node.AddComponent<GridNode>();
-                node.GetComponent<GridNode>().InitGridNode(algorithm.AlgorithmName, new int[2] { z, x });
+                node.GetComponent<GridNode>().InitGridNode(graphAlgorithm.AlgorithmName, new int[2] { z, x });
                 gridNodes[z, x] = node.GetComponent<GridNode>();
             }
         }

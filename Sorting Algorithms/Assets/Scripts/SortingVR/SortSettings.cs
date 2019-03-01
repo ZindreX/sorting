@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SortSettings : MonoBehaviour {
+public class SortSettings : MonoBehaviour, ISettings {
 
     /* -------------------------------------------- Algorithm settings ----------------------------------------------------
      * Takes all input from the settings walls in the VR environment and forwards it to the main unit
      * 
     */
+
 
     // ************** DEBUGGING ****************
     [Header("Overall settings")]
@@ -40,30 +41,34 @@ public class SortSettings : MonoBehaviour {
     private TutorialSpeedEditor tutorialSpeed;
     private enum TutorialSpeedEditor { slow, normal, fast }
 
-    private void SettingsFromEditor()
+    // Algorithm settings
+    private int numberOfElements = 8, difficulty = Util.BEGINNER;
+    private string algorithm = Util.BUBBLE_SORT, teachingMode = Util.DEMO, sortingCase = UtilSort.NONE;
+    private float demoStepDuration;
+    private bool allowDuplicates = true;
+
+    [Space(2)]
+    [Header("Objects")]
+    [SerializeField]
+    private SortMain sortMain;
+
+    public void PrepareSettings()
     {
         switch ((int)algorithmEditor)
         {
-            case 0: algorithm = UtilSort.BUBBLE_SORT; break;
-            case 1: algorithm = UtilSort.INSERTION_SORT; break;
-            case 2: algorithm = UtilSort.BUCKET_SORT; break;
+            case 0: algorithm = Util.BUBBLE_SORT; break;
+            case 1: algorithm = Util.INSERTION_SORT; break;
+            case 2: algorithm = Util.BUCKET_SORT; break;
         }
 
         switch ((int)teachingModeEditor)
         {
-            case 0: teachingMode = UtilSort.DEMO; break;
-            case 1: teachingMode = UtilSort.STEP_BY_STEP; break;
-            case 2: teachingMode = UtilSort.USER_TEST; break;
+            case 0: teachingMode = Util.DEMO; break;
+            case 1: teachingMode = Util.STEP_BY_STEP; break;
+            case 2: teachingMode = Util.USER_TEST; break;
         }
 
         Debug.Log(">>>>> If any error(s) <--- check here");
-        //switch ((int)difficultyEditor)
-        //{
-        //    case 0: difficulty = UtilSort.BEGINNER; break;
-        //    case 1: difficulty = UtilSort.INTERMEDIATE; break;
-        //    case 2: difficulty = UtilSort.ADVANCED; break;
-        //    case 3: difficulty = UtilSort.EXAMINATION; break;
-        //}
         difficulty = (int)difficultyEditor + 1;
 
         switch ((int)sortingCaseEditor)
@@ -73,20 +78,13 @@ public class SortSettings : MonoBehaviour {
             case 2: sortingCase = UtilSort.WORST_CASE; break;
         }
 
-        //switch ((int)numberofElementsEditor)
-        //{
-        //    case 0: numberOfElements = 2; break;
-        //    case 1: numberOfElements = 4; break;
-        //    case 2: numberOfElements = 6; break;
-        //    case 3: numberOfElements = 8; break;
-        //}
         numberOfElements = ((int)numberofElementsEditor + 1) * 2;
 
         switch ((int)tutorialSpeed)
         {
-            case 0: algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(2f); break;
-            case 1: algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(1f); break;
-            case 2: algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(0.5f); break;
+            case 0: demoStepDuration = 2f; break;
+            case 1: demoStepDuration = 1f; break;
+            case 2: demoStepDuration = 0.5f; break;
         }
 
         allowDuplicates = allowDupEditor;
@@ -95,26 +93,13 @@ public class SortSettings : MonoBehaviour {
     }
     // ********** DEBUGGING **************
 
-    // Algorithm settings
-    private int numberOfElements = 8, difficulty = UtilSort.BEGINNER;
-    private string algorithm = UtilSort.BUBBLE_SORT, teachingMode = UtilSort.DEMO, sortingCase = UtilSort.NONE;
-    private float demoStepDuration;
-    private bool allowDuplicates = true;
 
     [Header("New setup")]
     [SerializeField]
-    private GameObject algorithmManagerObj, displayUnitManagerObj, settingsObj;
-
-    [Space(2)]
-    [Header("Prefabs")]
-    [SerializeField]
-    private GameObject sortingElementprefab, holderPrefab, bucketPrefab;
+    public GameObject sortAlgorithmsObj, displayUnitManagerObj, settingsObj;
 
     [Space(4)]
-    [Header("Old")]
-    [SerializeField]
-    private AlgorithmManagerBase algorithmManager;
-
+    [Header("Sub settings")]
     [SerializeField]
     private Blackboard blackboard;
 
@@ -127,25 +112,14 @@ public class SortSettings : MonoBehaviour {
     private void Start()
     {
         // Debugging
-        SettingsFromEditor();
+        //SettingsFromEditor();
         ChangeSubSettingsDisplay(TeachingMode);
-
-        // *** New stuff added
-        // Get sub settings title
-        //subSettingsTitle = settingsObj.GetComponentInChildren<>
-
-        // 
-    }
-
-    private void Update()
-    {
-        
     }
 
     public string Algorithm
     {
         get { return algorithm; }
-        set { algorithm = value; SetActiveAlgorithmManager(); blackboard.ChangeText(blackboard.TextIndex, "Algorithm: " + value); }
+        set { algorithm = value; blackboard.ChangeText(blackboard.TextIndex, "Algorithm: " + value); }
     }
 
     // Tutorial, Step-By-Step, or User Test
@@ -185,37 +159,41 @@ public class SortSettings : MonoBehaviour {
 
     public float DemoSpeed
     {
-        //get { return algorithmManager.Algorithm.Seconds; }
-        set { algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(value); blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
+        get { return demoStepDuration; }
+        set { demoStepDuration = value; blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
     }
-
 
     public void StartSorting()
     {
-        algorithmManager.InstantiateSetup();
+        sortMain.InstantiateSetup();
     }
 
     public void StopSorting()
     {
-        algorithmManager.DestroyAndReset();
+        sortMain.DestroyAndReset();
+    }
+
+    public void SetSettingsActive(bool active)
+    {
+        settingsObj.SetActive(active);
     }
 
     // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
     public bool IsDemo()
     {
-        return teachingMode == UtilSort.DEMO || teachingMode == UtilSort.STEP_BY_STEP;
+        return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
     }
 
     // Check if it's StepByStep (not used?)
     public bool IsStepByStep()
     {
-        return teachingMode == UtilSort.STEP_BY_STEP;
+        return teachingMode == Util.STEP_BY_STEP;
     }
 
     // Check if it's UserTest
     public bool IsUserTest()
     {
-        return teachingMode == UtilSort.USER_TEST;
+        return teachingMode == Util.USER_TEST;
     }
 
     // Changes the sub settings (middle wall w/buttons) based on the chosen teaching mode
@@ -223,19 +201,19 @@ public class SortSettings : MonoBehaviour {
     {
         switch (teachingMode)
         {
-            case UtilSort.DEMO:
+            case Util.DEMO:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Demo speed";
                 ActiveButtons(false, true);
                 break;
-            case UtilSort.STEP_BY_STEP:
+            case Util.STEP_BY_STEP:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "";
                 ActiveButtons(false, false);
-                algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(0.5f);
+                sortMain.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0.5f);
                 break;
-            case UtilSort.USER_TEST:
+            case Util.USER_TEST:
                 subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Difficulty";
                 ActiveButtons(true, false);
-                algorithmManager.Algorithm.DemoStepDuration = new WaitForSeconds(0.5f);
+                sortMain.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0.5f);
                 break;
         }
     }
@@ -258,35 +236,15 @@ public class SortSettings : MonoBehaviour {
         }
     }
 
-    /* Activate / deactivate algorithm managers based on user input
-     * 
-     * 
-    */
-    private void SetActiveAlgorithmManager()
+    public TeachingAlgorithm GetAlgorithm()
     {
         switch (algorithm)
         {
-            case UtilSort.BUBBLE_SORT:
-                //sortAlgorithm = sortingAlgorithms.GetComponent<BubbleSort>();
-                // sortingAlgorithms.GetComponent<BubbleSortManager>();
-
-                break;
-
-            case UtilSort.INSERTION_SORT:
-                // TODO
-                break;
-
-            case UtilSort.BUCKET_SORT:
-                // TODO
-                break;
-
-            default: Debug.LogError("'" + algorithm + "' not valid"); break;
+            case Util.BUBBLE_SORT: return sortAlgorithmsObj.GetComponent<BubbleSort>();
+            case Util.INSERTION_SORT: return sortAlgorithmsObj.GetComponent<InsertionSort>();
+            case Util.BUCKET_SORT: return sortAlgorithmsObj.GetComponent<BucketSort>();
+            default: Debug.LogError("'" + algorithm + "' not valid"); return null;
         }
-    }
-
-    public GameObject GetSortingAlgorithms()
-    {
-        return algorithmManagerObj;
     }
 
 }

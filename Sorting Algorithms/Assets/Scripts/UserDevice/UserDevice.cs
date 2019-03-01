@@ -112,7 +112,8 @@ public class UserDevice : MonoBehaviour {
             case UtilSort.PORTAL:
                 for (int x=0; x < alternativeButtons.Length; x++)
                 {
-                    alternativeButtons[x].GetComponentInChildren<TextMesh>().text = UtilSort.ConvertSceneBuildIndexToName(x);
+                    Debug.Log("Nani");
+                    //alternativeButtons[x].GetComponentInChildren<TextMesh>().text = UtilSort.ConvertSceneBuildIndexToName(x);
                 }
                 break;
         }

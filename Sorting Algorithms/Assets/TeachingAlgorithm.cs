@@ -15,7 +15,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected WaitForSeconds demoStepDuration;
     protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;
     protected PseudoCodeViewer pseudoCodeViewer;
-    protected MainManager mainManager;
 
     // Demo variables
     protected int i, j, k;
@@ -29,11 +28,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         AddSkipAbleInstructions();
     }
 
-    public MainManager MainManager
-    {
-        get { return mainManager; }
-        set { mainManager = value; }
-    }
 
     public WaitForSeconds DemoStepDuration
     {
@@ -61,7 +55,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public PseudoCodeViewer PseudoCodeViewer
     {
         get { return pseudoCodeViewer; }
-        set { pseudoCodeViewer = value; pseudoCodeViewer.InitPseudoCodeViewer(this, GetLineSpacing()); }
+        set { pseudoCodeViewer = value; pseudoCodeViewer.InitPseudoCodeViewer(this, GetLineSpacing(), GetLineRTDelta()); }
     }
 
     // Reach to line of code which are not mentioned in instructions
@@ -100,8 +94,13 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     public abstract string AlgorithmName { get; }
 
+
+    public abstract MainManager MainManager { get; set; }
+
     // Space between lines of code
     protected abstract float GetLineSpacing();
+
+    protected abstract Vector2 GetLineRTDelta();
 
     /* Collects one line of code at a time and rewrites it into pseudocode
      * - Sort: old system in use (todo: fix)

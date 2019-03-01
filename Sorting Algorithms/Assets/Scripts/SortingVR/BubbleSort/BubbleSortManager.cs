@@ -5,25 +5,15 @@ using UnityEngine;
 //[RequireComponent(typeof(BubbleSort))]
 public class BubbleSortManager : AlgorithmManagerBase {
 
+    [SerializeField]
     private BubbleSort bubbleSort;
 
-    protected override void Awake()
-    {
-        bubbleSort = GetComponent(typeof(BubbleSort)) as BubbleSort;
-        base.Awake();
-    }
-
-    protected override SortAlgorithm InstanceOfAlgorithm
-    {
-        get { return bubbleSort; }
-    }
-
-    protected override int MovesNeeded
+    public override int MovesNeeded
     {
         get { return 2; }
     }
 
-    protected override int PrepareNextInstruction(InstructionBase instruction)
+    public override int PrepareNextInstruction(InstructionBase instruction)
     {
         bool gotSortingElement = !bubbleSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
         bool noDestination = bubbleSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
@@ -34,8 +24,8 @@ public class BubbleSortManager : AlgorithmManagerBase {
             BubbleSortInstruction bubbleInstruction = (BubbleSortInstruction)instruction;
 
             // Find the sorting elements for this instruction
-            BubbleSortElement s1 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
-            BubbleSortElement s2 = elementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
+            BubbleSortElement s1 = sortMain.ElementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
+            BubbleSortElement s2 = sortMain.ElementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
             
             // Hand the instructions out
             s1.Instruction = bubbleInstruction;
@@ -49,10 +39,10 @@ public class BubbleSortManager : AlgorithmManagerBase {
             }
         }
 
-        if (algorithmSettings.Difficulty <= UtilSort.BEGINNER)
+        if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
         {
-            BeginnerWait = true;
-            StartCoroutine(sortAlgorithm.UserTestHighlightPseudoCode(instruction, gotSortingElement));
+            sortMain.BeginnerWait = true;
+            StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
 
         if (gotSortingElement && !noDestination)
@@ -60,7 +50,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
         return 2;
     }
 
-    protected override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
+    public override InstructionBase[] CopyFirstState(GameObject[] sortingElements)
     {
         BubbleSortInstruction[] elementStates = new BubbleSortInstruction[sortingElements.Length];
 

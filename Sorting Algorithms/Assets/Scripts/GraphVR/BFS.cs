@@ -282,7 +282,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
 
         yield return demoStepDuration;
-        mainManager.BeginnerWait = false;
+        graphMain.BeginnerWait = false;
         Debug.Log("Pseudocode highlighted!");
     }
     #endregion

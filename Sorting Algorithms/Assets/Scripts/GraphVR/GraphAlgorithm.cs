@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class GraphAlgorithm : TeachingAlgorithm {
 
     protected string graphStructure = "Graph";
+    protected GraphMain graphMain;
 
     // Demo variables
     protected Node node1, node2;
@@ -31,6 +32,12 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.END_IF_INST);
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.END_FOR_LOOP_INST);
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.END_WHILE_INST);
+    }
+
+    public override MainManager MainManager
+    {
+        get { return graphMain; }
+        set { graphMain = (GraphMain)value; }
     }
 
     public string GraphStructure
@@ -69,6 +76,11 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected override float GetLineSpacing()
     {
         return UtilGraph.SPACE_BETWEEN_CODE_LINES;
+    }
+
+    protected override Vector2 GetLineRTDelta()
+    {
+        return new Vector2(10, 2);
     }
 
     public override void ResetSetup()
