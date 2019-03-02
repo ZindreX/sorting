@@ -47,6 +47,7 @@ public abstract class MainManager : MonoBehaviour {
 
 
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
+    protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
 
     /* --------------------------------------- Demo ---------------------------------------
      * - Gives a visual presentation of <algorithm>

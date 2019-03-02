@@ -510,12 +510,12 @@ Prefab:
     - target: {fileID: 114911391959875672, guid: 1f156b2565e9c2f4fa6c67557ef59cf1,
         type: 2}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224119467972406616, guid: 1f156b2565e9c2f4fa6c67557ef59cf1,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 6.79
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114911391959875672, guid: 1f156b2565e9c2f4fa6c67557ef59cf1,
         type: 2}
@@ -551,6 +551,11 @@ Prefab:
         type: 2}
       propertyPath: m_margin.w
       value: 1.3920898
+      objectReference: {fileID: 0}
+    - target: {fileID: 114911391959875672, guid: 1f156b2565e9c2f4fa6c67557ef59cf1,
+        type: 2}
+      propertyPath: m_enableWordWrapping
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f156b2565e9c2f4fa6c67557ef59cf1, type: 2}
@@ -717,11 +722,9 @@ MonoBehaviour:
   symmetricDirectedEdgePrefab: {fileID: 1434581048115598, guid: 0890964e700f0f048903c3dc19b2ce9e,
     type: 2}
   graphAlgorithmObj: {fileID: 157921380}
-  pseudoCodeViewer: {fileID: 548546077}
-  listVisual: {fileID: 1415126236}
   teachingModeEditor: 0
   graphStructureEditor: 0
-  useAlgorithmEditor: 3
+  useAlgorithmEditor: 2
   algorithmSpeedEditor: 2
   edgeTypeEditor: 1
   edgeModeEditor: 1
@@ -762,6 +765,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2910371e242b11c4eb5b00b4ce6f099e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphAlgorithmObj: {fileID: 157921380}
+  pseudoCodeViewer: {fileID: 548546077}
+  listVisual: {fileID: 1415126236}
 --- !u!114 &591449221
 MonoBehaviour:
   m_ObjectHideFlags: 0

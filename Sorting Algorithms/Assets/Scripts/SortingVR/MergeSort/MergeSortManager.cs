@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MergeSort))]
+//[RequireComponent(typeof(MergeSort))]
 public class MergeSortManager : AlgorithmManagerBase {
 
     private MergeSort mergeSort;

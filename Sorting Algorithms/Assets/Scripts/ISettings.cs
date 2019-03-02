@@ -5,7 +5,7 @@ using UnityEngine;
 public interface ISettings {
 
     void PrepareSettings();
-    TeachingAlgorithm GetAlgorithm();
+    //TeachingAlgorithm GetAlgorithm();
 
 
 }

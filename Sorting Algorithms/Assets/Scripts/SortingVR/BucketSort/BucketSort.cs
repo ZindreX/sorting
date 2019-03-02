@@ -19,8 +19,8 @@ public class BucketSort : SortAlgorithm {
 
     protected override void Awake()
     {
-        bucketSortManager = (BucketSortManager)GetComponentInParent<SortMain>().AlgorithmManagerBase;
         base.Awake();
+        bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
     }
 
     public override string AlgorithmName

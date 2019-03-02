@@ -14,7 +14,16 @@ public class GraphMain : MainManager {
     private UserTestManager userTestManager;
     private PositionManager posManager;
 
-    private bool backtracking = false;
+    [SerializeField]
+    private GameObject graphAlgorithmObj;
+
+    [SerializeField]
+    private PseudoCodeViewer pseudoCodeViewer;
+
+    [SerializeField]
+    private ListVisual listVisual;
+
+    private bool backtracking = false, userTestGoalActive = false;
 
 
     protected virtual void Awake()
@@ -28,9 +37,10 @@ public class GraphMain : MainManager {
         graphSettings.PrepareSettings();
 
         // >>> Algorithm
-        graphAlgorithm = (GraphAlgorithm)graphSettings.GetAlgorithm();
-        algorithmName = graphAlgorithm.AlgorithmName;
+        algorithmName = graphSettings.UseAlgorithm;
+        graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
         graphAlgorithm.MainManager = this;
+        graphAlgorithm.ListVisual = listVisual;
         graphAlgorithm.GraphStructure = graphSettings.Graphstructure;
         graphAlgorithm.DemoStepDuration = new WaitForSeconds(graphSettings.AlgorithmSpeed);
         
@@ -39,21 +49,19 @@ public class GraphMain : MainManager {
         graphAlgorithm.VisitLeftFirst = graphSettings.VisitLeftFirst;
 
         // >>> Extra learning material
-        graphAlgorithm.ListVisual = graphSettings.ListVisual;
-
         // Setup graph manager + Activate/deactivate components (Grid / Tree / Random)
         graphManager = ActivateDeactivateGraphComponents(graphSettings.Graphstructure);
         graphManager.InitGraphManager(graphSettings, graphAlgorithm, graphSettings.RNGDict());
 
         // Pseudocode
-        graphAlgorithm.PseudoCodeViewer = graphSettings.PseudoCodeViewer;
+        graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer;
 
     }
 
     // Use this for initialization
     void Start()
     {
-        graphSettings.PseudoCodeViewer.PseudoCodeSetup();
+        pseudoCodeViewer.PseudoCodeSetup();
 
         // Get variables for graph setup
         graphManager.InitGraph(graphSettings.GraphSetup());
@@ -96,17 +104,17 @@ public class GraphMain : MainManager {
         }
         else if (graphSettings.IsUserTest())
         {
+            // If a node is set to be visited or traversed, wait until it has been achieved
+            if (userTestGoalActive && !posManager.PlayerWithinGoalPosition)
+                return;
+            else
+                userTestGoalActive = false;
+
             // First check if user test setup is complete
             if (userTestManager.HasInstructions() && !beginnerWait)
             {
-                //// Check if user has done a move, and is ready for next round
-                //if (elementManager.CurrentMoving != null)
-                //{
-                //    // Dont do anything while moving element
-                //} else if
                 if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
                 {
-                    Debug.Log("Ready for next instruction");
                     // Reset counter
                     userTestManager.ReadyForNext = 0;
 
@@ -118,7 +126,6 @@ public class GraphMain : MainManager {
                     }
                     else
                     {
-                        Debug.Log("Go for next instruction");
                         // Still some elements not sorted, so go on to next round
                         bool hasInstruction = userTestManager.IncrementToNextInstruction();
 
@@ -130,7 +137,7 @@ public class GraphMain : MainManager {
 
                     }
                 }
-                // displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
+                //displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
             }
         }
     }
@@ -167,6 +174,38 @@ public class GraphMain : MainManager {
         }
         return null;
     }
+
+    protected override TeachingAlgorithm GrabAlgorithmFromObj()
+    {
+        listVisual.SetAlgorithmSpeed = graphSettings.AlgorithmSpeed;
+        switch (algorithmName)
+        {
+            case Util.BFS:
+                //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
+                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
+                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
+                listVisual.SetListType(Util.QUEUE);
+                return graphAlgorithmObj.GetComponent<BFS>();
+
+            case Util.DFS:
+            case Util.DFS_RECURSIVE:
+                //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
+                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
+                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
+                listVisual.SetListType(Util.STACK);
+                return graphAlgorithmObj.GetComponent<DFS>();
+
+            case Util.DIJKSTRA:
+                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
+                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
+                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
+                listVisual.SetListType(Util.PRIORITY_LIST);
+                return graphAlgorithmObj.GetComponent<Dijkstra>();
+
+            default: return null;
+        }
+    }
+
 
     public override void PerformAlgorithmDemo()
     {

@@ -25,7 +25,7 @@ public class SortMain : MainManager {
     protected AlgorithmUserController algorithmUserController;
 
     [SerializeField]
-    private GameObject sortingTableObj;
+    private GameObject sortAlgorithmsObj, displayUnitManagerObj, sortingTableObj;
 
     private Vector3[] holderPositions;
 
@@ -43,7 +43,7 @@ public class SortMain : MainManager {
         
         // >>> Algorithm
         algorithmName = sortSettings.Algorithm;
-        sortAlgorithm = (SortAlgorithm)sortSettings.GetAlgorithm();
+        sortAlgorithm = (SortAlgorithm)GrabAlgorithmFromObj();
         sortAlgorithm.MainManager = this;
         sortAlgorithm.DemoStepDuration = new WaitForSeconds(sortSettings.DemoSpeed);
 
@@ -52,7 +52,7 @@ public class SortMain : MainManager {
         algorithmManagerBase.InitSortingManager(this);
 
         // >>> Extra learning material
-        displayUnitManager = sortSettings.displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
+        displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
         sortAlgorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
         displayUnitManager.SetAlgorithmForPseudo(sortAlgorithm);
 
@@ -230,10 +230,11 @@ public class SortMain : MainManager {
         switch (sortAlgorithm)
         {
             case Util.BUBBLE_SORT:
-                GetComponentInChildren<BubbleSortManager>().enabled = true;
+                GetComponentInChildren<BubbleSortManager>().enabled = true; //todo: change to a list instead
                 GetComponentInChildren<InsertionSortManager>().enabled = false;
                 GetComponentInChildren<BucketSortManager>().enabled = false;
                 GetComponentInChildren<BucketManager>().enabled = false;
+                GetComponentInChildren<MergeSortManager>().enabled = false;
                 return GetComponentInChildren<BubbleSortManager>();
 
             case Util.INSERTION_SORT:
@@ -241,6 +242,7 @@ public class SortMain : MainManager {
                 GetComponentInChildren<InsertionSortManager>().enabled = true;
                 GetComponentInChildren<BucketSortManager>().enabled = false;
                 GetComponentInChildren<BucketManager>().enabled = false;
+                GetComponentInChildren<MergeSortManager>().enabled = false;
                 return GetComponentInChildren<InsertionSortManager>();
 
             case Util.BUCKET_SORT:
@@ -248,11 +250,32 @@ public class SortMain : MainManager {
                 GetComponentInChildren<InsertionSortManager>().enabled = false;
                 GetComponentInChildren<BucketSortManager>().enabled = true;
                 GetComponentInChildren<BucketManager>().enabled = true;
+                GetComponentInChildren<MergeSortManager>().enabled = false;
                 return GetComponentInChildren<BucketSortManager>();
+
+            case Util.MERGE_SORT:
+                GetComponentInChildren<BubbleSortManager>().enabled = false;
+                GetComponentInChildren<InsertionSortManager>().enabled = false;
+                GetComponentInChildren<BucketSortManager>().enabled = false;
+                GetComponentInChildren<BucketManager>().enabled = false;
+                GetComponentInChildren<MergeSortManager>().enabled = true;
+                return GetComponentInChildren<MergeSortManager>();
 
             default: Debug.Log("Sorting algorithm '" + sortAlgorithm + "' not found."); break;
         }
         return null;
+    }
+
+    protected override TeachingAlgorithm GrabAlgorithmFromObj()
+    {
+        switch (algorithmName)
+        {
+            case Util.BUBBLE_SORT: return sortAlgorithmsObj.GetComponent<BubbleSort>();
+            case Util.INSERTION_SORT: return sortAlgorithmsObj.GetComponent<InsertionSort>();
+            case Util.BUCKET_SORT: return sortAlgorithmsObj.GetComponent<BucketSort>();
+            case Util.MERGE_SORT: return sortAlgorithmsObj.GetComponent<MergeSort>();
+            default: Debug.LogError("'" + algorithmName + "' not valid"); return null;
+        }
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------

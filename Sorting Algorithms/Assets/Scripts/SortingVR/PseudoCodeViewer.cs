@@ -49,6 +49,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             TextMeshPro codelinePro = codeLine.GetComponent<TextMeshPro>();
             //codelinePro.font = startPosAndMat.font; //codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
             codelinePro.fontSize = startPosAndMat.fontSize;
+            // fix overflow
             
             // Rectangle shape
             RectTransform rt = codelinePro.rectTransform;
@@ -65,11 +66,11 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
 
         // Move/extend blackboard up if the pseudocode goes below the floor
-        //float codeBelowFloor = codeLines[numberOfLines - 1].transform.position.y;
-        //if (codeBelowFloor < 0.342f)
-        //{
-        //    transform.position += new Vector3(0f, 0.5f - codeBelowFloor, 0f);
-        //}
+        float codeBelowFloor = codeLines[numberOfLines - 1].transform.position.y;
+        if (codeBelowFloor < 0.342f)
+        {
+            transform.position += new Vector3(0f, 0.5f - codeBelowFloor, 0f);
+        }
     }
 
     public TextMeshPro CodeLine(int index)

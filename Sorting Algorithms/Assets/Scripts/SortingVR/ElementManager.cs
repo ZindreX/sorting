@@ -42,6 +42,8 @@ public class ElementManager : MonoBehaviour, IManager {
         if (containsElements)
             return;
 
+        Debug.Log("OBS!!!!! Fix back to random here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        int val = 0;
         sortingElements = new GameObject[numberOfElements]; // Util.CreateObjects(sortingElementPrefab, numberOfElements, positions, gameObject);
         for (int x = 0; x < numberOfElements; x++)
         {
@@ -54,7 +56,7 @@ public class ElementManager : MonoBehaviour, IManager {
                 case UtilSort.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
-            sortingElements[x].GetComponent<SortingElementBase>().Value = Random.Range(0, UtilSort.MAX_VALUE);
+            sortingElements[x].GetComponent<SortingElementBase>().Value = val++;//Random.Range(0, UtilSort.MAX_VALUE);
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
 
         }
@@ -77,6 +79,9 @@ public class ElementManager : MonoBehaviour, IManager {
 
         sortingElements = new GameObject[numberOfElements];
 
+        Debug.Log("OBS!!!!! Fix back to random here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        int val = 1;
+
         for (int x = 0; x < numberOfElements; x++)
         {
             int newValue = Random.Range(0, UtilSort.MAX_VALUE);
@@ -95,7 +100,7 @@ public class ElementManager : MonoBehaviour, IManager {
                 case UtilSort.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
-            sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;
+            sortingElements[x].GetComponent<SortingElementBase>().Value = val++; //newValue;
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
         }
 

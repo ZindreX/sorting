@@ -9,12 +9,6 @@ public class GraphSettings : MonoBehaviour, ISettings {
     [SerializeField]
     private GameObject graphAlgorithmObj;
 
-    [SerializeField]
-    private PseudoCodeViewer pseudoCodeViewer;
-
-    [SerializeField]
-    private ListVisual listVisual;
-
     [Header("Overall settings")]
     [SerializeField]
     private TeachingModeEditor teachingModeEditor;
@@ -253,43 +247,4 @@ public class GraphSettings : MonoBehaviour, ISettings {
         return rngDict;
     }
 
-    public PseudoCodeViewer PseudoCodeViewer
-    {
-        get { return pseudoCodeViewer; }
-    }
-
-    public ListVisual ListVisual
-    {
-        get { return listVisual; }
-    }
-
-    public TeachingAlgorithm GetAlgorithm()
-    {
-        listVisual.SetAlgorithmSpeed = algorithmSpeed;
-        switch (useAlgorithm)
-        {
-            case Util.BFS:
-                //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
-                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
-                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
-                listVisual.SetListType(Util.QUEUE);
-                return graphAlgorithmObj.GetComponent<BFS>();
-
-            case Util.DFS: case Util.DFS_RECURSIVE:
-                //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
-                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
-                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
-                listVisual.SetListType(Util.STACK);
-                return graphAlgorithmObj.GetComponent<DFS>();
-
-            case Util.DIJKSTRA:
-                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
-                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
-                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
-                listVisual.SetListType(Util.PRIORITY_LIST);
-                return graphAlgorithmObj.GetComponent<Dijkstra>();
-
-            default: return null;
-        }
-    }
 }

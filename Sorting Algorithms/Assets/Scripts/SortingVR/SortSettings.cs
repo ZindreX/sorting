@@ -14,7 +14,7 @@ public class SortSettings : MonoBehaviour, ISettings {
     [Header("Overall settings")]
     [SerializeField]
     private AlgorithmEditor algorithmEditor;
-    private enum AlgorithmEditor { BubbleSort, InsertionSort, BucketSort }
+    private enum AlgorithmEditor { BubbleSort, InsertionSort, BucketSort, MergeSort }
 
     [SerializeField]
     private TeachingModeEditor teachingModeEditor;
@@ -59,6 +59,7 @@ public class SortSettings : MonoBehaviour, ISettings {
             case 0: algorithm = Util.BUBBLE_SORT; break;
             case 1: algorithm = Util.INSERTION_SORT; break;
             case 2: algorithm = Util.BUCKET_SORT; break;
+            case 3: algorithm = Util.MERGE_SORT; break;
         }
 
         switch ((int)teachingModeEditor)
@@ -96,7 +97,7 @@ public class SortSettings : MonoBehaviour, ISettings {
 
     [Header("New setup")]
     [SerializeField]
-    public GameObject sortAlgorithmsObj, displayUnitManagerObj, settingsObj;
+    public GameObject settingsObj;
 
     [Space(4)]
     [Header("Sub settings")]
@@ -233,17 +234,6 @@ public class SortSettings : MonoBehaviour, ISettings {
         {
             obj.SetActive(speedActive);
             //obj.active = speedActive;
-        }
-    }
-
-    public TeachingAlgorithm GetAlgorithm()
-    {
-        switch (algorithm)
-        {
-            case Util.BUBBLE_SORT: return sortAlgorithmsObj.GetComponent<BubbleSort>();
-            case Util.INSERTION_SORT: return sortAlgorithmsObj.GetComponent<InsertionSort>();
-            case Util.BUCKET_SORT: return sortAlgorithmsObj.GetComponent<BucketSort>();
-            default: Debug.LogError("'" + algorithm + "' not valid"); return null;
         }
     }
 

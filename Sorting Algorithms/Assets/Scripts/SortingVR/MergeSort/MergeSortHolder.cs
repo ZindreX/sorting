@@ -4,6 +4,26 @@ using UnityEngine;
 
 public class MergeSortHolder : HolderBase {
 
+    private int holdingNumberOfElements;
+
+    private void Awake()
+    {
+        holdingNumberOfElements = 0;
+    }
+
+    public int HoldingNumberOfElements
+    {
+        get { return holdingNumberOfElements; }
+        set { holdingNumberOfElements = value; }
+    }
+
+    public Vector3 NextElementPos()
+    {
+        float yPos = holdingNumberOfElements * 0.2f;
+        return new Vector3(0f, yPos, 0f);
+    }
+
+
     protected override void UpdateColorOfHolder() // copied from insertionsort+/-: fix
     {
         if (!currentHolding.StandingInCorrectHolder)

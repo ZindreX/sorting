@@ -1791,6 +1791,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sortSettings: {fileID: 821729421}
   algorithmUserController: {fileID: 1562300766}
+  sortAlgorithmsObj: {fileID: 999074476}
+  displayUnitManagerObj: {fileID: 1991674846}
   sortingTableObj: {fileID: 385220746}
 --- !u!4 &236630475
 Transform:
@@ -3396,6 +3398,34 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 438991492}
   m_CullTransparentMesh: 0
+--- !u!1 &441062745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 441062746}
+  m_Layer: 0
+  m_Name: splitList1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &441062746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 441062745}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1869195593}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &443499760
 GameObject:
   m_ObjectHideFlags: 0
@@ -7087,16 +7117,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbc2cc9755196a4395056086359d527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  algorithmEditor: 2
-  teachingModeEditor: 1
+  algorithmEditor: 3
+  teachingModeEditor: 0
   difficultyEditor: 0
-  numberofElementsEditor: 1
+  numberofElementsEditor: 3
   allowDupEditor: 0
   sortingCaseEditor: 0
-  tutorialSpeed: 2
+  tutorialSpeed: 1
   sortMain: {fileID: 236630474}
-  sortAlgorithmsObj: {fileID: 999074476}
-  displayUnitManagerObj: {fileID: 1991674846}
   settingsObj: {fileID: 821729419}
   blackboard: {fileID: 1591023425}
   subSettingsTitle: {fileID: 1893572626}
@@ -8439,6 +8467,7 @@ GameObject:
   - component: {fileID: 999074480}
   - component: {fileID: 999074479}
   - component: {fileID: 999074478}
+  - component: {fileID: 999074481}
   m_Layer: 0
   m_Name: SortingAlgoritms
   m_TagString: Untagged
@@ -8495,6 +8524,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff01745a44766ba4287183f76428c09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &999074481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 999074476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f795a2cfa9dca4aa7969e9557678ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holderPrefab: {fileID: 1322738923561488, guid: 9cc9deae0773eeb428dc2d323a977516,
+    type: 2}
 --- !u!1 &1011757663
 GameObject:
   m_ObjectHideFlags: 0
@@ -9970,6 +10012,34 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1201343194}
   m_CullTransparentMesh: 0
+--- !u!1 &1217031627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1217031628}
+  m_Layer: 0
+  m_Name: splitList2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1217031628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1217031627}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1869195593}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1241011594
 GameObject:
   m_ObjectHideFlags: 0
@@ -13961,6 +14031,36 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1824611617}
   m_CullTransparentMesh: 0
+--- !u!1 &1869195592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1869195593}
+  m_Layer: 0
+  m_Name: MergeSortPointers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1869195593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1869195592}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 441062746}
+  - {fileID: 1217031628}
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1869326729
 GameObject:
   m_ObjectHideFlags: 0
@@ -15060,6 +15160,7 @@ GameObject:
   - component: {fileID: 2121649986}
   - component: {fileID: 2121649985}
   - component: {fileID: 2121649984}
+  - component: {fileID: 2121649988}
   m_Layer: 0
   m_Name: AlgorithmManagers
   m_TagString: Untagged
@@ -15134,6 +15235,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bubbleSort: {fileID: 999074480}
+--- !u!114 &2121649988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2121649982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20d6e3f69bd7a904e817a2be2ceea0e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2128787188
 GameObject:
   m_ObjectHideFlags: 0
