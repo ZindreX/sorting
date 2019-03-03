@@ -49,6 +49,11 @@ public class SortSettings : SettingsBase {
     [SerializeField]
     private SortMain sortMain;
 
+    private void Awake()
+    {
+        PrepareSettings();
+    }
+
     public override void PrepareSettings()
     {
         switch ((int)algorithmEditor)
@@ -86,7 +91,7 @@ public class SortSettings : SettingsBase {
 
         allowDuplicates = allowDupEditor;
 
-        Debug.Log("Teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
+        Debug.Log("Algorithm: " + algorithm + ", teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
     }
     // ********** DEBUGGING **************
 
@@ -116,6 +121,7 @@ public class SortSettings : SettingsBase {
     protected override MainManager MainManager
     {
         get { return sortmain; }
+        set { sortmain = (SortMain)value; }
     }
 
     //public string Algorithm
@@ -135,28 +141,54 @@ public class SortSettings : SettingsBase {
     public int Difficulty
     {
         get { return difficulty; }
-        set { difficulty = value; blackboard.ChangeText(blackboard.TextIndex, "Difficulty: " + value); }
+        set { difficulty = value; FillTooltips("Difficulty: " + value);  blackboard.ChangeText(blackboard.TextIndex, "Difficulty: " + value); }
     }
 
     // Number of elements used
     public int NumberOfElements
     {
         get { return numberOfElements; }
-        set { numberOfElements = value; blackboard.ChangeText(blackboard.TextIndex, "Number of elements: " + value); }
+        set { numberOfElements = value; FillTooltips("Number of elements: " + value); blackboard.ChangeText(blackboard.TextIndex, "Number of elements: " + value); }
+    }
+
+    public void IncreaseNumberOfElements()
+    {
+        if (numberOfElements < UtilSort.MAX_NUMBER_OF_ELEMENTS)
+        {
+            numberOfElements += 1;
+            FillTooltips("#Elements: " + numberOfElements);
+        }
+        else
+        {
+            FillTooltips("Can't add more elements!");
+        }
+    }
+
+    public void ReduceNumberOfElements()
+    {
+        if (numberOfElements > 2)
+        {
+            numberOfElements -= 1;
+            FillTooltips("#Elements: " + numberOfElements);
+        }
+        else
+        {
+            FillTooltips("Minimum 2 elements.");
+        }
     }
 
     // Duplicates can occour in the problem sets (not implemented yet)
     public bool Duplicates
     {
         get { return allowDuplicates; }
-        set { allowDuplicates = value; blackboard.ChangeText(blackboard.TextIndex, "Duplicates: " + UtilSort.EnabledToString(value)); }
+        set { allowDuplicates = value; FillTooltips("Duplicates: " + value); blackboard.ChangeText(blackboard.TextIndex, "Duplicates: " + UtilSort.EnabledToString(value)); }
     }
 
     // None, Best-case, Worst-case (not implemented yet)
     public string SortingCase
     {
         get { return sortingCase; }
-        set { sortingCase = value; blackboard.ChangeText(blackboard.TextIndex, "Case activated: " + value); }
+        set { sortingCase = value; FillTooltips("Sorting case: " + value); blackboard.ChangeText(blackboard.TextIndex, "Case activated: " + value); }
     }
 
     //public float DemoSpeed

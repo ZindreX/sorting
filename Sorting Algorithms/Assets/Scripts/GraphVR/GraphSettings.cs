@@ -173,6 +173,7 @@ public class GraphSettings : SettingsBase {
     protected override MainManager MainManager
     {
         get { return graphMain; }
+        set { graphMain = (GraphMain)value; }
     }
 
     public string Graphstructure

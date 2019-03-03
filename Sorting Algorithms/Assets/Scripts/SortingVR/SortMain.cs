@@ -226,7 +226,7 @@ public class SortMain : MainManager {
     {
         // From awake
         // Prepare settings from editor (debugging)
-        sortSettings.PrepareSettings();
+        //sortSettings.PrepareSettings();
 
         // >>> Algorithm
         algorithmName = sortSettings.Algorithm;

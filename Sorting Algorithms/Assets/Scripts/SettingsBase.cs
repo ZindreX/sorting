@@ -13,7 +13,7 @@ public abstract class SettingsBase : MonoBehaviour {
     //public MainManager mainManager;
 
     [SerializeField]
-    protected Material activeButtonMaterial, inactiveButtonMaterial;
+    protected Material activeButtonMaterial, inactiveButtonMaterial, offButtonMaterial;
 
     [SerializeField]
     protected TextMeshPro title, tooltips;
@@ -29,7 +29,7 @@ public abstract class SettingsBase : MonoBehaviour {
 
     //
     public abstract void PrepareSettings();
-    protected abstract MainManager MainManager { get; }
+    protected abstract MainManager MainManager { get; set; }
 
     public string Algorithm
     {
@@ -87,14 +87,20 @@ public abstract class SettingsBase : MonoBehaviour {
 
     public void FillTitle(string title)
     {
-        this.title.text = title;
-        tooltips.text = "";
+        if (title != null && tooltips != null)
+        {
+            this.title.text = title;
+            tooltips.text = "";
+        }
     }
 
     public void FillTooltips(string text)
     {
-        title.text = "";
-        tooltips.text = text;
+        if (title != null && tooltips != null)
+        {
+            title.text = "";
+            tooltips.text = text;
+        }
     }
 
 }
