@@ -21,6 +21,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     void Awake()
     {
         holderID = HOLDER_NR++;
+        name = MyRole();
     }
 
     void Update()

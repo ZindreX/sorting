@@ -2,29 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GraphSettings : MonoBehaviour, ISettings {
+public class GraphSettings : SettingsBase {
 
-    public GameObject nodePrefab, undirectedEdgePrefab, directedEdgePrefab, symmetricDirectedEdgePrefab;
+    [Space(5)]
+    [Header("Graph prefabs")]
+    public GameObject nodePrefab;
+    public GameObject undirectedEdgePrefab;
+    public GameObject directedEdgePrefab;
+    public GameObject symmetricDirectedEdgePrefab;
 
     [SerializeField]
     private GameObject graphAlgorithmObj;
 
-    [Header("Overall settings")]
     [SerializeField]
-    private TeachingModeEditor teachingModeEditor;
-    private enum TeachingModeEditor { Demo, UserTest }
+    private GraphMain graphMain;
 
+    [Space(2)]
+    [Header("Graph settings")]
     [SerializeField]
     private GraphStructureEditor graphStructureEditor;
     private enum GraphStructureEditor { Grid, Tree, Random }
 
     [SerializeField]
-    private UseAlgorithmEditor useAlgorithmEditor;
-    private enum UseAlgorithmEditor { BFS, DFS, DFSRecursive, Dijkstra }
-
-    [SerializeField]
-    private AlgorithmSpeedEditor algorithmSpeedEditor;
-    private enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
+    private AlgorithmEditor algorithmEditor;
+    private enum AlgorithmEditor { BFS, DFS, DFSRecursive, Dijkstra }
 
     [Space(2)]
     [Header("Edge settings")]
@@ -98,12 +99,11 @@ public class GraphSettings : MonoBehaviour, ISettings {
     [SerializeField]
     private int buildEdgeChance = 1;
 
-    private float algorithmSpeed;
-    private string teachingMode, graphStructure, edgeType, edgeMode, useAlgorithm;
+    private string graphStructure, edgeType, edgeMode;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, levelDepthLength;
 
-    public void PrepareSettings()
+    public override void PrepareSettings()
     {
         switch ((int)teachingModeEditor)
         {
@@ -111,6 +111,23 @@ public class GraphSettings : MonoBehaviour, ISettings {
             case 1: teachingMode = Util.USER_TEST; break;
         }
 
+        switch ((int)algorithmEditor)
+        {
+            case 0: algorithm = Util.BFS; break;
+            case 1: algorithm = Util.DFS; break;
+            case 2: algorithm = Util.DFS_RECURSIVE; break;
+            case 3: algorithm = Util.DIJKSTRA; break;
+        }
+
+        switch ((int)algorithmSpeedEditor)
+        {
+            case 0: algorithmSpeed = 3f; break;
+            case 1: algorithmSpeed = 1f; break;
+            case 2: algorithmSpeed = 0.25f; break;
+            case 4: algorithmSpeed = 0f; break;
+        }
+
+        // Graph
         switch ((int)graphStructureEditor)
         {
             case 0: graphStructure = UtilGraph.GRID_GRAPH; break;
@@ -132,22 +149,6 @@ public class GraphSettings : MonoBehaviour, ISettings {
             case 3: edgeMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
         }
 
-        switch ((int)useAlgorithmEditor)
-        {
-            case 0: useAlgorithm = Util.BFS; break;
-            case 1: useAlgorithm = Util.DFS; break;
-            case 2: useAlgorithm = Util.DFS_RECURSIVE; break;
-            case 3: useAlgorithm = Util.DIJKSTRA; break;
-        }
-
-        switch ((int)algorithmSpeedEditor)
-        {
-            case 0: algorithmSpeed = 3f; break;
-            case 1: algorithmSpeed = 1f; break;
-            case 2: algorithmSpeed = 0.25f; break;
-            case 4: algorithmSpeed = 0f; break;
-        }
-
         if (graphStructure.Equals(UtilGraph.GRID_GRAPH))
         {
             gridRows = (int)gridRowsEditor + 1;
@@ -165,36 +166,31 @@ public class GraphSettings : MonoBehaviour, ISettings {
             nTree = ((int)nTreeEditor + 2);
             levelDepthLength = ((int)levelDepthLengthEditor + 2) + (int)levelDepthLengthEditor * 2;
         }
+
+        Debug.Log("Teachingmode: " + teachingMode + ", algorithm: " + algorithm + ", graph: " + graphStructure);
     }
 
-    public string TeachingMode
+    protected override MainManager MainManager
     {
-        get { return teachingMode; }
+        get { return graphMain; }
     }
 
     public string Graphstructure
     {
         get { return graphStructure; }
+        set { graphStructure = value; FillTooltips("Graph structure: " + value); }
     }
 
     public string EdgeType
     {
         get { return edgeType; }
+        set { edgeType = value; FillTooltips("Edge type: " + value); }
     }
 
     public string EdgeMode
     {
         get { return edgeMode; }
-    }
-
-    public string UseAlgorithm
-    {
-        get { return useAlgorithm; }
-    }
-
-    public float AlgorithmSpeed
-    {
-        get { return algorithmSpeed; }
+        set { edgeMode = value; FillTooltips("Edge mode: " + value); }
     }
 
     public int[] StartNode()
@@ -210,21 +206,13 @@ public class GraphSettings : MonoBehaviour, ISettings {
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOneToAll; }
+        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); }
     }
 
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }
-    }
-
-    public bool IsDemo()
-    {
-        return teachingMode == Util.DEMO;
-    }
-
-    public bool IsUserTest()
-    {
-        return teachingMode == Util.USER_TEST;
+        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); }
     }
 
     public int[] GraphSetup()
@@ -246,5 +234,4 @@ public class GraphSettings : MonoBehaviour, ISettings {
         rngDict.Add(UtilGraph.BUILD_EDGE_CHANCE, buildEdgeChance);
         return rngDict;
     }
-
 }

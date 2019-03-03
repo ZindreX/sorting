@@ -11,7 +11,7 @@ public class ElementManager : MonoBehaviour, IManager {
     */
 
     [SerializeField]
-    private GameObject sortingElementPrefab;
+    private GameObject sortingElementPrefab, sortingTableElementsObj;
     private GameObject[] sortingElements;
 
     private SortingElementBase currentMoving;
@@ -37,7 +37,7 @@ public class ElementManager : MonoBehaviour, IManager {
     }
 
     // Creation without rules
-    public void CreateObjects(int numberOfElements, Vector3[] positions)
+    public void CreateObjects(int numberOfElements, Vector3[] positions) // NOT USED?
     {
         if (containsElements)
             return;
@@ -58,6 +58,7 @@ public class ElementManager : MonoBehaviour, IManager {
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = val++;//Random.Range(0, UtilSort.MAX_VALUE);
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
+            sortingElements[x].transform.parent = sortingTableElementsObj.transform;
 
         }
 
@@ -80,7 +81,7 @@ public class ElementManager : MonoBehaviour, IManager {
         sortingElements = new GameObject[numberOfElements];
 
         Debug.Log("OBS!!!!! Fix back to random here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        int val = 1;
+        int val = 8;
 
         for (int x = 0; x < numberOfElements; x++)
         {
@@ -100,8 +101,9 @@ public class ElementManager : MonoBehaviour, IManager {
                 case UtilSort.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
-            sortingElements[x].GetComponent<SortingElementBase>().Value = val++; //newValue;
+            sortingElements[x].GetComponent<SortingElementBase>().Value = val--; //newValue;
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
+            sortingElements[x].transform.parent = sortingTableElementsObj.transform;
         }
 
         if (sortingCase != UtilSort.NONE)

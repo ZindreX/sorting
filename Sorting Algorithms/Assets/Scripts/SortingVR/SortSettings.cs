@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SortSettings : MonoBehaviour, ISettings {
+public class SortSettings : SettingsBase {
 
     /* -------------------------------------------- Algorithm settings ----------------------------------------------------
      * Takes all input from the settings walls in the VR environment and forwards it to the main unit
@@ -11,14 +11,15 @@ public class SortSettings : MonoBehaviour, ISettings {
 
 
     // ************** DEBUGGING ****************
-    [Header("Overall settings")]
+
+    [SerializeField]
+    private SortMain sortmain;
+
+    [Space(5)]
+    [Header("Sorting settings")]
     [SerializeField]
     private AlgorithmEditor algorithmEditor;
     private enum AlgorithmEditor { BubbleSort, InsertionSort, BucketSort, MergeSort }
-
-    [SerializeField]
-    private TeachingModeEditor teachingModeEditor;
-    private enum TeachingModeEditor { demo, stepByStep, userTest }
 
     [SerializeField]
     private DifficultyEditor difficultyEditor;
@@ -37,14 +38,10 @@ public class SortSettings : MonoBehaviour, ISettings {
     private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
 
-    [SerializeField]
-    private TutorialSpeedEditor tutorialSpeed;
-    private enum TutorialSpeedEditor { slow, normal, fast }
-
     // Algorithm settings
     private int numberOfElements = 8, difficulty = Util.BEGINNER;
-    private string algorithm = Util.BUBBLE_SORT, teachingMode = Util.DEMO, sortingCase = UtilSort.NONE;
-    private float demoStepDuration;
+    //private string algorithm = Util.BUBBLE_SORT, teachingMode = Util.DEMO;
+    private string sortingCase = UtilSort.NONE;
     private bool allowDuplicates = true;
 
     [Space(2)]
@@ -52,7 +49,7 @@ public class SortSettings : MonoBehaviour, ISettings {
     [SerializeField]
     private SortMain sortMain;
 
-    public void PrepareSettings()
+    public override void PrepareSettings()
     {
         switch ((int)algorithmEditor)
         {
@@ -69,7 +66,6 @@ public class SortSettings : MonoBehaviour, ISettings {
             case 2: teachingMode = Util.USER_TEST; break;
         }
 
-        Debug.Log(">>>>> If any error(s) <--- check here");
         difficulty = (int)difficultyEditor + 1;
 
         switch ((int)sortingCaseEditor)
@@ -81,11 +77,11 @@ public class SortSettings : MonoBehaviour, ISettings {
 
         numberOfElements = ((int)numberofElementsEditor + 1) * 2;
 
-        switch ((int)tutorialSpeed)
+        switch ((int)algorithmSpeed)
         {
-            case 0: demoStepDuration = 2f; break;
-            case 1: demoStepDuration = 1f; break;
-            case 2: demoStepDuration = 0.5f; break;
+            case 0: algorithmSpeed = 2f; break;
+            case 1: algorithmSpeed = 1f; break;
+            case 2: algorithmSpeed = 0.5f; break;
         }
 
         allowDuplicates = allowDupEditor;
@@ -117,18 +113,23 @@ public class SortSettings : MonoBehaviour, ISettings {
         ChangeSubSettingsDisplay(TeachingMode);
     }
 
-    public string Algorithm
+    protected override MainManager MainManager
     {
-        get { return algorithm; }
-        set { algorithm = value; blackboard.ChangeText(blackboard.TextIndex, "Algorithm: " + value); }
+        get { return sortmain; }
     }
 
+    //public string Algorithm
+    //{
+    //    get { return algorithm; }
+    //    set { algorithm = value; blackboard.ChangeText(blackboard.TextIndex, "Algorithm: " + value); }
+    //}
+
     // Tutorial, Step-By-Step, or User Test
-    public string TeachingMode
-    {
-        get { return teachingMode; }
-        set { teachingMode = value; ChangeSubSettingsDisplay(value); blackboard.ChangeText(blackboard.TextIndex, "Teaching mode: " + value); }
-    }
+    //public string TeachingMode
+    //{
+    //    get { return teachingMode; }
+    //    set { teachingMode = value; ChangeSubSettingsDisplay(value); blackboard.ChangeText(blackboard.TextIndex, "Teaching mode: " + value); }
+    //}
 
     // Beginner, Intermediate, or Examination
     public int Difficulty
@@ -158,21 +159,21 @@ public class SortSettings : MonoBehaviour, ISettings {
         set { sortingCase = value; blackboard.ChangeText(blackboard.TextIndex, "Case activated: " + value); }
     }
 
-    public float DemoSpeed
-    {
-        get { return demoStepDuration; }
-        set { demoStepDuration = value; blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
-    }
+    //public float DemoSpeed
+    //{
+    //    get { return demoStepDuration; }
+    //    set { demoStepDuration = value; blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
+    //}
 
-    public void StartSorting()
-    {
-        sortMain.InstantiateSetup();
-    }
+    //public void StartTask()
+    //{
+    //    sortMain.InstantiateSetup();
+    //}
 
-    public void StopSorting()
-    {
-        sortMain.DestroyAndReset();
-    }
+    //public void StopTask()
+    //{
+    //    sortMain.DestroyAndReset();
+    //}
 
     public void SetSettingsActive(bool active)
     {
@@ -180,22 +181,22 @@ public class SortSettings : MonoBehaviour, ISettings {
     }
 
     // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
-    public bool IsDemo()
-    {
-        return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
-    }
+    //public bool IsDemo()
+    //{
+    //    return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
+    //}
 
-    // Check if it's StepByStep (not used?)
-    public bool IsStepByStep()
-    {
-        return teachingMode == Util.STEP_BY_STEP;
-    }
+    //// Check if it's StepByStep (not used?)
+    //public bool IsStepByStep()
+    //{
+    //    return teachingMode == Util.STEP_BY_STEP;
+    //}
 
-    // Check if it's UserTest
-    public bool IsUserTest()
-    {
-        return teachingMode == Util.USER_TEST;
-    }
+    //// Check if it's UserTest
+    //public bool IsUserTest()
+    //{
+    //    return teachingMode == Util.USER_TEST;
+    //}
 
     // Changes the sub settings (middle wall w/buttons) based on the chosen teaching mode
     private void ChangeSubSettingsDisplay(string teachingMode)

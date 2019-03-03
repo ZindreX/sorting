@@ -6,6 +6,9 @@ public interface ISettings {
 
     void PrepareSettings();
     //TeachingAlgorithm GetAlgorithm();
+    void StartTask();
+    void StopTask();
+
 
 
 }

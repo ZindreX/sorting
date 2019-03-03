@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(GraphSettings))]
 [RequireComponent(typeof(GraphManager))]
 [RequireComponent(typeof(UserTestManager))]
 public class GraphMain : MainManager {
@@ -28,63 +27,78 @@ public class GraphMain : MainManager {
 
     protected virtual void Awake()
     {
+        Debug.Log("I am alive!");
+
         // >>> Basic components
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         posManager = FindObjectOfType<PositionManager>();
+        graphSettings = (GraphSettings)settings;
+    }
 
-        // >>> Get settings from editor
-        graphSettings = GetComponent(typeof(GraphSettings)) as GraphSettings;
-        graphSettings.PrepareSettings();
-
-        // >>> Algorithm
-        algorithmName = graphSettings.UseAlgorithm;
-        graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
-        graphAlgorithm.MainManager = this;
-        graphAlgorithm.ListVisual = listVisual;
-        graphAlgorithm.GraphStructure = graphSettings.Graphstructure;
-        graphAlgorithm.DemoStepDuration = new WaitForSeconds(graphSettings.AlgorithmSpeed);
-        
-        // Extra settings
-        graphAlgorithm.ShortestPathOneToAll = graphSettings.ShortestPathOneToAll;
-        graphAlgorithm.VisitLeftFirst = graphSettings.VisitLeftFirst;
-
-        // >>> Extra learning material
-        // Setup graph manager + Activate/deactivate components (Grid / Tree / Random)
-        graphManager = ActivateDeactivateGraphComponents(graphSettings.Graphstructure);
-        graphManager.InitGraphManager(graphSettings, graphAlgorithm, graphSettings.RNGDict());
-
-        // Pseudocode
-        graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer;
+    protected override void DemoUpdate()
+    {
 
     }
 
-    // Use this for initialization
-    void Start()
+    protected override void StepByStepUpdate()
     {
-        pseudoCodeViewer.PseudoCodeSetup();
 
-        // Get variables for graph setup
-        graphManager.InitGraph(graphSettings.GraphSetup());
-        graphManager.SetupImportantNodes(graphSettings.StartNode(), graphSettings.EndNode(), true);
+    }
 
-        // Create graph based on init variables
-        graphManager.CreateGraph();
+    protected override void UserTestUpdate()
+    {
+        // If a node is set to be visited or traversed, wait until it has been achieved
+        if (userTestGoalActive && !posManager.PlayerWithinGoalPosition)
+            return;
+        else
+            userTestGoalActive = false;
 
-        // Mark start-/end nodes
-        graphManager.SetupImportantNodes(null, null, false);
-
-        // Init teaching mode
-        switch (graphSettings.TeachingMode)
+        // First check if user test setup is complete
+        if (userTestManager.HasInstructions() && !beginnerWait)
         {
-            case Util.DEMO: PerformAlgorithmDemo(); break;
-            case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
-            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
-            default: Debug.LogError("Teaching mode '" + graphSettings.TeachingMode + "' unknown."); break;
+            if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
+            {
+                // Reset counter
+                userTestManager.ReadyForNext = 0;
+
+                // Checking if all sorting elements are sorted
+                if (!userTestManager.HasInstructions()) // && elementManager.AllSorted())
+                {
+                    graphAlgorithm.IsTaskCompleted = true;
+                    // ?
+                }
+                else
+                {
+                    // Still some elements not sorted, so go on to next round
+                    bool hasInstruction = userTestManager.IncrementToNextInstruction();
+
+                    // Hot fix - solve in some other way?
+                    if (hasInstruction)
+                        userTestManager.ReadyForNext += graphManager.PrepareNextInstruction(userTestManager.GetInstruction());
+                    //else if (elementManager.AllSorted())
+                    //    StartCoroutine(FinishUserTest());
+
+                }
+            }
+            //displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
+        }
+    }
+
+    protected override void TaskCompletedFinishOff()
+    {
+        if (!backtracking && graphAlgorithm is IShortestPath)
+        {
+            Debug.Log("Starting backtracking");
+            if (graphAlgorithm.ShortestPathOneToAll)
+                StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
+            else
+                StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
+            backtracking = true;
         }
     }
 
     // Update is called once per frame
-    void Update()
+    void oldUpdate() // OLD NOT USED: DELETE WHEN RDY
     {
         if (graphAlgorithm.IsTaskCompleted && !backtracking)
         {
@@ -206,10 +220,66 @@ public class GraphMain : MainManager {
         }
     }
 
+    public override void InstantiateSetup()
+    {
+        graphSettings.PrepareSettings();
+
+        // From awake
+        // >>> Algorithm
+        algorithmName = graphSettings.Algorithm;
+        graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
+        graphAlgorithm.MainManager = this;
+
+        graphAlgorithm.GraphStructure = graphSettings.Graphstructure;
+        graphAlgorithm.DemoStepDuration = new WaitForSeconds(graphSettings.AlgorithmSpeed);
+        // Extra settings
+        graphAlgorithm.ShortestPathOneToAll = graphSettings.ShortestPathOneToAll;
+        graphAlgorithm.VisitLeftFirst = graphSettings.VisitLeftFirst;
+        // >>> Extra learning material
+        graphAlgorithm.ListVisual = listVisual;
+        // Pseudocode
+        graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer;
+
+        // end
+
+        // Setup graph manager + Activate/deactivate components (Grid / Tree / Random)
+        graphManager = ActivateDeactivateGraphComponents(graphSettings.Graphstructure);
+        graphManager.InitGraphManager(graphSettings, graphAlgorithm, graphSettings.RNGDict());
+
+        pseudoCodeViewer.PseudoCodeSetup();
+
+        // Get variables for graph setup
+        graphManager.InitGraph(graphSettings.GraphSetup());
+        graphManager.SetupImportantNodes(graphSettings.StartNode(), graphSettings.EndNode(), true);
+
+        // Create graph based on init variables
+        graphManager.CreateGraph();
+
+        // Mark start-/end nodes
+        graphManager.SetupImportantNodes(null, null, false);
+
+        // Init teaching mode
+        switch (graphSettings.TeachingMode)
+        {
+            case Util.DEMO: PerformAlgorithmDemo(); break;
+            case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
+            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
+            default: Debug.LogError("Teaching mode '" + graphSettings.TeachingMode + "' unknown."); break;
+        }
+
+        initialized = true;
+    }
+
+    public override void DestroyAndReset()
+    {
+        initialized = false;
+
+    }
+
 
     public override void PerformAlgorithmDemo()
     {
-        switch (graphSettings.UseAlgorithm)
+        switch (graphSettings.Algorithm)
         {
             case Util.BFS: StartCoroutine(((BFS)graphAlgorithm).Demo(graphManager.StartNode)); break;
 
@@ -250,7 +320,7 @@ public class GraphMain : MainManager {
         // Set start time
         userTestManager.SetStartTime();
 
-        if (graphSettings.UseAlgorithm == Util.BFS)
+        if (graphSettings.Algorithm == Util.BFS)
         {
             string result = "";
             foreach (KeyValuePair<int, InstructionBase> entry in instructions)
@@ -271,6 +341,8 @@ public class GraphMain : MainManager {
         userTestReady = true;
         Debug.Log("Ready for user test!");
     }
+
+
 
     // Moved to graphmanager
     //public int PrepareNextInstruction(InstructionBase instruction)

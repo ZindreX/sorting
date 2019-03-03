@@ -11,9 +11,52 @@ public abstract class MainManager : MonoBehaviour {
      * 
     */
 
+    [SerializeField]
+    protected SettingsBase settings;
+
     protected string algorithmName;
     protected bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
+    protected bool initialized = false;
+
     protected bool userTestReady = false; // debugging
+
+
+    void Update()
+    {
+        if (!initialized)
+            return;
+
+        // If the user has clicked the stop button in game
+        if (userStoppedAlgorithm)
+            return;
+
+
+
+        if (GetTeachingAlgorithm().IsTaskCompleted)
+        {
+            TaskCompletedFinishOff();
+        }
+        else
+        {
+            if (settings.IsDemo())
+            {
+                DemoUpdate();
+            }
+            else if (settings.IsStepByStep())
+            {
+                StepByStepUpdate();
+            }
+            else if (settings.IsUserTest())
+            {
+                UserTestUpdate();
+            }
+        }
+    }
+
+    protected abstract void DemoUpdate();
+    protected abstract void StepByStepUpdate();
+    protected abstract void UserTestUpdate();
+    protected abstract void TaskCompletedFinishOff();
 
     // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
     public bool BeginnerWait
@@ -48,6 +91,17 @@ public abstract class MainManager : MonoBehaviour {
 
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
     protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
+
+    /* --------------------------------------- Instatiate Setup ---------------------------------------
+     * > Called from UserController
+     * > Creates the holders and the sorting elements
+    */
+    public abstract void InstantiateSetup();
+    /* --------------------------------------- Destroy & Restart ---------------------------------------
+     * > Called from UserController
+     * > Destroys all the gameobjects
+     */
+    public abstract void DestroyAndReset();
 
     /* --------------------------------------- Demo ---------------------------------------
      * - Gives a visual presentation of <algorithm>

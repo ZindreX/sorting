@@ -85,8 +85,11 @@ public class MergeSort : SortAlgorithm {
     #region Merge Sort: Standard
     public static GameObject[] MergeSortStandard(GameObject[] list)
     {
+        Debug.Log("Demo: " + DebugList(list));
+
         if (list.Length <= 1)
         {
+            Debug.Log("Only 1 element left, return!");
             return list;
         }
 
@@ -106,15 +109,21 @@ public class MergeSort : SortAlgorithm {
             }
         }
 
+        Debug.Log("Left: " + DebugList(left));
         left = MergeSortStandard(left);
+
+        Debug.Log("Right: " + DebugList(right));
         right = MergeSortStandard(right);
+
+        Debug.Log("Start merge: " + DebugList(left) + " + " + DebugList(right));
         return MergeStandard(left, right);
     }
 
     private static GameObject[] MergeStandard(GameObject[] left, GameObject[] right)
     {
-        GameObject[] result = new GameObject[left.Length + right.Length];
+        Debug.Log("Merging: " + DebugList(left) + " + " + DebugList(right));
 
+        GameObject[] result = new GameObject[left.Length + right.Length];
         int l = 0, r = 0;
         while (l < left.Length && r < right.Length)
         {
@@ -142,6 +151,7 @@ public class MergeSort : SortAlgorithm {
             r += 1;
         }
 
+        Debug.Log("Result: " + DebugList(result));
         return result;
     }
     #endregion
@@ -222,11 +232,11 @@ public class MergeSort : SortAlgorithm {
         return (listLength != 1) ? FindNumberOfSplits(listLength / 2, N + 1) : N;
     }
 
-    private int splitLeft, splitRight;
+    private int splitLeft, splitRight, mergesAdded = 0, atMerge = 0;
     private const string LEFT = "Left", RIGHT = "Right";
     private int split = -1, leftIndex = 0, rightIndex = 0;
 
-    private string DebugList(GameObject[] list)
+    private static string DebugList(GameObject[] list)
     {
         string result = "";
         for (int i=0; i < list.Length; i++)
@@ -237,6 +247,10 @@ public class MergeSort : SortAlgorithm {
     }
 
     private GameObject[] leftList, rightList;
+    private Dictionary<int, GameObject[]> leftSplits = new Dictionary<int, GameObject[]>();
+    private Dictionary<int, GameObject[]> rightSplits = new Dictionary<int, GameObject[]>();
+    private Dictionary<int, GameObject[]> allMerges = new Dictionary<int, GameObject[]>();
+
     #region Merge Sort: Demo visual
     public override IEnumerator Demo(GameObject[] list)
     {
@@ -247,7 +261,9 @@ public class MergeSort : SortAlgorithm {
         // Check if list only has 1 element
         if (list.Length <= 1)
         {
+            Debug.Log("Only 1 element left, return!");
             yield return list;
+            yield break;
             Debug.Log("Nani");
         }
 
@@ -257,32 +273,35 @@ public class MergeSort : SortAlgorithm {
         {
             switch (split)
             {
+
                 case 0:
                     for (int i = 0; i < 2; i++)
                     {
                         splitHolders.Add(CreateSplitHolder(holderIndex[numberOfElements][splitHolders.Count]));
                     }
-                    leftIndex = splitHolders.Count - 2;
-                    rightIndex = splitHolders.Count - 1;
+                    //leftIndex = splitHolders.Count - 2;
+                    //rightIndex = splitHolders.Count - 1;
                     break;
 
                 case 1: case 2: case 3: case 4: case 5: case 6: case 7:
                     int hIndex = holderIndex[numberOfElements][splitHolders.Count];
                     splitHolders.Add(CreateSplitHolder(hIndex));
 
-                    if (split == 3)
-                        leftIndex = 2; // holderIndex[numberOfElements][2]; // 2
-                    else if (split == 4 || split == 5)
-                        leftIndex = 1; // holderIndex[numberOfElements][1]; // 4
-                    else
-                        leftIndex = 5; //holderIndex[numberOfElements][5]; // 6
+                    //if (split == 3)
+                    //    leftIndex = 2; // holderIndex[numberOfElements][2]; // 2
+                    //else if (split == 4 || split == 5)
+                    //    leftIndex = 1; // holderIndex[numberOfElements][1]; // 4
+                    //else
+                    //    leftIndex = 5; //holderIndex[numberOfElements][5]; // 6
 
-                    rightIndex = hIndex;
+                    //rightIndex = hIndex;
 
                     break;
 
                 default: Debug.Log("No split set"); break;
             }
+            leftIndex = splitHolders.Count - 2;
+            rightIndex = splitHolders.Count - 1;
         }
 
         // Otherwise split list into two lists
@@ -320,22 +339,37 @@ public class MergeSort : SortAlgorithm {
 
 
         // Recursively do it until only 1 element remain in each list
-        leftList = left;
-        if (left.Length > 1)
-            yield return Demo(left);
+        Debug.Log("Left: " + DebugList(left));
+        //leftList = left;
+        yield return Demo(left);
 
-        Debug.Log("Right list");
-        rightList = right;
-        if (right.Length > 1)
-            yield return Demo(right);
+        Debug.Log("Right: " + DebugList(right));
+        //rightList = right;
+        yield return Demo(right);
 
         // Then merge the two lists
-        DemoMerge(leftList, rightList);
+        Debug.Log("Start merge: " + DebugList(left) + " + " + DebugList(right));
+        if (left.Length == 1 && right.Length == 1)
+            yield return DemoMerge(left, right);
+        else
+        {
+            Debug.Log("Split: " + split + ", atMerge: " + atMerge + " of " + mergesAdded);
+            foreach (KeyValuePair<int, GameObject[]> entry in allMerges)
+            {
+                Debug.Log("Entry: " + entry.Key + ": " + DebugList(entry.Value));
+            }
+
+
+            GameObject[] l = allMerges[atMerge];
+            GameObject[] r = allMerges[atMerge+1];
+            atMerge += 2;
+            yield return DemoMerge(l, r);
+        }
     }
 
-    private void DemoMerge(GameObject[] left, GameObject[] right)
+    private GameObject[] DemoMerge(GameObject[] left, GameObject[] right)
     {
-        Debug.Log("Merging: " + DebugList(left) + " <--> " + DebugList(right));
+        Debug.Log("Merging: " + DebugList(left) + " + " + DebugList(right));
 
         GameObject[] result = new GameObject[left.Length + right.Length];
         int l = 0, r = 0;
@@ -365,7 +399,9 @@ public class MergeSort : SortAlgorithm {
             r += 1;
         }
 
-        //return result;
+        allMerges.Add(mergesAdded++, result);
+        Debug.Log("Result: " + DebugList(result));
+        return result;
     }
     #endregion
 

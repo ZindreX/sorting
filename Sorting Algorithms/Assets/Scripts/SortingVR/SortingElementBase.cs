@@ -35,6 +35,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected virtual void Awake()
     {
         sortingElementID = SORTING_ELEMENT_NR++;
+        name = MyRole();
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------

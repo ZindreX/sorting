@@ -10,7 +10,7 @@ public class HolderManager : MonoBehaviour, IManager {
     */
 
     // Initialization
-    public GameObject holderPrefab;
+    public GameObject holderPrefab, sortingTableHoldersObj;
 
     // GameObject
     private GameObject[] holders;
@@ -51,6 +51,7 @@ public class HolderManager : MonoBehaviour, IManager {
             }
             
             holders[x].GetComponent<HolderBase>().SuperElement = GetComponent<SortMain>(); // null(?): add C# script to holder / sorting elements
+            holders[x].transform.parent = sortingTableHoldersObj.transform;
         }
         containsHolders = true;
     }
