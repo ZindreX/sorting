@@ -36,8 +36,6 @@ public class SortMain : MainManager {
         elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
         tutorialStep = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
-
-        // >>> Extra learning material
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
     }
 
@@ -109,79 +107,6 @@ public class SortMain : MainManager {
             displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
         }
         displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, "Sorting Completed!");
-    }
-
-    // Update is called once per frame
-    void OldUpdate () {
-
-        // OBS: Not used, see mainManager
-
-        if (sortAlgorithm.IsTaskCompleted)
-        {
-            if (sortSettings.IsUserTest() && userTestManager.TimeSpent == 0)
-            {
-                userTestManager.SetEndTime();
-                userTestManager.CalculateScore();
-                displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
-            }
-            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, "Sorting Completed!");
-        }
-        else
-        {
-            if (sortSettings.IsStepByStep())
-            {
-                if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
-                {
-                    tutorialStep.PlayerMove = false;
-                    InstructionBase instruction = tutorialStep.GetStep();
-                    Debug.Log(">>> " + instruction.Instruction);
-                    //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
-                    //Debug.Log(tutorialStep.CurrentInstructionNr);
-
-
-                    bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-                    sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
-                }
-            }
-            else if (sortSettings.IsUserTest()) // User test
-            {
-                // First check if user test setup is complete
-                if (userTestManager.HasInstructions() && !beginnerWait)
-                {
-                    // Check if user has done a move, and is ready for next round
-                    if (elementManager.CurrentMoving != null)
-                    {
-                        // Dont do anything while moving element
-                    }
-                    else if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
-                    {
-                        // Reset counter
-                        userTestManager.ReadyForNext = 0;
-
-                        // Checking if all sorting elements are sorted
-                        if (!userTestManager.HasInstructions() && elementManager.AllSorted())
-                        {
-                            sortAlgorithm.IsTaskCompleted = true;
-                            Debug.LogError("Manage to enter this case???"); // ???
-                        }
-                        else
-                        {
-                            // Still some elements not sorted, so go on to next round
-                            bool hasInstruction = userTestManager.IncrementToNextInstruction();
-
-                            // Hot fix - solve in some other way?
-                            if (hasInstruction)
-                                userTestManager.ReadyForNext += algorithmManagerBase.PrepareNextInstruction(userTestManager.GetInstruction());
-                            else if (elementManager.AllSorted())
-                                StartCoroutine(FinishUserTest());
-
-                        }
-                    }
-                    displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
-                }
-            }
-        }
-
     }
 
     // --------------------------------------- Getters / Setters --------------------------------------- 
@@ -285,18 +210,17 @@ public class SortMain : MainManager {
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
             //displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
         }
+        ActivateTaskObjects(true);
+    }
 
-        switch (sortSettings.TeachingMode)
-        {
-            case Util.DEMO: PerformAlgorithmDemo(); break;
-            case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
-            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
-        }
-        userStoppedAlgorithm = false;
-        sortSettings.SetSettingsActive(false);
-        sortingTableObj.SetActive(true);
-        controllerReady = true;
-        initialized = true;
+    protected override void ActivateTaskObjects(bool active)
+    {
+        // Settings menu
+        sortSettings.SetSettingsActive(!active);
+
+        // Sorting table
+        sortingTableObj.SetActive(active);
+
     }
 
     // Keeps only one sorting algorithm manager active
@@ -359,7 +283,7 @@ public class SortMain : MainManager {
      */
     public override void DestroyAndReset()
     {
-        initialized = false;
+        algorithmStarted = false;
 
         if (sortSettings.IsDemo() && !sortSettings.IsStepByStep() && !sortAlgorithm.IsTaskCompleted)
         {
@@ -368,13 +292,13 @@ public class SortMain : MainManager {
         else
         {
             // Stop ongoing actions
-            userStoppedAlgorithm = true;
+            UserStoppedAlgorithm = true;
 
             // Destroy holders
-            holderManager.DestroyObjects();
+            holderManager.DestroyAndReset();
 
             // Destroy sorting elements
-            elementManager.DestroyObjects();
+            elementManager.DestroyAndReset();
 
             // Reset
             if (sortAlgorithm.IsTaskCompleted)
@@ -384,20 +308,18 @@ public class SortMain : MainManager {
             sortAlgorithm.ResetSetup();
 
             // Reset displays
-            displayUnitManager.ResetDisplays();
+            //displayUnitManager.ResetDisplays();
+            displayUnitManager.DestroyDisplaysContent();
 
-            // Show settings menu again
-            sortSettings.SetSettingsActive(true);
-
-            // Remove sorting table
-            sortingTableObj.SetActive(false);
+            // Hide sorting table and bring back menu
+            ActivateTaskObjects(false);
 
             //
             controllerReady = false;
         }
 
         // Cleanup pseudocode
-        //algorithm.PseudoCodeViewer.DestroyPseudoCode();
+        sortAlgorithm.PseudoCodeViewer.DestroyPseudoCode();
     }
 
     // Input from user during Step-By-Step (increment/decrement)
@@ -471,4 +393,87 @@ public class SortMain : MainManager {
         userTestReady = true; // debugging
     }
 
+
+
+
+
+
+
+
+
+
+    // DELETE::::
+
+    // Update is called once per frame
+    void OldUpdate()
+    {
+
+        // OBS: Not used, see mainManager
+
+        if (sortAlgorithm.IsTaskCompleted)
+        {
+            if (sortSettings.IsUserTest() && userTestManager.TimeSpent == 0)
+            {
+                userTestManager.SetEndTime();
+                userTestManager.CalculateScore();
+                displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
+            }
+            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, "Sorting Completed!");
+        }
+        else
+        {
+            if (sortSettings.IsStepByStep())
+            {
+                if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
+                {
+                    tutorialStep.PlayerMove = false;
+                    InstructionBase instruction = tutorialStep.GetStep();
+                    Debug.Log(">>> " + instruction.Instruction);
+                    //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
+                    //Debug.Log(tutorialStep.CurrentInstructionNr);
+
+
+                    bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+                    sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
+                }
+            }
+            else if (sortSettings.IsUserTest()) // User test
+            {
+                // First check if user test setup is complete
+                if (userTestManager.HasInstructions() && !beginnerWait)
+                {
+                    // Check if user has done a move, and is ready for next round
+                    if (elementManager.CurrentMoving != null)
+                    {
+                        // Dont do anything while moving element
+                    }
+                    else if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
+                    {
+                        // Reset counter
+                        userTestManager.ReadyForNext = 0;
+
+                        // Checking if all sorting elements are sorted
+                        if (!userTestManager.HasInstructions() && elementManager.AllSorted())
+                        {
+                            sortAlgorithm.IsTaskCompleted = true;
+                            Debug.LogError("Manage to enter this case???"); // ???
+                        }
+                        else
+                        {
+                            // Still some elements not sorted, so go on to next round
+                            bool hasInstruction = userTestManager.IncrementToNextInstruction();
+
+                            // Hot fix - solve in some other way?
+                            if (hasInstruction)
+                                userTestManager.ReadyForNext += algorithmManagerBase.PrepareNextInstruction(userTestManager.GetInstruction());
+                            else if (elementManager.AllSorted())
+                                StartCoroutine(FinishUserTest());
+
+                        }
+                    }
+                    displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
+                }
+            }
+        }
+    }
 }

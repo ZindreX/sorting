@@ -45,5 +45,12 @@ public class DisplayUnitManager : MonoBehaviour {
         rightBlackboard.GetComponent<Blackboard>().EmptyContent();
     }
 
+    public void DestroyDisplaysContent()
+    {
+        //leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
+        centerBlackboard.GetComponent<PseudoCodeViewer>().DestroyPseudoCode();
+        rightBlackboard.GetComponent<Blackboard>().EmptyContent();
+    }
+
 
 }

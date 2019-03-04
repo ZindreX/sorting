@@ -65,7 +65,7 @@ public class AlgorithmUserController : MonoBehaviour {
         // *************
 
         // Do actions according to what teaching mode the player has activated
-        if (sortMain.Initialized)
+        if (sortMain.AlgorithmStarted)
         {
             switch (sortMain.SortSettings.TeachingMode)
             {
@@ -111,7 +111,7 @@ public class AlgorithmUserController : MonoBehaviour {
     }
 
     private bool debugNextReady = true;
-    private WaitForSeconds buttonClickWait = new WaitForSeconds(0.2f);
+    private WaitForSeconds buttonClickWait = new WaitForSeconds(0.2f), warningMessageDuration = new WaitForSeconds(3f);
     private IEnumerator DebugWait()
     {
         debugNextReady = false;
@@ -124,7 +124,7 @@ public class AlgorithmUserController : MonoBehaviour {
     {
         this.warningMessage.color = color;
         this.warningMessage.text = warningMessage;
-        yield return new WaitForSeconds(3.0f);
+        yield return warningMessageDuration;
         this.warningMessage.text = "";
     }
 }

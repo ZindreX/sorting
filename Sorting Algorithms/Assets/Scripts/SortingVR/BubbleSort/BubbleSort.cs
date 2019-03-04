@@ -126,11 +126,19 @@ public class BubbleSort : SortAlgorithm {
 
         for (i=0; i < N; i++)
         {
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Display outer loop
             yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
             for (j = 0; j < N - i - 1; j++)
             {
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 // Display pseudocode (update for-loops)
                 yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
@@ -210,8 +218,8 @@ public class BubbleSort : SortAlgorithm {
             // Change internal state of following sorting elements
             if (instruction.Instruction != UtilSort.UPDATE_LOOP_INST && instruction.Instruction != UtilSort.END_LOOP_INST)
             {
-                se1 = GetComponent<ElementManager>().GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
-                se2 = GetComponent<ElementManager>().GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
+                se1 = sortMain.ElementManager.GetSortingElement(bubbleInstruction.SortingElementID1).GetComponent<BubbleSortElement>();
+                se2 = sortMain.ElementManager.GetSortingElement(bubbleInstruction.SortingElementID2).GetComponent<BubbleSortElement>();
             }
         }
 

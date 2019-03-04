@@ -120,8 +120,7 @@ public class SortSettings : SettingsBase {
 
 
     [Header("New setup")]
-    [SerializeField]
-    public GameObject settingsObj;
+
 
     [Space(4)]
     [Header("Sub settings")]
@@ -195,11 +194,6 @@ public class SortSettings : SettingsBase {
     {
         get { return sortingCase; }
         set { sortingCase = value; FillTooltips("Sorting case:\n" + value); SetActiveButton(value); }
-    }
-
-    public void SetSettingsActive(bool active)
-    {
-        settingsObj.SetActive(active);
     }
 
     // Changes the sub settings (middle wall w/buttons) based on the chosen teaching mode

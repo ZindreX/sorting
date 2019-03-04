@@ -37,6 +37,7 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     {
         value1 = UtilSort.INIT_STATE;
         value2 = UtilSort.INIT_STATE;
+        prevHighlight = new List<int>();
     }
 
     public override MainManager MainManager

@@ -5,12 +5,16 @@ using TMPro;
 
 public class OnOffButton : MonoBehaviour {
 
+    // On/Off/any... button
+
     [SerializeField]
-    private string buttonID, sectionID;
+    private string buttonID;
     private bool state;
 
-    private TextMeshPro buttonText;
+    [SerializeField]
+    private string onText, offText;
 
+    private TextMeshPro buttonText;
 
     [SerializeField]
     private Material onMaterial, offMaterial, nonMaterial;
@@ -19,42 +23,25 @@ public class OnOffButton : MonoBehaviour {
     private bool isOnOffButton;
 
     [SerializeField]
-    private List<OnOffButton> sectionButtons;
+    private GameObject section;
+
+    [SerializeField]
+    private OnOffButton[] sectionButtons;
+
+
 
     private void Awake()
     {
         state = false;
         buttonText = GetComponentInChildren<TextMeshPro>();
-        
-        // litt lat
-        if (sectionButtons.Count > 0)
-        {
-            for (int i=0; i < sectionButtons.Count; i++)
-            {
-                sectionButtons[i].AddSectionButton(this);
-                sectionButtons[i].SectionID = sectionID;
-                for (int j=0; j < sectionButtons.Count; j++)
-                {
-                    sectionButtons[i].AddSectionButton(sectionButtons[j]);
-                }
-            }
-        }
-    }
 
-    private void Start()
-    {
-        
+        if (section != null)
+            sectionButtons = section.GetComponentsInChildren<OnOffButton>();
     }
 
     public string ButtonID
     {
         get { return buttonID;}
-    }
-
-    public string SectionID
-    {
-        get { return sectionID; }
-        set { sectionID = value; }
     }
 
     public bool State
@@ -69,14 +56,19 @@ public class OnOffButton : MonoBehaviour {
 
     public void ChangeState()
     {
+        // Deactivate other button(s) in same section
+        if (sectionButtons != null)
+        {
+            foreach (OnOffButton button in sectionButtons)
+            {
+                if (button.State)
+                    button.DeactivateButton();
+            }
+        }
+
+        // Activate this button
         state = true;
         GetComponentInChildren<Renderer>().material = onMaterial;
-
-        foreach (OnOffButton button in sectionButtons)
-        {
-            if (button != this)
-                button.DeactivateButton();
-        }
     }
 
     public void ToggleState()
@@ -84,12 +76,12 @@ public class OnOffButton : MonoBehaviour {
         state = !state;
         if (state)
         {
-            buttonText.text = "ON";
+            buttonText.text = onText;
             GetComponentInChildren<Renderer>().material = onMaterial;
         }
         else
         {
-            buttonText.text = "OFF";
+            buttonText.text = offText;
             GetComponentInChildren<Renderer>().material = offMaterial;
         }
     }
@@ -101,12 +93,6 @@ public class OnOffButton : MonoBehaviour {
             GetComponentInChildren<Renderer>().material = offMaterial;
         else
             GetComponentInChildren<Renderer>().material = nonMaterial;
-    }
-
-    public void AddSectionButton(OnOffButton button)
-    {
-        if (!sectionButtons.Contains(button))
-            sectionButtons.Add(button);
     }
 
 

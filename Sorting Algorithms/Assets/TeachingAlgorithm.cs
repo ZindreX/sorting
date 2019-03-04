@@ -13,7 +13,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // Basis variables for all modes
     protected WaitForSeconds demoStepDuration;
-    protected bool isTaskCompleted = false, includeLineNr = false;  // isReadyForNextMove = false;
+    protected bool isTaskCompleted = false, includeLineNr = false; // isReadyForNextMove = false;
     protected PseudoCodeViewer pseudoCodeViewer;
 
     // Demo variables

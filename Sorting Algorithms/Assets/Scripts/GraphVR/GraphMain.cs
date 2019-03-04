@@ -272,12 +272,18 @@ public class GraphMain : MainManager {
             default: Debug.LogError("Teaching mode '" + graphSettings.TeachingMode + "' unknown."); break;
         }
 
-        initialized = true;
+        algorithmStarted = true;
     }
+
+    protected override void ActivateTaskObjects(bool active)
+    {
+
+    }
+
 
     public override void DestroyAndReset()
     {
-        initialized = false;
+        algorithmStarted = false;
 
     }
 

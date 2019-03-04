@@ -74,10 +74,10 @@ public class BucketManager : MonoBehaviour, IManager {
 
     public void ResetSetup()
     {
-        DestroyObjects();
+        DestroyAndReset();
     }
 
-    public void DestroyObjects()
+    public void DestroyAndReset()
     {
         UtilSort.DestroyObjects(buckets);
         containsBuckets = false;

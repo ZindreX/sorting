@@ -61,7 +61,7 @@ public class HolderManager : MonoBehaviour, IManager {
     }
 
     // Destroys all holders + reset
-    public void DestroyObjects()
+    public void DestroyAndReset()
     {
         UtilSort.DestroyObjects(holders);
         containsHolders = false;

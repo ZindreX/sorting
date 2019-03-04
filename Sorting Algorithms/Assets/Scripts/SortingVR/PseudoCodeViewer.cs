@@ -150,8 +150,8 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     {
         for (int x=0; x < codeLines.Length; x++)
         {
-            Destroy(codeLines[x]);
+            Destroy(codeLines[x].gameObject);
         }
-        PseudoCodeSetup();
+        //PseudoCodeSetup();
     }
 }

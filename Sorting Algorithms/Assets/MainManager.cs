@@ -13,14 +13,14 @@ public abstract class MainManager : MonoBehaviour {
 
     protected string algorithmName;
     protected bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
-    protected bool initialized = false;
+    protected bool algorithmStarted = false;
 
     protected bool userTestReady = false; // debugging
 
 
     void Update()
     {
-        if (!initialized)
+        if (!algorithmStarted)
             return;
 
         // If the user has clicked the stop button in game
@@ -53,10 +53,10 @@ public abstract class MainManager : MonoBehaviour {
     protected abstract void UserTestUpdate();
     protected abstract void TaskCompletedFinishOff();
 
-    // Algorithm is initialized
-    public bool Initialized
+    // Algorithm is initialized and ready to go
+    public bool AlgorithmStarted
     {
-        get { return initialized; }
+        get { return algorithmStarted; }
     }
 
     // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
@@ -66,12 +66,33 @@ public abstract class MainManager : MonoBehaviour {
         set { beginnerWait = value; }
     }
 
+    public bool UserStoppedAlgorithm
+    {
+        get { return userStoppedAlgorithm; }
+        set { userStoppedAlgorithm = value; ActivateTaskObjects(false); }
+    }
+
+    // ?
     public bool ControllerReady
     {
         get { return controllerReady; }
         //set { controllerReady = value; }
     }
 
+    public void StartAlgorithm()
+    {
+        // Start algorithm
+        switch (Settings.TeachingMode)
+        {
+            case Util.DEMO: PerformAlgorithmDemo(); break;
+            case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
+            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
+        }
+        userStoppedAlgorithm = false;
+        //
+        controllerReady = true;
+        algorithmStarted = true;
+    }
 
 
     // Finds the number of instructions which the player has to do something to progress  
@@ -94,6 +115,8 @@ public abstract class MainManager : MonoBehaviour {
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
     protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
     public abstract SettingsBase Settings { get; }
+
+    protected abstract void ActivateTaskObjects(bool active);
 
     /* --------------------------------------- Instatiate Setup ---------------------------------------
      * > Called from UserController

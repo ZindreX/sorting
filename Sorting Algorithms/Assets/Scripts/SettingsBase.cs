@@ -30,10 +30,14 @@ public abstract class SettingsBase : MonoBehaviour {
 
     protected Dictionary<string, OnOffButton> buttons;
 
-
     //
     public abstract void PrepareSettings();
     protected abstract MainManager MainManager { get; set; }
+
+    public void SetSettingsActive(bool active)
+    {
+        gameObject.SetActive(active);
+    }
 
     public string Algorithm
     {
@@ -75,9 +79,26 @@ public abstract class SettingsBase : MonoBehaviour {
         set { algorithmSpeed = value; FillTooltips("Demo speed:\n" + value + " sec per step"); SetActiveButton(Util.ConvertAlgorithmSpeed(value)); }
     }
 
-    public void StartTask()
+    public void InstantiateTask()
     {
         MainManager.InstantiateSetup();
+    }
+
+    public void StartStopTask()
+    {
+        if (!MainManager.AlgorithmStarted)
+            MainManager.StartAlgorithm();
+        else
+        {
+            Debug.Log("STOPPING!!!!");
+            MainManager.UserStoppedAlgorithm = true; //
+            MainManager.DestroyAndReset();
+        }
+    }
+
+    public void StartTask()
+    {
+        MainManager.StartAlgorithm();
     }
 
     public void StopTask()
@@ -113,7 +134,6 @@ public abstract class SettingsBase : MonoBehaviour {
                 button.ToggleState();
             else
                 button.ChangeState();
-
         }
     }
 
