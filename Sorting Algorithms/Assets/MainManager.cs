@@ -11,9 +11,6 @@ public abstract class MainManager : MonoBehaviour {
      * 
     */
 
-    [SerializeField]
-    protected SettingsBase settings;
-
     protected string algorithmName;
     protected bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
     protected bool initialized = false;
@@ -30,23 +27,21 @@ public abstract class MainManager : MonoBehaviour {
         if (userStoppedAlgorithm)
             return;
 
-
-
         if (GetTeachingAlgorithm().IsTaskCompleted)
         {
             TaskCompletedFinishOff();
         }
         else
         {
-            if (settings.IsDemo())
-            {
-                DemoUpdate();
-            }
-            else if (settings.IsStepByStep())
+            if (Settings.IsStepByStep())
             {
                 StepByStepUpdate();
             }
-            else if (settings.IsUserTest())
+            else if (Settings.IsDemo())
+            {
+                DemoUpdate();
+            }
+            else if (Settings.IsUserTest())
             {
                 UserTestUpdate();
             }
@@ -57,6 +52,12 @@ public abstract class MainManager : MonoBehaviour {
     protected abstract void StepByStepUpdate();
     protected abstract void UserTestUpdate();
     protected abstract void TaskCompletedFinishOff();
+
+    // Algorithm is initialized
+    public bool Initialized
+    {
+        get { return initialized; }
+    }
 
     // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
     public bool BeginnerWait
@@ -70,6 +71,7 @@ public abstract class MainManager : MonoBehaviour {
         get { return controllerReady; }
         //set { controllerReady = value; }
     }
+
 
 
     // Finds the number of instructions which the player has to do something to progress  
@@ -91,6 +93,7 @@ public abstract class MainManager : MonoBehaviour {
 
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
     protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
+    public abstract SettingsBase Settings { get; }
 
     /* --------------------------------------- Instatiate Setup ---------------------------------------
      * > Called from UserController

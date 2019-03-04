@@ -22,17 +22,17 @@ public class MergeSort : SortAlgorithm {
     
     private void Start()
     {
-        numberOfElements = sortMain.SortSettings.NumberOfElements;
-        numberOfSplits = FindNumberOfSplits(numberOfElements, 0);
-        Debug.Log(numberOfSplits);
-        splitLeft = numberOfSplits;
-        splitRight = numberOfSplits;
+        //numberOfElements = sortMain.SortSettings.NumberOfElements;
+        //numberOfSplits = FindNumberOfSplits(numberOfElements, 0);
+        //Debug.Log(numberOfSplits);
+        //splitLeft = numberOfSplits;
+        //splitRight = numberOfSplits;
 
-        //
-        holderIndex.Add(8, new int[8] { 0, 4, 2, 1, 3, 6, 5, 7 });
-        holderIndex.Add(6, new int[6] { 0, 3, 2, 1, 5, 4 });
-        holderIndex.Add(4, new int[4] { 0, 2, 1, 3 });
-        holderIndex.Add(2, new int[2] { 0, 1 });
+        ////
+        //holderIndex.Add(8, new int[8] { 0, 4, 2, 1, 3, 6, 5, 7 });
+        //holderIndex.Add(6, new int[6] { 0, 3, 2, 1, 5, 4 });
+        //holderIndex.Add(4, new int[4] { 0, 2, 1, 3 });
+        //holderIndex.Add(2, new int[2] { 0, 1 });
     }
 
     public override string AlgorithmName

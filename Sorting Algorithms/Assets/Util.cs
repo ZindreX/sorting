@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Util : MonoBehaviour {
 
+    // Buttons
+    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_SPEED = "Slow", NORMAL_SPEED = "Normal", FAST_SPEED = "Fast", TEST_SPEED = "Test speed";
+
     // Teaching modes
     public const string DEMO = "Demo", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
 
@@ -20,7 +23,7 @@ public class Util : MonoBehaviour {
     public const string QUEUE = "Queue", STACK = "Stack", PRIORITY_LIST = "Priority";
 
     // Difficulty
-    //public const string BEGINNER = "Beginner", INTERMEDIATE = "Intermediate", ADVANCED = "Advanced", EXAMINATION = "Examination";
+    public const string BEGINNER_STR = "Beginner", INTERMEDIATE_STR = "Intermediate", ADVANCED_STR = "Advanced", EXAMINATION_STR = "Examination";
     public const int BEGINNER = 1, INTERMEDIATE = 2, ADVANCED = 3, EXAMINATION = 4;
 
     // Rooms
@@ -108,5 +111,29 @@ public class Util : MonoBehaviour {
     public static bool RollRandom(int below)
     {
         return Random.Range(ROLL_MIN, ROLL_MAX) < below;
+    }
+
+    public static string ConvertDifficulty(int difficulty)
+    {
+        switch (difficulty)
+        {
+            case 1: return BEGINNER_STR;
+            case 2: return INTERMEDIATE_STR;
+            case 3: return ADVANCED_STR;
+            case 4: return EXAMINATION_STR;
+            default: return "'" + difficulty + "' not found";
+        }
+    }
+
+    public static string ConvertAlgorithmSpeed(float value)
+    {
+        if (value == 2)
+            return SLOW_SPEED;
+        else if (value == 1)
+            return NORMAL_SPEED;
+        else if (value == 0.5)
+            return FAST_SPEED;
+        else
+            return TEST_SPEED;
     }
 }

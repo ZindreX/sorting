@@ -15,13 +15,15 @@ public class BucketSort : SortAlgorithm {
 
     [SerializeField]
     private BucketManager bucketManager;
+
+    [SerializeField]
     private BucketSortManager bucketSortManager;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
-    }
+    //protected override void Awake()
+    //{
+    //    base.Awake();
+    //    bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
+    //}
 
     public override string AlgorithmName
     {

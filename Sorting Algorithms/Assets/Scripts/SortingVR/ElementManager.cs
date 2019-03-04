@@ -80,8 +80,8 @@ public class ElementManager : MonoBehaviour, IManager {
 
         sortingElements = new GameObject[numberOfElements];
 
-        Debug.Log("OBS!!!!! Fix back to random here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        int val = 8;
+        //Debug.Log("OBS!!!!! Fix back to random here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //int val = 8;
 
         for (int x = 0; x < numberOfElements; x++)
         {
@@ -101,7 +101,7 @@ public class ElementManager : MonoBehaviour, IManager {
                 case UtilSort.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
-            sortingElements[x].GetComponent<SortingElementBase>().Value = val--; //newValue;
+            sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
             sortingElements[x].transform.parent = sortingTableElementsObj.transform;
         }

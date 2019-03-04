@@ -54,6 +54,10 @@ public class HolderManager : MonoBehaviour, IManager {
             holders[x].transform.parent = sortingTableHoldersObj.transform;
         }
         containsHolders = true;
+
+        // TODO: incease width of table
+        //Vector3 lastHolder = holders[holders.Length - 1].transform.position;
+        //sortingTableHoldersObj.GetComponentInChildren<MeshRenderer>().transform.localScale += new Vector3(lastHolder.x - firstHolderPos.x, 0f, 0f);
     }
 
     // Destroys all holders + reset

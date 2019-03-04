@@ -9,14 +9,25 @@ public class SortSettings : SettingsBase {
      * 
     */
 
+    // Algorithm settings
+    [Space(5)]
+    [Header("Sorting settings")]
+    [SerializeField]
+    private bool allowDuplicates;
+
+    private int numberOfElements;
+    private string sortingCase;
+
+    [Space(2)]
+    [Header("Objects")]
+    [SerializeField]
+    private SortMain sortMain;
 
     // ************** DEBUGGING ****************
 
-    [SerializeField]
-    private SortMain sortmain;
+    [Space(2)]
+    [Header("Debugging")]
 
-    [Space(5)]
-    [Header("Sorting settings")]
     [SerializeField]
     private AlgorithmEditor algorithmEditor;
     private enum AlgorithmEditor { BubbleSort, InsertionSort, BucketSort, MergeSort }
@@ -32,64 +43,76 @@ public class SortSettings : SettingsBase {
     private enum NumberofElementsEditor { two, four, six, eight }
 
     [SerializeField]
-    private bool allowDupEditor = false;
-
-    [SerializeField]
     private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
 
-    // Algorithm settings
-    private int numberOfElements = 8, difficulty = Util.BEGINNER;
-    //private string algorithm = Util.BUBBLE_SORT, teachingMode = Util.DEMO;
-    private string sortingCase = UtilSort.NONE;
-    private bool allowDuplicates = true;
-
-    [Space(2)]
-    [Header("Objects")]
-    [SerializeField]
-    private SortMain sortMain;
 
     private void Awake()
     {
-        PrepareSettings();
+        buttons = new Dictionary<string, OnOffButton>();
+
+        // Get buttons
+        Component[] buttonComponents = GetComponentsInChildren<OnOffButton>();
+        foreach (OnOffButton component in buttonComponents)
+        {
+            buttons.Add(component.ButtonID, component);
+        }
+    }
+
+    private void Start()
+    {
+        // Debugging editor (fast edit settings)
+        if (useDebuggingSettings)
+            PrepareSettings();
+        else
+        {
+            // Init settings
+            Algorithm = Util.BUBBLE_SORT;
+            TeachingMode = Util.DEMO;
+            NumberOfElements = 8;
+            SortingCase = UtilSort.NONE;
+            AlgorithmSpeed = 1;
+            Duplicates = false;
+            Difficulty = 1;
+        }
+        title.text = "Settings";
+        tooltips.text = "";
     }
 
     public override void PrepareSettings()
     {
         switch ((int)algorithmEditor)
         {
-            case 0: algorithm = Util.BUBBLE_SORT; break;
-            case 1: algorithm = Util.INSERTION_SORT; break;
-            case 2: algorithm = Util.BUCKET_SORT; break;
-            case 3: algorithm = Util.MERGE_SORT; break;
+            case 0: Algorithm = Util.BUBBLE_SORT; break;
+            case 1: Algorithm = Util.INSERTION_SORT; break;
+            case 2: Algorithm = Util.BUCKET_SORT; break;
+            case 3: Algorithm = Util.MERGE_SORT; break;
         }
 
         switch ((int)teachingModeEditor)
         {
-            case 0: teachingMode = Util.DEMO; break;
-            case 1: teachingMode = Util.STEP_BY_STEP; break;
-            case 2: teachingMode = Util.USER_TEST; break;
+            case 0: TeachingMode = Util.DEMO; break;
+            case 1: TeachingMode = Util.STEP_BY_STEP; break;
+            case 2: TeachingMode = Util.USER_TEST; break;
         }
 
         difficulty = (int)difficultyEditor + 1;
 
         switch ((int)sortingCaseEditor)
         {
-            case 0: sortingCase = UtilSort.NONE; break;
-            case 1: sortingCase = UtilSort.BEST_CASE; break;
-            case 2: sortingCase = UtilSort.WORST_CASE; break;
+            case 0: SortingCase = UtilSort.NONE; break;
+            case 1: SortingCase = UtilSort.BEST_CASE; break;
+            case 2: SortingCase = UtilSort.WORST_CASE; break;
         }
 
-        numberOfElements = ((int)numberofElementsEditor + 1) * 2;
+        NumberOfElements = ((int)numberofElementsEditor + 1) * 2;
 
         switch ((int)algorithmSpeed)
         {
-            case 0: algorithmSpeed = 2f; break;
-            case 1: algorithmSpeed = 1f; break;
-            case 2: algorithmSpeed = 0.5f; break;
+            case 0: AlgorithmSpeed = 2f; break;
+            case 1: AlgorithmSpeed = 1f; break;
+            case 2: AlgorithmSpeed = 0.5f; break;
         }
-
-        allowDuplicates = allowDupEditor;
 
         Debug.Log("Algorithm: " + algorithm + ", teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
     }
@@ -102,8 +125,6 @@ public class SortSettings : SettingsBase {
 
     [Space(4)]
     [Header("Sub settings")]
-    [SerializeField]
-    private Blackboard blackboard;
 
     [SerializeField]
     private GameObject subSettingsTitle;
@@ -111,44 +132,23 @@ public class SortSettings : SettingsBase {
     [SerializeField]
     private GameObject[] difficultyButtons, demoSpeedButtons, numberOfElementsButtons, caseButtons, duplicateButtons;
 
-    private void Start()
-    {
-        // Debugging
-        //SettingsFromEditor();
-        ChangeSubSettingsDisplay(TeachingMode);
-    }
 
     protected override MainManager MainManager
     {
-        get { return sortmain; }
-        set { sortmain = (SortMain)value; }
+        get { return sortMain; }
+        set { sortMain = (SortMain)value; }
     }
 
-    //public string Algorithm
-    //{
-    //    get { return algorithm; }
-    //    set { algorithm = value; blackboard.ChangeText(blackboard.TextIndex, "Algorithm: " + value); }
-    //}
-
-    // Tutorial, Step-By-Step, or User Test
-    //public string TeachingMode
-    //{
-    //    get { return teachingMode; }
-    //    set { teachingMode = value; ChangeSubSettingsDisplay(value); blackboard.ChangeText(blackboard.TextIndex, "Teaching mode: " + value); }
-    //}
-
-    // Beginner, Intermediate, or Examination
-    public int Difficulty
+    public override bool IsDemo()
     {
-        get { return difficulty; }
-        set { difficulty = value; FillTooltips("Difficulty: " + value);  blackboard.ChangeText(blackboard.TextIndex, "Difficulty: " + value); }
+        return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
     }
 
     // Number of elements used
     public int NumberOfElements
     {
         get { return numberOfElements; }
-        set { numberOfElements = value; FillTooltips("Number of elements: " + value); blackboard.ChangeText(blackboard.TextIndex, "Number of elements: " + value); }
+        set { numberOfElements = value; FillTooltips("Number of elements:\n" + value); } // remove
     }
 
     public void IncreaseNumberOfElements()
@@ -156,7 +156,7 @@ public class SortSettings : SettingsBase {
         if (numberOfElements < UtilSort.MAX_NUMBER_OF_ELEMENTS)
         {
             numberOfElements += 1;
-            FillTooltips("#Elements: " + numberOfElements);
+            FillTooltips("#Elements:\n" + numberOfElements);
         }
         else
         {
@@ -178,57 +178,29 @@ public class SortSettings : SettingsBase {
     }
 
     // Duplicates can occour in the problem sets (not implemented yet)
+    public void SetDuplicates()
+    {
+        allowDuplicates = !allowDuplicates;
+        FillTooltips("Duplicates:\n" + allowDuplicates);
+    }
+
     public bool Duplicates
     {
         get { return allowDuplicates; }
-        set { allowDuplicates = value; FillTooltips("Duplicates: " + value); blackboard.ChangeText(blackboard.TextIndex, "Duplicates: " + UtilSort.EnabledToString(value)); }
+        set { allowDuplicates = value; FillTooltips("Duplicates:\n" + value); SetActiveButton(UtilSort.DUPLICATES); }
     }
 
     // None, Best-case, Worst-case (not implemented yet)
     public string SortingCase
     {
         get { return sortingCase; }
-        set { sortingCase = value; FillTooltips("Sorting case: " + value); blackboard.ChangeText(blackboard.TextIndex, "Case activated: " + value); }
+        set { sortingCase = value; FillTooltips("Sorting case:\n" + value); SetActiveButton(value); }
     }
-
-    //public float DemoSpeed
-    //{
-    //    get { return demoStepDuration; }
-    //    set { demoStepDuration = value; blackboard.ChangeText(blackboard.TextIndex, "Demo speed: " + value + " seconds"); }
-    //}
-
-    //public void StartTask()
-    //{
-    //    sortMain.InstantiateSetup();
-    //}
-
-    //public void StopTask()
-    //{
-    //    sortMain.DestroyAndReset();
-    //}
 
     public void SetSettingsActive(bool active)
     {
         settingsObj.SetActive(active);
     }
-
-    // Check if it's a Tutorial (including stepbystep for simplicity, might fix this later)
-    //public bool IsDemo()
-    //{
-    //    return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
-    //}
-
-    //// Check if it's StepByStep (not used?)
-    //public bool IsStepByStep()
-    //{
-    //    return teachingMode == Util.STEP_BY_STEP;
-    //}
-
-    //// Check if it's UserTest
-    //public bool IsUserTest()
-    //{
-    //    return teachingMode == Util.USER_TEST;
-    //}
 
     // Changes the sub settings (middle wall w/buttons) based on the chosen teaching mode
     private void ChangeSubSettingsDisplay(string teachingMode)

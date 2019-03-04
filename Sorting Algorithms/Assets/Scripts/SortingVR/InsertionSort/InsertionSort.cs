@@ -340,7 +340,7 @@ public class InsertionSort : SortAlgorithm {
             Debug.Log("Debug: " + insertionInstruction.DebugInfo() + "\n");
 
             // Change internal state of sorting element
-            sortingElement = GetComponent<ElementManager>().GetSortingElement(insertionInstruction.SortingElementID).GetComponent<InsertionSortElement>();
+            sortingElement = sortMain.ElementManager.GetSortingElement(insertionInstruction.SortingElementID).GetComponent<InsertionSortElement>();
         }
 
         if (instruction is InstructionLoop)
@@ -735,9 +735,9 @@ public class InsertionSort : SortAlgorithm {
 
     public void MovePivotHolder(bool increment)
     {
-        if (GetComponent<SortMain>().ControllerReady)
+        if (sortMain.ControllerReady)
         {
-            if (increment && pivotHolder.PositionIndex < GetComponent<HolderManager>().Holders.Length - 1)
+            if (increment && pivotHolder.PositionIndex < sortMain.HolderManager.Holders.Length - 1)
             {
                 pivotHolder.transform.position += new Vector3(UtilSort.SPACE_BETWEEN_HOLDERS, 0f, 0f);
                 pivotHolder.PositionIndex++;

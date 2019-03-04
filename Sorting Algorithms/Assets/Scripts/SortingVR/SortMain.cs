@@ -201,6 +201,11 @@ public class SortMain : MainManager {
         get { return sortSettings; }
     }
 
+    public override SettingsBase Settings
+    {
+        get { return sortSettings; }
+    }
+
     public ElementManager ElementManager
     {
         get { return elementManager; }

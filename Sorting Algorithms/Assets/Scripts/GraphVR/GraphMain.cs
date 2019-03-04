@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(UserTestManager))]
 public class GraphMain : MainManager {
 
+    [SerializeField]
     private GraphSettings graphSettings;
     private GraphAlgorithm graphAlgorithm;
     private GraphManager graphManager;
@@ -32,7 +33,6 @@ public class GraphMain : MainManager {
         // >>> Basic components
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         posManager = FindObjectOfType<PositionManager>();
-        graphSettings = (GraphSettings)settings;
     }
 
     protected override void DemoUpdate()
@@ -159,6 +159,11 @@ public class GraphMain : MainManager {
     public override TeachingAlgorithm GetTeachingAlgorithm()
     {
         return graphAlgorithm;
+    }
+
+    public override SettingsBase Settings
+    {
+        get { return graphSettings; }
     }
 
     // Keeps only one graph structure active
