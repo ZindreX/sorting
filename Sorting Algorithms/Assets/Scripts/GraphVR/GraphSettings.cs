@@ -99,54 +99,89 @@ public class GraphSettings : SettingsBase {
     [SerializeField]
     private int buildEdgeChance = 1;
 
+    [SerializeField]
+    private bool initGrid;
     private string graphStructure, edgeType, edgeMode;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, levelDepthLength;
+
+    private void Start()
+    {
+        // Debugging editor (fast edit settings)
+        if (useDebuggingSettings)
+            PrepareSettings();
+        else
+        {
+            // Init settings
+            Algorithm = Util.BFS;
+            TeachingMode = Util.DEMO;
+            AlgorithmSpeed = 1;
+            Difficulty = 1;
+
+            // Graph
+            if (initGrid)
+            {
+                Graphstructure = UtilGraph.GRID_GRAPH;
+                EdgeType = UtilGraph.UNDIRECTED_EDGE;
+                EdgeMode = UtilGraph.FULL_EDGES_NO_CROSSING;
+                gridRows = 5;
+                gridColumns = 5;
+                gridSpace = 4;
+            }
+            else
+            {
+                treeDepth = 2;
+                nTree = 2;
+                levelDepthLength = 4;
+            }
+        }
+        tooltips.text = "";
+    }
 
     public override void PrepareSettings()
     {
         switch ((int)teachingModeEditor)
         {
-            case 0: teachingMode = Util.DEMO; break;
-            case 1: teachingMode = Util.USER_TEST; break;
+            case 0: TeachingMode = Util.DEMO; break;
+            case 1: TeachingMode = Util.USER_TEST; break;
         }
 
         switch ((int)algorithmEditor)
         {
-            case 0: algorithm = Util.BFS; break;
-            case 1: algorithm = Util.DFS; break;
-            case 2: algorithm = Util.DFS_RECURSIVE; break;
-            case 3: algorithm = Util.DIJKSTRA; break;
+            case 0: Algorithm = Util.BFS; break;
+            case 1: Algorithm = Util.DFS; break;
+            case 2: Algorithm = Util.DFS_RECURSIVE; break;
+            case 3: Algorithm = Util.DIJKSTRA; break;
         }
 
         switch ((int)algorithmSpeedEditor)
         {
-            case 0: algorithmSpeed = 3f; break;
-            case 1: algorithmSpeed = 1f; break;
-            case 2: algorithmSpeed = 0.25f; break;
-            case 4: algorithmSpeed = 0f; break;
+            case 0: AlgorithmSpeed = 3f; break;
+            case 1: AlgorithmSpeed = 1f; break;
+            case 2: AlgorithmSpeed = 0.25f; break;
+            case 4: AlgorithmSpeed = 0f; break;
         }
 
         // Graph
         switch ((int)graphStructureEditor)
         {
-            case 0: graphStructure = UtilGraph.GRID_GRAPH; break;
-            case 1: graphStructure = UtilGraph.TREE_GRAPH; break;
-            case 2: graphStructure = UtilGraph.RANDOM_GRAPH; break;
+            case 0: Graphstructure = UtilGraph.GRID_GRAPH; break;
+            case 1: Graphstructure = UtilGraph.TREE_GRAPH; break;
+            case 2: Graphstructure = UtilGraph.RANDOM_GRAPH; break;
         }
 
         switch ((int)edgeTypeEditor)
         {
-            case 0: edgeType = UtilGraph.UNDIRECTED_EDGE; break;
-            case 1: edgeType = UtilGraph.DIRECED_EDGE; break;
+            case 0: EdgeType = UtilGraph.UNDIRECTED_EDGE; break;
+            case 1: EdgeType = UtilGraph.DIRECED_EDGE; break;
         }
 
         switch ((int)edgeModeEditor)
         {
-            case 0: edgeMode = UtilGraph.FULL_EDGES; break;
-            case 1: edgeMode = UtilGraph.FULL_EDGES_NO_CROSSING; break;
-            case 2: edgeMode = UtilGraph.PARTIAL_EDGES; break;
-            case 3: edgeMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
+            case 0: EdgeMode = UtilGraph.FULL_EDGES; break;
+            case 1: EdgeMode = UtilGraph.FULL_EDGES_NO_CROSSING; break;
+            case 2: EdgeMode = UtilGraph.PARTIAL_EDGES; break;
+            case 3: EdgeMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
         }
 
         if (graphStructure.Equals(UtilGraph.GRID_GRAPH))
@@ -179,19 +214,19 @@ public class GraphSettings : SettingsBase {
     public string Graphstructure
     {
         get { return graphStructure; }
-        set { graphStructure = value; FillTooltips("Graph structure: " + value); }
+        set { graphStructure = value; FillTooltips("Graph structure: " + value); SetActiveButton(""); }
     }
 
     public string EdgeType
     {
         get { return edgeType; }
-        set { edgeType = value; FillTooltips("Edge type: " + value); }
+        set { edgeType = value; FillTooltips("Edge type: " + value); SetActiveButton(""); }
     }
 
     public string EdgeMode
     {
         get { return edgeMode; }
-        set { edgeMode = value; FillTooltips("Edge mode: " + value); }
+        set { edgeMode = value; FillTooltips("Edge mode: " + value); SetActiveButton(""); }
     }
 
     public int[] StartNode()
@@ -207,13 +242,13 @@ public class GraphSettings : SettingsBase {
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOneToAll; }
-        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); }
+        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); SetActiveButton(""); }
     }
 
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }
-        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); }
+        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); SetActiveButton(""); }
     }
 
     public int[] GraphSetup()

@@ -38,13 +38,12 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         set { sortMain = (SortMain)value; }
     }
 
-
-
     public override void ResetSetup()
     {
         value1 = UtilSort.INIT_STATE;
         value2 = UtilSort.INIT_STATE;
         prevHighlight = new List<int>();
+        //sortMain = null;
         base.ResetSetup();
     }
 

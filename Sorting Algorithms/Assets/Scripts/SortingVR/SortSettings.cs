@@ -46,19 +46,6 @@ public class SortSettings : SettingsBase {
     private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
 
-
-    private void Awake()
-    {
-        buttons = new Dictionary<string, OnOffButton>();
-
-        // Get buttons
-        Component[] buttonComponents = GetComponentsInChildren<OnOffButton>();
-        foreach (OnOffButton component in buttonComponents)
-        {
-            buttons.Add(component.ButtonID, component);
-        }
-    }
-
     private void Start()
     {
         // Debugging editor (fast edit settings)
@@ -72,10 +59,9 @@ public class SortSettings : SettingsBase {
             NumberOfElements = 8;
             SortingCase = UtilSort.NONE;
             AlgorithmSpeed = 1;
-            Duplicates = false;
             Difficulty = 1;
+            Duplicates = true; //SetDuplicates();
         }
-        title.text = "Settings";
         tooltips.text = "";
     }
 
@@ -96,7 +82,7 @@ public class SortSettings : SettingsBase {
             case 2: TeachingMode = Util.USER_TEST; break;
         }
 
-        difficulty = (int)difficultyEditor + 1;
+        Difficulty = (int)difficultyEditor + 1;
 
         switch ((int)sortingCaseEditor)
         {
@@ -107,12 +93,22 @@ public class SortSettings : SettingsBase {
 
         NumberOfElements = ((int)numberofElementsEditor + 1) * 2;
 
-        switch ((int)algorithmSpeed)
+        switch ((int)algorithmSpeedEditor)
         {
             case 0: AlgorithmSpeed = 2f; break;
             case 1: AlgorithmSpeed = 1f; break;
             case 2: AlgorithmSpeed = 0.5f; break;
         }
+
+        if (allowDuplicates)
+            Duplicates = allowDuplicates; // Toggle false -> true
+        else
+        {
+            // No color/text if not toggle 2x (TODO: improve)
+            Duplicates = allowDuplicates; // Toggle false -> true
+            Duplicates = allowDuplicates; // Toggle true -> false (correct color/text)
+        }
+
 
         Debug.Log("Algorithm: " + algorithm + ", teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
     }
@@ -176,18 +172,20 @@ public class SortSettings : SettingsBase {
         }
     }
 
-    // Duplicates can occour in the problem sets (not implemented yet)
+    // Duplicates can occour in the problem sets (used by the in game button)
     public void SetDuplicates()
     {
         allowDuplicates = !allowDuplicates;
-        FillTooltips("Duplicates:\n" + allowDuplicates);
+        FillTooltips("Allow duplicates:\n" + allowDuplicates);
     }
 
+    // Init setup duplicates
     public bool Duplicates
     {
         get { return allowDuplicates; }
-        set { allowDuplicates = value; FillTooltips("Duplicates:\n" + value); SetActiveButton(UtilSort.DUPLICATES); }
+        set { allowDuplicates = value; FillTooltips("Allow duplicates:\n" + Util.EnabledToString(value)); SetActiveButton(UtilSort.DUPLICATES); }
     }
+    
 
     // None, Best-case, Worst-case (not implemented yet)
     public string SortingCase

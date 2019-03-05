@@ -20,15 +20,19 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     public void InitSortingManager(SortMain sortMain)
     {
         this.sortMain = sortMain;
+        Debug.Log("Algorithm: " + AlgorithmManager);
     }
 
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
     public virtual HolderBase GetCorrectHolder(int index)
     {
+        Debug.Log("Nani");
         return sortMain.HolderManager.GetHolder(index);
     }
 
     // --------------------------------------- To be implemented in subclasses ---------------------------------------
+
+    public abstract string AlgorithmManager { get; }
 
     // Moves needed to progress to next instruction
     public abstract int MovesNeeded { get; }

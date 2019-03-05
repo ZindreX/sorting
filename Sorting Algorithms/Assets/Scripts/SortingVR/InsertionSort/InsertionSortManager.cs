@@ -8,6 +8,11 @@ public class InsertionSortManager : AlgorithmManagerBase {
     [SerializeField]
     private InsertionSort insertionSort;
 
+    public override string AlgorithmManager
+    {
+        get { return insertionSort.AlgorithmName + " Manager"; }
+    }
+
     public override int MovesNeeded
     {
         get { return 1; }

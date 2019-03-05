@@ -18,7 +18,7 @@ public class ElementManager : MonoBehaviour, IManager {
     private bool containsElements = false;
     private SortMain superElement;
 
-    private void Awake()
+    public void InitManager()
     {
         superElement = GetComponent<SortMain>();
     }

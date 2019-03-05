@@ -10,6 +10,9 @@ public class BubbleSort : SortAlgorithm {
      * Moves the biggest until it reaches the end of the list
     */
 
+    [SerializeField]
+    private BubbleSortManager bubbleSortManager;
+
     public override string AlgorithmName
     {
         get { return UtilSort.BUBBLE_SORT; }
@@ -126,6 +129,7 @@ public class BubbleSort : SortAlgorithm {
     #region Bubble Sort: All Moves Demo (Visual)
     public override IEnumerator Demo(GameObject[] list)
     {
+        Debug.Log("Starting Bubble sort demo!!!");
         int N = list.Length;
         i = 0;
         j = 0;
@@ -156,11 +160,8 @@ public class BubbleSort : SortAlgorithm {
                     break;
 
                 // Choose sorting elements to compare
-                BubbleSortElement p1 = null, p2 = null;
-                if (list[j] != null)
-                    p1 = list[j].GetComponent<BubbleSortElement>();
-                if (list[j + 1] != null)
-                    p2 = list[j + 1].GetComponent<BubbleSortElement>();
+                BubbleSortElement p1 = list[j].GetComponent<BubbleSortElement>();
+                BubbleSortElement p2 = list[j + 1].GetComponent<BubbleSortElement>();
 
                 // Change status
                 if (p1 != null)
@@ -398,8 +399,8 @@ public class BubbleSort : SortAlgorithm {
 
         if (gotSortingElement)
         {
-            se1 = GetComponent<ElementManager>().GetSortingElement(((BubbleSortInstruction)instruction).SortingElementID1).GetComponent<BubbleSortElement>();
-            se2 = GetComponent<ElementManager>().GetSortingElement(((BubbleSortInstruction)instruction).SortingElementID2).GetComponent<BubbleSortElement>();
+            se1 = sortMain.ElementManager.GetSortingElement(((BubbleSortInstruction)instruction).SortingElementID1).GetComponent<BubbleSortElement>();
+            se2 = sortMain.ElementManager.GetSortingElement(((BubbleSortInstruction)instruction).SortingElementID2).GetComponent<BubbleSortElement>();
         }
 
         if (instruction is InstructionLoop)

@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IManager {
 
     void CreateObjects(int numberOfElements, Vector3[] positions);
+    void InitManager();
     void DestroyAndReset();
 
 

@@ -57,6 +57,10 @@ public class AlgorithmUserController : MonoBehaviour {
                 sortMain.InstantiateSetup();
                 StartCoroutine(DebugWait());
             }
+            else if (Input.GetKey(KeyCode.T))
+            {
+                sortMain.StartAlgorithm();
+            }
             else if (Input.GetKey(KeyCode.O))
             {
                 sortMain.DestroyAndReset();

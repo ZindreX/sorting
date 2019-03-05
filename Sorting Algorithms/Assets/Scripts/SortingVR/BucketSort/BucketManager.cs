@@ -15,7 +15,7 @@ public class BucketManager : MonoBehaviour, IManager {
 
     private SortMain superElement;
 
-    void Awake()
+    public void InitManager()
     {
         buckets = new GameObject[GetComponent<BucketSortManager>().NumberOfBuckets];
         superElement = GetComponentInParent<SortMain>();

@@ -21,10 +21,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected string lengthOfList = "len(Q)";
 
     // User Test
-    protected Dictionary<string, List<string>> skipDict = new Dictionary<string, List<string>>();
+    protected Dictionary<string, List<string>> skipDict;
 
-    protected virtual void Awake()
+    public virtual void InitTeachingAlgorithm()
     {
+        skipDict = new Dictionary<string, List<string>>();
         AddSkipAbleInstructions();
     }
 
@@ -78,7 +79,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     // Instructions which the user don't need to perform any actions to proceed
     public virtual void AddSkipAbleInstructions()
     {
-        // Insert base skip instructions (any common sort/graph???)
         skipDict.Add(Util.SKIP_NO_ELEMENT, new List<string>());
     }
 
@@ -90,6 +90,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         lengthOfList = "len(Q)";
         isTaskCompleted = false;
         demoStepDuration = null;
+        skipDict = null;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------

@@ -262,22 +262,11 @@ public class GraphMain : MainManager {
 
         // Mark start-/end nodes
         graphManager.SetupImportantNodes(null, null, false);
-
-        // Init teaching mode
-        switch (graphSettings.TeachingMode)
-        {
-            case Util.DEMO: PerformAlgorithmDemo(); break;
-            case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
-            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
-            default: Debug.LogError("Teaching mode '" + graphSettings.TeachingMode + "' unknown."); break;
-        }
-
-        algorithmStarted = true;
     }
 
-    protected override void ActivateTaskObjects(bool active)
+    protected override IEnumerator ActivateTaskObjects(bool active)
     {
-
+        yield return null;
     }
 
 

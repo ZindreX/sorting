@@ -18,6 +18,13 @@ public class HolderManager : MonoBehaviour, IManager {
     [SerializeField]
     private Transform firstHolderPosition;
     private bool containsHolders = false;
+    private SortMain superElement;
+
+    public void InitManager()
+    {
+        superElement = GetComponent<SortMain>();
+    }
+
 
     public GameObject[] Holders
     {
@@ -41,7 +48,7 @@ public class HolderManager : MonoBehaviour, IManager {
         for (int x = 0; x < numberOfHolders; x++)
         {
             holders[x] = Instantiate(holderPrefab, firstHolderPos + new Vector3((x * UtilSort.SPACE_BETWEEN_HOLDERS), 0f, 0f), Quaternion.identity);
-            switch (GetComponent<SortMain>().GetTeachingAlgorithm().AlgorithmName)
+            switch (superElement.GetTeachingAlgorithm().AlgorithmName)
             {
                 case UtilSort.BUBBLE_SORT: holders[x].AddComponent<BubbleSortHolder>(); break;
                 case UtilSort.INSERTION_SORT: holders[x].AddComponent<InsertionSortHolder>(); break;
@@ -50,7 +57,7 @@ public class HolderManager : MonoBehaviour, IManager {
                 default: Debug.LogError("Add subclass for holder!"); break;
             }
             
-            holders[x].GetComponent<HolderBase>().SuperElement = GetComponent<SortMain>(); // null(?): add C# script to holder / sorting elements
+            holders[x].GetComponent<HolderBase>().SuperElement = superElement; // null(?): add C# script to holder / sorting elements
             holders[x].transform.parent = sortingTableHoldersObj.transform;
         }
         containsHolders = true;
@@ -66,6 +73,7 @@ public class HolderManager : MonoBehaviour, IManager {
         UtilSort.DestroyObjects(holders);
         containsHolders = false;
         HolderBase.HOLDER_NR = 0;
+        superElement = null;
     }
 
     public Vector3[] GetHolderPositions()
@@ -73,7 +81,8 @@ public class HolderManager : MonoBehaviour, IManager {
         Vector3[] positions = new Vector3[holders.Length];
         for (int x=0; x < holders.Length; x++)
         {
-            positions[x] = holders[x].transform.position;
+            if (holders[x] != null)
+                positions[x] = holders[x].transform.position;
         }
         return positions;
     }

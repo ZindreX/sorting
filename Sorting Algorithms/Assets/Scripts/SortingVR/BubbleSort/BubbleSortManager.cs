@@ -8,6 +8,11 @@ public class BubbleSortManager : AlgorithmManagerBase {
     [SerializeField]
     private BubbleSort bubbleSort;
 
+    public override string AlgorithmManager
+    {
+        get { return bubbleSort.AlgorithmName + " Manager"; }
+    }
+
     public override int MovesNeeded
     {
         get { return 2; }

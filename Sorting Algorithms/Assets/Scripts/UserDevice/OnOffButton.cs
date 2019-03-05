@@ -20,15 +20,13 @@ public class OnOffButton : MonoBehaviour {
     private Material onMaterial, offMaterial, nonMaterial;
 
     [SerializeField]
-    private bool isOnOffButton;
+    private bool isOnOffButton, staticColor;
 
     [SerializeField]
     private GameObject section;
 
     [SerializeField]
     private OnOffButton[] sectionButtons;
-
-
 
     private void Awake()
     {
@@ -68,7 +66,9 @@ public class OnOffButton : MonoBehaviour {
 
         // Activate this button
         state = true;
-        GetComponentInChildren<Renderer>().material = onMaterial;
+
+        if (!staticColor)
+            GetComponentInChildren<Renderer>().material = onMaterial;
     }
 
     public void ToggleState()
@@ -89,10 +89,14 @@ public class OnOffButton : MonoBehaviour {
     public void DeactivateButton()
     {
         state = false;
-        if (isOnOffButton)
-            GetComponentInChildren<Renderer>().material = offMaterial;
-        else
-            GetComponentInChildren<Renderer>().material = nonMaterial;
+
+        if (!staticColor)
+        {
+            if (isOnOffButton)
+                GetComponentInChildren<Renderer>().material = offMaterial;
+            else
+                GetComponentInChildren<Renderer>().material = nonMaterial;
+        }
     }
 
 

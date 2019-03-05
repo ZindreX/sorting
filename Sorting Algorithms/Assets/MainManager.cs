@@ -116,7 +116,7 @@ public abstract class MainManager : MonoBehaviour {
     protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
     public abstract SettingsBase Settings { get; }
 
-    protected abstract void ActivateTaskObjects(bool active);
+    protected abstract IEnumerator ActivateTaskObjects(bool active);
 
     /* --------------------------------------- Instatiate Setup ---------------------------------------
      * > Called from UserController

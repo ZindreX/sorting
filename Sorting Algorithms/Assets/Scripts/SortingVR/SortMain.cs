@@ -18,7 +18,7 @@ public class SortMain : MainManager {
     protected DisplayUnitManager displayUnitManager;
 
     // Teaching modes
-    protected StepByStepManager tutorialStep;
+    protected StepByStepManager stepByStepManager;
     protected UserTestManager userTestManager;
 
     [SerializeField]
@@ -28,13 +28,14 @@ public class SortMain : MainManager {
     private GameObject sortAlgorithmsObj, displayUnitManagerObj, sortingTableObj;
 
     private Vector3[] holderPositions;
+    protected WaitForSeconds loading = new WaitForSeconds(1f);
 
     private void Awake()
     {
         // >>> Objects
         holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
         elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
-        tutorialStep = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
+        stepByStepManager = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
     }
@@ -84,46 +85,44 @@ public class SortMain : MainManager {
     */
     public override void InstantiateSetup()
     {
-        // From awake
-        // Prepare settings from editor (debugging)
-        //sortSettings.PrepareSettings();
+        // Get values from settings
+        algorithmName = sortSettings.Algorithm; // string name
+        int numberOfElements = sortSettings.NumberOfElements;
+        bool allowDuplicates = sortSettings.Duplicates;
+        string sortingCase = sortSettings.SortingCase;
+        float algorithmSpeed = sortSettings.AlgorithmSpeed;
 
-        // >>> Algorithm
-        algorithmName = sortSettings.Algorithm;
-        sortAlgorithm = (SortAlgorithm)GrabAlgorithmFromObj(); // move to init
-        sortAlgorithm.MainManager = this;
-        sortAlgorithm.DemoStepDuration = new WaitForSeconds(sortSettings.AlgorithmSpeed);
+        // Algorithm setup
+        sortAlgorithm = (SortAlgorithm)GrabAlgorithmFromObj(); // SortAlgorithm object
+        sortAlgorithm.InitTeachingAlgorithm();
+        sortAlgorithm.MainManager = this; // Set main manager
+        sortAlgorithm.DemoStepDuration = new WaitForSeconds(algorithmSpeed); // set algorithm step duration speed
 
-        // Manager
+        // Algorithm manager setup
         algorithmManagerBase = ActivateDeactivateSortingManagers(algorithmName);
         algorithmManagerBase.InitSortingManager(this);
 
         sortAlgorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
-        displayUnitManager.SetAlgorithmForPseudo(sortAlgorithm);
-        // awake end
 
-        // From start
-        // Right blackboard title / text
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, "Teaching mode: " + sortSettings.TeachingMode);
+        // Init display unit manager
+        displayUnitManager.InitDisplayUnitManager(sortAlgorithm);
+        displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, algorithmName, 0);
 
-        // start end
-
-        holderManager.CreateObjects(sortSettings.NumberOfElements, null);
+        // Init holder manager
+        holderManager.InitManager();
+        holderManager.CreateObjects(numberOfElements, null);
         HolderPositions = holderManager.GetHolderPositions();
-        elementManager.CreateObjects(sortSettings.NumberOfElements, HolderPositions, sortSettings.Duplicates, sortSettings.SortingCase);
 
-        // Display on blackboard
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, algorithmName);
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, sortSettings.TeachingMode);
+        // Init element manager
+        elementManager.InitManager();
+        elementManager.CreateObjects(numberOfElements, HolderPositions, allowDuplicates, sortingCase);
 
-        // Display pseudocode
+        // Prepare difficulty level related stuff for user test
         if (sortSettings.TeachingMode == Util.USER_TEST)
         {
             if (sortSettings.Difficulty <= Util.INTERMEDIATE)
             {
                 displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
-                //displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
             }
             else if (sortSettings.Difficulty == Util.ADVANCED)
             {
@@ -138,10 +137,12 @@ public class SortMain : MainManager {
         else
         {
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
-            //displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
         }
-        Debug.Log("Setting up table / removing menu");
-        ActivateTaskObjects(true);
+        
+        // Hide menu and display sorting table
+        StartCoroutine(ActivateTaskObjects(true));
+
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Click start to play");
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -152,29 +153,14 @@ public class SortMain : MainManager {
     {
         algorithmStarted = false;
 
-        //Debug.Log("isdemo: " + sortSettings.IsDemo() + ", not stepbystep: " + !sortSettings.IsStepByStep() + ", task not completed: " + !sortAlgorithm.IsTaskCompleted);
-
-        //if (sortSettings.IsDemo() && !sortSettings.IsStepByStep() && !sortAlgorithm.IsTaskCompleted)
-        //{
-        //    // Warning message during Demo(works only on monitor, not in VR)
-        //    StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", UtilSort.ERROR_COLOR)); // remove when fixed
-        //}
-        //else
-        //{
-        Debug.Log("Shutting down");
-
         // Stop ongoing actions
         UserStoppedAlgorithm = true;
-
-        // Destroy holders
-        holderManager.DestroyAndReset();
 
         // Destroy sorting elements
         elementManager.DestroyAndReset();
 
-        // Reset (done in sortAlg)
-        //if (sortAlgorithm.IsTaskCompleted)
-        //    sortAlgorithm.IsTaskCompleted = false;
+        // Destroy holders
+        holderManager.DestroyAndReset();
 
         // Reset algorithm
         sortAlgorithm.ResetSetup();
@@ -184,13 +170,22 @@ public class SortMain : MainManager {
         displayUnitManager.DestroyDisplaysContent(); //::::
 
         // Hide sorting table and bring back menu
-        ActivateTaskObjects(false);
+        StartCoroutine(ActivateTaskObjects(false));
 
         //
         controllerReady = false;
 
         // Cleanup pseudocode
         sortAlgorithm.PseudoCodeViewer.DestroyPseudoCode();
+
+        // test stuff
+        switch (sortSettings.TeachingMode)
+        {
+            case Util.DEMO: break;
+            case Util.STEP_BY_STEP: stepByStepManager.ResetState(); break;
+            case Util.USER_TEST: userTestManager.ResetState(); break;
+            default: Debug.Log("Teaching mode '" + sortSettings.TeachingMode + "' not found"); break;
+        }
     }
 
     /* --------------------------------------- Demo ---------------------------------------
@@ -199,7 +194,8 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
-        Debug.Log(">>> Performing " + algorithmName + " demo.");
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn");
+
         elementManager.InteractionWithSortingElements(false);
         //MergeSort.MergeSortStandard(elementManager.SortingElements);
         //Debug.Log("----------------------------------------------------------------------");
@@ -218,31 +214,34 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmStepByStep()
     {
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use grip buttons\n to progress");
+
         // Getting instructions for this sample of sorting elements
         elementManager.InteractionWithSortingElements(false);
-        tutorialStep.Init(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
+        stepByStepManager.Init(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
     }
 
     // Input from user during Step-By-Step (increment/decrement)
     public void PlayerStepByStepInput(bool increment)
     {
         if (ControllerReady)
-            tutorialStep.NotifyUserInput(increment);
+            stepByStepManager.NotifyUserInput(increment);
     }
 
     protected override void StepByStepUpdate()
     {
-        if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
+        if (stepByStepManager.PlayerMove && stepByStepManager.IsValidStep)
         {
-            tutorialStep.PlayerMove = false;
-            InstructionBase instruction = tutorialStep.GetStep();
-            Debug.Log(">>> " + instruction.Instruction);
+            stepByStepManager.PlayerMove = false;
+            InstructionBase instruction = stepByStepManager.GetStep();
+            
+            //Debug.Log(">>> " + instruction.Instruction);
             //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
             //Debug.Log(tutorialStep.CurrentInstructionNr);
 
 
             bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-            sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
+            sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, stepByStepManager.PlayerIncremented);
         }
     }
 
@@ -252,7 +251,9 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmUserTest()
     {
-        Debug.Log(">>> Performing " + algorithmName + " user test.");
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use trigger buttons to interact\n with the sorting elements");
+
+        // Enable interaction
         elementManager.InteractionWithSortingElements(true);
 
         // Getting instructions for this sample of sorting elements
@@ -263,8 +264,6 @@ public class SortMain : MainManager {
 
         // Set start time
         userTestManager.SetStartTime();
-
-        //DebugCheckInstructions(instructions); // Debugging
 
         userTestReady = true; // debugging
     }
@@ -339,13 +338,24 @@ public class SortMain : MainManager {
     // --------------------------------------- Other functions --------------------------------------- 
 
     // Makes specific objects visible/invisible based on when they should be active
-    protected override void ActivateTaskObjects(bool active)
+    protected override IEnumerator ActivateTaskObjects(bool active)
     {
+
+        sortSettings.FillTooltips("Loading setup...");
+        displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading setup", 1);
+        yield return loading;
+        displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading complete!", 1);
+
         // Settings menu
         sortSettings.SetSettingsActive(!active);
 
         // Sorting table
         sortingTableObj.SetActive(active);
+
+        yield return loading;
+
+        if (active)
+            displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Teaching mode: " + sortSettings.TeachingMode, 1);
 
     }
 
@@ -371,12 +381,18 @@ public class SortMain : MainManager {
                 return GetComponentInChildren<InsertionSortManager>();
 
             case Util.BUCKET_SORT:
+                BucketSortManager bucketSortManager = GetComponentInChildren<BucketSortManager>();
+                bucketSortManager.enabled = true;
+
+                BucketManager bucketManager = GetComponentInChildren<BucketManager>();
+                bucketManager.enabled = true;
+                bucketManager.InitManager();
+
                 GetComponentInChildren<BubbleSortManager>().enabled = false;
                 GetComponentInChildren<InsertionSortManager>().enabled = false;
-                GetComponentInChildren<BucketSortManager>().enabled = true;
-                GetComponentInChildren<BucketManager>().enabled = true;
                 GetComponentInChildren<MergeSortManager>().enabled = false;
-                return GetComponentInChildren<BucketSortManager>();
+
+                return bucketSortManager;
 
             case Util.MERGE_SORT:
                 GetComponentInChildren<BubbleSortManager>().enabled = false;
@@ -432,17 +448,17 @@ public class SortMain : MainManager {
         {
             if (sortSettings.IsStepByStep())
             {
-                if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
+                if (stepByStepManager.PlayerMove && stepByStepManager.IsValidStep)
                 {
-                    tutorialStep.PlayerMove = false;
-                    InstructionBase instruction = tutorialStep.GetStep();
+                    stepByStepManager.PlayerMove = false;
+                    InstructionBase instruction = stepByStepManager.GetStep();
                     Debug.Log(">>> " + instruction.Instruction);
                     //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
                     //Debug.Log(tutorialStep.CurrentInstructionNr);
 
 
                     bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-                    sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
+                    sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, stepByStepManager.PlayerIncremented);
                 }
             }
             else if (sortSettings.IsUserTest()) // User test

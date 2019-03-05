@@ -21,6 +21,7 @@ public class UserTestManager : InstructionControlBase {
     private float startTime, endTime, timeSpent;
     private int streakScore, totalScore, currentStreak, longestStreak, difficultyMultiplier;
     private string difficultyLevel;
+    private WaitForSeconds scoreUpdateDuration;
 
     /* Parameters:
      * - instructions           : a set of instructions which includes all steps through a algorithm
@@ -36,6 +37,7 @@ public class UserTestManager : InstructionControlBase {
         totalCorrect = 0;
         totalErrorCount = 0;
         errorLog = new Dictionary<string, int>();
+        scoreUpdateDuration = new WaitForSeconds(SCORE_UPDATE);
     }
 
     // Added methods from scoremanager
@@ -59,7 +61,7 @@ public class UserTestManager : InstructionControlBase {
 
     public int CalculateScore()
     {
-        if (GetComponent<SortAlgorithm>().IsTaskCompleted)
+        if (sortMain.GetTeachingAlgorithm().IsTaskCompleted)
             return CalculateTotalScore();
         return CalculateIntermediateScore();
     }
@@ -79,7 +81,7 @@ public class UserTestManager : InstructionControlBase {
     public IEnumerator VisualizeScore()
     {
         // TODO: display score on blackboard at end of game
-        yield return new WaitForSeconds(SCORE_UPDATE);
+        yield return scoreUpdateDuration;
     }
 
     // Sets when User Test begins
@@ -92,7 +94,7 @@ public class UserTestManager : InstructionControlBase {
     // Sets when User Test ends
     public void SetEndTime()
     {
-        if (endTime == 0 && GetComponent<SortAlgorithm>().IsTaskCompleted)
+        if (endTime == 0 && sortMain.GetTeachingAlgorithm().IsTaskCompleted)
         {
             endTime = Time.deltaTime;
             timeSpent = endTime - startTime;
@@ -210,6 +212,7 @@ public class UserTestManager : InstructionControlBase {
         streakScore = 0;
         currentStreak = 0;
         longestStreak = 0;
+        scoreUpdateDuration = null;
     }
 
     public override string FillInBlackboard()

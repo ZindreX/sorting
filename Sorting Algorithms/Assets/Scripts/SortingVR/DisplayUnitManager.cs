@@ -1,13 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DisplayUnitManager : MonoBehaviour {
 
     [SerializeField]
-    private GameObject leftBlackboard, centerBlackboard, rightBlackboard;
+    private PseudoCodeViewer centerBlackboard;
+
+    [SerializeField]
+    private Blackboard rightBlackboard;
+
+
+    [SerializeField]
+    private TextMeshPro leftInfoBoardText, sortingTableText, settingsMenuText;
 
     private SortAlgorithm algorithm;
+
+    public void InitDisplayUnitManager(SortAlgorithm algorithm)
+    {
+        centerBlackboard.InitPseudoCodeViewer(algorithm, UtilSort.SPACE_BETWEEN_CODE_LINES, new Vector2(10, 2));
+        leftInfoBoardText.text = "";
+        sortingTableText.text = "";
+        settingsMenuText.text = "";
+    }
 
     public SortAlgorithm Algorithm
     {
@@ -15,41 +31,43 @@ public class DisplayUnitManager : MonoBehaviour {
         set { algorithm = value; }
     }
 
-    public PseudoCodeViewer PseudoCodeViewerFixed
-    {
-        get { return leftBlackboard.GetComponent<PseudoCodeViewer>(); }
-    }
-
     // Algorithm will control this blackboard
     public PseudoCodeViewer PseudoCodeViewer
     {
-        get { return centerBlackboard.GetComponent<PseudoCodeViewer>(); }
+        get { return centerBlackboard; }
     }
 
     public Blackboard BlackBoard
     {
-        get { return rightBlackboard.GetComponent<Blackboard>(); }
+        get { return rightBlackboard; }
     }
-
-    public void SetAlgorithmForPseudo(SortAlgorithm algorithm)
-    {
-        PseudoCodeViewer.InitPseudoCodeViewer(algorithm, UtilSort.SPACE_BETWEEN_CODE_LINES, new Vector2(10, 2));
-        //PseudoCodeViewerFixed.SetAlgorithm(algorithm);
-    }
-
 
     public void ResetDisplays()
     {
-        //leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
-        centerBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
-        rightBlackboard.GetComponent<Blackboard>().EmptyContent();
+        leftInfoBoardText.text = "";
+        centerBlackboard.EmptyContent();
+        rightBlackboard.EmptyContent();
     }
 
     public void DestroyDisplaysContent()
     {
-        //leftBlackboard.GetComponent<PseudoCodeViewer>().EmptyContent();
-        centerBlackboard.GetComponent<PseudoCodeViewer>().DestroyPseudoCode();
-        rightBlackboard.GetComponent<Blackboard>().EmptyContent();
+        centerBlackboard.DestroyPseudoCode();
+    }
+
+    public void SetTextWithIndex(string display, string text, int index)
+    {
+        switch (display)
+        {
+            case UtilSort.LEFT_BLACKBOARD: leftInfoBoardText.text = text; break;
+            case UtilSort.RIGHT_BLACKBOARD: rightBlackboard.ChangeText(index, text); break;
+            case UtilSort.SORT_TABLE_TEXT: sortingTableText.text = text; break;
+            case UtilSort.SETTINGS_MENU_TEXT: break;
+        }
+    }
+
+    public void SetText(string display, string text)
+    {
+        SetTextWithIndex(display, text, Util.NO_INDEX_VALUE);
     }
 
 

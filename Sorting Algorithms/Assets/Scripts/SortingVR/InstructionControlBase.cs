@@ -12,10 +12,13 @@ public abstract class InstructionControlBase : MonoBehaviour {
     protected int currentInstructionNr = 0;
     protected Dictionary<int, InstructionBase> instructions;
 
+    protected SortMain sortMain;
+
     public virtual void Init(Dictionary<int, InstructionBase> instructions)
     {
         this.instructions = instructions;
         currentInstructionNr = -1;
+        sortMain = GetComponent<SortMain>();
     }
 
     public bool HasInstructions()

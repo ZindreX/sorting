@@ -128,11 +128,11 @@ public class Util : MonoBehaviour {
 
     public static string ConvertAlgorithmSpeed(float value)
     {
-        if (value == 2)
+        if (value == 2f)
             return SLOW_SPEED;
-        else if (value == 1)
+        else if (value == 1f)
             return NORMAL_SPEED;
-        else if (value == 0.5)
+        else if (value == 0.5f)
             return FAST_SPEED;
         else
             return TEST_SPEED;

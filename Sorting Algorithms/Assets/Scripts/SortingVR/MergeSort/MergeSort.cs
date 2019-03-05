@@ -16,6 +16,9 @@ public class MergeSort : SortAlgorithm {
     [SerializeField]
     private GameObject holderPrefab;
 
+    [SerializeField]
+    private MergeSortManager mergeSortManager;
+
     private int numberOfElements, numberOfSplits;
     private Vector3 splitHolderPos = new Vector3(0f, 0.2f, 0.2f);
     private Dictionary<int, int[]> holderIndex = new Dictionary<int, int[]>();

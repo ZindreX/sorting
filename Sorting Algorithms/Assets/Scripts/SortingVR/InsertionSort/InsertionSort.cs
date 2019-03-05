@@ -12,19 +12,20 @@ public class InsertionSort : SortAlgorithm {
      */
 
     [SerializeField]
-    private GameObject pivotHolderPrefab;
+    private GameObject pivotHolderPrefab, sortingTableHoldersObj;
     private GameObject pivotHolderClone;
 
     private InsertionSortHolder pivotHolder;
     private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
 
+    [SerializeField]
     private InsertionSortManager insertionSortManager;
 
-    protected override void Awake()
+    public override void InitTeachingAlgorithm()
     {
-        base.Awake();
+        base.InitTeachingAlgorithm();
         tutorialPivotElementHeight = pivotHolderPos + new Vector3(0f, 0.1f, 0f);
-        insertionSortManager = GetComponent(typeof(InsertionSortManager)) as InsertionSortManager;
+        //insertionSortManager = (InsertionSortManager)sortMain.AlgorithmManagerBase;
     }
 
     public override string AlgorithmName
@@ -111,13 +112,15 @@ public class InsertionSort : SortAlgorithm {
         }
     }
 
-    public void CreatePivotHolder() // 1.02998 - 0.809
+    public void CreatePivotHolder()
     {
+        Debug.Log("Creating pivot holder");
         // Instantiate
         Vector3 pos = GetComponentInParent<SortMain>().HolderPositions[1] + pivotHolderPos;
 
         pivotHolderClone = Instantiate(pivotHolderPrefab, pos, Quaternion.identity);
         pivotHolderClone.AddComponent<InsertionSortHolder>();
+        pivotHolderClone.transform.parent = sortingTableHoldersObj.transform;
         pivotHolder = pivotHolderClone.GetComponent<InsertionSortHolder>();
 
         // Mark as pivotholder
@@ -386,7 +389,12 @@ public class InsertionSort : SortAlgorithm {
         yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
 
         // Mark the last element sorted
-        list[list.Length - 1].GetComponent<InsertionSortElement>().IsSorted = true;
+        InsertionSortElement lastElement = null;
+        if (list[list.Length - 1] != null)
+            lastElement = list[list.Length - 1].GetComponent<InsertionSortElement>();
+
+        if (lastElement != null)
+            lastElement.IsSorted = true;
 
         // Finished off; remove pivot holder
         PivotHolderVisible(false);
@@ -573,6 +581,12 @@ public class InsertionSort : SortAlgorithm {
                 case UtilSort.PIVOT_START_INST: // tesing (was combined with switch/pivot_end
                     if (increment)
                     {
+                        Debug.Log(sortingElement);
+                        Debug.Log(sortingElement.CurrentStandingOn);
+                        Debug.Log(sortingElement.CurrentStandingOn.HolderID);
+                        Debug.Log(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID));
+
+
                         pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
                         sortingElement.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
                     }
@@ -798,7 +812,8 @@ public class InsertionSort : SortAlgorithm {
 
     private void PivotHolderVisible(bool enable)
     {
-        pivotHolderClone.GetComponentInChildren<MeshRenderer>().enabled = enable;
+        if (pivotHolderClone != null)
+            pivotHolderClone.GetComponentInChildren<MeshRenderer>().enabled = enable;
     }
 
     public void MovePivotHolder(bool increment)

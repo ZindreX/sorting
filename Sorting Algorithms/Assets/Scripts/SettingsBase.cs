@@ -10,11 +10,9 @@ public abstract class SettingsBase : MonoBehaviour {
     protected int difficulty;
 
     [Header("Settings base")]
-    //[SerializeField]
-    //public MainManager mainManager;
 
     [SerializeField]
-    protected TextMeshPro title, tooltips;
+    protected TextMeshPro tooltips;
 
     [Space(2)]
     [Header("Overall settings")]
@@ -29,6 +27,21 @@ public abstract class SettingsBase : MonoBehaviour {
     protected enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
 
     protected Dictionary<string, OnOffButton> buttons;
+    [SerializeField]
+    protected OnOffButton startButton;
+
+    private void Awake()
+    {
+        buttons = new Dictionary<string, OnOffButton>();
+
+        // Get buttons
+        Component[] buttonComponents = GetComponentsInChildren<OnOffButton>();
+        foreach (OnOffButton component in buttonComponents)
+        {
+            buttons.Add(component.ButtonID, component);
+        }
+        buttons.Add("Start", startButton);
+    }
 
     //
     public abstract void PrepareSettings();
@@ -79,11 +92,13 @@ public abstract class SettingsBase : MonoBehaviour {
         set { algorithmSpeed = value; FillTooltips("Demo speed:\n" + value + " sec per step"); SetActiveButton(Util.ConvertAlgorithmSpeed(value)); }
     }
 
+    // Instantiates the algorithm/task, user needs to click a start button to start the task (see method below)
     public void InstantiateTask()
     {
         MainManager.InstantiateSetup();
     }
 
+    // Start/stop algorithm in game
     public void StartStopTask()
     {
         if (!MainManager.AlgorithmStarted)
@@ -94,36 +109,29 @@ public abstract class SettingsBase : MonoBehaviour {
             //MainManager.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f);
             MainManager.DestroyAndReset();
         }
+        SetActiveButton("Start");
     }
 
+    // Start task from in game
     public void StartTask()
     {
         MainManager.StartAlgorithm();
     }
 
+    // Stop task from in game
     public void StopTask()
     {
         MainManager.DestroyAndReset();
     }
 
-    public void FillTitle(string title)
-    {
-        if (title != null && tooltips != null)
-        {
-            this.title.text = title;
-            tooltips.text = "";
-        }
-    }
-
+    // Set thje settings menu text
     public void FillTooltips(string text)
     {
-        if (title != null && tooltips != null)
-        {
-            title.text = "";
+        if (tooltips != null)
             tooltips.text = text;
-        }
     }
 
+    // Changes the state of the in game menu (marking the selected button with a different material/color)
     protected void SetActiveButton(string buttonID)
     {
         if (buttons.ContainsKey(buttonID))
@@ -135,6 +143,8 @@ public abstract class SettingsBase : MonoBehaviour {
             else
                 button.ChangeState();
         }
+        else
+            Debug.LogError("No key: " + buttonID);
     }
 
 }

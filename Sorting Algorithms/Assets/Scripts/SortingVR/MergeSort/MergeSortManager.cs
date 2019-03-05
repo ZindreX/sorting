@@ -7,6 +7,11 @@ public class MergeSortManager : AlgorithmManagerBase {
 
     private MergeSort mergeSort;
 
+    public override string AlgorithmManager
+    {
+        get { return mergeSort.AlgorithmName + " Manager"; }
+    }
+
     public override int MovesNeeded
     {
         get { return 1; }

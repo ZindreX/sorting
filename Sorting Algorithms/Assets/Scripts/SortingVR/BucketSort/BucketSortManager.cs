@@ -15,6 +15,10 @@ public class BucketSortManager : AlgorithmManagerBase {
     [SerializeField]
     private BucketManager bucketManager;
 
+    public override string AlgorithmManager
+    {
+        get { return bucketSort.AlgorithmName + " Manager"; }
+    }
 
     public int NumberOfBuckets
     {
