@@ -90,8 +90,8 @@ public abstract class SettingsBase : MonoBehaviour {
             MainManager.StartAlgorithm();
         else
         {
-            Debug.Log("STOPPING!!!!");
             MainManager.UserStoppedAlgorithm = true; //
+            //MainManager.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f);
             MainManager.DestroyAndReset();
         }
     }

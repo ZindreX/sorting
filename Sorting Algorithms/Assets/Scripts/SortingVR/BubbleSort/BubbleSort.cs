@@ -32,18 +32,27 @@ public class BubbleSort : SortAlgorithm {
         switch (lineNr)
         {
             case 0: lineOfCode += "BubbleSort( list ):"; break; // add case for this line(?): BubbleSort(4, 1, 10, ... etc.)
-            case 1: lineOfCode += string.Format("  n = {0}", n); break; //"n = " + n;
-            case 2: lineOfCode += string.Format("  for i={0} to {1}:", i, (n-1)); break; //"for i=" + i + " to " + (n - 1) + ":";
-            case 3: lineOfCode += string.Format("      for j={0} to {1}:", j, (n-i-1)); break; // "    for j=" + j + " to " + (n - i - 1) + ":";
-            case 4: lineOfCode += string.Format("          if ( {0} > {1} ):", value1, value2); break; //"          if ( " + value1 + " > " + value2 + " ):";
-            case 5: lineOfCode += string.Format("              swap {0} and {1}", value1, value2); break; //"            swap " + value1 + " and " + value2;
+            case 1: lineOfCode += string.Format("  n = {0}", n); break;
+            case 2: lineOfCode += string.Format("  for i={0} to {1}:", i, (n-1)); break;
+            case 3: lineOfCode += string.Format("      for j={0} to {1}:", j, (n-i-1)); break;
+            case 4: lineOfCode += string.Format("          if ( {0} > {1} ):", ConvertInitValues(value1, 1), ConvertInitValues(value2, 2)); break;
+            case 5: lineOfCode += string.Format("              swap {0} and {1}", ConvertInitValues(value1, 1), ConvertInitValues(value2, 2)); break;
             case 6: lineOfCode += "          end if"; break;
             case 7: lineOfCode += "      end for"; break;
             case 8: lineOfCode += "  end for"; break;
             default: return "lineNr " + lineNr + " not found!";
         }
         return lineOfCode;
+    }
 
+    protected override string ConvertInitValues(int value, int element)
+    {
+        switch (element)
+        {
+            case 1: return (value == UtilSort.INIT_STATE) ? "list[i]" : value.ToString();
+            case 2: return (value == UtilSort.INIT_STATE - 1) ? "list[i+1]" : value.ToString();
+            default: return "X";
+        }
     }
 
     public override int FirstInstructionCodeLine()
@@ -142,24 +151,39 @@ public class BubbleSort : SortAlgorithm {
                 // Display pseudocode (update for-loops)
                 yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 // Choose sorting elements to compare
-                BubbleSortElement p1 = list[j].GetComponent<BubbleSortElement>();
-                BubbleSortElement p2 = list[j + 1].GetComponent<BubbleSortElement>();
+                BubbleSortElement p1 = null, p2 = null;
+                if (list[j] != null)
+                    p1 = list[j].GetComponent<BubbleSortElement>();
+                if (list[j + 1] != null)
+                    p2 = list[j + 1].GetComponent<BubbleSortElement>();
 
                 // Change status
-                p1.IsCompare = true;
-                p2.IsCompare = true;
+                if (p1 != null)
+                    p1.IsCompare = true;
+                if (p2 != null)
+                    p2.IsCompare = true;
 
                 // Update color on holders
                 UtilSort.IndicateElement(p1.gameObject);
                 UtilSort.IndicateElement(p2.gameObject);
 
                 // Get their values
-                value1 = p1.Value;
-                value2 = p2.Value;
+                if (p1 != null)
+                    value1 = p1.Value;
+                if (p2 != null)
+                    value2 = p2.Value;
 
                 // Display pseudocode (list length)
                 yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
+
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
 
                 if (value1 > value2)
                 {
@@ -178,9 +202,17 @@ public class BubbleSort : SortAlgorithm {
 
                     // Display pseudocode (swap)
                     yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+
+                    // Check if user wants to stop the demo
+                    if (sortMain.UserStoppedAlgorithm)
+                        break;
                 }
                 // Display pseudocode (comparison/if end)
                 yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
+
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
 
                 p1.IsCompare = false;
                 if (p1.CurrentStandingOn != null)
@@ -192,7 +224,18 @@ public class BubbleSort : SortAlgorithm {
             // Display pseudocode (end 2nd for-loop)
             yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
-            list[N - i - 1].GetComponent<BubbleSortElement>().IsSorted = true;
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
+            // Biggest element moved to the last* index, mark it as sorted
+            if (list[N - i - 1] != null)
+            {
+                BubbleSortElement lastElement = list[N - i - 1].GetComponent<BubbleSortElement>();
+                if (lastElement != null)
+                    lastElement.IsSorted = true;
+            }
+
             UtilSort.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
             yield return demoStepDuration;
         }

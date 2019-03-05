@@ -88,6 +88,8 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         j = 0;
         k = 0;
         lengthOfList = "len(Q)";
+        isTaskCompleted = false;
+        demoStepDuration = null;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------

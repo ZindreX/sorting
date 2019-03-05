@@ -69,7 +69,7 @@ public abstract class MainManager : MonoBehaviour {
     public bool UserStoppedAlgorithm
     {
         get { return userStoppedAlgorithm; }
-        set { userStoppedAlgorithm = value; ActivateTaskObjects(false); }
+        set { userStoppedAlgorithm = value; }
     }
 
     // ?

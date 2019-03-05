@@ -3099,11 +3099,11 @@ MonoBehaviour:
   title: {fileID: 1442620717}
   tooltips: {fileID: 721067195}
   useDebuggingSettings: 1
-  teachingModeEditor: 2
-  algorithmSpeedEditor: 1
+  teachingModeEditor: 0
+  algorithmSpeedEditor: 2
   allowDuplicates: 1
   sortMain: {fileID: 236630474}
-  algorithmEditor: 1
+  algorithmEditor: 0
   difficultyEditor: 0
   numberofElementsEditor: 3
   sortingCaseEditor: 0

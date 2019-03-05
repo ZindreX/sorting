@@ -76,7 +76,8 @@ public class UtilSort : Util {
 
     public static void IndicateElement(GameObject obj)
     {
-        obj.transform.position += ABOVE_HOLDER_VR;
+        if (obj != null)
+            obj.transform.position += ABOVE_HOLDER_VR;
     }
 
     public static string TranslateInstructionForExamination(string instruction)

@@ -61,11 +61,11 @@ public class InsertionSort : SortAlgorithm {
         {
             case 0: lineOfCode += "InsertionSort( List<int> list )"; break;
             case 1: lineOfCode += "i = 1"; break;
-            case 2: lineOfCode += "while ( " + i + " < " + GetComponentInParent<SortMain>().SortSettings.NumberOfElements + " )"; break;
+            case 2: lineOfCode += "while ( " + i + " < " + sortMain.SortSettings.NumberOfElements + " )"; break;
             case 3: lineOfCode += "   " + j + " = " + i  + " - 1"; break;
-            case 4: lineOfCode += "   pivot = " + value1; break;
-            case 5: lineOfCode += "   while ( " + j + " >= 0 and pivot < " + value2 + " )"; break; //+ value1 + " < " + value2 + " )";
-            case 6: lineOfCode += "       move " + value2 + " to list[" + (j + 1) + "]"; break;
+            case 4: lineOfCode += "   pivot = " + ConvertInitValues(value1, 1); break;
+            case 5: lineOfCode += "   while ( " + j + " >= 0 and pivot < " + ConvertInitValues(value2, 2) + " )"; break; //+ value1 + " < " + value2 + " )";
+            case 6: lineOfCode += "       move " + ConvertInitValues(value2, 2) + " to list[" + (j + 1) + "]"; break;
             case 7: lineOfCode += "       " + j + " = " + (j + 1) + " - 1"; break;
             case 8: lineOfCode += "   end while"; break;
             case 9: lineOfCode += "   list[" + (j + 1) + "] = pivot"; break; //+ value1;
@@ -74,6 +74,16 @@ public class InsertionSort : SortAlgorithm {
             default: return "X";
         }
         return lineOfCode;
+    }
+
+    protected override string ConvertInitValues(int value, int element)
+    {
+        switch (element)
+        {
+            case 1: return (value == UtilSort.INIT_STATE) ? "list[i]" : value.ToString();
+            case 2: return (value == UtilSort.INIT_STATE - 1) ? "list[j]" : value.ToString();
+            default: return "X";
+        }
     }
 
     public override int FirstInstructionCodeLine()
@@ -88,8 +98,8 @@ public class InsertionSort : SortAlgorithm {
 
     public override void ResetSetup()
     {
-        base.ResetSetup();
         Destroy(pivotHolderClone);
+        base.ResetSetup();
     }
 
     public override void Specials(string method, int number, bool activate)

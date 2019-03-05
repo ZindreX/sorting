@@ -112,7 +112,8 @@ public class ElementManager : MonoBehaviour, IManager {
         // Hotfix (sorting element currentHolding / prevHolding problem)
         for (int x = 0; x < sortingElements.Length; x++)
         {
-            sortingElements[x].GetComponent<SortingElementBase>().PlaceManuallySortingElementOn(GetComponent<HolderManager>().Holders[x].GetComponent<HolderBase>());
+            HolderBase holder = GetComponent<HolderManager>().Holders[x].GetComponent<HolderBase>();
+            sortingElements[x].GetComponent<SortingElementBase>().PlaceManuallySortingElementOn(holder);
         }
 
         containsElements = true;

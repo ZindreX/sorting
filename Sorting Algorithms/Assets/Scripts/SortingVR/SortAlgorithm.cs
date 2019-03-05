@@ -7,7 +7,6 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     // value1 <- pivot value, value2 <- compare value (usually)
     protected int value1 = UtilSort.INIT_STATE, value2 = UtilSort.INIT_STATE - 1;
     protected List<int> prevHighlight = new List<int>();
-
     protected SortMain sortMain;
 
     public override void AddSkipAbleInstructions()
@@ -33,23 +32,30 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         return new Vector2(1f, 0.2f);
     }
 
-    public override void ResetSetup()
-    {
-        value1 = UtilSort.INIT_STATE;
-        value2 = UtilSort.INIT_STATE;
-        prevHighlight = new List<int>();
-    }
-
     public override MainManager MainManager
     {
         get { return sortMain; }
         set { sortMain = (SortMain)value; }
     }
 
+
+
+    public override void ResetSetup()
+    {
+        value1 = UtilSort.INIT_STATE;
+        value2 = UtilSort.INIT_STATE;
+        prevHighlight = new List<int>();
+        base.ResetSetup();
+    }
+
+
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------
 
     // To do stuff important for individual classes
     public abstract void Specials(string method, int number, bool activate); // used?
+
+    // Pseudo code
+    protected abstract string ConvertInitValues(int value, int element);
 
     /* Tutorial of the chosen sorting algorithm
      * - No interaction from the user (except for settings)

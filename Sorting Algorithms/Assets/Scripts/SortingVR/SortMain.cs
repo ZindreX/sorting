@@ -39,76 +39,6 @@ public class SortMain : MainManager {
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
     }
 
-    protected override void DemoUpdate()
-    {
-
-    }
-
-    protected override void StepByStepUpdate()
-    {
-        if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
-        {
-            tutorialStep.PlayerMove = false;
-            InstructionBase instruction = tutorialStep.GetStep();
-            Debug.Log(">>> " + instruction.Instruction);
-            //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
-            //Debug.Log(tutorialStep.CurrentInstructionNr);
-
-
-            bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-            sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
-        }
-    }
-
-    protected override void UserTestUpdate()
-    {
-        // First check if user test setup is complete
-        if (userTestManager.HasInstructions() && !beginnerWait)
-        {
-            // Check if user has done a move, and is ready for next round
-            if (elementManager.CurrentMoving != null)
-            {
-                // Dont do anything while moving element
-            }
-            else if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
-            {
-                // Reset counter
-                userTestManager.ReadyForNext = 0;
-
-                // Checking if all sorting elements are sorted
-                if (!userTestManager.HasInstructions() && elementManager.AllSorted())
-                {
-                    sortAlgorithm.IsTaskCompleted = true;
-                    Debug.LogError("Manage to enter this case???"); // ???
-                }
-                else
-                {
-                    // Still some elements not sorted, so go on to next round
-                    bool hasInstruction = userTestManager.IncrementToNextInstruction();
-
-                    // Hot fix - solve in some other way?
-                    if (hasInstruction)
-                        userTestManager.ReadyForNext += algorithmManagerBase.PrepareNextInstruction(userTestManager.GetInstruction());
-                    else if (elementManager.AllSorted())
-                        StartCoroutine(FinishUserTest());
-
-                }
-            }
-            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
-        }
-    }
-
-    protected override void TaskCompletedFinishOff()
-    {
-        if (sortSettings.IsUserTest() && userTestManager.TimeSpent == 0)
-        {
-            userTestManager.SetEndTime();
-            userTestManager.CalculateScore();
-            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
-        }
-        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, "Sorting Completed!");
-    }
-
     // --------------------------------------- Getters / Setters --------------------------------------- 
 
     public override TeachingAlgorithm GetTeachingAlgorithm()
@@ -210,9 +140,205 @@ public class SortMain : MainManager {
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
             //displayUnitManager.PseudoCodeViewerFixed.PseudoCodeSetup();
         }
+        Debug.Log("Setting up table / removing menu");
         ActivateTaskObjects(true);
     }
 
+    /* --------------------------------------- Destroy & Restart ---------------------------------------
+     * > Called from UserController
+     * > Destroys all the gameobjects
+     */
+    public override void DestroyAndReset()
+    {
+        algorithmStarted = false;
+
+        //Debug.Log("isdemo: " + sortSettings.IsDemo() + ", not stepbystep: " + !sortSettings.IsStepByStep() + ", task not completed: " + !sortAlgorithm.IsTaskCompleted);
+
+        //if (sortSettings.IsDemo() && !sortSettings.IsStepByStep() && !sortAlgorithm.IsTaskCompleted)
+        //{
+        //    // Warning message during Demo(works only on monitor, not in VR)
+        //    StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", UtilSort.ERROR_COLOR)); // remove when fixed
+        //}
+        //else
+        //{
+        Debug.Log("Shutting down");
+
+        // Stop ongoing actions
+        UserStoppedAlgorithm = true;
+
+        // Destroy holders
+        holderManager.DestroyAndReset();
+
+        // Destroy sorting elements
+        elementManager.DestroyAndReset();
+
+        // Reset (done in sortAlg)
+        //if (sortAlgorithm.IsTaskCompleted)
+        //    sortAlgorithm.IsTaskCompleted = false;
+
+        // Reset algorithm
+        sortAlgorithm.ResetSetup();
+
+        // Reset displays
+        //displayUnitManager.ResetDisplays();
+        displayUnitManager.DestroyDisplaysContent(); //::::
+
+        // Hide sorting table and bring back menu
+        ActivateTaskObjects(false);
+
+        //
+        controllerReady = false;
+
+        // Cleanup pseudocode
+        sortAlgorithm.PseudoCodeViewer.DestroyPseudoCode();
+    }
+
+    /* --------------------------------------- Demo ---------------------------------------
+     * - Gives a visual presentation of <sorting algorithm>
+     * - Player can't interact with sorting elements (*fix)
+    */
+    public override void PerformAlgorithmDemo()
+    {
+        Debug.Log(">>> Performing " + algorithmName + " demo.");
+        elementManager.InteractionWithSortingElements(false);
+        //MergeSort.MergeSortStandard(elementManager.SortingElements);
+        //Debug.Log("----------------------------------------------------------------------");
+        StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
+    }
+
+    protected override void DemoUpdate()
+    {
+
+    }
+
+    /* --------------------------------------- Step-By-Step ---------------------------------------
+     * - Gives a visual presentation of <sorting algorithm>
+     * - Player can't directly interact with sorting elements, but can use controllers to progress
+     *   one step of a time / or back
+    */
+    public override void PerformAlgorithmStepByStep()
+    {
+        // Getting instructions for this sample of sorting elements
+        elementManager.InteractionWithSortingElements(false);
+        tutorialStep.Init(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
+    }
+
+    // Input from user during Step-By-Step (increment/decrement)
+    public void PlayerStepByStepInput(bool increment)
+    {
+        if (ControllerReady)
+            tutorialStep.NotifyUserInput(increment);
+    }
+
+    protected override void StepByStepUpdate()
+    {
+        if (tutorialStep.PlayerMove && tutorialStep.IsValidStep)
+        {
+            tutorialStep.PlayerMove = false;
+            InstructionBase instruction = tutorialStep.GetStep();
+            Debug.Log(">>> " + instruction.Instruction);
+            //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
+            //Debug.Log(tutorialStep.CurrentInstructionNr);
+
+
+            bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+            sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, tutorialStep.PlayerIncremented);
+        }
+    }
+
+    /* --------------------------------------- User Test ---------------------------------------
+     * - Gives a visual presentation of elements used in <sorting algorithm>
+     * - Player needs to interact with the sorting elements to progress through the algorithm
+    */
+    public override void PerformAlgorithmUserTest()
+    {
+        Debug.Log(">>> Performing " + algorithmName + " user test.");
+        elementManager.InteractionWithSortingElements(true);
+
+        // Getting instructions for this sample of sorting elements
+        Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements));
+
+        // Initialize user test
+        userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, FindNumberOfUserAction(instructions));
+
+        // Set start time
+        userTestManager.SetStartTime();
+
+        //DebugCheckInstructions(instructions); // Debugging
+
+        userTestReady = true; // debugging
+    }
+
+    protected override void UserTestUpdate()
+    {
+        // First check if user test setup is complete
+        if (userTestManager.HasInstructions() && !beginnerWait)
+        {
+            // Check if user has done a move, and is ready for next round
+            if (elementManager.CurrentMoving != null)
+            {
+                // Dont do anything while moving element
+            }
+            else if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
+            {
+                // Reset counter
+                userTestManager.ReadyForNext = 0;
+
+                // Checking if all sorting elements are sorted
+                if (!userTestManager.HasInstructions() && elementManager.AllSorted())
+                {
+                    sortAlgorithm.IsTaskCompleted = true;
+                    Debug.LogError("Manage to enter this case???"); // ???
+                }
+                else
+                {
+                    // Still some elements not sorted, so go on to next round
+                    bool hasInstruction = userTestManager.IncrementToNextInstruction();
+
+                    // Hot fix - solve in some other way?
+                    if (hasInstruction)
+                        userTestManager.ReadyForNext += algorithmManagerBase.PrepareNextInstruction(userTestManager.GetInstruction());
+                    else if (elementManager.AllSorted())
+                        StartCoroutine(FinishUserTest());
+
+                }
+            }
+            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
+        }
+    }
+
+    // Give feedback to the user when the sorting task (user test) is completed)
+    private IEnumerator FinishUserTest()
+    {
+        yield return sortAlgorithm.DemoStepDuration;
+        sortAlgorithm.IsTaskCompleted = true;
+        displayUnitManager.PseudoCodeViewer.RemoveHightlight();
+
+        // Visual feedback (make each element "jump")
+        for (int x = 0; x < sortSettings.NumberOfElements; x++)
+        {
+            UtilSort.IndicateElement(elementManager.GetSortingElement(x));
+            elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
+            yield return sortAlgorithm.DemoStepDuration; // 1/2
+        }
+    }
+
+    // Finish off user test
+    protected override void TaskCompletedFinishOff()
+    {
+        if (sortSettings.IsUserTest() && userTestManager.TimeSpent == 0)
+        {
+            userTestManager.SetEndTime();
+            userTestManager.CalculateScore();
+            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
+        }
+        displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TitleIndex, "Sorting Completed!");
+    }
+
+
+    // --------------------------------------- Other functions --------------------------------------- 
+
+    // Makes specific objects visible/invisible based on when they should be active
     protected override void ActivateTaskObjects(bool active)
     {
         // Settings menu
@@ -265,6 +391,7 @@ public class SortMain : MainManager {
         return null;
     }
 
+    // Get algorithm component
     protected override TeachingAlgorithm GrabAlgorithmFromObj()
     {
         switch (algorithmName)
@@ -276,125 +403,6 @@ public class SortMain : MainManager {
             default: Debug.LogError("'" + algorithmName + "' not valid"); return null;
         }
     }
-
-    /* --------------------------------------- Destroy & Restart ---------------------------------------
-     * > Called from UserController
-     * > Destroys all the gameobjects
-     */
-    public override void DestroyAndReset()
-    {
-        algorithmStarted = false;
-
-        if (sortSettings.IsDemo() && !sortSettings.IsStepByStep() && !sortAlgorithm.IsTaskCompleted)
-        {
-            StartCoroutine(algorithmUserController.CreateWarningMessage("Can't stop during demo. See blackboard for progress.", UtilSort.ERROR_COLOR));
-        }
-        else
-        {
-            // Stop ongoing actions
-            UserStoppedAlgorithm = true;
-
-            // Destroy holders
-            holderManager.DestroyAndReset();
-
-            // Destroy sorting elements
-            elementManager.DestroyAndReset();
-
-            // Reset
-            if (sortAlgorithm.IsTaskCompleted)
-                sortAlgorithm.IsTaskCompleted = false;
-
-            // Reset algorithm
-            sortAlgorithm.ResetSetup();
-
-            // Reset displays
-            //displayUnitManager.ResetDisplays();
-            displayUnitManager.DestroyDisplaysContent();
-
-            // Hide sorting table and bring back menu
-            ActivateTaskObjects(false);
-
-            //
-            controllerReady = false;
-        }
-
-        // Cleanup pseudocode
-        sortAlgorithm.PseudoCodeViewer.DestroyPseudoCode();
-    }
-
-    // Input from user during Step-By-Step (increment/decrement)
-    public void PlayerStepByStepInput(bool increment)
-    {
-        if (ControllerReady)
-            tutorialStep.NotifyUserInput(increment);
-    }
-
-    // Give feedback to the user when the sorting task (user test) is completed)
-    private IEnumerator FinishUserTest()
-    {
-        yield return sortAlgorithm.DemoStepDuration;
-        sortAlgorithm.IsTaskCompleted = true;
-        displayUnitManager.PseudoCodeViewer.RemoveHightlight();
-
-        // Visual feedback (make each element "jump")
-        for (int x = 0; x < sortSettings.NumberOfElements; x++)
-        {
-            UtilSort.IndicateElement(elementManager.GetSortingElement(x));
-            elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
-            yield return sortAlgorithm.DemoStepDuration; // 1/2
-        }
-    }
-
-    /* --------------------------------------- Demo ---------------------------------------
-     * - Gives a visual presentation of <sorting algorithm>
-     * - Player can't interact with sorting elements (*fix)
-    */
-    public override void PerformAlgorithmDemo()
-    {
-        Debug.Log(">>> Performing " + algorithmName + " demo.");
-        elementManager.InteractionWithSortingElements(false);
-        //MergeSort.MergeSortStandard(elementManager.SortingElements);
-        //Debug.Log("----------------------------------------------------------------------");
-        StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
-    }
-
-    /* --------------------------------------- Step-By-Step ---------------------------------------
-     * - Gives a visual presentation of <sorting algorithm>
-     * - Player can't directly interact with sorting elements, but can use controllers to progress
-     *   one step of a time / or back
-    */
-    public override void PerformAlgorithmStepByStep()
-    {
-        // Getting instructions for this sample of sorting elements
-        elementManager.InteractionWithSortingElements(false);
-        tutorialStep.Init(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
-    }
-
-    /* --------------------------------------- User Test ---------------------------------------
-     * - Gives a visual presentation of elements used in <sorting algorithm>
-     * - Player needs to interact with the sorting elements to progress through the algorithm
-    */
-    public override void PerformAlgorithmUserTest()
-    {
-        Debug.Log(">>> Performing " + algorithmName + " user test.");
-        elementManager.InteractionWithSortingElements(true);
-
-        // Getting instructions for this sample of sorting elements
-        Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements));
-
-        // Initialize user test
-        userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, FindNumberOfUserAction(instructions));
-
-        // Set start time
-        userTestManager.SetStartTime();
-
-        //DebugCheckInstructions(instructions); // Debugging
-
-        userTestReady = true; // debugging
-    }
-
-
-
 
 
 
