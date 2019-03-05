@@ -138,13 +138,19 @@ public abstract class SettingsBase : MonoBehaviour {
         {
             OnOffButton button = buttons[buttonID];
 
-            if (button.IsOnOffButton)
-                button.ToggleState();
+            if (button != null)
+            {
+                if (button.IsOnOffButton)
+                    button.ToggleState();
+                else
+                    button.ChangeState();
+            }
             else
-                button.ChangeState();
+                Debug.LogError("Null button: ID= " + buttonID);
+
         }
-        else
-            Debug.LogError("No key: " + buttonID);
+    //    else
+    //        Debug.LogError("No key: " + buttonID);
     }
 
 }

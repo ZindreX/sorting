@@ -152,6 +152,7 @@ public class SortSettings : SettingsBase {
         {
             numberOfElements += 1;
             FillTooltips("#Elements:\n" + numberOfElements);
+            //buttons[] >>> fill in text #elements
         }
         else
         {

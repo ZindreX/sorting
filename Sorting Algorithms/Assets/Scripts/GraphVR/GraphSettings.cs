@@ -119,11 +119,11 @@ public class GraphSettings : SettingsBase {
             Difficulty = 1;
 
             // Graph
+            Graphstructure = UtilGraph.GRID_GRAPH;
+            EdgeType = UtilGraph.UNDIRECTED_EDGE;
+            EdgeMode = UtilGraph.FULL_EDGES_NO_CROSSING;
             if (initGrid)
             {
-                Graphstructure = UtilGraph.GRID_GRAPH;
-                EdgeType = UtilGraph.UNDIRECTED_EDGE;
-                EdgeMode = UtilGraph.FULL_EDGES_NO_CROSSING;
                 gridRows = 5;
                 gridColumns = 5;
                 gridSpace = 4;
@@ -156,9 +156,9 @@ public class GraphSettings : SettingsBase {
 
         switch ((int)algorithmSpeedEditor)
         {
-            case 0: AlgorithmSpeed = 3f; break;
+            case 0: AlgorithmSpeed = 2f; break;
             case 1: AlgorithmSpeed = 1f; break;
-            case 2: AlgorithmSpeed = 0.25f; break;
+            case 2: AlgorithmSpeed = 0.5f; break;
             case 4: AlgorithmSpeed = 0f; break;
         }
 
@@ -214,19 +214,19 @@ public class GraphSettings : SettingsBase {
     public string Graphstructure
     {
         get { return graphStructure; }
-        set { graphStructure = value; FillTooltips("Graph structure: " + value); SetActiveButton(""); }
+        set { graphStructure = value; FillTooltips("Graph structure: " + value); SetActiveButton(value); }
     }
 
     public string EdgeType
     {
         get { return edgeType; }
-        set { edgeType = value; FillTooltips("Edge type: " + value); SetActiveButton(""); }
+        set { edgeType = value; FillTooltips("Edge type: " + value); SetActiveButton(value); }
     }
 
     public string EdgeMode
     {
         get { return edgeMode; }
-        set { edgeMode = value; FillTooltips("Edge mode: " + value); SetActiveButton(""); }
+        set { edgeMode = value; FillTooltips("Edge mode: " + value); SetActiveButton(value); }
     }
 
     public int[] StartNode()

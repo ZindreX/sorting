@@ -305,7 +305,7 @@ public class GridManager : GraphManager {
     {
         if (a >= 0 && a < rows && b >= 0 && b < cols)
             return gridNodes[a, b];
-        Debug.LogError("Invalid node!");
+        Debug.LogError("Invalid node! : a = " + a + ", b = " + b);
         return null;
     }
 

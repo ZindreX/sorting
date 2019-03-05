@@ -190,11 +190,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonID: 
-  sectionID: 
+  onText: 
+  offText: 
   onMaterial: {fileID: 2100000, guid: aab2715fce5d96142958128b54911190, type: 2}
   offMaterial: {fileID: 2100000, guid: 5e9224b46d0182a478901682dc993000, type: 2}
   nonMaterial: {fileID: 2100000, guid: 11ed7178807427d4ab4bd82cabd68f43, type: 2}
   isOnOffButton: 0
+  staticColor: 0
+  section: {fileID: 0}
   sectionButtons: []
 --- !u!114 &114302147662746634
 MonoBehaviour:
@@ -455,8 +458,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1651753835909450}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 0, z: -0.3021}
-  m_LocalScale: {x: 0.15, y: 0.08, z: 0.03}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.11, y: 0.06, z: 0.03}
   m_Children:
   - {fileID: 4876904393482100}
   - {fileID: 224548226858767474}
@@ -465,6 +468,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.0828}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

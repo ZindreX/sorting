@@ -28,8 +28,6 @@ public class GraphMain : MainManager {
 
     protected virtual void Awake()
     {
-        Debug.Log("I am alive!");
-
         // >>> Basic components
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         posManager = FindObjectOfType<PositionManager>();
@@ -227,25 +225,36 @@ public class GraphMain : MainManager {
 
     public override void InstantiateSetup()
     {
-        graphSettings.PrepareSettings();
-
-        // From awake
-        // >>> Algorithm
+        // Grab variable data from settings
         algorithmName = graphSettings.Algorithm;
+        float algorithmSpeed = graphSettings.AlgorithmSpeed;
+        string graphStructure = graphSettings.Graphstructure;
+        string edgeType = graphSettings.EdgeType;
+        string edgeMode = graphSettings.EdgeMode;
+        int[] graphSetup = graphSettings.GraphSetup();
+        int[] startNodeCoordinates = graphSettings.StartNode();
+        int[] endNodeCoordinates = graphSettings.EndNode();
+
+        // Extra
+        bool shortestPathOneToAll = graphSettings.ShortestPathOneToAll;
+        bool visitLeftFirst = graphSettings.VisitLeftFirst;
+
+
+        // >>> Algorithm
         graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
         graphAlgorithm.MainManager = this;
+        graphAlgorithm.GraphStructure = graphStructure;
+        graphAlgorithm.DemoStepDuration = new WaitForSeconds(algorithmSpeed);
 
-        graphAlgorithm.GraphStructure = graphSettings.Graphstructure;
-        graphAlgorithm.DemoStepDuration = new WaitForSeconds(graphSettings.AlgorithmSpeed);
         // Extra settings
-        graphAlgorithm.ShortestPathOneToAll = graphSettings.ShortestPathOneToAll;
-        graphAlgorithm.VisitLeftFirst = graphSettings.VisitLeftFirst;
+        graphAlgorithm.ShortestPathOneToAll = shortestPathOneToAll;
+        graphAlgorithm.VisitLeftFirst = visitLeftFirst;
+
         // >>> Extra learning material
         graphAlgorithm.ListVisual = listVisual;
         // Pseudocode
         graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer;
 
-        // end
 
         // Setup graph manager + Activate/deactivate components (Grid / Tree / Random)
         graphManager = ActivateDeactivateGraphComponents(graphSettings.Graphstructure);
@@ -254,8 +263,8 @@ public class GraphMain : MainManager {
         pseudoCodeViewer.PseudoCodeSetup();
 
         // Get variables for graph setup
-        graphManager.InitGraph(graphSettings.GraphSetup());
-        graphManager.SetupImportantNodes(graphSettings.StartNode(), graphSettings.EndNode(), true);
+        graphManager.InitGraph(graphSetup);
+        graphManager.SetupImportantNodes(startNodeCoordinates, endNodeCoordinates, true);
 
         // Create graph based on init variables
         graphManager.CreateGraph();

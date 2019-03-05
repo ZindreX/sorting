@@ -581,12 +581,6 @@ public class InsertionSort : SortAlgorithm {
                 case UtilSort.PIVOT_START_INST: // tesing (was combined with switch/pivot_end
                     if (increment)
                     {
-                        Debug.Log(sortingElement);
-                        Debug.Log(sortingElement.CurrentStandingOn);
-                        Debug.Log(sortingElement.CurrentStandingOn.HolderID);
-                        Debug.Log(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID));
-
-
                         pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
                         sortingElement.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
                     }

@@ -25,6 +25,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         this.rtDelta = rtDelta;
     }
 
+    // Initializes the pseudocode (Instantiating each line of code and making them fit among each other/within the blackboard)
     public void PseudoCodeSetup()
     {
         int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;
@@ -36,20 +37,17 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             GameObject codeLine = new GameObject("Line" + x);
             codeLine.transform.parent = gameObject.transform;
 
-            // Change transformation position and scale //new Vector3(-4.23f, 3.36f - (x * SPACE_BETWEEN_CODE_LINES), -0.1f);
+            // Change transformation position and scale
             Vector3 pos = startPosAndMat.transform.position;
             codeLine.transform.position = new Vector3(pos.x, pos.y - (x * spaceBetweenLines), pos.z);
             codeLine.transform.eulerAngles = new Vector3(startPosAndMat.transform.eulerAngles.x, startPosAndMat.transform.eulerAngles.y, startPosAndMat.transform.eulerAngles.z);
-            codeLine.transform.localScale = startPosAndMat.transform.localScale; // new Vector3(0.05f, 0.05f, 0.05f);
+            codeLine.transform.localScale = startPosAndMat.transform.localScale;
 
             // Change material and font
-            //codeLine.AddComponent<MeshRenderer>();
-            //codeLine.GetComponent<MeshRenderer>().material = startPosAndMat.GetComponent<MeshRenderer>().material; //material;
-            codeLine.AddComponent<TextMeshPro>(); //codeLine.AddComponent<TextMesh>();
+            codeLine.AddComponent<TextMeshPro>();
             TextMeshPro codelinePro = codeLine.GetComponent<TextMeshPro>();
-            //codelinePro.font = startPosAndMat.font; //codeLine.GetComponent<TextMesh>().font = startPosAndMat.font; //font;
             codelinePro.fontSize = startPosAndMat.fontSize;
-            // fix overflow
+            codelinePro.enableWordWrapping = false;
             
             // Rectangle shape
             RectTransform rt = codelinePro.rectTransform;

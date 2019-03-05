@@ -57,7 +57,7 @@ public class AlgorithmUserController : MonoBehaviour {
                 sortMain.InstantiateSetup();
                 StartCoroutine(DebugWait());
             }
-            else if (Input.GetKey(KeyCode.T))
+            else if (Input.GetKey(KeyCode.U))
             {
                 sortMain.StartAlgorithm();
             }
