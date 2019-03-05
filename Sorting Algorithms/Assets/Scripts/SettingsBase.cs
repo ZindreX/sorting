@@ -137,24 +137,4 @@ public abstract class SettingsBase : MonoBehaviour {
         }
     }
 
-
-    //public void ActiveButtonInSection(GameObject[] section, GameObject activeButton)
-    //{
-    //    foreach (GameObject button in section)
-    //    {
-    //        if (button == activeButton)
-    //            button.GetComponentInChildren<Renderer>().material = activeButtonMaterial;
-    //        else
-    //            button.GetComponentInChildren<Renderer>().material = inactiveButtonMaterial;
-    //    }
-    //}
-    //public void UpdateSection(GameObject section, int active)
-    //{
-    //    Component[] parts = section.GetComponentsInChildren(typeof(MeshRenderer));
-    //    for (int i=0; i < parts.Length; i++)
-    //    {
-    //        parts[i].GetComponent<MeshRenderer>()
-    //    }
-    //}
-
 }

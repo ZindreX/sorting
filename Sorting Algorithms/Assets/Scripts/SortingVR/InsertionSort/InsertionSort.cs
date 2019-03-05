@@ -208,14 +208,26 @@ public class InsertionSort : SortAlgorithm {
 
         while (i < listLength)
         {
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Display pseudocode (1st while)
             yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
 
             // Get index of first element to the left of the pivot and compare
             j = i - 1;
 
             // Display pseudocode (set j)
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
 
             // Get pivot
             GameObject pivotObj = list[i];
@@ -238,6 +250,10 @@ public class InsertionSort : SortAlgorithm {
             // Display pseudocode (set pivot)
             yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
 
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Start comparing until find the correct position is found
             // Prepare the element to compare with
             GameObject compareObj = list[j];
@@ -247,11 +263,20 @@ public class InsertionSort : SortAlgorithm {
 
             // Display pseudocode (2nd while)
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             compare.IsCompare = false;
             compare.IsSorted = true;
 
             while (value1 < value2)
             {
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 // Pivot is smaller, start moving compare element
                 // Compare element's position
                 Vector3 temp2 = compare.transform.position;
@@ -264,6 +289,10 @@ public class InsertionSort : SortAlgorithm {
                 // Display pseudocode (move compare element)
                 yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 // Preparing for next step
                 temp = temp2;
                 j -= 1;
@@ -271,12 +300,20 @@ public class InsertionSort : SortAlgorithm {
                 // Display pseudocode (update j)
                 yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 // Move pivot out and place it ontop of pivot holder (above holder it check whether it's put the element)
                 pivotHolder.transform.position = temp + pivotHolderPos;
                 pivot.transform.position = temp + tutorialPivotElementHeight;
 
                 // Wait to show the pivot being moved
                 yield return demoStepDuration;
+
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
 
                 // Check if there are more elements to compare the pivot with
                 if (j >= 0)
@@ -291,6 +328,11 @@ public class InsertionSort : SortAlgorithm {
 
                     // Display pseudocode (2nd while new compare value)
                     yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+
+                    // Check if user wants to stop the demo
+                    if (sortMain.UserStoppedAlgorithm)
+                        break;
+
                     compare.IsCompare = false;
                     compare.IsSorted = true;
 
@@ -299,6 +341,10 @@ public class InsertionSort : SortAlgorithm {
                         UtilSort.IndicateElement(compare.gameObject);
                         // Display pseudocode (end 2nd while)
                         yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+
+                        // Check if user wants to stop the demo
+                        if (sortMain.UserStoppedAlgorithm)
+                            break;
                     }
                 }
                 else
@@ -308,6 +354,10 @@ public class InsertionSort : SortAlgorithm {
                     break;
                 }
             }
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             if (i == 1 && value1 >= value2)
                 compare.CurrentStandingOn.CurrentColor = UtilSort.SORTED_COLOR;
 
@@ -320,9 +370,17 @@ public class InsertionSort : SortAlgorithm {
             list[j + 1] = pivotObj;
             yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
 
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Display pseudocode (increment i)
             i += 1;
             yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
         }
         // Display pseudocode (end 1st while)
         yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);

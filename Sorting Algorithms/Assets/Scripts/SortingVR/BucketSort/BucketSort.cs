@@ -258,13 +258,23 @@ public class BucketSort : SortAlgorithm {
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         // Buckets
-        GameObject[] buckets = bucketManager.Buckets;
+        GameObject[] buckets = null;
+        if (bucketManager != null)
+            buckets = bucketManager.Buckets;
 
         // Add elements to buckets
         for (i = 0; i < sortingElements.Length; i++)
         {
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Line 2 (Update for-loop)
             yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
 
             // Get element
             GameObject element = sortingElements[i];
@@ -275,6 +285,10 @@ public class BucketSort : SortAlgorithm {
 
             // Line 3 (Display bucket index)
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
 
             // Get bucket
             Bucket bucket = buckets[bucketIndex].GetComponent<Bucket>(); // element.GetComponent<SortingElementBase>().Value - minValue);
@@ -292,6 +306,10 @@ public class BucketSort : SortAlgorithm {
         // Display elements
         for (int x=0; x < numberOfBuckets; x++)
         {
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Line 6 (For-loop: Sort elements in buckets)
             //pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, x, Util.NO_VALUE, Util.NO_VALUE, true), Util.HIGHLIGHT_COLOR);
             //yield return new WaitForSeconds(seconds);
@@ -307,10 +325,18 @@ public class BucketSort : SortAlgorithm {
             i = x;
             yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             // Put elements for display on top of buckets
             int numberOfElementsInBucket = bucket.CurrenHolding.Count;
             for (int y=0; y < numberOfElementsInBucket; y++)
             {
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 SortingElementBase element = bucket.GetElementForDisplay(y);
                 element.gameObject.active = true;
                 element.transform.position += UtilSort.ABOVE_BUCKET_VR;
@@ -332,6 +358,10 @@ public class BucketSort : SortAlgorithm {
         // while (k < sortingElements.Length && i < numberOfBuckets)
         for (i = 0; i < numberOfBuckets; i++)
         {
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
+
             Bucket bucket = buckets[i].GetComponent<Bucket>();
 
             // number of elements in bucket
@@ -342,8 +372,16 @@ public class BucketSort : SortAlgorithm {
 
             for (j = 0; j < loopRange; j++)
             {
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 // Line 9 (2nd For-loop: Concatenate all buckets)
                 yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
 
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
                 
@@ -358,12 +396,20 @@ public class BucketSort : SortAlgorithm {
                 // Line 10 (Put element back into list)
                 yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
 
+                // Check if user wants to stop the demo
+                if (sortMain.UserStoppedAlgorithm)
+                    break;
+
                 k++;
                 // Line 11 (Update k)
                 yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
             }
             // Line 12 (2nd for-inner-loop end)
             yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
+
+            // Check if user wants to stop the demo
+            if (sortMain.UserStoppedAlgorithm)
+                break;
         }
         // Line 13 (2nd for-loop end)
         yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
