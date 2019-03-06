@@ -15,9 +15,6 @@ public class Pointer2 : MonoBehaviour {
 
     private int layerMask;
 
-    [SerializeField]
-    private Vector3 newPos;
-
     private void Start()
     {
         layerMask = 1 << 8;
@@ -26,16 +23,16 @@ public class Pointer2 : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+
         RaycastHit hit;
-
-
         if (true) //Input.GetKey(KeyCode.E))
         {
-            if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit)) //, Mathf.Infinity, layerMask))
             {
                 Vector3 collidePos = hit.collider.transform.position;
 
                 float distance = hit.distance;
+                Debug.Log(distance);
   
                 if (distance > maxRange)
                     distance = maxRange;
@@ -44,7 +41,7 @@ public class Pointer2 : MonoBehaviour {
                 //Vector3 target = hit.point;
                 //laserbeam.transform.position = Vector3.Lerp(pointerEnd.position, target, 0.5f);  //new Vector3(pos.x, pos.y, distance / 2);
 
-                if (laserbeam.transform.localScale.y < maxRange)
+                if (laserbeam.transform.localScale.y < distance)
                     laserbeam.transform.localScale += new Vector3(0f, distance, 0f);
                 laserbeam.transform.localPosition = new Vector3(0f, 0f, distance);
         

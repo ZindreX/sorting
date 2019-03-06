@@ -36,7 +36,6 @@ public class AlgorithmUserController : MonoBehaviour {
                 sortMain.InstantiateSetup();
             else
                 sortMain.DestroyAndReset();
-
         }
 
         // ************* DEBUGGING *************

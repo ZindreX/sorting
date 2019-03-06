@@ -14,7 +14,7 @@ public class Pointer : MonoBehaviour {
     private Transform pointerEnd;
 
     [SerializeField]
-    private Camera vrCamera;
+    private Transform hand;
 
     private LineRenderer laserBeam;
 
@@ -34,12 +34,12 @@ public class Pointer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (true) // input steamvr
+        transform.position = hand.position;
+
+
+        if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any)) // input steamvr
         {
             laserBeam.enabled = true;
-
-            // Create a vector at the center of our camera's viewport
-            //Vector3 rayOrigin = vrCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
 
             // Declare a raycast hit to store information about what our raycast hit
             RaycastHit hit;
@@ -48,7 +48,8 @@ public class Pointer : MonoBehaviour {
             laserBeam.SetPosition(0, pointerEnd.position);
 
             // Check if our raycast has hit anything
-            if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))//Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
+            if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+                //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
             {
                 // Set the end position for our laser line
                 laserBeam.SetPosition(1, hit.point);
@@ -65,6 +66,7 @@ public class Pointer : MonoBehaviour {
             else
             {
                 // If we didn't hit anything, set the end of the line to a position directly in front of the camera at the distance of laserRange
+                laserBeam.SetPosition(1, pointerEnd.transform.position * laserRange);
                 //laserBeam.SetPosition(1, rayOrigin + (vrCamera.transform.position * laserRange));
             }
 
@@ -74,6 +76,21 @@ public class Pointer : MonoBehaviour {
             laserBeam.enabled = false;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
