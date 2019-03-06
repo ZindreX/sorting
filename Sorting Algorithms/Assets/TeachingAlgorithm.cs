@@ -13,12 +13,13 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // Basis variables for all modes
     protected WaitForSeconds demoStepDuration;
-    protected bool isTaskCompleted = false, includeLineNr = false; // isReadyForNextMove = false;
+    protected bool pseudoCodeInitilized = false, isTaskCompleted = false, includeLineNr = false; // isReadyForNextMove = false;
     protected PseudoCodeViewer pseudoCodeViewer;
 
     // Demo variables
     protected int i, j, k;
-    protected string lengthOfList = "len(Q)";
+    protected string i_str = "i", j_str = "j", k_str = "k";
+    protected string lengthOfList = "len(list)";
 
     // User Test
     protected Dictionary<string, List<string>> skipDict;
@@ -27,6 +28,13 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     {
         skipDict = new Dictionary<string, List<string>>();
         AddSkipAbleInstructions();
+    }
+
+    // Mark to change values according to demo etc. (before initialized: init pseudocode displays)
+    public bool PseudoCodeInitilized
+    {
+        get { return pseudoCodeInitilized; }
+        set { pseudoCodeInitilized = value; }
     }
 
 
@@ -87,10 +95,14 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         i = 0;
         j = 0;
         k = 0;
+        i_str = "i";
+        j_str = "j";
+        k_str = "k";
         lengthOfList = "len(Q)";
         isTaskCompleted = false;
         demoStepDuration = null;
         skipDict = null;
+        pseudoCodeInitilized = false;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------

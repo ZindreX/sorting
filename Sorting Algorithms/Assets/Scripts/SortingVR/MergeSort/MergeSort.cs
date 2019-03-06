@@ -48,17 +48,6 @@ public class MergeSort : SortAlgorithm {
         return "0: No pseudocode for merge sort yet.";
     }
 
-    protected override string ConvertInitValues(int value, int element)
-    {
-        return null;
-        //switch (element)
-        //{
-        //    case 1: return (value == UtilSort.INIT_STATE) ? "list[i]" : value.ToString();
-        //    case 2: return (value == UtilSort.INIT_STATE - 1) ? "list[j]" : value.ToString();
-        //    default: return "X";
-        //}
-    }
-
     public override int FirstInstructionCodeLine()
     {
         return 0;

@@ -32,10 +32,6 @@ public class SortSettings : SettingsBase {
     private AlgorithmEditor algorithmEditor;
     private enum AlgorithmEditor { BubbleSort, InsertionSort, BucketSort, MergeSort }
 
-    [SerializeField]
-    private DifficultyEditor difficultyEditor;
-    private enum DifficultyEditor { beginner, intermediate, advanced, examination }
-
     [Space(2)]
     [Header("Rules / extra")]
     [SerializeField]
@@ -63,6 +59,9 @@ public class SortSettings : SettingsBase {
             Duplicates = true; //SetDuplicates();
         }
         tooltips.text = "";
+
+        // Hide inactive subsection buttons
+        HideSubSections();
     }
 
     public override void PrepareSettings()

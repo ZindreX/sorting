@@ -19,12 +19,6 @@ public class BucketSort : SortAlgorithm {
     [SerializeField]
     private BucketSortManager bucketSortManager;
 
-    //protected override void Awake()
-    //{
-    //    base.Awake();
-    //    bucketSortManager = GetComponent(typeof(BucketSortManager)) as BucketSortManager;
-    //}
-
     public override string AlgorithmName
     {
         get { return UtilSort.BUCKET_SORT; }
@@ -54,37 +48,6 @@ public class BucketSort : SortAlgorithm {
         }
         return lineOfCode;
     }
-
-    protected override string ConvertInitValues(int value, int element)
-    {
-        return null;
-        //switch (element)
-        //{
-        //    case 1: return (value == UtilSort.INIT_STATE) ? "list[i]" : value.ToString();
-        //    case 2: return (value == UtilSort.INIT_STATE - 1) ? "list[j]" : value.ToString();
-        //    default: return "X";
-        //}
-    }
-    //switch (lineNr)
-    //{
-    //    case 0: return "BucketSort(list, n)";
-    //    case 1: return "    buckets = new array of n empty lists";
-    //    case 2: return "    for i=0 to len(list)-1:";
-    //    case 3: return "        index = list[i] * n / MAX_VALUE";
-    //    case 4: return "        buckets[index] <- list[i]";
-    //    case 5: return "    end for";
-    //    //case 6: return "    for i=0 to n-1:";
-    //    case 6: return "    Sorting each bucket w/InsertionSort";
-    //    //case 8: return "    end for";
-    //    case 7: return "    k = 0";
-    //    case 8: return "    for i=0 to n:";
-    //    case 9: return "        for j={0} to len(buckets[i]):";
-    //    case 10: return "            list[k] = buckets[i][j]";
-    //    case 11: return "            k++";
-    //    case 12: return "        end for";
-    //    case 13: return "    end for";
-    //    default: return "X";
-    //}
 
     public override int FirstInstructionCodeLine()
     {

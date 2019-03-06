@@ -25,7 +25,8 @@ public class InsertionSort : SortAlgorithm {
     {
         base.InitTeachingAlgorithm();
         tutorialPivotElementHeight = pivotHolderPos + new Vector3(0f, 0.1f, 0f);
-        //insertionSortManager = (InsertionSortManager)sortMain.AlgorithmManagerBase;
+        element1Value = "list[i]";
+        element2Value = "list[j]";
     }
 
     public override string AlgorithmName
@@ -58,33 +59,40 @@ public class InsertionSort : SortAlgorithm {
     {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
 
+        if (pseudoCodeInitilized)
+            UpdatePseudoValues(lineNr);
+
         switch (lineNr)
         {
-            case 0: lineOfCode += "InsertionSort( List<int> list )"; break;
-            case 1: lineOfCode += "i = 1"; break;
-            case 2: lineOfCode += "while ( " + i + " < " + sortMain.SortSettings.NumberOfElements + " )"; break;
-            case 3: lineOfCode += "   " + j + " = " + i  + " - 1"; break;
-            case 4: lineOfCode += "   pivot = " + ConvertInitValues(value1, 1); break;
-            case 5: lineOfCode += "   while ( " + j + " >= 0 and pivot < " + ConvertInitValues(value2, 2) + " )"; break; //+ value1 + " < " + value2 + " )";
-            case 6: lineOfCode += "       move " + ConvertInitValues(value2, 2) + " to list[" + (j + 1) + "]"; break;
-            case 7: lineOfCode += "       " + j + " = " + (j + 1) + " - 1"; break;
-            case 8: lineOfCode += "   end while"; break;
-            case 9: lineOfCode += "   list[" + (j + 1) + "] = pivot"; break; //+ value1;
-            case 10: lineOfCode += "   " + i + " = " + (i - 1) + " + 1"; break;
+            case 0: lineOfCode +=  "InsertionSort(list)"; break;
+            case 1: lineOfCode +=  "i = 1"; break;
+            case 2: lineOfCode +=  "while ( " + i_str + " < " + lengthOfList + " )"; break;
+            case 3: lineOfCode +=  "   j = " + iMinus1; break;
+            case 4: lineOfCode +=  "   pivot = " + element1Value; break;
+            case 5: lineOfCode +=  "   while ( " + j_str + " >= 0 and pivot < " + element2Value + " )"; break;
+            case 6: lineOfCode +=  "       move " + element2Value + " to list[" + jPlus1 + "]"; break; // (j_str + 1) 
+            case 7: lineOfCode +=  "       j = " + jMinus1; break; // j_str = (j_str + 1) - 1
+            case 8: lineOfCode +=  "   end while"; break;
+            case 9: lineOfCode +=  "   list[" + jPlus1 + "] = pivot"; break; // (j_str + 1) 
+            case 10: lineOfCode += "   i = " + iPlus1; break; // i_str = (i_str - 1) + 1 
             case 11: lineOfCode += "end while"; break;
             default: return "X";
         }
         return lineOfCode;
     }
 
-    protected override string ConvertInitValues(int value, int element)
+    private string iMinus1 = "i - 1", iPlus1 = "i + 1", jMinus1 = "j - 1", jPlus1 = "j + 1";
+    private void UpdatePseudoValues(int lineNr)
     {
-        switch (element)
-        {
-            case 1: return (value == UtilSort.INIT_STATE) ? "list[i]" : value.ToString();
-            case 2: return (value == UtilSort.INIT_STATE - 1) ? "list[j]" : value.ToString();
-            default: return "X";
-        }
+        i_str = i.ToString();
+        j_str = j.ToString();
+
+        iMinus1 = (i - 1).ToString();
+        iPlus1 = (i + 1).ToString();
+
+        jMinus1 = (j - 1).ToString();
+        jPlus1 = (j + 1).ToString();
+        
     }
 
     public override int FirstInstructionCodeLine()
@@ -100,6 +108,10 @@ public class InsertionSort : SortAlgorithm {
     public override void ResetSetup()
     {
         Destroy(pivotHolderClone);
+        iMinus1 = "i - 1";
+        iPlus1 = "i + 1";
+        jMinus1 = "j - 1";
+        jPlus1 = "j + 1";
         base.ResetSetup();
     }
 
@@ -247,8 +259,8 @@ public class InsertionSort : SortAlgorithm {
             pivot.transform.position = temp + tutorialPivotElementHeight;
 
             // Set first values here to display on blackboard
-            value1 = pivot.Value;
-            value2 = list[j].GetComponent<InsertionSortElement>().Value;
+            PreparePseudocodeValue(pivot.Value, 1);
+            PreparePseudocodeValue(list[j].GetComponent<InsertionSortElement>().Value, 2);
 
             // Display pseudocode (set pivot)
             yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
@@ -298,10 +310,11 @@ public class InsertionSort : SortAlgorithm {
 
                 // Preparing for next step
                 temp = temp2;
-                j -= 1;
 
                 // Display pseudocode (update j)
                 yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+                j -= 1;
+
 
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedAlgorithm)
@@ -326,7 +339,7 @@ public class InsertionSort : SortAlgorithm {
                     compareObj = list[j];
                     compare = compareObj.GetComponent<InsertionSortElement>();
                     compare.IsCompare = true;
-                    value2 = compare.Value;
+                    PreparePseudocodeValue(compare.Value, 2);
                     UtilSort.IndicateElement(compare.gameObject);
 
                     // Display pseudocode (2nd while new compare value)
@@ -378,8 +391,8 @@ public class InsertionSort : SortAlgorithm {
                 break;
 
             // Display pseudocode (increment i)
-            i += 1;
             yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
+            i += 1;
 
             // Check if user wants to stop the demo
             if (sortMain.UserStoppedAlgorithm)

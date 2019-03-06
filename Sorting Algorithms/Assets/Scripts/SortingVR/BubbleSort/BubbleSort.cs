@@ -13,6 +13,14 @@ public class BubbleSort : SortAlgorithm {
     [SerializeField]
     private BubbleSortManager bubbleSortManager;
 
+    public override void InitTeachingAlgorithm()
+    {
+        base.InitTeachingAlgorithm();
+        element1Value = "list[j]";
+        element2Value = "list[j + 1]";
+    }
+
+
     public override string AlgorithmName
     {
         get { return UtilSort.BUBBLE_SORT; }
@@ -38,24 +46,14 @@ public class BubbleSort : SortAlgorithm {
             case 1: lineOfCode += string.Format("  n = {0}", n); break;
             case 2: lineOfCode += string.Format("  for i={0} to {1}:", i, (n-1)); break;
             case 3: lineOfCode += string.Format("      for j={0} to {1}:", j, (n-i-1)); break;
-            case 4: lineOfCode += string.Format("          if ( {0} > {1} ):", ConvertInitValues(value1, 1), ConvertInitValues(value2, 2)); break;
-            case 5: lineOfCode += string.Format("              swap {0} and {1}", ConvertInitValues(value1, 1), ConvertInitValues(value2, 2)); break;
+            case 4: lineOfCode += string.Format("          if ( {0} > {1} ):", element1Value, element2Value); break;
+            case 5: lineOfCode += string.Format("              swap {0} and {1}", element1Value, element2Value); break;
             case 6: lineOfCode += "          end if"; break;
             case 7: lineOfCode += "      end for"; break;
             case 8: lineOfCode += "  end for"; break;
             default: return "lineNr " + lineNr + " not found!";
         }
         return lineOfCode;
-    }
-
-    protected override string ConvertInitValues(int value, int element)
-    {
-        switch (element)
-        {
-            case 1: return (value == UtilSort.INIT_STATE) ? "list[i]" : value.ToString();
-            case 2: return (value == UtilSort.INIT_STATE - 1) ? "list[i+1]" : value.ToString();
-            default: return "X";
-        }
     }
 
     public override int FirstInstructionCodeLine()
@@ -175,9 +173,9 @@ public class BubbleSort : SortAlgorithm {
 
                 // Get their values
                 if (p1 != null)
-                    value1 = p1.Value;
+                    PreparePseudocodeValue(p1.Value, 1);
                 if (p2 != null)
-                    value2 = p2.Value;
+                    PreparePseudocodeValue(p2.Value, 2);
 
                 // Display pseudocode (list length)
                 yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);

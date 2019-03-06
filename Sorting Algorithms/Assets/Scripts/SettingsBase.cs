@@ -26,6 +26,10 @@ public abstract class SettingsBase : MonoBehaviour {
     protected AlgorithmSpeedEditor algorithmSpeedEditor;
     protected enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
 
+    [SerializeField]
+    protected DifficultyEditor difficultyEditor;
+    protected enum DifficultyEditor { beginner, intermediate, advanced, examination }
+
     protected Dictionary<string, OnOffButton> buttons;
     [SerializeField]
     protected OnOffButton startButton;
@@ -34,12 +38,14 @@ public abstract class SettingsBase : MonoBehaviour {
     {
         buttons = new Dictionary<string, OnOffButton>();
 
-        // Get buttons
+        // Get all buttons in the settings menu
         Component[] buttonComponents = GetComponentsInChildren<OnOffButton>();
         foreach (OnOffButton component in buttonComponents)
         {
             buttons.Add(component.ButtonID, component);
         }
+
+        // Also add the start button which is located near startpoint/working area
         buttons.Add("Start", startButton);
     }
 
@@ -55,13 +61,13 @@ public abstract class SettingsBase : MonoBehaviour {
     public string Algorithm
     {
         get { return algorithm; }
-        set { algorithm = value; FillTooltips("Algorithm:\n" + value); SetActiveButton(algorithm); }
+        set { algorithm = value; FillTooltips("Algorithm:\n" + value); SetActiveButton(value); }
     }
 
     public string TeachingMode
     {
         get { return teachingMode; }
-        set { teachingMode = value; FillTooltips("Teaching mode:\n" + value); SetActiveButton(teachingMode); }
+        set { teachingMode = value; FillTooltips("Teaching mode:\n" + value); SetActiveButton(value); }
     }
 
     public virtual bool IsDemo()
@@ -149,8 +155,23 @@ public abstract class SettingsBase : MonoBehaviour {
                 Debug.LogError("Null button: ID= " + buttonID);
 
         }
-    //    else
-    //        Debug.LogError("No key: " + buttonID);
+        else
+            Debug.LogError("No key: " + buttonID);
+    }
+
+    protected void HideSubSections()
+    {
+        foreach (KeyValuePair<string, OnOffButton> entry in buttons)
+        {
+            OnOffButton button = entry.Value;
+            if (button.HasSubSection() && !button.State)
+            {
+                Debug.Log("Has sub section: " + entry.Key);
+                button.HideSubsection();
+            }
+            //else
+            //    Debug.Log("Has no sub section: " + entry.Key);
+        }
     }
 
 }

@@ -67,8 +67,6 @@ public class UtilSort : Util {
     // Other switch cases
     public const string INIT = "Init", UPDATE_BLACKBOARD = "Update blackboard";
 
-    //public static List<string> skipAbleInstructions = new List<string>() { FIRST_INSTRUCTION, FINAL_INSTRUCTION, COMPARE_START_INST, COMPARE_END_INST, UPDATE_LOOP_INST };
-
 
     // Displays
     public const string SORT_TABLE_TEXT = "Sort table text", LEFT_BLACKBOARD = "Left blackboard", RIGHT_BLACKBOARD = "Right blackboard", SETTINGS_MENU_TEXT = "Settings menu text";

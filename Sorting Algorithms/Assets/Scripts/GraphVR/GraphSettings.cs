@@ -117,6 +117,8 @@ public class GraphSettings : SettingsBase {
             TeachingMode = Util.DEMO;
             AlgorithmSpeed = 1;
             Difficulty = 1;
+            ShortestPathOneToAll = true;
+            VisitLeftFirst = true;
 
             // Graph
             Graphstructure = UtilGraph.GRID_GRAPH;
@@ -136,6 +138,9 @@ public class GraphSettings : SettingsBase {
             }
         }
         tooltips.text = "";
+
+        // Hide inactive subsection buttons
+        HideSubSections();
     }
 
     public override void PrepareSettings()
@@ -161,6 +166,8 @@ public class GraphSettings : SettingsBase {
             case 2: AlgorithmSpeed = 0.5f; break;
             case 4: AlgorithmSpeed = 0f; break;
         }
+
+        Difficulty = (int)difficultyEditor + 1;
 
         // Graph
         switch ((int)graphStructureEditor)
@@ -202,6 +209,12 @@ public class GraphSettings : SettingsBase {
             levelDepthLength = ((int)levelDepthLengthEditor + 2) + (int)levelDepthLengthEditor * 2;
         }
 
+        // kinda messed.... but if false 1x gets inverse
+        ShortestPathOneToAll = shortestPathOneToAll;
+        ShortestPathOneToAll = shortestPathOneToAll;
+        VisitLeftFirst = visitLeftFirst;
+        VisitLeftFirst = visitLeftFirst;
+
         Debug.Log("Teachingmode: " + teachingMode + ", algorithm: " + algorithm + ", graph: " + graphStructure);
     }
 
@@ -229,6 +242,111 @@ public class GraphSettings : SettingsBase {
         set { edgeMode = value; FillTooltips("Edge mode: " + value); SetActiveButton(value); }
     }
 
+    public void ChangeGridRows(bool increment)
+    {
+        if (increment)
+        {
+            if (gridRows < UtilGraph.MAX_ROWS)
+                gridRows++;
+            else
+            {
+                FillTooltips("Max rows: " + UtilGraph.MAX_ROWS);
+                return;
+            }
+        }
+        else
+        {
+            if (gridRows > 1)
+                gridRows--;
+            else
+            {
+                FillTooltips("Min rows: 1");
+                return;
+            }
+
+        }
+        FillTooltips("#Rows: " + gridRows);
+    }
+
+    public void ChangeGridColumns(bool increment)
+    {
+        if (increment)
+        {
+            if (gridColumns < UtilGraph.MAX_COLUMNS)
+                gridColumns++;
+            else
+            {
+                FillTooltips("Max columns: " + UtilGraph.MAX_COLUMNS);
+                return;
+            }
+        }
+        else
+        {
+            if (gridColumns > 1)
+                gridColumns--;
+            else
+            {
+                FillTooltips("Min columns: 1");
+                return;
+            }
+
+        }
+        FillTooltips("#Columns: " + gridColumns);
+    }
+
+    public void ChangeTreeDepth(bool increment)
+    {
+        if (increment)
+        {
+            if (treeDepth < UtilGraph.MAX_TREE_DEPTH)
+                treeDepth++;
+            else
+            {
+                FillTooltips("Max tree depth: " + UtilGraph.MAX_TREE_DEPTH);
+                return;
+            }
+        }
+        else
+        {
+            if (treeDepth > 0)
+                treeDepth--;
+            else
+            {
+                FillTooltips("Min tree depth: 0");
+                return;
+            }
+
+        }
+        FillTooltips("#Tree depth: " + treeDepth);
+    }
+
+    public void ChangeNTree(bool increment)
+    {
+        if (increment)
+        {
+            if (treeDepth < UtilGraph.MAX_N_TREE)
+                nTree++;
+            else
+            {
+                FillTooltips("Max n-tree: " + UtilGraph.MAX_N_TREE);
+                return;
+            }
+        }
+        else
+        {
+            if (nTree > 2)
+                nTree--;
+            else
+            {
+                FillTooltips("Min n-tree: 2");
+                return;
+            }
+
+        }
+        FillTooltips("#Tree depth: " + treeDepth);
+    }
+
+
     public int[] StartNode()
     {
         return new int[2] { x1, z1 };
@@ -239,16 +357,30 @@ public class GraphSettings : SettingsBase {
         return new int[2] { x2, z2 };
     }
 
+    public void SetShortestPathOneToAll()
+    {
+        shortestPathOneToAll = !shortestPathOneToAll;
+        FillTooltips("Shortest path one to all:\n" + shortestPathOneToAll);
+        SetActiveButton(UtilGraph.SHORTEST_PATH_ONE_TO_ALL);
+    }
+
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOneToAll; }
-        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); SetActiveButton(""); }
+        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); SetActiveButton(UtilGraph.SHORTEST_PATH_ONE_TO_ALL); }
+    }
+
+    public void SetVisitLeftFirst()
+    {
+        visitLeftFirst = !visitLeftFirst;
+        FillTooltips("Visit left node first:\n" + visitLeftFirst);
+        SetActiveButton(UtilGraph.VISIT_LEFT_FIRST);
     }
 
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }
-        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); SetActiveButton(""); }
+        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); SetActiveButton(UtilGraph.VISIT_LEFT_FIRST); }
     }
 
     public int[] GraphSetup()

@@ -6,6 +6,8 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     // value1 <- pivot value, value2 <- compare value (usually)
     protected int value1 = UtilSort.INIT_STATE, value2 = UtilSort.INIT_STATE - 1;
+    protected string element1Value, element2Value;
+
     protected List<int> prevHighlight = new List<int>();
     protected SortMain sortMain;
 
@@ -38,11 +40,24 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         set { sortMain = (SortMain)value; }
     }
 
+    protected void PreparePseudocodeValue(int value, int elementNr)
+    {
+        switch (elementNr)
+        {
+            case 1: value1 = value; element1Value = value.ToString(); break;
+            case 2: value2 = value; element2Value = value.ToString(); break;
+        }
+    }
+
+
+
     public override void ResetSetup()
     {
         value1 = UtilSort.INIT_STATE;
         value2 = UtilSort.INIT_STATE;
         prevHighlight = new List<int>();
+        element1Value = "";
+        element2Value = "";
         //sortMain = null;
         base.ResetSetup();
     }
@@ -52,9 +67,6 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     // To do stuff important for individual classes
     public abstract void Specials(string method, int number, bool activate); // used?
-
-    // Pseudo code
-    protected abstract string ConvertInitValues(int value, int element);
 
     /* Tutorial of the chosen sorting algorithm
      * - No interaction from the user (except for settings)

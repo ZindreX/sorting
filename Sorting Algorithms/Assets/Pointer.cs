@@ -34,7 +34,7 @@ public class Pointer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (false) // input steamvr
+        if (true) // input steamvr
         {
             laserBeam.enabled = true;
 

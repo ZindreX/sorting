@@ -25,6 +25,8 @@ public class GraphMain : MainManager {
 
     private bool backtracking = false, userTestGoalActive = false;
 
+    [SerializeField]
+    private GameObject startPillar;
 
     protected virtual void Awake()
     {
@@ -271,11 +273,23 @@ public class GraphMain : MainManager {
 
         // Mark start-/end nodes
         graphManager.SetupImportantNodes(null, null, false);
+
+        // Hide menu
+        StartCoroutine(ActivateTaskObjects(true));
     }
 
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
-        yield return null;
+        Debug.Log(">>>>>>>>>>>>>>> Initing!");
+        graphSettings.FillTooltips("Loading setup...");
+        yield return loading;
+
+        // Settings menu
+        graphSettings.SetSettingsActive(!active);
+
+        startPillar.SetActive(active);
+
+        yield return loading;
     }
 
 
@@ -283,6 +297,12 @@ public class GraphMain : MainManager {
     {
         algorithmStarted = false;
 
+        // Delete list visual
+
+        // Delete graph
+        graphManager.DeleteGraph();
+
+        StartCoroutine(ActivateTaskObjects(false));
     }
 
 

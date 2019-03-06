@@ -17,6 +17,7 @@ public abstract class MainManager : MonoBehaviour {
 
     protected bool userTestReady = false; // debugging
 
+    protected WaitForSeconds loading = new WaitForSeconds(1f);
 
     void Update()
     {

@@ -5,7 +5,7 @@ using TMPro;
 
 public class OnOffButton : MonoBehaviour {
 
-    // On/Off/any... button
+    // Messy class, should be improved --> split into on/off (toggle), switch etc.
 
     [SerializeField]
     private string buttonID;
@@ -20,21 +20,27 @@ public class OnOffButton : MonoBehaviour {
     private Material onMaterial, offMaterial, nonMaterial;
 
     [SerializeField]
-    private bool isOnOffButton, staticColor;
+    private bool isOnOffButton, staticAppearance;
 
     [SerializeField]
     private GameObject section;
 
-    [SerializeField]
     private OnOffButton[] sectionButtons;
+
+    [SerializeField]
+    private GameObject subSectionButtons;
 
     private void Awake()
     {
         state = false;
         buttonText = GetComponentInChildren<TextMeshPro>();
 
+        //if (!staticAppearance)
+        //    buttonText.text = buttonID;
+
         if (section != null)
             sectionButtons = section.GetComponentsInChildren<OnOffButton>();
+
     }
 
     public string ButtonID
@@ -52,6 +58,16 @@ public class OnOffButton : MonoBehaviour {
         get { return isOnOffButton; }
     }
 
+    public bool HasSubSection()
+    {
+        return subSectionButtons != null;
+    }
+
+    public void HideSubsection()
+    {
+        subSectionButtons.SetActive(false);
+    }
+
     public void ChangeState()
     {
         // Deactivate other button(s) in same section
@@ -67,9 +83,14 @@ public class OnOffButton : MonoBehaviour {
         // Activate this button
         state = true;
 
-        if (!staticColor)
+        if (!staticAppearance)
             GetComponentInChildren<Renderer>().material = onMaterial;
+
+        // Display sub buttons
+        if (subSectionButtons != null)
+            subSectionButtons.SetActive(state);
     }
+
 
     public void ToggleState()
     {
@@ -90,13 +111,16 @@ public class OnOffButton : MonoBehaviour {
     {
         state = false;
 
-        if (!staticColor)
+        if (!staticAppearance)
         {
             if (isOnOffButton)
                 GetComponentInChildren<Renderer>().material = offMaterial;
             else
                 GetComponentInChildren<Renderer>().material = nonMaterial;
         }
+
+        if (subSectionButtons != null)
+            subSectionButtons.SetActive(state);
     }
 
 

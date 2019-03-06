@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class UtilGraph : Util {
 
+    public static readonly int MAX_ROWS = 5, MAX_COLUMNS = 5;
+    public static readonly int MAX_TREE_DEPTH = 3, MAX_N_TREE = 3;
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
+
+    // Rules
+    public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all", VISIT_LEFT_FIRST = "Visit left first";
 
     // Graph structures
     public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge", SYMMETRIC_EDGE = "Symmetric edge";
@@ -102,21 +107,5 @@ public class UtilGraph : Util {
         return null;
     }
 
-    //string compassDir = UtilGraph.GetCompassDirection(i, j);
-    //switch (compassDir)
-    //{
-    //    case UtilGraph.NORTH: case UtilGraph.SOUTH:
-    //        angle = Mathf.Atan2(0, n2.x - n1.x) * Mathf.Rad2Deg;
-    //        break;
-
-    //    case UtilGraph.NORTH_WEST: case UtilGraph.NORTH_EAST: case UtilGraph.EAST: case UtilGraph.WEST:
-    //        angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
-    //        break;
-
-    //    case UtilGraph.SOUTH_WEST: case UtilGraph.SOUTH_EAST:
-    //        angle = Mathf.Atan2(gridSpace, n2.x - n1.x) * Mathf.Rad2Deg;
-    //        break;
-    //    default: Debug.LogError("Compass direction unknown!"); break;
-    //}
 }
 
