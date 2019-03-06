@@ -166,7 +166,7 @@ public abstract class SettingsBase : MonoBehaviour {
             OnOffButton button = entry.Value;
             if (button.HasSubSection() && !button.State)
             {
-                Debug.Log("Has sub section: " + entry.Key);
+                //Debug.Log("Has sub section: " + entry.Key);
                 button.HideSubsection();
             }
             //else

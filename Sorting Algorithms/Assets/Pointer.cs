@@ -7,7 +7,7 @@ using Valve.VR;
 public class Pointer : MonoBehaviour {
 
     [SerializeField]
-    private float laserWidth = 100f, laserRange = 50f;
+    private float laserRange = 50f;
     private int layerMask;
 
     [SerializeField]
