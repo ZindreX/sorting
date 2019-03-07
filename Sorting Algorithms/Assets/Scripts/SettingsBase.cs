@@ -30,9 +30,15 @@ public abstract class SettingsBase : MonoBehaviour {
     protected DifficultyEditor difficultyEditor;
     protected enum DifficultyEditor { beginner, intermediate, advanced, examination }
 
+    // Old
     protected Dictionary<string, OnOffButton> buttons;
     [SerializeField]
     protected OnOffButton startButton;
+
+
+    // New
+    protected Dictionary<string, SettingsMenuItem> settingsMenuItems;
+
 
     private void Awake()
     {
@@ -47,15 +53,19 @@ public abstract class SettingsBase : MonoBehaviour {
 
         // Also add the start button which is located near startpoint/working area
         buttons.Add("Start", startButton);
-    }
 
-    //
-    public abstract void PrepareSettings();
-    protected abstract MainManager MainManager { get; set; }
 
-    public void SetSettingsActive(bool active)
-    {
-        Util.HideObject(gameObject, active);
+        // new stuff
+        settingsMenuItems = new Dictionary<string, SettingsMenuItem>();
+        Component[] newButtonComponents = GetComponentsInChildren<SettingsMenuItem>();
+        foreach (SettingsMenuItem item in newButtonComponents)
+        {
+            string itemID = item.ItemID;
+            if (!settingsMenuItems.ContainsKey(itemID))
+                settingsMenuItems[itemID] = item;
+            else
+                Debug.LogError("Item already in dict: " + itemID);
+        }
     }
 
     public string Algorithm
@@ -174,4 +184,12 @@ public abstract class SettingsBase : MonoBehaviour {
         }
     }
 
+    //
+    public abstract void PrepareSettings();
+    protected abstract MainManager MainManager { get; set; }
+
+    public void SetSettingsActive(bool active)
+    {
+        Util.HideObject(gameObject, active);
+    }
 }

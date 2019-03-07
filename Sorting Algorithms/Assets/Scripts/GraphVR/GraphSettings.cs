@@ -219,6 +219,21 @@ public class GraphSettings : SettingsBase {
         Debug.Log("Teachingmode: " + teachingMode + ", algorithm: " + algorithm + ", graph: " + graphStructure);
     }
 
+    // All input from interactable settings menu goes through here
+    public void UpdateValueFromSettingsMenu(string sectionID, string itemID)
+    {
+        switch (sectionID)
+        {
+            case Util.ALGORITHM: Algorithm = itemID; break;
+            case Util.TEACHING_MODE: TeachingMode = itemID; break;
+                //case Util.DIFFICULTY: Difficulty = itemID; break;
+                //case Util.ALGORITHM_SPEED: AlgorithmSpeed = itemID; break;
+                
+        }
+    }
+
+
+
     protected override MainManager MainManager
     {
         get { return graphMain; }

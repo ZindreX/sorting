@@ -6,6 +6,7 @@ public class Util : MonoBehaviour {
 
     // Buttons
     public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_SPEED = "Slow", NORMAL_SPEED = "Normal", FAST_SPEED = "Fast", TEST_SPEED = "Test speed";
+    public const string ALGORITHM_SPEED = "Algorithm speed";
 
     // Teaching modes
     public const string DEMO = "Demo", STEP_BY_STEP = "Step by step", USER_TEST = "User test";

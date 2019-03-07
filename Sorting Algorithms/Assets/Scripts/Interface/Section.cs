@@ -5,37 +5,62 @@ using TMPro;
 
 public class Section : MonoBehaviour {
 
+    /* --------------------------------- Section ---------------------------------
+     * - Managing grouped buttons
+     * 
+     * 
+    */
+
     [SerializeField]
     private string sectionID;
 
-    private Dictionary<string, SettingsButton> sectionButtons;
+    [SerializeField]
+    private bool isOneActiveOnlySection, isSubSection;
+
+    private Dictionary<string, SettingsMenuItem> sectionButtons;
 
     private void Awake()
     {
         // Get all buttons in this section and add them to a dictionary
-        sectionButtons = new Dictionary<string, SettingsButton>();
+        sectionButtons = new Dictionary<string, SettingsMenuItem>();
 
-        Component[] buttons = GetComponentsInChildren<SettingsButton>();
-        foreach (SettingsButton sButton in buttons)
+        Component[] buttons = GetComponentsInChildren<SettingsMenuItem>();
+        foreach (SettingsMenuItem item in buttons)
         {
-            string buttonID = sButton.ButtonID;
-            sectionButtons[buttonID] = sButton;
+            // Item is under this section
+            item.Section = this;
+
+            // Add item to dictionary
+            string buttonID = item.ItemID;
+            sectionButtons[buttonID] = item;
+
         }
     }
 
-    private void Update()
+    public bool IsOneActiveOnlySection
     {
-        
+        get { return IsOneActiveOnlySection; }
     }
 
-
-    public void ReportActivation(string buttonID)
+    public bool IsSubSection
     {
-        foreach (KeyValuePair<string, SettingsButton> entry in sectionButtons)
+        get { return isSubSection; }
+    }
+
+    // If one item activates within a group, then deactivate the others within this group
+    public void ReportActivation(string itemID)
+    {
+        if (isOneActiveOnlySection)
         {
-            if (entry.Key != buttonID)
-                Debug.Log(entry.Value.ButtonID);
-                //entry.Value.Deactivate();
+            foreach (KeyValuePair<string, SettingsMenuItem> entry in sectionButtons)
+            {
+                if (entry.Key != itemID)
+                {
+                    OneActiveButton button = (OneActiveButton)entry.Value;
+                    button.Deactivateitem();
+                }
+
+            }
         }
     }
 
