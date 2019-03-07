@@ -32,7 +32,7 @@ public class OnOffButton : MonoBehaviour {
 
     private void Awake()
     {
-        state = false;
+        DeactivateButton();
         buttonText = GetComponentInChildren<TextMeshPro>();
 
         //if (!staticAppearance)
@@ -65,7 +65,7 @@ public class OnOffButton : MonoBehaviour {
 
     public void HideSubsection()
     {
-        subSectionButtons.SetActive(false);
+        Util.HideObject(gameObject, false);
     }
 
     public void ChangeState()
@@ -88,7 +88,7 @@ public class OnOffButton : MonoBehaviour {
 
         // Display sub buttons
         if (subSectionButtons != null)
-            subSectionButtons.SetActive(state);
+            Util.HideObject(subSectionButtons.gameObject, state);
     }
 
 
@@ -120,9 +120,8 @@ public class OnOffButton : MonoBehaviour {
         }
 
         if (subSectionButtons != null)
-            subSectionButtons.SetActive(state);
+            Util.HideObject(subSectionButtons.gameObject, state);
     }
-
 
     
 

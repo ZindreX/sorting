@@ -28,7 +28,7 @@ public class GridManager : GraphManager {
         gridSpace = graphStructure[2];
     }
 
-    protected override void CreateNodes(string mode)
+    public override void CreateNodes(string mode)
     {
         gridNodes = new GridNode[rows, cols];
         int startX = (UtilGraph.GRAPH_MAX_X - ((MAX_ROWS - cols) / 2) * gridSpace);
@@ -56,18 +56,19 @@ public class GridManager : GraphManager {
         return (int)Mathf.Pow(rows - 1, cols) + (int)Mathf.Pow(cols - 1, rows); // complete graph
     }
 
-    protected override void CreateEdges(string mode)
+    public override void CreateEdges(string mode)
     {
         for (int row=0; row < rows; row++)
         {
             for (int col=0; col < cols; col++)
             {
+                GridNode currentNode = gridNodes[row, col];
                 switch (mode)
                 {
-                    case UtilGraph.FULL_EDGES: BuildEdges(row, col, false, Util.ROLL_MAX); break;
-                    case UtilGraph.FULL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(row, col, Util.ROLL_MAX); break;
-                    case UtilGraph.PARTIAL_EDGES: BuildEdges(row, col, false, LookUpRNGDict(UtilGraph.BUILD_EDGE_CHANCE)); break;
-                    case UtilGraph.PARTIAL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(row, col, Util.ROLL_MAX); break;
+                    case UtilGraph.FULL_EDGES: BuildEdges(currentNode, false, Util.ROLL_MAX); break;
+                    case UtilGraph.FULL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(currentNode, row, col, Util.ROLL_MAX); break;
+                    case UtilGraph.PARTIAL_EDGES: BuildEdges(currentNode, false, LookUpRNGDict(UtilGraph.BUILD_EDGE_CHANCE)); break;
+                    case UtilGraph.PARTIAL_EDGES_NO_CROSSING: BuildEdgesNoCrossing(currentNode, row, col, Util.ROLL_MAX); break;
                     default: Debug.LogError("'" + mode + "' mode not implemented!"); break;
                 }
             }
@@ -75,7 +76,7 @@ public class GridManager : GraphManager {
     }
 
     // Builds efficiently a full grid w/o any crossing edges
-    private void BuildEdgesNoCrossing(int row, int col, int chance)
+    private void BuildEdgesNoCrossing(GridNode currentNode, int row, int col, int chance)
     {
         bool useCompassFormation = row % 2 == 0 && col % 2 == 0;
         bool useStartFormation = row % 2 != 0 && col % 2 != 0;
@@ -83,7 +84,6 @@ public class GridManager : GraphManager {
         // Build edges from this node if valid node for compass/star formation
         if (useCompassFormation || useStartFormation)
         {
-            GridNode currentNode = gridNodes[row, col];
             Vector3 n1 = currentNode.transform.position, n2;
             List<GridNode> neighbors = null;
 
@@ -116,9 +116,8 @@ public class GridManager : GraphManager {
     }
 
     // Tries to build edges from the input node (total 8 nodes, see GetNeighbors method)
-    private void BuildEdges(int row, int col, bool doubleDepth, int chance)
+    private void BuildEdges(GridNode currentNode, bool doubleDepth, int chance)
     {
-        GridNode currentNode = gridNodes[row, col];
         Vector3 n1 = currentNode.transform.position, n2;
         GridNode[,] neighbors = GetNeighbors(currentNode, doubleDepth);
 
@@ -134,7 +133,7 @@ public class GridManager : GraphManager {
 
                 // Making things a bit random, build if...
                 bool buildEdge = true;
-                if (row == START_Z && col == START_X || row == END_Z && col == END_X)
+                if (neighbor.IsStartNode || neighbor.IsEndNode) //row == START_Z && col == START_X || row == END_Z && col == END_X)
                     buildEdge = true;
                 else
                     buildEdge = Util.RollRandom(chance);
@@ -165,11 +164,11 @@ public class GridManager : GraphManager {
             }
         }
         // Destroy nodes with no connected neighbors
-        if (currentNode.NumberOfNeighbors() == 0)
-        {
-            Destroy(currentNode.gameObject);
-            gridNodes[row, col] = null;
-        }
+        //if (currentNode.NumberOfNeighbors() == 0)
+        //{
+        //    Destroy(currentNode.gameObject);
+        //    gridNodes[row, col] = null;
+        //}
     }
 
     private void CheckAndDestroyUnreachableNodes()

@@ -88,7 +88,7 @@ public class GraphSettings : SettingsBase {
     private int z2;
 
     [SerializeField]
-    private bool shortestPathOneToAll;
+    private bool shortestPathOneToAll, selectStartEndNodes;
 
     // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
     [Header("RNG stuff")]
@@ -214,6 +214,7 @@ public class GraphSettings : SettingsBase {
         ShortestPathOneToAll = shortestPathOneToAll;
         VisitLeftFirst = visitLeftFirst;
         VisitLeftFirst = visitLeftFirst;
+        
 
         Debug.Log("Teachingmode: " + teachingMode + ", algorithm: " + algorithm + ", graph: " + graphStructure);
     }
@@ -346,6 +347,17 @@ public class GraphSettings : SettingsBase {
         FillTooltips("#Tree depth: " + treeDepth);
     }
 
+    private Node startNode, endNode;
+    public Node PlayerStartNode
+    {
+        get { return startNode; }
+        set { startNode = value; StartCoroutine(startNode.PlayerSelectedNode()); startNode.IsStartNode = true; Debug.Log("Added start node"); }
+    }
+    public Node PlayerEndNode
+    {
+        get { return endNode; }
+        set { endNode = value; StartCoroutine(endNode.PlayerSelectedNode()); endNode.IsEndNode = true; Debug.Log("Added end node"); }
+    }
 
     public int[] StartNode()
     {
@@ -355,6 +367,22 @@ public class GraphSettings : SettingsBase {
     public int[] EndNode()
     {
         return new int[2] { x2, z2 };
+    }
+
+
+    public bool SelectStartEndNodes
+    {
+        get { return selectStartEndNodes; }
+        set { selectStartEndNodes = value; }
+    }
+
+    public void SetSelectNodes()
+    {
+        Debug.Log("Do this: " + buttons["Select nodes"].State);
+        selectStartEndNodes = !selectStartEndNodes;
+        FillTooltips("Select start/end nodes:\n" + selectStartEndNodes);
+        SetActiveButton("Select nodes");
+        SetActiveButton("Select nodes");
     }
 
     public void SetShortestPathOneToAll()

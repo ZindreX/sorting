@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -290,6 +291,17 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     // Instruction methods end
 
+    private WaitForSeconds selectedDuration = new WaitForSeconds(0.5f);
+    public IEnumerator PlayerSelectedNode()
+    {
+        for (int i=0; i < 4; i++)
+        {
+            CurrentColor = Color.white;
+            yield return selectedDuration;
+            CurrentColor = Util.STANDARD_COLOR;
+            yield return selectedDuration;
+        }
+    }
 
 
     // Abstract methods

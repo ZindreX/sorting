@@ -27,7 +27,7 @@ public class RandomGraphManager : GraphManager {
         return numberOfEdges;
     }
 
-    protected override void CreateNodes(string s)
+    public override void CreateNodes(string s)
     {
         // Start node
         nodes.Add(GenerateNode(new Vector3(0f, 0f, 0f)));
@@ -69,7 +69,7 @@ public class RandomGraphManager : GraphManager {
 
 
     //private Dictionary<RandomNode, List<RandomNode>>
-    protected override void CreateEdges(string mode)
+    public override void CreateEdges(string mode)
     {
         // Dictionary for counting number of times nodeID has been used - Dict<nodeID, counter>
         Dictionary<int, int> nodeUsedCounter = new Dictionary<int, int>();

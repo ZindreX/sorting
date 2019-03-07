@@ -55,7 +55,7 @@ public abstract class SettingsBase : MonoBehaviour {
 
     public void SetSettingsActive(bool active)
     {
-        gameObject.SetActive(active);
+        Util.HideObject(gameObject, active);
     }
 
     public string Algorithm

@@ -7,6 +7,9 @@ using UnityEngine;
 public class GraphMain : MainManager {
 
     [SerializeField]
+    private GameObject settingsObj;
+
+    [SerializeField]
     private GraphSettings graphSettings;
     private GraphAlgorithm graphAlgorithm;
     private GraphManager graphManager;
@@ -33,6 +36,11 @@ public class GraphMain : MainManager {
         // >>> Basic components
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         posManager = FindObjectOfType<PositionManager>();
+    }
+
+    public GraphSettings GraphSettings
+    {
+        get { return graphSettings; }
     }
 
     protected override void DemoUpdate()
@@ -225,6 +233,21 @@ public class GraphMain : MainManager {
         }
     }
 
+    // Test
+    private bool playerChooseStartNode = false;
+    public bool PlayerChooseStartNode
+    {
+        get { return playerChooseStartNode; }
+        set { playerChooseStartNode = value; }
+    }
+
+    private bool playerChooseEndNode = false;
+    public bool PlayerChooseEndNode
+    {
+        get { return playerChooseEndNode; }
+        set { playerChooseEndNode = value; }
+    }
+
     public override void InstantiateSetup()
     {
         // Grab variable data from settings
@@ -232,10 +255,7 @@ public class GraphMain : MainManager {
         float algorithmSpeed = graphSettings.AlgorithmSpeed;
         string graphStructure = graphSettings.Graphstructure;
         string edgeType = graphSettings.EdgeType;
-        string edgeMode = graphSettings.EdgeMode;
         int[] graphSetup = graphSettings.GraphSetup();
-        int[] startNodeCoordinates = graphSettings.StartNode();
-        int[] endNodeCoordinates = graphSettings.EndNode();
 
         // Extra
         bool shortestPathOneToAll = graphSettings.ShortestPathOneToAll;
@@ -266,21 +286,42 @@ public class GraphMain : MainManager {
 
         // Get variables for graph setup
         graphManager.InitGraph(graphSetup);
-        graphManager.SetupImportantNodes(startNodeCoordinates, endNodeCoordinates, true);
 
         // Create graph based on init variables
-        graphManager.CreateGraph();
-
-        // Mark start-/end nodes
-        graphManager.SetupImportantNodes(null, null, false);
+        graphManager.CreateNodes("See InstantiateSetup()");
 
         // Hide menu
         StartCoroutine(ActivateTaskObjects(true));
+
+        if (graphSettings.SelectStartEndNodes)
+        {
+            Debug.Log("Selecting nodes");
+            playerChooseStartNode = true;
+            if (graphAlgorithm is IShortestPath)
+                playerChooseEndNode = true;
+        }
+        else
+            StartCoroutine(InitImportanceNodes());
+    }
+
+    public IEnumerator InitImportanceNodes()
+    {
+        Debug.Log("Starting building edges");
+        yield return loading;
+
+        // Set starting nodes
+        graphManager.StartNode = graphSettings.PlayerStartNode;
+        graphManager.EndNode = graphSettings.PlayerEndNode;
+
+        // Getting edge mode (full/partial etc.)
+        string edgeMode = graphSettings.EdgeMode;
+
+        // Building edges
+        graphManager.CreateEdges(edgeMode);
     }
 
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
-        Debug.Log(">>>>>>>>>>>>>>> Initing!");
         graphSettings.FillTooltips("Loading setup...");
         yield return loading;
 

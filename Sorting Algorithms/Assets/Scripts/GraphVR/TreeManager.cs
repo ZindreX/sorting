@@ -40,7 +40,7 @@ public class TreeManager : GraphManager {
         levelDepthLength = graphStructure[2];
     }
 
-    protected override void CreateNodes(string mode)
+    public override void CreateNodes(string mode)
     {
         tree = new List<TreeNode>();
 
@@ -117,7 +117,7 @@ public class TreeManager : GraphManager {
         return node.GetComponent<TreeNode>();
     }
 
-    protected override void CreateEdges(string mode)
+    public override void CreateEdges(string mode)
     {
         //return;
         //Debug.LogError("No need for this method anymore (tree)");

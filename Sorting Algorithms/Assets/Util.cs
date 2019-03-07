@@ -137,4 +137,21 @@ public class Util : MonoBehaviour {
         else
             return TEST_SPEED;
     }
+
+    public static void HideObject(GameObject obj, bool visible)
+    {
+        Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer part in visibleParts)
+        {
+            part.enabled = visible;
+
+            //Vector3 pos = part.transform.position;
+            //float yPos = pos.y + 10f;
+            //if (!visible)
+            //    yPos *= -1;
+
+            //part.transform.position += new Vector3(pos.x, yPos, pos.z);
+
+        }
+    }
 }

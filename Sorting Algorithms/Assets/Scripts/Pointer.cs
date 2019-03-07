@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
+using TMPro;
 
-
+[RequireComponent(typeof(LineRenderer))]
 public class Pointer : MonoBehaviour {
 
     [SerializeField]
@@ -11,16 +12,21 @@ public class Pointer : MonoBehaviour {
     private int layerMask;
 
     [SerializeField]
-    private Transform pointerEnd;
+    private GraphMain graphMain;
 
     [SerializeField]
-    private Transform hand;
+    private Transform pointerEnd, hand;
 
+    [SerializeField]
+    private Material laserMaterial;
     private LineRenderer laserBeam;
+
+    public GameObject hitObject;
 
 	// Use this for initialization
 	void Start () {
         laserBeam = GetComponent<LineRenderer>();
+        laserBeam.material = laserMaterial;
 
         // Bit shift the index of the layer (8) to get a bit mask
         layerMask = 1 << 8;
@@ -33,11 +39,12 @@ public class Pointer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        // Set position & rotation to hand
         transform.position = hand.position;
+        transform.rotation = hand.rotation;
 
 
-        if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any)) // input steamvr
+        if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.RightHand)) // input steamvr
         {
             laserBeam.enabled = true;
 
@@ -54,19 +61,40 @@ public class Pointer : MonoBehaviour {
                 // Set the end position for our laser line
                 laserBeam.SetPosition(1, hit.point);
 
+                //Debug.Log("Gameobject: " + hit.collider.gameObject);
+                hitObject = hit.collider.gameObject;
+
                 // Get a reference to the node the raycast collided with
                 Node node = hit.collider.GetComponent<Node>();
 
                 // If there was a node script attached
                 if (node != null)
                 {
-                    node.Visited = !node.Visited;
+                    if (graphMain.PlayerChooseStartNode)
+                    {
+                        graphMain.GraphSettings.PlayerStartNode = node;
+                        graphMain.PlayerChooseStartNode = false;
+
+                        if (!graphMain.PlayerChooseEndNode)
+                            StartCoroutine(graphMain.InitImportanceNodes());
+
+                    }
+                    else if (graphMain.PlayerChooseEndNode && node != graphMain.GraphSettings.PlayerStartNode)
+                    {
+                        graphMain.GraphSettings.PlayerEndNode = node;
+                        graphMain.PlayerChooseEndNode = false;
+                        StartCoroutine(graphMain.InitImportanceNodes());
+                    }
+
+
+                    //node.Visited = !node.Visited;
                 }
+
             }
             else
             {
                 // If we didn't hit anything, set the end of the line to a position directly in front of the camera at the distance of laserRange
-                laserBeam.SetPosition(1, pointerEnd.transform.position * laserRange);
+                //laserBeam.SetPosition(1, pointerEnd.transform.position * laserRange);
                 //laserBeam.SetPosition(1, rayOrigin + (vrCamera.transform.position * laserRange));
             }
 
@@ -76,7 +104,6 @@ public class Pointer : MonoBehaviour {
             laserBeam.enabled = false;
         }
     }
-
 
 
 

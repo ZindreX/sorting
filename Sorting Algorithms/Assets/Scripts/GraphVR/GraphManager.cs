@@ -9,7 +9,6 @@ public abstract class GraphManager : MonoBehaviour {
     protected GraphSettings graphSettings;
     protected GraphAlgorithm graphAlgorithm;
 
-    protected int START_X, START_Z, END_X, END_Z;
     private Node startNode, endNode;
     private Dictionary<string, int> rngDict;
 
@@ -28,39 +27,20 @@ public abstract class GraphManager : MonoBehaviour {
     public Node StartNode
     {
         get { return startNode; }
+        set { startNode = value; }
     }
 
     public Node EndNode
     {
         get { return endNode; }
+        set { endNode = value; }
     }
 
-    public void SetupImportantNodes(int[] startNodeCell, int[] endNodeCell, bool beforeNodesExist)
-    {
-        if (beforeNodesExist)
-        {
-            START_X = startNodeCell[0];
-            START_Z = startNodeCell[1];
-            END_X = endNodeCell[0];
-            END_Z = endNodeCell[1];
-        }
-        else
-        {
-            // Start node
-            startNode = GetNode(START_X, START_Z);
-            startNode.IsStartNode = true;
-
-            // End node
-            endNode = GetNode(END_X, END_Z);
-            endNode.IsEndNode = true;
-        }
-    }
-
-    public void CreateGraph()
-    {
-        CreateNodes(graphSettings.EdgeMode);
-        CreateEdges(graphSettings.EdgeMode);
-    }
+    //public void CreateGraph()
+    //{
+    //    CreateNodes(graphSettings.EdgeMode);
+    //    CreateEdges(graphSettings.EdgeMode);
+    //}
 
     private bool testIsland = false;
     protected void CreateEdge(Node node1, Node node2, Vector3 centerPos, float angle)
@@ -206,7 +186,7 @@ public abstract class GraphManager : MonoBehaviour {
     public abstract void InitGraph(int[] graphStructure);
 
     // Creates the nodes (and edges*)
-    protected abstract void CreateNodes(string structure);
+    public abstract void CreateNodes(string structure);
 
     // Max #nodes (change/remove?)
     public abstract int GetMaxNumberOfNodes();
@@ -215,7 +195,7 @@ public abstract class GraphManager : MonoBehaviour {
     public abstract Node GetNode(int a, int b);
 
     // Creates the edges of the graph (in case not already done)
-    protected abstract void CreateEdges(string mode);
+    public abstract void CreateEdges(string mode);
 
     // #Edges
     public abstract int GetNumberOfEdges();
