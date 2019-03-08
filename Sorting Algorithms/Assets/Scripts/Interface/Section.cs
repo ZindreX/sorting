@@ -17,10 +17,16 @@ public class Section : MonoBehaviour {
     [SerializeField]
     private bool isOneActiveOnlySection, isSubSection;
 
+    [SerializeField]
+    private SettingsBase settings;
+
     private Dictionary<string, SettingsMenuItem> sectionButtons;
 
     private void Awake()
     {
+        // Set title
+        GetComponentInChildren<TextMeshPro>().text = sectionID;
+
         // Get all buttons in this section and add them to a dictionary
         sectionButtons = new Dictionary<string, SettingsMenuItem>();
 
@@ -37,6 +43,11 @@ public class Section : MonoBehaviour {
         }
     }
 
+    public string SectionID
+    {
+        get { return sectionID; }
+    }
+
     public bool IsOneActiveOnlySection
     {
         get { return IsOneActiveOnlySection; }
@@ -47,20 +58,57 @@ public class Section : MonoBehaviour {
         get { return isSubSection; }
     }
 
+    public void ReportItemClicked(string itemID)
+    {
+        settings.UpdateValueFromSettingsMenu(sectionID, itemID);
+    }
+
+    public void InitItem(string itemID)
+    {
+        SettingsMenuItem item = sectionButtons[itemID];
+
+        switch (item.ItemRole())
+        {
+            case Util.ONE_ACTIVE_BUTTON: ((OneActiveButton)item).ActivateItem(); break;
+            case Util.STATIC_BUTTON: break;
+        }
+    }
+
+    public void InitItem(string itemID, int value)
+    {
+        SettingsMenuItem item = sectionButtons[itemID];
+
+        switch (item.ItemRole())
+        {
+            case Util.MULTI_STATE_BUTTON: ((MultiStateButton)item).InitMultiStateButton(value); break;
+        }
+    }
+
+    public void InitItem(string itemID, bool value)
+    {
+        SettingsMenuItem item = sectionButtons[itemID];
+
+        switch (item.ItemRole())
+        {
+            case Util.TOGGLE_BUTTON: ((ToggleButton)item).InitToggleButton(value); break;
+        }
+    }
+
     // If one item activates within a group, then deactivate the others within this group
     public void ReportActivation(string itemID)
     {
-        if (isOneActiveOnlySection)
+        foreach (KeyValuePair<string, SettingsMenuItem> entry in sectionButtons)
         {
-            foreach (KeyValuePair<string, SettingsMenuItem> entry in sectionButtons)
+            if (entry.Key != itemID)
             {
-                if (entry.Key != itemID)
+                SettingsMenuItem item = entry.Value;
+                if (item.ItemRole() == Util.ONE_ACTIVE_BUTTON)
                 {
                     OneActiveButton button = (OneActiveButton)entry.Value;
                     button.Deactivateitem();
                 }
-
             }
+
         }
     }
 

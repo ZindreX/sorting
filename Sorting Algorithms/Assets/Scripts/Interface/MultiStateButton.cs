@@ -15,15 +15,21 @@ public class MultiStateButton : SettingsMenuButton {
 
     private int state;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (states.Length != materials.Length)
             Debug.LogError("States != materials");
+
     }
 
-    public void InitMultiStateButton(string state)
+    public void InitMultiStateButton(int state)
     {
-        buttonText.text = state;
+        if (state >= 0 && state < states.Length)
+            ChangeAppearance(states[state], materials[state]);
+        else
+            Debug.LogError("Couldn't initalize state due to index out of range");
     }
 
     public void ToggleNextState()
@@ -35,4 +41,8 @@ public class MultiStateButton : SettingsMenuButton {
         ChangeAppearance(states[state], materials[state]);
     }
 
+    public override string ItemRole()
+    {
+        return Util.MULTI_STATE_BUTTON;
+    }
 }

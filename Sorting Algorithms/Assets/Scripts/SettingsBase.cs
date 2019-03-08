@@ -7,7 +7,7 @@ public abstract class SettingsBase : MonoBehaviour {
 
     protected float algorithmSpeed;
     protected string algorithm, teachingMode;
-    protected int difficulty;
+    protected int difficulty, algSpeed;
 
     [Header("Settings base")]
 
@@ -30,14 +30,20 @@ public abstract class SettingsBase : MonoBehaviour {
     protected DifficultyEditor difficultyEditor;
     protected enum DifficultyEditor { beginner, intermediate, advanced, examination }
 
-    // Old
+    // Old to be removed
     protected Dictionary<string, OnOffButton> buttons;
     [SerializeField]
     protected OnOffButton startButton;
 
 
+
+
     // New
-    protected Dictionary<string, SettingsMenuItem> settingsMenuItems;
+    protected Dictionary<string, Section> settingsSections;
+    //protected Dictionary<string, SettingsMenuItem> settingsMenuItems;
+
+    [SerializeField]
+    protected ToggleButton startButton2;
 
 
     private void Awake()
@@ -55,29 +61,75 @@ public abstract class SettingsBase : MonoBehaviour {
         buttons.Add("Start", startButton);
 
 
+
+
         // new stuff
-        settingsMenuItems = new Dictionary<string, SettingsMenuItem>();
-        Component[] newButtonComponents = GetComponentsInChildren<SettingsMenuItem>();
-        foreach (SettingsMenuItem item in newButtonComponents)
+        settingsSections = new Dictionary<string, Section>();
+        Component[] sectionComponents = GetComponentsInChildren<Section>();
+        foreach (Section section in sectionComponents)
         {
-            string itemID = item.ItemID;
-            if (!settingsMenuItems.ContainsKey(itemID))
-                settingsMenuItems[itemID] = item;
+            string sectionID = section.SectionID;
+            if (!settingsSections.ContainsKey(sectionID))
+                settingsSections[sectionID] = section;
             else
-                Debug.LogError("Item already in dict: " + itemID);
+                Debug.LogError("Section already in dict: " + sectionID);
+        }
+
+        Debug.Log("Number of sections added: " + settingsSections.Count);
+
+
+
+        //settingsMenuItems = new Dictionary<string, SettingsMenuItem>();
+        //Component[] newButtonComponents = GetComponentsInChildren<SettingsMenuItem>();
+        //foreach (SettingsMenuItem item in newButtonComponents)
+        //{
+        //    string itemID = item.ItemID;
+        //    if (!settingsMenuItems.ContainsKey(itemID))
+        //        settingsMenuItems[itemID] = item;
+        //    else
+        //        Debug.LogError("Item already in dict: " + itemID);
+        //}
+    }
+
+
+    //
+    public virtual void PrepareSettings()
+    {
+        switch ((int)teachingModeEditor)
+        {
+            case 0: TeachingMode = Util.DEMO; break;
+            case 1: TeachingMode = Util.STEP_BY_STEP; break;
+            case 2: TeachingMode = Util.USER_TEST; break;
+        }
+
+        AlgorithmSpeedLevel = (int)algorithmSpeedEditor;
+        Difficulty = (int)difficultyEditor;
+
+    }
+
+    // All input from interactable settings menu goes through here
+    public virtual void UpdateValueFromSettingsMenu(string sectionID, string itemID)
+    {
+        switch (sectionID)
+        {
+            case Util.ALGORITHM: Algorithm = itemID; break;
+            case Util.TEACHING_MODE: TeachingMode = itemID; break;
+                //case Util.DIFFICULTY: Difficulty = itemID; break;
+                //case Util.ALGORITHM_SPEED: AlgorithmSpeed = itemID; break;
+
         }
     }
 
     public string Algorithm
     {
         get { return algorithm; }
-        set { algorithm = value; FillTooltips("Algorithm:\n" + value); SetActiveButton(value); }
+        set { algorithm = value; FillTooltips("Algorithm:\n" + value); InitButtonState(Util.ALGORITHM, value); } //SetActiveButton(value); }
     }
 
     public string TeachingMode
     {
         get { return teachingMode; }
-        set { teachingMode = value; FillTooltips("Teaching mode:\n" + value); SetActiveButton(value); }
+        set { teachingMode = value; FillTooltips("Teaching mode:\n" + value); InitButtonState(Util.TEACHING_MODE, value); } // SetActiveButton(value); }
     }
 
     public virtual bool IsDemo()
@@ -99,13 +151,30 @@ public abstract class SettingsBase : MonoBehaviour {
     public int Difficulty
     {
         get { return difficulty; }
-        set { difficulty = value; FillTooltips("Difficulty:\n" + value); SetActiveButton(Util.ConvertDifficulty(value)); }
+        set { difficulty = value; FillTooltips("Difficulty:\n" + value); InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, value); } // SetActiveButton(Util.ConvertDifficulty(value)); }
     }
 
+    // OLD
     public float AlgorithmSpeed
     {
         get { return algorithmSpeed; }
-        set { algorithmSpeed = value; FillTooltips("Demo speed:\n" + value + " sec per step"); SetActiveButton(Util.ConvertAlgorithmSpeed(value)); }
+    }
+
+    public int AlgorithmSpeedLevel
+    {
+        get { return algSpeed; }
+        set
+        {
+            algSpeed = value;
+            switch (value)
+            {
+                case 0: algorithmSpeed = 2f; break;
+                case 1: algorithmSpeed = 1f; break;
+                case 2: algorithmSpeed = 0.5f; break;
+                case 3: algorithmSpeed = 0f; break;
+            }
+            InitButtonState(Util.ALGORITHM_SPEED, Util.ALGORITHM_SPEED, value);
+        }
     }
 
     // Instantiates the algorithm/task, user needs to click a start button to start the task (see method below)
@@ -124,7 +193,7 @@ public abstract class SettingsBase : MonoBehaviour {
             MainManager.UserStoppedAlgorithm = true; //
             MainManager.DestroyAndReset();
         }
-        SetActiveButton("Start");
+        //SetActiveButton("Start");
     }
 
     // Start task from in game
@@ -146,6 +215,7 @@ public abstract class SettingsBase : MonoBehaviour {
             tooltips.text = text;
     }
 
+    // OLD: To be removed!
     // Changes the state of the in game menu (marking the selected button with a different material/color)
     protected void SetActiveButton(string buttonID)
     {
@@ -168,6 +238,46 @@ public abstract class SettingsBase : MonoBehaviour {
             Debug.LogError("No key: " + buttonID);
     }
 
+    // new stuff
+    protected void InitButtonState(string sectionID, string itemID)
+    {
+        if (settingsSections.ContainsKey(sectionID))
+        {
+            Section section = settingsSections[sectionID];
+
+            section.InitItem(itemID);
+
+        }
+        else
+            Debug.LogError("No section: " + sectionID);
+    }
+
+    protected void InitButtonState(string sectionID, string itemID, int value)
+    {
+        if (settingsSections.ContainsKey(sectionID))
+        {
+            Section section = settingsSections[sectionID];
+
+            section.InitItem(itemID, value);
+
+        }
+        else
+            Debug.LogError("No section: " + sectionID);
+    }
+
+    protected void InitButtonState(string sectionID, string itemID, bool value)
+    {
+        if (settingsSections.ContainsKey(sectionID))
+        {
+            Section section = settingsSections[sectionID];
+
+            section.InitItem(itemID, value);
+
+        }
+        else
+            Debug.LogError("No section: " + sectionID);
+    }
+
     protected void HideSubSections()
     {
         foreach (KeyValuePair<string, OnOffButton> entry in buttons)
@@ -183,8 +293,7 @@ public abstract class SettingsBase : MonoBehaviour {
         }
     }
 
-    //
-    public abstract void PrepareSettings();
+
     protected abstract MainManager MainManager { get; set; }
 
     public void SetSettingsActive(bool active)

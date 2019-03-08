@@ -54,7 +54,7 @@ public class SortSettings : SettingsBase {
             TeachingMode = Util.DEMO;
             NumberOfElements = 8;
             SortingCase = UtilSort.NONE;
-            AlgorithmSpeed = 1;
+            AlgorithmSpeedLevel = 1;
             Difficulty = 1;
             Duplicates = true; //SetDuplicates();
         }
@@ -66,6 +66,8 @@ public class SortSettings : SettingsBase {
 
     public override void PrepareSettings()
     {
+        base.PrepareSettings();
+
         switch ((int)algorithmEditor)
         {
             case 0: Algorithm = Util.BUBBLE_SORT; break;
@@ -73,15 +75,6 @@ public class SortSettings : SettingsBase {
             case 2: Algorithm = Util.BUCKET_SORT; break;
             case 3: Algorithm = Util.MERGE_SORT; break;
         }
-
-        switch ((int)teachingModeEditor)
-        {
-            case 0: TeachingMode = Util.DEMO; break;
-            case 1: TeachingMode = Util.STEP_BY_STEP; break;
-            case 2: TeachingMode = Util.USER_TEST; break;
-        }
-
-        Difficulty = (int)difficultyEditor + 1;
 
         switch ((int)sortingCaseEditor)
         {
@@ -91,13 +84,6 @@ public class SortSettings : SettingsBase {
         }
 
         NumberOfElements = ((int)numberofElementsEditor + 1) * 2;
-
-        switch ((int)algorithmSpeedEditor)
-        {
-            case 0: AlgorithmSpeed = 2f; break;
-            case 1: AlgorithmSpeed = 1f; break;
-            case 2: AlgorithmSpeed = 0.5f; break;
-        }
 
         if (allowDuplicates)
             Duplicates = allowDuplicates; // Toggle false -> true

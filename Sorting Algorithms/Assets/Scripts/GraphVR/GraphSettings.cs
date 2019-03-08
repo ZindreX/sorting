@@ -120,10 +120,11 @@ public class GraphSettings : SettingsBase {
             Algorithm = Util.BFS;
             TeachingMode = Util.DEMO;
             GraphTask = UtilGraph.TRAVERSE;
-            AlgorithmSpeed = 1;
-            Difficulty = 1;
+            AlgorithmSpeedLevel = 0;
+            Difficulty = 0;
             ShortestPathOneToAll = true;
             VisitLeftFirst = true;
+            SelectStartEndNodes = false;
 
             // Graph
             Graphstructure = UtilGraph.GRID_GRAPH;
@@ -145,16 +146,12 @@ public class GraphSettings : SettingsBase {
         tooltips.text = "";
 
         // Hide inactive subsection buttons
-        HideSubSections();
+        //HideSubSections();
     }
 
     public override void PrepareSettings()
     {
-        switch ((int)teachingModeEditor)
-        {
-            case 0: TeachingMode = Util.DEMO; break;
-            case 1: TeachingMode = Util.USER_TEST; break;
-        }
+        base.PrepareSettings();
 
         switch ((int)algorithmEditor)
         {
@@ -169,16 +166,6 @@ public class GraphSettings : SettingsBase {
             case 0: GraphTask = UtilGraph.TRAVERSE; break;
             case 1: GraphTask = UtilGraph.SHORTEST_PATH; break;
         }
-
-        switch ((int)algorithmSpeedEditor)
-        {
-            case 0: AlgorithmSpeed = 2f; break;
-            case 1: AlgorithmSpeed = 1f; break;
-            case 2: AlgorithmSpeed = 0.5f; break;
-            case 4: AlgorithmSpeed = 0f; break;
-        }
-
-        Difficulty = (int)difficultyEditor + 1;
 
         // Graph
         switch ((int)graphStructureEditor)
@@ -230,19 +217,6 @@ public class GraphSettings : SettingsBase {
         Debug.Log("Teachingmode: " + teachingMode + ", algorithm: " + algorithm + ", graph: " + graphStructure);
     }
 
-    // All input from interactable settings menu goes through here
-    public void UpdateValueFromSettingsMenu(string sectionID, string itemID)
-    {
-        switch (sectionID)
-        {
-            case Util.ALGORITHM: Algorithm = itemID; break;
-            case Util.TEACHING_MODE: TeachingMode = itemID; break;
-                //case Util.DIFFICULTY: Difficulty = itemID; break;
-                //case Util.ALGORITHM_SPEED: AlgorithmSpeed = itemID; break;
-                
-        }
-    }
-
 
     protected override MainManager MainManager
     {
@@ -253,25 +227,25 @@ public class GraphSettings : SettingsBase {
     public string GraphTask
     {
         get { return graphTask; }
-        set { graphTask = value; }
+        set { graphTask = value; InitButtonState(UtilGraph.GRAPH_TASK, value); }
     }
 
     public string Graphstructure
     {
         get { return graphStructure; }
-        set { graphStructure = value; FillTooltips("Graph structure: " + value); SetActiveButton(value); }
+        set { graphStructure = value; FillTooltips("Graph structure: " + value); InitButtonState(UtilGraph.GRAPH_STRUCTURE, value); } // SetActiveButton(value); }
     }
 
     public string EdgeType
     {
         get { return edgeType; }
-        set { edgeType = value; FillTooltips("Edge type: " + value); SetActiveButton(value); }
+        set { edgeType = value; FillTooltips("Edge type: " + value); InitButtonState(UtilGraph.EDGE_TYPE, value); } // SetActiveButton(value); }
     }
 
     public string EdgeMode
     {
         get { return edgeMode; }
-        set { edgeMode = value; FillTooltips("Edge mode: " + value); SetActiveButton(value); }
+        set { edgeMode = value; FillTooltips("Edge mode: " + value); InitButtonState(UtilGraph.EDGE_MODE, value); } //SetActiveButton(value); }
     }
 
     public void ChangeGridRows(bool increment)
@@ -404,42 +378,37 @@ public class GraphSettings : SettingsBase {
     public bool SelectStartEndNodes
     {
         get { return selectStartEndNodes; }
-        set { selectStartEndNodes = value; }
+        set { selectStartEndNodes = value; InitButtonState("Init", UtilGraph.SELECT_NODE, value); }
     }
 
     public void SetSelectNodes()
     {
-        Debug.Log("Do this: " + buttons["Select nodes"].State);
         selectStartEndNodes = !selectStartEndNodes;
         FillTooltips("Select start/end nodes:\n" + selectStartEndNodes);
-        SetActiveButton("Select nodes");
-        SetActiveButton("Select nodes");
     }
 
     public void SetShortestPathOneToAll()
     {
         shortestPathOneToAll = !shortestPathOneToAll;
         FillTooltips("Shortest path one to all:\n" + shortestPathOneToAll);
-        SetActiveButton(UtilGraph.SHORTEST_PATH_ONE_TO_ALL);
     }
 
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOneToAll; }
-        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); SetActiveButton(UtilGraph.SHORTEST_PATH_ONE_TO_ALL); }
+        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll); } // SetActiveButton(UtilGraph.SHORTEST_PATH_ONE_TO_ALL); }
     }
 
     public void SetVisitLeftFirst()
     {
         visitLeftFirst = !visitLeftFirst;
         FillTooltips("Visit left node first:\n" + visitLeftFirst);
-        SetActiveButton(UtilGraph.VISIT_LEFT_FIRST);
     }
 
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }
-        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); SetActiveButton(UtilGraph.VISIT_LEFT_FIRST); }
+        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst); }//SetActiveButton(UtilGraph.VISIT_LEFT_FIRST); }
     }
 
     public int[] GraphSetup()

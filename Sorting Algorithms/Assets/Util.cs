@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class Util : MonoBehaviour {
 
+    // ----------------------------------------- Interface ----------------------------------------- 
     // Buttons
+    public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
+
+    // Sections
     public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_SPEED = "Slow", NORMAL_SPEED = "Normal", FAST_SPEED = "Fast", TEST_SPEED = "Test speed";
     public const string ALGORITHM_SPEED = "Algorithm speed";
+
+
+    // ----------------------------------------- ... ----------------------------------------- 
 
     // Teaching modes
     public const string DEMO = "Demo", STEP_BY_STEP = "Step by step", USER_TEST = "User test";
@@ -19,13 +26,13 @@ public class Util : MonoBehaviour {
     public const string BUCKET_SORT = "Bucket sort";
 
     // Graph Algorithms
-    public const string BFS = "Breadth-First Search", DFS = "Depth-First Search", DFS_RECURSIVE = "DFS recursive", DIJKSTRA = "Dijkstra";
+    public const string BFS = "BFS", DFS = "DFS", DFS_RECURSIVE = "DFS recursive", DIJKSTRA = "Dijkstra";
     //public const string TREE_PRE_ORDER_TRAVERSAL = "Pre order", TREE_IN_ORDER_TRAVERSAL = "In order", TREE_POST_ORDER_TRAVERSAL = "Post order";
     public const string QUEUE = "Queue", STACK = "Stack", PRIORITY_LIST = "Priority";
 
     // Difficulty
     public const string BEGINNER_STR = "Beginner", INTERMEDIATE_STR = "Intermediate", ADVANCED_STR = "Advanced", EXAMINATION_STR = "Examination";
-    public const int BEGINNER = 1, INTERMEDIATE = 2, ADVANCED = 3, EXAMINATION = 4;
+    public const int BEGINNER = 0, INTERMEDIATE = 1, ADVANCED = 2, EXAMINATION = 3; // enum?
 
     // Rooms
     public const string START_ROOM = "Start room", MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
@@ -119,24 +126,23 @@ public class Util : MonoBehaviour {
     {
         switch (difficulty)
         {
-            case 1: return BEGINNER_STR;
-            case 2: return INTERMEDIATE_STR;
-            case 3: return ADVANCED_STR;
-            case 4: return EXAMINATION_STR;
+            case 0: return BEGINNER_STR;
+            case 1: return INTERMEDIATE_STR;
+            case 2: return ADVANCED_STR;
+            case 3: return EXAMINATION_STR;
             default: return "'" + difficulty + "' not found";
         }
     }
 
-    public static string ConvertAlgorithmSpeed(float value)
+    public static string ConvertAlgorithmSpeed(int speed)
     {
-        if (value == 2f)
-            return SLOW_SPEED;
-        else if (value == 1f)
-            return NORMAL_SPEED;
-        else if (value == 0.5f)
-            return FAST_SPEED;
-        else
-            return TEST_SPEED;
+        switch (speed)
+        {
+            case 0: return SLOW_SPEED;
+            case 1: return NORMAL_SPEED;
+            case 2: return FAST_SPEED;
+            default: return "'" + speed + "' not found";
+        }
     }
 
     public static void HideObject(GameObject obj, bool visible)

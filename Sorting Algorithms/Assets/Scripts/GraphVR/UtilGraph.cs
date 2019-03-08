@@ -9,16 +9,21 @@ public class UtilGraph : Util {
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
+
+    // ----------------------------------------- Interface ----------------------------------------- 
     // Graph task
-    public const string TRAVERSE = "Traverse", SHORTEST_PATH = "Shortest path";
+    public const string GRAPH_TASK = "Graph task", TRAVERSE = "Traverse", SHORTEST_PATH = "Shortest path";
+    public const string TRAVERSE_SUB_SECTION = "Traverse sub section", SHORTEST_PATH_SUB_SECTION = "Shortest path sub section";
+    public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_MODE = "Edge mode";
+    public const string SELECT_NODE = "Select node";
+
 
     // Rules
     public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all", VISIT_LEFT_FIRST = "Visit left first";
 
     // Graph structures
-    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected edge", DIRECED_EDGE = "Directed edge", SYMMETRIC_EDGE = "Symmetric edge";
-    public const string FULL_EDGES = "Full edges", FULL_EDGES_NO_CROSSING = "Full edges no crossing", PARTIAL_EDGES = "Partial edges", PARTIAL_EDGES_NO_CROSSING = "Partial edges no crossing ";
-    public const string MINIMUM_EDGES = "Minimum edges";
+    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected", DIRECED_EDGE = "Directed", SYMMETRIC_EDGE = "Symmetric";
+    public const string FULL_EDGES = "Full", FULL_EDGES_NO_CROSSING = "Full no cross", PARTIAL_EDGES = "Partial", PARTIAL_EDGES_NO_CROSSING = "Partial no cross";
 
     // Node types
     public const string GRID_NODE = "Grid node", TREE_NODE = "Tree node", RANDOM_NODE = "Random node";

@@ -12,22 +12,35 @@ public class OneActiveButton : SettingsMenuButton {
 
     private bool active;
 
-    private void Awake()
+    protected override void Awake()
     {
-        SetSubSectionsVisible(false);
+        base.Awake();
+
+        Deactivateitem();
     }
 
+    // If this button has been chosen
     public void ActivateItem()
     {
+        // Make it visible that it has been chosen
         active = true;
-        ChangeAppearance(itemID, activeMat);
+        ChangeAppearance(activeMat);
+
+        // Report to section so that other buttons within this section becomes inactive
         section.ReportActivation(itemID);
+
+        // Make sub section(s) of this button visible
+        SetSubSectionsVisible(true);
     }
 
+    // If some other button within this section has been chosen
     public void Deactivateitem()
     {
+        // Make it visible that it hasn't been chosen
         active = false;
-        ChangeAppearance(itemID, inactiveMat);
+        ChangeAppearance(inactiveMat);
+
+        // Hide sub section(s)
         SetSubSectionsVisible(false);
     }
     
@@ -42,4 +55,8 @@ public class OneActiveButton : SettingsMenuButton {
         }
     }
 
+    public override string ItemRole()
+    {
+        return Util.ONE_ACTIVE_BUTTON;
+    }
 }

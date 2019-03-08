@@ -7,9 +7,17 @@ public abstract class SettingsMenuButton : SettingsMenuItem {
 
     protected TextMeshPro buttonText;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        buttonText.text = itemID;
+        buttonText = GetComponentInChildren<TextMeshPro>();
+
+        if (!this is StaticButton)
+            buttonText.text = itemID;
+    }
+
+    protected void ChangeAppearance(Material material)
+    {
+        GetComponentInChildren<Renderer>().material = material;
     }
 
     protected void ChangeAppearance(string text, Material material)
@@ -17,6 +25,4 @@ public abstract class SettingsMenuButton : SettingsMenuItem {
         buttonText.text = text;
         GetComponentInChildren<Renderer>().material = material;
     }
-
-
 }

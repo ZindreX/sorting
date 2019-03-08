@@ -12,10 +12,18 @@ public class ToggleButton : SettingsMenuButton {
 
     private bool state;
 
-    public void InitSettingsButton(bool state)
+    protected override void Awake()
     {
-        this.state = !state;
-        Toggle();
+        base.Awake();
+
+        state = false;
+        ChangeAppearance(offText, offMaterial);
+    }
+
+    public void InitToggleButton(bool state)
+    {
+        if (state)
+            Toggle();
     }
 
     // Toggles between two states
@@ -29,5 +37,10 @@ public class ToggleButton : SettingsMenuButton {
             ChangeAppearance(offText, offMaterial);
 
     }
-    
+
+    public override string ItemRole()
+    {
+        return Util.TOGGLE_BUTTON;
+    }
+
 }
