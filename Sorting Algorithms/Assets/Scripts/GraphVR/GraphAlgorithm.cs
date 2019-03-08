@@ -22,8 +22,6 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     // Instruction variables
     protected int prevHighlightedLineOfCode;
 
-    protected ListVisual listVisual;
-
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
@@ -106,15 +104,4 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         get { return shortestPathOnToAll; }
         set { shortestPathOnToAll = value; }
     }
-
-    public ListVisual ListVisual
-    {
-        get { return listVisual; }
-        set { listVisual = value; }
-    }
-
-
-
-
-
 }

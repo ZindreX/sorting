@@ -58,7 +58,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
     // Dijkstra on Tree: must start at 0, or atleast have end node in the same subtree underneath start node
     #region Dijkstra Demo
-    public IEnumerator Demo(Node startNode, Node endNode)
+    public IEnumerator ShortestPathDemo(Node startNode, Node endNode)
     {
         // Line 1: Set all vertices of G to inifity
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
@@ -71,7 +71,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         list.Add(startNode);
         startNode.Visited = true;
         SetNodePseudoCode(startNode, 1, 0); // PseudoCode (line 3+4)
-        listVisual.PriorityAdd(startNode, 0); // List visual
+        graphMain.UpdateListVisual(UtilGraph.PRIORITY_ADD_NODE, startNode, 0); //listVisual.PriorityAdd(startNode, 0); // List visual
         yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
         // Line 4: Set total cost (Dist) of start node to 0
@@ -87,7 +87,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             Node currentNode = list[list.Count - 1];
             list.RemoveAt(list.Count - 1);
             SetNodePseudoCode(currentNode, 1); // PseudoCode
-            listVisual.RemoveCurrentNode(); // List visual
+            graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); // listVisual.RemoveCurrentNode(); // List visual
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
 
             // Line 6: Remove element with lowest distance
@@ -159,17 +159,17 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                         if (!list.Contains(connectedNode))
                            list.Add(connectedNode);
 
+                        // Sort list such that the lowest distance node gets out first
                         list.Sort();
-                        //Debug.Log(PrintList(list));
 
                         // List visual
                         int index = list.IndexOf(connectedNode); //(list.Count - 1 ) - list.IndexOf(connectedNode); // OBS: list is inverted (removes the last element instead of index 0)
-                        int currentNodeRepIndex = listVisual.ListIndexOf(connectedNode);
+                        int currentNodeRepIndex = graphMain.ListVisual.ListIndexOf(connectedNode); // Create method/action code ???
 
-                        if (!listVisual.HasNodeRepresentation(connectedNode))
-                            listVisual.PriorityAdd(connectedNode, index); // Node representation
+                        if (!graphMain.CheckListVisual(UtilGraph.HAS_NODE_REPRESENTATION, connectedNode)) // listVisual.HasNodeRepresentation(connectedNode))
+                            graphMain.UpdateListVisual(UtilGraph.PRIORITY_ADD_NODE, connectedNode, index); // listVisual.PriorityAdd(connectedNode, index); // Node representation
                         else
-                            yield return listVisual.UpdateValueAndPositionOf(connectedNode, index);
+                            yield return graphMain.ListVisual.UpdateValueAndPositionOf(connectedNode, index); // Create method/action code ???
 
 
                         //Debug.Log(listVisual.PrintList());
@@ -190,7 +190,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             currentNode.Traversed = true;
 
             lengthOfList = list.Count.ToString(); // PseudoCode
-            listVisual.DestroyCurrentNode(); // Node Representation
+            graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); // listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 14: End while-loop
         yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
@@ -293,5 +293,10 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             result += "[" + list[i].NodeAlphaID + "," + list[i].Dist + "], ";
         }
         return result;
+    }
+
+    public Dictionary<int, InstructionBase> ShortestPathUserTestInstructions(Node startNode, Node endNode)
+    {
+        throw new System.NotImplementedException();
     }
 }

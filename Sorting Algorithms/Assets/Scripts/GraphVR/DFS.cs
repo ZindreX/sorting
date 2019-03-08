@@ -54,7 +54,7 @@ public class DFS : GraphAlgorithm, ITraverse {
     }
 
     #region DFS Demo
-    public IEnumerator Demo(Node startNode)
+    public IEnumerator TraverseDemo(Node startNode)
     {
         // Line 0: Set graph/start node
         SetNodePseudoCode(startNode, 1);
@@ -66,7 +66,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         // Line 2: Push start node
         stack.Push(startNode);
-        listVisual.AddListObject(startNode); // Node Representation
+        graphMain.UpdateListVisual(UtilGraph.ADD_NODE, startNode, Util.NO_VALUE); //listVisual.AddListObject(startNode); // Node Representation
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
@@ -81,7 +81,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Pop node from stack
             Node currentNode = stack.Pop();
-            listVisual.RemoveCurrentNode(); // Node Representation
+            graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.RemoveCurrentNode(); // Node Representation
             SetNodePseudoCode(currentNode, 1);
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -128,7 +128,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Push node on top of stack
                     stack.Push(checkingNode);
-                    listVisual.AddListObject(checkingNode); // Node Representation
+                    graphMain.UpdateListVisual(UtilGraph.ADD_NODE, checkingNode, Util.NO_VALUE); //listVisual.AddListObject(checkingNode); // Node Representation
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -149,7 +149,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
             lengthOfList = stack.Count.ToString(); // Pseudocode stack size
 
-            listVisual.DestroyCurrentNode(); // Node Representation
+            graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);                    
@@ -210,7 +210,7 @@ public class DFS : GraphAlgorithm, ITraverse {
     #endregion
 
     #region User Test instructions
-    public Dictionary<int, InstructionBase> UserTestInstructions(Node startNode)
+    public Dictionary<int, InstructionBase> TraverseUserTestInstructions(Node startNode)
     {
         return null;
     }

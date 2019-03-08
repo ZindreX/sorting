@@ -158,18 +158,17 @@ public abstract class GraphManager : MonoBehaviour {
         }
 
         // Display help on blackboard
-        if (true) //algorithmSettings.Difficulty <= UtilSort.BEGINNER)
+        if (graphSettings.Difficulty <= Util.BEGINNER)
         {
-            Debug.Log("Fixing pseudocode!");
             graphMain.BeginnerWait = true;
             StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
 
             // Node representation
             switch (instruction.Instruction)
             {
-                case UtilGraph.ENQUEUE_NODE_INST: graphAlgorithm.ListVisual.AddListObject(node); break;
-                case UtilGraph.DEQUEUE_NODE_INST: graphAlgorithm.ListVisual.RemoveCurrentNode(); break;
-                case UtilGraph.END_FOR_LOOP_INST: graphAlgorithm.ListVisual.DestroyCurrentNode(); break;
+                case UtilGraph.ENQUEUE_NODE_INST: graphMain.UpdateListVisual(UtilGraph.ADD_NODE, node, Util.NO_VALUE); break;
+                case UtilGraph.DEQUEUE_NODE_INST: graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); break;
+                case UtilGraph.END_FOR_LOOP_INST: graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); break;
             }
         }
 

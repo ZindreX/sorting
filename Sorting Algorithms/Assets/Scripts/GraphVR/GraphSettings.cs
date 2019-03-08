@@ -27,6 +27,10 @@ public class GraphSettings : SettingsBase {
     private AlgorithmEditor algorithmEditor;
     private enum AlgorithmEditor { BFS, DFS, DFSRecursive, Dijkstra }
 
+    [SerializeField]
+    private GraphTaskEditor graphTaskEditor;
+    private enum GraphTaskEditor { Traverse, ShortestPath }
+
     [Space(2)]
     [Header("Edge settings")]
     [SerializeField]
@@ -101,7 +105,7 @@ public class GraphSettings : SettingsBase {
 
     [SerializeField]
     private bool initGrid;
-    private string graphStructure, edgeType, edgeMode;
+    private string graphTask, graphStructure, edgeType, edgeMode;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, levelDepthLength;
 
@@ -115,6 +119,7 @@ public class GraphSettings : SettingsBase {
             // Init settings
             Algorithm = Util.BFS;
             TeachingMode = Util.DEMO;
+            GraphTask = UtilGraph.TRAVERSE;
             AlgorithmSpeed = 1;
             Difficulty = 1;
             ShortestPathOneToAll = true;
@@ -157,6 +162,12 @@ public class GraphSettings : SettingsBase {
             case 1: Algorithm = Util.DFS; break;
             case 2: Algorithm = Util.DFS_RECURSIVE; break;
             case 3: Algorithm = Util.DIJKSTRA; break;
+        }
+
+        switch ((int)graphTaskEditor)
+        {
+            case 0: GraphTask = UtilGraph.TRAVERSE; break;
+            case 1: GraphTask = UtilGraph.SHORTEST_PATH; break;
         }
 
         switch ((int)algorithmSpeedEditor)
@@ -233,11 +244,16 @@ public class GraphSettings : SettingsBase {
     }
 
 
-
     protected override MainManager MainManager
     {
         get { return graphMain; }
         set { graphMain = (GraphMain)value; }
+    }
+
+    public string GraphTask
+    {
+        get { return graphTask; }
+        set { graphTask = value; }
     }
 
     public string Graphstructure

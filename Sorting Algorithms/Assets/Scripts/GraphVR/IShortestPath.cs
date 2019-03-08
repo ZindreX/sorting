@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IShortestPath {
 
-    IEnumerator Demo(Node startNode, Node endNode);
-
+    IEnumerator ShortestPathDemo(Node startNode, Node endNode);
+    Dictionary<int, InstructionBase> ShortestPathUserTestInstructions(Node startNode, Node endNode);
 
 }

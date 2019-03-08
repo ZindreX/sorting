@@ -58,7 +58,7 @@ public class BFS : GraphAlgorithm, ITraverse {
     }
 
     #region BFS Demo
-    public IEnumerator Demo(Node startNode)
+    public IEnumerator TraverseDemo(Node startNode)
     {
         // Line 0: Set graph/start node
         SetNodePseudoCode(startNode, 1); // Pseudocode
@@ -70,7 +70,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
         // Line 2: Add start node
         queue.Enqueue(startNode);
-        listVisual.AddListObject(startNode); // Node Representation
+        graphMain.UpdateListVisual(UtilGraph.ADD_NODE, startNode, Util.NO_VALUE); //listVisual.AddListObject(startNode); // Node Representation
         yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
         // Line 3: Mark as visited
@@ -85,7 +85,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             // Line 5: Dequeue node from queue
             Node currentNode = queue.Dequeue();
-            listVisual.RemoveCurrentNode(); // Node Representation
+            graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); // listVisual.RemoveCurrentNode(); // Node Representation
             SetNodePseudoCode(currentNode, 1); // Pseudocode
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
@@ -127,7 +127,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 {
                     // Line 8: Add to queue
                     queue.Enqueue(checkingNode);
-                    listVisual.AddListObject(checkingNode); // Node Representation
+                    graphMain.UpdateListVisual(UtilGraph.ADD_NODE, checkingNode, Util.NO_VALUE); //listVisual.AddListObject(checkingNode); // Node Representation
                     yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                     // Line 9: Mark node
@@ -145,7 +145,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             currentNode.Traversed = true;
 
             lengthOfList = queue.Count.ToString(); // Pseudo code
-            listVisual.DestroyCurrentNode(); // Node Representation
+            graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
@@ -155,7 +155,7 @@ public class BFS : GraphAlgorithm, ITraverse {
     #endregion
 
     #region BFS User Test instructions
-    public Dictionary<int, InstructionBase> UserTestInstructions(Node startNode)
+    public Dictionary<int, InstructionBase> TraverseUserTestInstructions(Node startNode)
     {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instNr = 0;

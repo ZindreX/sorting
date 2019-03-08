@@ -40,7 +40,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Copies the first state of sorting elements into instruction, which can be used when creating instructions for user test
     public abstract InstructionBase[] CopyFirstState(GameObject[] sortingElements);
 
-
     /* Prepares the next instruction based on the algorithm being runned
      * - Sends instruction to the next sorting element the user should move
      * - Beginners (difficulty) will be shown steps on pseudoboard and given some hints

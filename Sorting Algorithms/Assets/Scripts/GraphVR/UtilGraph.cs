@@ -9,6 +9,9 @@ public class UtilGraph : Util {
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
+    // Graph task
+    public const string TRAVERSE = "Traverse", SHORTEST_PATH = "Shortest path";
+
     // Rules
     public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all", VISIT_LEFT_FIRST = "Visit left first";
 
@@ -43,6 +46,9 @@ public class UtilGraph : Util {
     public const string WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", DEQUEUE_NODE_INST = "Dequeue node inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";
     public const string IF_NOT_VISITED_INST = "If not visited inst", END_IF_INST = "End if inst", END_FOR_LOOP_INST = "End for loop inst", END_WHILE_INST = "End while inst";
 
+    // List visual
+    public const string ADD_NODE = "Add node", PRIORITY_ADD_NODE = "Priority add node", REMOVE_CURRENT_NODE = "Remove current node";
+    public const string DESTROY_CURRENT_NODE = "Destroy current node", HAS_NODE_REPRESENTATION = "Has node representation";
 
     // Spacing
     public static float SPACE_BETWEEN_CODE_LINES = 0.6f;

@@ -122,7 +122,6 @@ public abstract class SettingsBase : MonoBehaviour {
         else
         {
             MainManager.UserStoppedAlgorithm = true; //
-            //MainManager.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f);
             MainManager.DestroyAndReset();
         }
         SetActiveButton("Start");

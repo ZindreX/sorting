@@ -85,7 +85,8 @@ public class Pointer : MonoBehaviour {
                         graphMain.PlayerChooseEndNode = false;
                         StartCoroutine(graphMain.InitImportanceNodes());
                     }
-
+                    
+                    //if (node.NextMove)
 
                     //node.Visited = !node.Visited;
                 }
