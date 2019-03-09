@@ -1,48 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PositionManager : MonoBehaviour {
 
-    [Header("Player")]
-    [SerializeField]
-    private GameObject player;
-
-    [Space(2)]
     [Header("Goal(s)")]
     [SerializeField]
-    private GameObject currentGoal;
+    private Node currentGoal, reportedNode;
 
-    [SerializeField]
-    private float withinValue = 0.6f;
-    [SerializeField]
-    private bool playerWithinGoalPosition = false;
+    private bool showDistance, playerWithinGoalPosition;
+    private TextMeshPro playerPositionText, nodeDistText;
 
+    public void InitPositionManager(bool showDistance)
+    {
+        this.showDistance = showDistance;
+        playerPositionText.text = "Player position: start area";
+        playerWithinGoalPosition = false;
+    }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    private void Awake()
+    {
+        Component[] components = GetComponentsInChildren<TextMeshPro>();
+        playerPositionText = components[0].GetComponent<TextMeshPro>();
+        nodeDistText = components[1].GetComponent<TextMeshPro>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        if (currentGoal != null)
+        if (currentGoal != null && reportedNode != null)
         {
-            Vector3 playerPos = player.transform.position;
-            Vector3 goalPos = currentGoal.transform.position;
-
-            float playerRelToGoalX = Mathf.Abs(playerPos.x - goalPos.x);
-            float playerRelToGoalZ = Mathf.Abs(playerPos.z - goalPos.z);
-
-            if (playerRelToGoalX < withinValue && playerRelToGoalZ < withinValue)
+            if (currentGoal == reportedNode)
                 PlayerWithinGoalPosition = true;
             else
                 PlayerWithinGoalPosition = false;
         }
-		
-	}
 
-    public GameObject CurrentGoal
+    }
+
+    public void ReportPlayerOnNode(Node node)
+    {
+        playerPositionText.text = "Player position: " + node.NodeAlphaID;
+        if (showDistance)
+            nodeDistText.text = "Node dist: " + UtilGraph.ConvertIfInf(node.Dist);
+    }
+
+    public Node CurrentGoal
     {
         get { return currentGoal; }
         set { currentGoal = value; }

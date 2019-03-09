@@ -22,6 +22,14 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     // Instruction variables
     protected int prevHighlightedLineOfCode;
 
+    public void InitGraphAlgorithm(GraphMain graphMain, string graphStructure, float algorithmSpeed)
+    {
+        base.InitTeachingAlgorithm(algorithmSpeed);
+
+        this.graphMain = graphMain;
+        this.graphStructure = graphStructure;
+    }
+
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
@@ -35,13 +43,13 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     public override MainManager MainManager
     {
         get { return graphMain; }
-        set { graphMain = (GraphMain)value; }
+        //set { graphMain = (GraphMain)value; }
     }
 
     public string GraphStructure
     {
         get { return graphStructure; }
-        set { graphStructure = value; }
+        //set { graphStructure = value; }
     }
 
     protected void SetNodePseudoCode(Node node, int nr)
@@ -104,4 +112,6 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         get { return shortestPathOnToAll; }
         set { shortestPathOnToAll = value; }
     }
+
+    public abstract string GetListType();
 }

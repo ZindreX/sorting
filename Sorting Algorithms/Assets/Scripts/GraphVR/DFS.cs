@@ -9,6 +9,11 @@ public class DFS : GraphAlgorithm, ITraverse {
         get { return Util.DFS; }
     }
 
+    public override string GetListType()
+    {
+        return UtilGraph.STACK;
+    }
+
     public override string CollectLine(int lineNr)
     {
         string codeLine = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Valve.VR.InteractionSystem;
 
 public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble {
 
@@ -18,8 +19,10 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected bool isStartNode, isEndNode;
 
     protected Color currentColor;
-    protected Animator animator;
     protected TextMeshPro textNodeID, textNodeDist;
+    protected Animator animator;
+
+    private WaitForSeconds selectedDuration = new WaitForSeconds(0.5f);
 
     // Instruction variables
     protected int userMove = 0, validatedUserMove = 0;
@@ -40,6 +43,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     [SerializeField]
     protected List<Edge> edges;
 
+    // Position handling
+    private Camera playerCamera;
+    private Vector3 nodePosition;
+    private float withinNode = 0.6f;
+    private PositionManager positionManager;
+
     // Debugging
     #region Debugging variables:
     [Space(5)]
@@ -53,20 +62,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected bool nextNode;
     #endregion
 
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-
-        Component[] textHolders = GetComponentsInChildren(typeof(TextMeshPro));
-        textNodeID = textHolders[0].GetComponent<TextMeshPro>();
-        textNodeDist = textHolders[1].GetComponent<TextMeshPro>();
-
-        nodeID = NODE_ID++;
-        NodeAlphaID = UtilGraph.ConvertIDToAlphabet(nodeID);
-        name = NodeType + nodeID + "(" + nodeAlphaID + ")";
-        ResetNode();
-    }
-
     protected void InitNode(string algorithm)
     {
         SetNodeTextID(true);
@@ -76,6 +71,55 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             Dist = UtilGraph.INF;
         else
             textNodeDist.text = "";
+    }
+
+    private void Awake()
+    {
+        // Set ID's
+        nodeID = NODE_ID++;
+        NodeAlphaID = UtilGraph.ConvertIDToAlphabet(nodeID);
+
+        // Name shown in the editor
+        name = NodeType + nodeID + "(" + nodeAlphaID + ")";
+
+        // Not used
+        animator = GetComponent<Animator>();
+
+        // Get textmesh pros
+        Component[] textHolders = GetComponentsInChildren(typeof(TextMeshPro));
+        textNodeID = textHolders[0].GetComponent<TextMeshPro>();
+        textNodeDist = textHolders[1].GetComponent<TextMeshPro>();
+
+
+        // Find player object and its camera
+        playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
+        positionManager = FindObjectOfType<PositionManager>();
+
+        // Node position
+        nodePosition = transform.position;
+
+        // "Set"
+        ResetNode();
+    }
+
+    private void Update()
+    {
+        if (playerCamera != null)
+        {
+            Vector3 playerPos = playerCamera.transform.position;
+
+            // >>> Rotate text (ID & dist) according to player position, making it readable
+            textNodeID.transform.LookAt(2 * textNodeID.transform.position - playerPos);
+            textNodeDist.transform.LookAt(2 * textNodeDist.transform.position - playerPos);
+
+            // >>> Check if player is standing on this node
+            float playerRelToNodeX = Mathf.Abs(playerPos.x - nodePosition.x);
+            float playerRelToNodeZ = Mathf.Abs(playerPos.z - nodePosition.z);
+
+            // If so report it
+            if (playerRelToNodeX < withinNode && playerRelToNodeZ < withinNode)
+                positionManager.ReportPlayerOnNode(this);
+        }
     }
 
     public int NodeID
@@ -112,12 +156,20 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public int Dist
     {
         get { return dist; }
-        set { dist = value; UpdateTextNodeDist(value); }
+        set { dist = value; StartCoroutine(UpdateTextNodeDist(value)); }
     }
 
-    private void UpdateTextNodeDist(int newDist)
+    private IEnumerator UpdateTextNodeDist(int newDist)
     {
         textNodeDist.text = UtilGraph.ConvertIfInf(newDist);
+
+        for (int i = 0; i < 4; i++)
+        {
+            textNodeDist.color = currentColor;
+            yield return selectedDuration;
+            textNodeDist.color = UtilGraph.STANDARD_COST_TEXT_COLOR;
+            yield return selectedDuration;
+        }
     }
 
     public bool Traversed
@@ -135,7 +187,22 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public Color CurrentColor
     {
         get { return currentColor; }
-        set { currentColor = value; GetComponentInChildren<Renderer>().material.color = value; }
+        set { currentColor = value; ChangeApperance(value); }
+    }
+
+    private void ChangeApperance(Color color)
+    {
+        GetComponentInChildren<Renderer>().material.color = color;
+        if (color == UtilGraph.TRAVERSE_COLOR)
+        {
+            textNodeID.color = color;
+            textNodeDist.color = color;
+        }
+        else
+        {
+            textNodeID.color = UtilGraph.STANDARD_COST_TEXT_COLOR;
+            textNodeDist.color = UtilGraph.STANDARD_COST_TEXT_COLOR;
+        }
     }
 
     public List<Edge> Edges
@@ -291,7 +358,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     // Instruction methods end
 
-    private WaitForSeconds selectedDuration = new WaitForSeconds(0.5f);
+
     public IEnumerator PlayerSelectedNode()
     {
         for (int i=0; i < 4; i++)

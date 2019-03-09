@@ -13,9 +13,9 @@ public class BubbleSort : SortAlgorithm {
     [SerializeField]
     private BubbleSortManager bubbleSortManager;
 
-    public override void InitTeachingAlgorithm()
+    public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
-        base.InitTeachingAlgorithm();
+        base.InitTeachingAlgorithm(algorithmSpeed);
         element1Value = "list[j]";
         element2Value = "list[j + 1]";
     }

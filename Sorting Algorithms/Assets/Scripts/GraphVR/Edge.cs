@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Valve.VR.InteractionSystem;
 
 public abstract class Edge : MonoBehaviour {
 
@@ -10,7 +11,6 @@ public abstract class Edge : MonoBehaviour {
      * - When an edge is initialized it notifies the two nodes automatically
     */
 
-
     public static int EDGE_ID;
 
     [SerializeField]
@@ -18,11 +18,15 @@ public abstract class Edge : MonoBehaviour {
     protected string graphStructure;
     protected Color currentColor;
 
+    protected TextMeshPro costText;
+
     [SerializeField]
     protected float angle;
 
     [SerializeField]
     protected Node node1, node2;
+
+    private Camera playerCamera;
 
     protected void InitEdge(Node node1, Node node2, int cost, string graphStructure)
     {
@@ -40,6 +44,22 @@ public abstract class Edge : MonoBehaviour {
         NotifyNodes(node1, node2);
     }
 
+    private void Awake()
+    {
+        // Find player object and its camera
+       playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
+
+       // Get textmesh pro
+       costText = GetComponentInChildren<TextMeshPro>();
+    }
+
+    private void Update()
+    {
+        // Rotate text (cost) according to player position, making it readable
+        if (playerCamera != null)
+            costText.transform.LookAt(2 * costText.transform.position -  playerCamera.transform.position);
+    }
+
     public int EdgeID
     {
         get { return edgeID; }
@@ -48,7 +68,7 @@ public abstract class Edge : MonoBehaviour {
     public int Cost
     {
         get { return cost; }
-        set { cost = value; GetComponentInChildren<TextMeshPro>().text = value.ToString(); }
+        set { cost = value; costText.text = value.ToString(); }
     }
 
     // *** Object settings ***
@@ -72,7 +92,22 @@ public abstract class Edge : MonoBehaviour {
     public virtual Color CurrentColor
     {
         get { return currentColor; }
-        set { currentColor = value; GetComponentInChildren<Renderer>().material.color = value; }
+        set { currentColor = value; ChangeApperance(value); }
+    }
+
+    private void ChangeApperance(Color color)
+    {
+        GetComponentInChildren<Renderer>().material.color = color;
+        if (color == UtilGraph.TRAVERSE_COLOR)
+        {
+            costText.color = color;
+            costText.transform.position += UtilGraph.increaseHeightOfText;
+        }
+        else
+        {
+            costText.color = UtilGraph.STANDARD_COST_TEXT_COLOR;
+            costText.transform.position -= UtilGraph.increaseHeightOfText;
+        }
     }
 
     // *** Object settings end ***

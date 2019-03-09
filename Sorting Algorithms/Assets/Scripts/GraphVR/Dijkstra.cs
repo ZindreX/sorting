@@ -11,6 +11,11 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         get { return Util.DIJKSTRA; }
     }
 
+    public override string GetListType()
+    {
+        return UtilGraph.PRIORITY_LIST;
+    }
+
     public override string CollectLine(int lineNr)
     {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;

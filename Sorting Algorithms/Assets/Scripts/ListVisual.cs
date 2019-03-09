@@ -21,8 +21,7 @@ public class ListVisual : MonoBehaviour {
     [SerializeField]
     public GameObject listObjPrefab, listRoof;
 
-    [SerializeField]
-    private TextMeshPro listTypeTitle;
+    private string listType;
 
     [SerializeField]
     private Transform spawnPointList, currentNodePoint;
@@ -31,20 +30,21 @@ public class ListVisual : MonoBehaviour {
     private NodeRepresentation currentNode;
     private List<NodeRepresentation> nodeRepresentations;
 
-    private void Awake()
+
+    public void InitListVisual(string listType, float algorithmSpeed)
     {
+        this.listType = listType;
+        GetComponentInChildren<TextMeshPro>().text = listType;
+
+        seconds = algorithmSpeed;
+
         nodeRepresentations = new List<NodeRepresentation>();
     }
 
-    // Set in settings based on which algorithm which is used
-    public void SetListType(string listType)
+    public void DestroyAndReset()
     {
-        listTypeTitle.text = listType;
-    }
-
-    public float SetAlgorithmSpeed
-    {
-        set { seconds = value; }
+        nodeRepresentations = null;
+        seconds = 0f;
     }
 
     // Check whether a node has a visual representation of itself
@@ -141,7 +141,7 @@ public class ListVisual : MonoBehaviour {
     // Removes the next element from the list/queue/stack
     public void RemoveCurrentNode()
     {
-        switch (listTypeTitle.text)
+        switch (listType)
         {
             case Util.QUEUE:
                 currentNode = nodeRepresentations[0]; // change to queue for dequeuing instead?

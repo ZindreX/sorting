@@ -6,19 +6,36 @@ using UnityEngine;
 [RequireComponent(typeof(UserTestManager))]
 public class GraphMain : MainManager {
 
+    [Header("Graph prefabs")]
+    public GameObject nodePrefab;
+    public GameObject undirectedEdgePrefab;
+    public GameObject directedEdgePrefab;
+    public GameObject symmetricDirectedEdgePrefab;
+
+    [Space(5)]
+    [Header("Environment objects")]
     [SerializeField]
     private GameObject settingsObj;
+    [SerializeField]
+    private GameObject startPillar;
 
+    [Space(5)]
+    [Header("Other objects")]
     [SerializeField]
     private GraphSettings graphSettings;
-    private GraphAlgorithm graphAlgorithm;
-    private GraphManager graphManager;
-
-    private UserTestManager userTestManager;
-    private PositionManager posManager;
 
     [SerializeField]
     private GameObject graphAlgorithmObj;
+
+
+    private GraphAlgorithm graphAlgorithm;
+    private GraphManager graphManager;
+    private UserTestManager userTestManager;
+    private PositionManager posManager;
+
+
+    [Space(5)]
+    [Header("Support")]
 
     [SerializeField]
     private PseudoCodeViewer pseudoCodeViewer;
@@ -28,8 +45,7 @@ public class GraphMain : MainManager {
 
     private bool backtracking = false, userTestGoalActive = false;
 
-    [SerializeField]
-    private GameObject startPillar;
+
 
     protected virtual void Awake()
     {
@@ -82,7 +98,7 @@ public class GraphMain : MainManager {
 
                     // Hot fix - solve in some other way?
                     if (hasInstruction)
-                        userTestManager.ReadyForNext += graphManager.PrepareNextInstruction(userTestManager.GetInstruction());
+                        userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
                     //else if (elementManager.AllSorted())
                     //    StartCoroutine(FinishUserTest());
 
@@ -116,7 +132,7 @@ public class GraphMain : MainManager {
         get { return graphSettings; }
     }
 
-    // Keeps only one graph structure active
+    // Keeps only one graph structure active: Activate/deactivate components (Grid / Tree / Random) - working?
     private GraphManager ActivateDeactivateGraphComponents(string graphStructure)
     {
         switch (graphStructure)
@@ -146,14 +162,12 @@ public class GraphMain : MainManager {
 
     protected override TeachingAlgorithm GrabAlgorithmFromObj()
     {
-        listVisual.SetAlgorithmSpeed = graphSettings.AlgorithmSpeed;
         switch (algorithmName)
         {
             case Util.BFS:
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
-                listVisual.SetListType(Util.QUEUE);
                 return graphAlgorithmObj.GetComponent<BFS>();
 
             case Util.DFS:
@@ -161,14 +175,12 @@ public class GraphMain : MainManager {
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
-                listVisual.SetListType(Util.STACK);
                 return graphAlgorithmObj.GetComponent<DFS>();
 
             case Util.DIJKSTRA:
                 //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
                 //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
                 //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
-                listVisual.SetListType(Util.PRIORITY_LIST);
                 return graphAlgorithmObj.GetComponent<Dijkstra>();
 
             default: return null;
@@ -192,45 +204,76 @@ public class GraphMain : MainManager {
 
     public override void InstantiateSetup()
     {
-        // Grab variable data from settings
+        // >>> Grab variable data from settings
         algorithmName = graphSettings.Algorithm;
+        int difficulty = graphSettings.Difficulty;
         string graphTask = graphSettings.GraphTask; //..
         float algorithmSpeed = graphSettings.AlgorithmSpeed;
-        string graphStructure = graphSettings.Graphstructure;
+        string graphStructure = graphSettings.GraphStructure;
         string edgeType = graphSettings.EdgeType;
+        string edgeBuildMode = graphSettings.EdgeBuildMode;
         int[] graphSetup = graphSettings.GraphSetup();
 
         // Extra
         bool shortestPathOneToAll = graphSettings.ShortestPathOneToAll;
         bool visitLeftFirst = graphSettings.VisitLeftFirst;
 
-
-        // >>> Algorithm
+        // >>> Init Algorithm
         graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
-        graphAlgorithm.MainManager = this;
-        graphAlgorithm.GraphStructure = graphStructure;
-        graphAlgorithm.DemoStepDuration = new WaitForSeconds(algorithmSpeed);
+        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed);
 
         // Extra settings
         graphAlgorithm.ShortestPathOneToAll = shortestPathOneToAll;
         graphAlgorithm.VisitLeftFirst = visitLeftFirst;
 
+        // >>> Init position manager
+        bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
+        posManager.InitPositionManager(isShortestPath);
+
+
         // >>> Extra learning material
+        // Init list visual
+        string listType = graphAlgorithm.GetListType();
+        listVisual.InitListVisual(listType, algorithmSpeed);
+
         // Pseudocode
         graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer;
-
-
-        // Setup graph manager + Activate/deactivate components (Grid / Tree / Random)
-        graphManager = ActivateDeactivateGraphComponents(graphSettings.Graphstructure);
-        graphManager.InitGraphManager(graphSettings, graphAlgorithm, graphSettings.RNGDict());
-
         pseudoCodeViewer.PseudoCodeSetup();
 
-        // Get variables for graph setup
+
+        // >>> Init Graph manager
+        graphManager = ActivateDeactivateGraphComponents(graphSettings.GraphStructure);
+        graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict());
+
+        // Graph setup (rows/colums - tree depth/nTree - random?)
         graphManager.InitGraph(graphSetup);
 
         // Create graph based on init variables
-        graphManager.CreateNodes("See InstantiateSetup()");
+        graphManager.CreateGraph(edgeBuildMode);
+
+        // Prepare difficulty level related stuff for user test (copied from sort)
+        if (graphSettings.TeachingMode == Util.USER_TEST)
+        {
+            if (difficulty <= Util.INTERMEDIATE)
+            {
+                //displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+            }
+            else if (difficulty == Util.ADVANCED)
+            {
+                //isplayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+                // Ideas for left/center blackboard?
+            }
+            else
+            {
+                // Ideas for left/center? (Examination)
+            }
+        }
+        else
+        {
+            //displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+        }
+
+
 
         // Hide menu
         StartCoroutine(ActivateTaskObjects(true));
@@ -252,15 +295,18 @@ public class GraphMain : MainManager {
         yield return loading;
 
         // Set starting nodes
-        graphManager.StartNode = graphSettings.PlayerStartNode;
-        graphManager.EndNode = graphSettings.PlayerEndNode;
-
-        // Getting edge mode (full/partial etc.)
-        string edgeMode = graphSettings.EdgeMode;
-
-        // Building edges
-        graphManager.CreateEdges(edgeMode);
-
+        if (graphSettings.SelectStartEndNodes)
+        {
+            graphManager.StartNode = graphSettings.PlayerStartNode;
+            graphManager.EndNode = graphSettings.PlayerEndNode;
+        }
+        else
+        {
+            int[] startCell = graphSettings.StartNode();
+            int[] endCell = graphSettings.EndNode();
+            graphManager.StartNode = graphManager.GetNode(startCell[0], startCell[1]);
+            graphManager.EndNode = graphManager.GetNode(endCell[0], endCell[1]);
+        }
         Debug.Log("Start / end nodes set and ready");
     }
 
@@ -282,10 +328,17 @@ public class GraphMain : MainManager {
     {
         algorithmStarted = false;
 
+        // Stop ongoing actions
+        UserStoppedAlgorithm = true;
+
         // Delete list visual
+        listVisual.DestroyAndReset();
 
         // Delete graph
         graphManager.DeleteGraph();
+
+        // Reset algorithm
+        graphAlgorithm.ResetSetup();
 
         StartCoroutine(ActivateTaskObjects(false));
     }
@@ -372,28 +425,82 @@ public class GraphMain : MainManager {
         Debug.Log("Ready for user test!");
     }
 
+    public int PrepareNextInstruction(InstructionBase instruction)
+    {
+        Debug.Log("Preparing next instruction: " + instruction.Instruction);
+        Node node = null;
+        bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
+
+        if (gotNode)
+        {
+            TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
+
+            // Get the Sorting element
+            node = traverseInstruction.Node;
+
+            // Hands out the next instruction
+            node.Instruction = traverseInstruction;
+
+            // Set goal
+            posManager.CurrentGoal = node;
+
+            // Give this sorting element permission to give feedback to progress to next intstruction
+            if (instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
+                node.NextMove = true;
+        }
+
+        // Display help on blackboard
+        if (graphSettings.Difficulty <= Util.BEGINNER)
+        {
+            BeginnerWait = true;
+            StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
+
+            // Node representation
+            switch (instruction.Instruction)
+            {
+                case UtilGraph.ENQUEUE_NODE_INST: UpdateListVisual(UtilGraph.ADD_NODE, node, Util.NO_VALUE); break;
+                case UtilGraph.DEQUEUE_NODE_INST: UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); break;
+                case UtilGraph.END_FOR_LOOP_INST: UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); break;
+            }
+        }
+
+        Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
+        if (gotNode && !noDestination)
+            return 0;
+        Debug.Log("Nothing to do for player, get another instruction");
+        return 1;
+    }
 
 
     // *** List visual / Node representation ***
 
     public void UpdateListVisual(string action, Node node, int index)
     {
-        switch (action)
+        if (graphSettings.Difficulty == Util.BEGINNER)
         {
-            case UtilGraph.ADD_NODE: listVisual.AddListObject(node); break;
-            case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(node, index); break;
-            case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
-            case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
+            switch (action)
+            {
+                case UtilGraph.ADD_NODE: listVisual.AddListObject(node); break;
+                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(node, index); break;
+                case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
+                case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
+            }
         }
     }
 
     public bool CheckListVisual(string action, Node node)
     {
-        switch (action)
+        if (graphSettings.Difficulty == Util.BEGINNER)
         {
-            case UtilGraph.HAS_NODE_REPRESENTATION: return listVisual.HasNodeRepresentation(node);
-            default: Debug.LogError("Add case!"); return false;
+            switch (action)
+            {
+                case UtilGraph.HAS_NODE_REPRESENTATION: return listVisual.HasNodeRepresentation(node);
+                default: Debug.LogError("Add case!"); return false;
+            }
         }
+        Debug.LogError("False false!");
+        return true; // returning true leads to UpdateListVisual which will be blocked anyways
     }
 
     public ListVisual ListVisual
@@ -402,114 +509,5 @@ public class GraphMain : MainManager {
     }
 
 
-
-    // Moved to graphmanager
-    //public int PrepareNextInstruction(InstructionBase instruction)
-    //{
-    //    Debug.Log("Preparing next instruction: " + instruction.Instruction);
-    //    Node node = null;
-    //    bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-    //    bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
-
-    //    if (gotNode)
-    //    {
-    //        TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
-
-    //        // Get the Sorting element
-    //        node = traverseInstruction.Node;
-
-    //        // Hands out the next instruction
-    //        node.Instruction = traverseInstruction;
-
-    //        // Set goal
-    //        posManager.CurrentGoal = node.gameObject;
-
-    //        // Give this sorting element permission to give feedback to progress to next intstruction
-    //        if (instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
-    //            node.NextMove = true;
-    //    }
-
-    //    // Display help on blackboard
-    //    if (true) //algorithmSettings.Difficulty <= UtilSort.BEGINNER)
-    //    {
-    //        Debug.Log("Fixing pseudocode!");
-    //        BeginnerWait = true;
-    //        StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
-
-    //        // Node representation
-    //        switch (instruction.Instruction)
-    //        {
-    //            case UtilGraph.ENQUEUE_NODE_INST: graphAlgorithm.ListVisual.AddListObject(node); break;
-    //            case UtilGraph.DEQUEUE_NODE_INST: graphAlgorithm.ListVisual.RemoveCurrentNode(); break;
-    //            case UtilGraph.END_FOR_LOOP_INST: graphAlgorithm.ListVisual.DestroyCurrentNode(); break;
-    //        }
-    //    }
-
-    //    Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
-    //    if (gotNode && !noDestination)
-    //        return 0;
-    //    Debug.Log("Nothing to do for player, get another instruction");
-    //    return 1;
-    //}
-
-
-    // Update is called once per frame
-    //void oldUpdate() // OLD NOT USED: DELETE WHEN RDY
-    //{
-    //    if (graphAlgorithm.IsTaskCompleted && !backtracking)
-    //    {
-    //        if (graphAlgorithm is IShortestPath)
-    //        {
-    //            Debug.Log("Starting backtracking");
-    //            if (graphAlgorithm.ShortestPathOneToAll)
-    //                StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
-    //            else
-    //                StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
-    //            backtracking = true;
-    //        }
-    //    }
-    //    else if (graphSettings.IsDemo())
-    //    {
-
-    //    }
-    //    else if (graphSettings.IsUserTest())
-    //    {
-    //        // If a node is set to be visited or traversed, wait until it has been achieved
-    //        if (userTestGoalActive && !posManager.PlayerWithinGoalPosition)
-    //            return;
-    //        else
-    //            userTestGoalActive = false;
-
-    //        // First check if user test setup is complete
-    //        if (userTestManager.HasInstructions() && !beginnerWait)
-    //        {
-    //            if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
-    //            {
-    //                // Reset counter
-    //                userTestManager.ReadyForNext = 0;
-
-    //                // Checking if all sorting elements are sorted
-    //                if (!userTestManager.HasInstructions()) // && elementManager.AllSorted())
-    //                {
-    //                    graphAlgorithm.IsTaskCompleted = true;
-    //                    // ?
-    //                }
-    //                else
-    //                {
-    //                    // Still some elements not sorted, so go on to next round
-    //                    bool hasInstruction = userTestManager.IncrementToNextInstruction();
-
-    //                    // Hot fix - solve in some other way?
-    //                    if (hasInstruction)
-    //                        userTestManager.ReadyForNext += graphManager.PrepareNextInstruction(userTestManager.GetInstruction());
-    //                    //else if (elementManager.AllSorted())
-    //                    //    StartCoroutine(FinishUserTest());
-
-    //                }
-    //            }
-    //            //displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
-    //        }
-    //    }
-    //}
 
 }

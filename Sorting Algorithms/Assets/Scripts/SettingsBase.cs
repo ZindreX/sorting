@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public abstract class SettingsBase : MonoBehaviour {
 
@@ -108,28 +109,28 @@ public abstract class SettingsBase : MonoBehaviour {
     }
 
     // All input from interactable settings menu goes through here
-    public virtual void UpdateValueFromSettingsMenu(string sectionID, string itemID)
+    public virtual void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
     {
+        Debug.Log("base");
         switch (sectionID)
         {
             case Util.ALGORITHM: Algorithm = itemID; break;
             case Util.TEACHING_MODE: TeachingMode = itemID; break;
-                //case Util.DIFFICULTY: Difficulty = itemID; break;
-                //case Util.ALGORITHM_SPEED: AlgorithmSpeed = itemID; break;
-
+            case Util.DIFFICULTY: Difficulty = Util.difficultyConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
+            case Util.ALGORITHM_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
         }
     }
 
     public string Algorithm
     {
         get { return algorithm; }
-        set { algorithm = value; FillTooltips("Algorithm:\n" + value); InitButtonState(Util.ALGORITHM, value); } //SetActiveButton(value); }
+        set { algorithm = value; }
     }
 
     public string TeachingMode
     {
         get { return teachingMode; }
-        set { teachingMode = value; FillTooltips("Teaching mode:\n" + value); InitButtonState(Util.TEACHING_MODE, value); } // SetActiveButton(value); }
+        set { teachingMode = value; }
     }
 
     public virtual bool IsDemo()
@@ -151,7 +152,7 @@ public abstract class SettingsBase : MonoBehaviour {
     public int Difficulty
     {
         get { return difficulty; }
-        set { difficulty = value; FillTooltips("Difficulty:\n" + value); InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, value); } // SetActiveButton(Util.ConvertDifficulty(value)); }
+        set { difficulty = value; }
     }
 
     // OLD
@@ -173,7 +174,6 @@ public abstract class SettingsBase : MonoBehaviour {
                 case 2: algorithmSpeed = 0.5f; break;
                 case 3: algorithmSpeed = 0f; break;
             }
-            InitButtonState(Util.ALGORITHM_SPEED, Util.ALGORITHM_SPEED, value);
         }
     }
 

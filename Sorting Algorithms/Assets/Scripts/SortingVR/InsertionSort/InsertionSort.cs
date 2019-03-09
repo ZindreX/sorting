@@ -21,9 +21,9 @@ public class InsertionSort : SortAlgorithm {
     [SerializeField]
     private InsertionSortManager insertionSortManager;
 
-    public override void InitTeachingAlgorithm()
+    public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
-        base.InitTeachingAlgorithm();
+        base.InitTeachingAlgorithm(algorithmSpeed);
         tutorialPivotElementHeight = pivotHolderPos + new Vector3(0f, 0.1f, 0f);
         element1Value = "list[i]";
         element2Value = "list[j]";

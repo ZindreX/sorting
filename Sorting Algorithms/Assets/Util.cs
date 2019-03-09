@@ -9,7 +9,7 @@ public class Util : MonoBehaviour {
     public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
 
     // Sections
-    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_SPEED = "Slow", NORMAL_SPEED = "Normal", FAST_SPEED = "Fast", TEST_SPEED = "Test speed";
+    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", TEST_SPEED_STR = "Test";
     public const string ALGORITHM_SPEED = "Algorithm speed";
 
 
@@ -33,6 +33,7 @@ public class Util : MonoBehaviour {
     // Difficulty
     public const string BEGINNER_STR = "Beginner", INTERMEDIATE_STR = "Intermediate", ADVANCED_STR = "Advanced", EXAMINATION_STR = "Examination";
     public const int BEGINNER = 0, INTERMEDIATE = 1, ADVANCED = 2, EXAMINATION = 3; // enum?
+    public const int SLOW = 0, NORMAL = 1, FAST = 2, TEST_SPEED = 3;
 
     // Rooms
     public const string START_ROOM = "Start room", MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
@@ -122,28 +123,30 @@ public class Util : MonoBehaviour {
         return Random.Range(ROLL_MIN, ROLL_MAX) < below;
     }
 
-    public static string ConvertDifficulty(int difficulty)
-    {
-        switch (difficulty)
-        {
-            case 0: return BEGINNER_STR;
-            case 1: return INTERMEDIATE_STR;
-            case 2: return ADVANCED_STR;
-            case 3: return EXAMINATION_STR;
-            default: return "'" + difficulty + "' not found";
-        }
-    }
+    public static Dictionary<int, string> difficultyConverterDict = new Dictionary<int, string>() { { BEGINNER, BEGINNER_STR }, { INTERMEDIATE, INTERMEDIATE_STR }, { ADVANCED, ADVANCED_STR }, { EXAMINATION, EXAMINATION_STR } };
+    //public static string ConvertDifficulty(int difficulty)
+    //{
+    //    switch (difficulty)
+    //    {
+    //        case 0: return BEGINNER_STR;
+    //        case 1: return INTERMEDIATE_STR;
+    //        case 2: return ADVANCED_STR;
+    //        case 3: return EXAMINATION_STR;
+    //        default: return "'" + difficulty + "' not found";
+    //    }
+    //}
 
-    public static string ConvertAlgorithmSpeed(int speed)
-    {
-        switch (speed)
-        {
-            case 0: return SLOW_SPEED;
-            case 1: return NORMAL_SPEED;
-            case 2: return FAST_SPEED;
-            default: return "'" + speed + "' not found";
-        }
-    }
+    public static Dictionary<int, string> algorithSpeedConverterDict = new Dictionary<int, string>() { { SLOW, SLOW_STR }, { NORMAL, NORMAL_STR }, { FAST, FAST_STR }, { TEST_SPEED, TEST_SPEED_STR } };
+    //public static string ConvertAlgorithmSpeed(int speed)
+    //{
+    //    switch (speed)
+    //    {
+    //        case 0: return SLOW_STR;
+    //        case 1: return NORMAL_STR;
+    //        case 2: return FAST_STR;
+    //        default: return "'" + speed + "' not found";
+    //    }
+    //}
 
     public static void HideObject(GameObject obj, bool visible)
     {

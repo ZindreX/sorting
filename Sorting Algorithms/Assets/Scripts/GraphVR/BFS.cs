@@ -9,6 +9,11 @@ public class BFS : GraphAlgorithm, ITraverse {
         get { return UtilGraph.BFS; }
     }
 
+    public override string GetListType()
+    {
+        return UtilGraph.QUEUE;
+    }
+
     public override string CollectLine(int lineNr)
     {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;

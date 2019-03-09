@@ -58,9 +58,9 @@ public class Section : MonoBehaviour {
         get { return isSubSection; }
     }
 
-    public void ReportItemClicked(string itemID)
+    public void ReportItemClicked(string itemID, string itemDescription)
     {
-        settings.UpdateValueFromSettingsMenu(sectionID, itemID);
+        settings.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription);
     }
 
     public void InitItem(string itemID)

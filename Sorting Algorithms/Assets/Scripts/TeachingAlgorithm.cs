@@ -24,9 +24,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     // User Test
     protected Dictionary<string, List<string>> skipDict;
 
-    public virtual void InitTeachingAlgorithm()
+    public virtual void InitTeachingAlgorithm(float algorithmSpeed)
     {
+        demoStepDuration = new WaitForSeconds(algorithmSpeed);
         skipDict = new Dictionary<string, List<string>>();
+
         AddSkipAbleInstructions();
     }
 
@@ -110,7 +112,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public abstract string AlgorithmName { get; }
 
 
-    public abstract MainManager MainManager { get; set; }
+    public abstract MainManager MainManager { get; }
 
     // Space between lines of code
     protected abstract float GetLineSpacing();

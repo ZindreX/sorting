@@ -11,6 +11,13 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     protected List<int> prevHighlight = new List<int>();
     protected SortMain sortMain;
 
+    public void InitSortAlgorithm(SortMain sortMain, float algorithmSpeed)
+    {
+        base.InitTeachingAlgorithm(algorithmSpeed);
+
+        this.sortMain = sortMain;
+    }
+
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
@@ -37,7 +44,7 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     public override MainManager MainManager
     {
         get { return sortMain; }
-        set { sortMain = (SortMain)value; }
+        //set { sortMain = (SortMain)value; }
     }
 
     protected void PreparePseudocodeValue(int value, int elementNr)

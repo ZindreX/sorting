@@ -5,18 +5,27 @@ using UnityEngine;
 
 public abstract class GraphManager : MonoBehaviour {
 
-    protected GraphMain graphMain;
-    protected GraphSettings graphSettings;
-    protected GraphAlgorithm graphAlgorithm;
+    protected GameObject nodePrefab, undirectedEdgePrefab, directedEdgePrefab, symmetricDirectedEdgePrefab;
+
+    protected bool isShortestPath;
+    protected string algorithmName, graphStructure, edgeType;
 
     private Node startNode, endNode;
     private Dictionary<string, int> rngDict;
 
-    public void InitGraphManager(GraphSettings graphSettings, GraphAlgorithm graphAlgorithm, Dictionary<string, int> rngDict)
+    public void InitGraphManager(string algorithmName, string graphStructure, string edgeType, bool isShortestPath, Dictionary<string, int> rngDict)
     {
-        this.graphSettings = graphSettings;
-        this.graphAlgorithm = graphAlgorithm;
+        this.algorithmName = algorithmName;
+        this.graphStructure = graphStructure;
+        this.edgeType = edgeType;
+        this.isShortestPath = isShortestPath;
         this.rngDict = rngDict;
+
+        GraphMain graphMain = GetComponent<GraphMain>();
+        nodePrefab = graphMain.nodePrefab;
+        undirectedEdgePrefab = graphMain.undirectedEdgePrefab;
+        directedEdgePrefab = graphMain.directedEdgePrefab;
+        symmetricDirectedEdgePrefab = graphMain.symmetricDirectedEdgePrefab;
     }
 
     public int LookUpRNGDict(string key)
@@ -27,20 +36,20 @@ public abstract class GraphManager : MonoBehaviour {
     public Node StartNode
     {
         get { return startNode; }
-        set { startNode = value; }
+        set { startNode = value; startNode.IsStartNode = true; }
     }
 
     public Node EndNode
     {
         get { return endNode; }
-        set { endNode = value; }
+        set { endNode = value; endNode.IsEndNode = true; }
     }
 
-    //public void CreateGraph()
-    //{
-    //    CreateNodes(graphSettings.EdgeMode);
-    //    CreateEdges(graphSettings.EdgeMode);
-    //}
+    public void CreateGraph(string edgeBuildMode)
+    {
+        CreateNodes(edgeBuildMode);
+        CreateEdges(edgeBuildMode);
+    }
 
     private bool testIsland = false;
     protected void CreateEdge(Node node1, Node node2, Vector3 centerPos, float angle)
@@ -51,14 +60,14 @@ public abstract class GraphManager : MonoBehaviour {
 
         // Set cost if algorithm requires it
         int edgeCost = UtilGraph.NO_COST;
-        if (graphAlgorithm is IShortestPath)
+        if (isShortestPath)
             edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
 
         // Initialize edge
-        switch (graphSettings.EdgeType)
+        switch (edgeType)
         {
             case UtilGraph.UNDIRECTED_EDGE:
-                edge = Instantiate(graphSettings.undirectedEdgePrefab, centerPos, Quaternion.identity);
+                edge = Instantiate(undirectedEdgePrefab, centerPos, Quaternion.identity);
                 edge.AddComponent<UnDirectedEdge>();
                 edge.GetComponent<UnDirectedEdge>().InitUndirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH);
                 break;
@@ -67,9 +76,9 @@ public abstract class GraphManager : MonoBehaviour {
                 bool pathBothWaysActive = RollSymmetricEdge();
 
                 if (pathBothWaysActive)
-                    edge = Instantiate(graphSettings.symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
+                    edge = Instantiate(symmetricDirectedEdgePrefab, centerPos, Quaternion.identity);
                 else
-                    edge = Instantiate(graphSettings.directedEdgePrefab, centerPos, Quaternion.identity);
+                    edge = Instantiate(directedEdgePrefab, centerPos, Quaternion.identity);
 
                 edge.AddComponent<DirectedEdge>();
                 edge.GetComponent<DirectedEdge>().InitDirectedEdge(node1, node2, edgeCost, UtilGraph.GRID_GRAPH, pathBothWaysActive);
@@ -94,11 +103,11 @@ public abstract class GraphManager : MonoBehaviour {
 
     private bool RollSymmetricEdge()
     {
-        switch (graphSettings.Graphstructure)
+        switch (graphStructure)
         {
             case UtilGraph.GRID_GRAPH: case UtilGraph.RANDOM_GRAPH: return Util.RollRandom(LookUpRNGDict(UtilGraph.SYMMETRIC_EDGE_CHANCE));
             case UtilGraph.TREE_GRAPH: return false;
-            default: Debug.LogError("Symmetric option not set for '" + graphSettings.Graphstructure + "'."); break;
+            default: Debug.LogError("Symmetric option not set for '" + graphStructure + "'."); break;
         }
         return false;
     }
@@ -130,53 +139,6 @@ public abstract class GraphManager : MonoBehaviour {
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
             yield return demoStepDuration;
         }
-    }
-
-    public int PrepareNextInstruction(InstructionBase instruction)
-    {
-        Debug.Log("Preparing next instruction: " + instruction.Instruction);
-        Node node = null;
-        bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-        bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
-
-        if (gotNode)
-        {
-            TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
-
-            // Get the Sorting element
-            node = traverseInstruction.Node;
-
-            // Hands out the next instruction
-            node.Instruction = traverseInstruction;
-
-            // Set goal
-            //posManager.CurrentGoal = node.gameObject;
-
-            // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
-                node.NextMove = true;
-        }
-
-        // Display help on blackboard
-        if (graphSettings.Difficulty <= Util.BEGINNER)
-        {
-            graphMain.BeginnerWait = true;
-            StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
-
-            // Node representation
-            switch (instruction.Instruction)
-            {
-                case UtilGraph.ENQUEUE_NODE_INST: graphMain.UpdateListVisual(UtilGraph.ADD_NODE, node, Util.NO_VALUE); break;
-                case UtilGraph.DEQUEUE_NODE_INST: graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); break;
-                case UtilGraph.END_FOR_LOOP_INST: graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); break;
-            }
-        }
-
-        Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
-        if (gotNode && !noDestination)
-            return 0;
-        Debug.Log("Nothing to do for player, get another instruction");
-        return 1;
     }
 
     // ************************************ Abstract methods ************************************ 

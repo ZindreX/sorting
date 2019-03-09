@@ -6,7 +6,14 @@ public class TreeManager : GraphManager {
 
     private int treeLevel, nTree, levelDepthLength;
     private List<TreeNode> tree;
- 
+
+    public override void InitGraph(int[] graphStructure)
+    {
+        treeLevel = graphStructure[0];
+        nTree = graphStructure[1];
+        levelDepthLength = graphStructure[2];
+    }
+
     // N^(L+1) - 1. || (N^L-1) / (N-1).
     public override int GetMaxNumberOfNodes()
     {
@@ -33,12 +40,6 @@ public class TreeManager : GraphManager {
         get { return tree; }
     }
 
-    public override void InitGraph(int[] graphStructure)
-    {
-        treeLevel = graphStructure[0];
-        nTree = graphStructure[1];
-        levelDepthLength = graphStructure[2];
-    }
 
     public override void CreateNodes(string mode)
     {
@@ -111,9 +112,9 @@ public class TreeManager : GraphManager {
 
     private TreeNode GenerateNode(TreeNode parent, Vector3 pos, int treeLevel)
     {
-        GameObject node = Instantiate(graphSettings.nodePrefab, pos, Quaternion.identity);
+        GameObject node = Instantiate(nodePrefab, pos, Quaternion.identity);
         node.AddComponent<TreeNode>();
-        node.GetComponent<TreeNode>().InitTreeNode(graphAlgorithm.AlgorithmName, parent, treeLevel);
+        node.GetComponent<TreeNode>().InitTreeNode(algorithmName, parent, treeLevel);
         return node.GetComponent<TreeNode>();
     }
 

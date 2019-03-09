@@ -38,6 +38,7 @@ public class MultiStateButton : SettingsMenuButton {
         if (state >= states.Length)
             state = 0;
 
+        interactionDescription = stateDescription[state];
         ChangeAppearance(states[state], materials[state]);
     }
 

@@ -48,7 +48,7 @@ public abstract class SettingsMenuItem : MonoBehaviour {
         }
 
         // Report click to section
-        section.ReportItemClicked(itemID);
+        section.ReportItemClicked(itemID, interactionDescription);
     }
 
 

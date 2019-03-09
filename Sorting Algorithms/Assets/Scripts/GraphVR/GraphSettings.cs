@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class GraphSettings : SettingsBase {
 
-    [Space(5)]
-    [Header("Graph prefabs")]
-    public GameObject nodePrefab;
-    public GameObject undirectedEdgePrefab;
-    public GameObject directedEdgePrefab;
-    public GameObject symmetricDirectedEdgePrefab;
-
     [SerializeField]
     private GameObject graphAlgorithmObj;
 
@@ -105,7 +98,7 @@ public class GraphSettings : SettingsBase {
 
     [SerializeField]
     private bool initGrid;
-    private string graphTask, graphStructure, edgeType, edgeMode;
+    private string graphTask, graphStructure, edgeType, edgeBuildMode;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, levelDepthLength;
 
@@ -127,9 +120,9 @@ public class GraphSettings : SettingsBase {
             SelectStartEndNodes = false;
 
             // Graph
-            Graphstructure = UtilGraph.GRID_GRAPH;
+            GraphStructure = UtilGraph.GRID_GRAPH;
             EdgeType = UtilGraph.UNDIRECTED_EDGE;
-            EdgeMode = UtilGraph.FULL_EDGES_NO_CROSSING;
+            EdgeBuildMode = UtilGraph.FULL_EDGES_NO_CROSSING;
             if (initGrid)
             {
                 gridRows = 5;
@@ -145,8 +138,7 @@ public class GraphSettings : SettingsBase {
         }
         tooltips.text = "";
 
-        // Hide inactive subsection buttons
-        //HideSubSections();
+        InitButtons();
     }
 
     public override void PrepareSettings()
@@ -170,9 +162,9 @@ public class GraphSettings : SettingsBase {
         // Graph
         switch ((int)graphStructureEditor)
         {
-            case 0: Graphstructure = UtilGraph.GRID_GRAPH; break;
-            case 1: Graphstructure = UtilGraph.TREE_GRAPH; break;
-            case 2: Graphstructure = UtilGraph.RANDOM_GRAPH; break;
+            case 0: GraphStructure = UtilGraph.GRID_GRAPH; break;
+            case 1: GraphStructure = UtilGraph.TREE_GRAPH; break;
+            case 2: GraphStructure = UtilGraph.RANDOM_GRAPH; break;
         }
 
         switch ((int)edgeTypeEditor)
@@ -183,10 +175,10 @@ public class GraphSettings : SettingsBase {
 
         switch ((int)edgeModeEditor)
         {
-            case 0: EdgeMode = UtilGraph.FULL_EDGES; break;
-            case 1: EdgeMode = UtilGraph.FULL_EDGES_NO_CROSSING; break;
-            case 2: EdgeMode = UtilGraph.PARTIAL_EDGES; break;
-            case 3: EdgeMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
+            case 0: EdgeBuildMode = UtilGraph.FULL_EDGES; break;
+            case 1: EdgeBuildMode = UtilGraph.FULL_EDGES_NO_CROSSING; break;
+            case 2: EdgeBuildMode = UtilGraph.PARTIAL_EDGES; break;
+            case 3: EdgeBuildMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
         }
 
         if (graphStructure.Equals(UtilGraph.GRID_GRAPH))
@@ -212,11 +204,40 @@ public class GraphSettings : SettingsBase {
         ShortestPathOneToAll = shortestPathOneToAll;
         VisitLeftFirst = visitLeftFirst;
         VisitLeftFirst = visitLeftFirst;
-        
-
-        Debug.Log("Teachingmode: " + teachingMode + ", algorithm: " + algorithm + ", graph: " + graphStructure);
     }
 
+    public override void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
+    {
+        Debug.Log("Override");
+        // Fill information on the "display" on the settings menu about the button just clicked
+        FillTooltips(itemDescription);
+
+        switch (sectionID)
+        {
+            case Util.ALGORITHM: Algorithm = itemID; break;
+            case UtilGraph.GRAPH_STRUCTURE: GraphStructure = itemID; break;
+            case UtilGraph.GRAPH_TASK: GraphTask = itemID; break;
+            case UtilGraph.EDGE_TYPE: EdgeType = itemID; break;
+            case UtilGraph.EDGE_BUILD_MODE: EdgeBuildMode = itemID; break;
+            default: base.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription); break;
+        }
+
+    }
+
+    public void InitButtons()
+    {
+        InitButtonState(Util.ALGORITHM, algorithm);
+        InitButtonState(Util.TEACHING_MODE, teachingMode);
+        InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
+        InitButtonState(Util.ALGORITHM_SPEED, Util.ALGORITHM_SPEED, algSpeed);
+        InitButtonState(UtilGraph.GRAPH_TASK, graphTask);
+        InitButtonState(UtilGraph.GRAPH_STRUCTURE, graphStructure);
+        InitButtonState(UtilGraph.EDGE_TYPE, edgeType);
+        InitButtonState(UtilGraph.EDGE_BUILD_MODE, edgeBuildMode);
+        InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll);
+        InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst);
+        InitButtonState("Init", UtilGraph.SELECT_NODE, selectStartEndNodes);
+    }
 
     protected override MainManager MainManager
     {
@@ -227,25 +248,25 @@ public class GraphSettings : SettingsBase {
     public string GraphTask
     {
         get { return graphTask; }
-        set { graphTask = value; InitButtonState(UtilGraph.GRAPH_TASK, value); }
+        set { graphTask = value; }
     }
 
-    public string Graphstructure
+    public string GraphStructure
     {
         get { return graphStructure; }
-        set { graphStructure = value; FillTooltips("Graph structure: " + value); InitButtonState(UtilGraph.GRAPH_STRUCTURE, value); } // SetActiveButton(value); }
+        set { graphStructure = value; }
     }
 
     public string EdgeType
     {
         get { return edgeType; }
-        set { edgeType = value; FillTooltips("Edge type: " + value); InitButtonState(UtilGraph.EDGE_TYPE, value); } // SetActiveButton(value); }
+        set { edgeType = value; }
     }
 
-    public string EdgeMode
+    public string EdgeBuildMode
     {
-        get { return edgeMode; }
-        set { edgeMode = value; FillTooltips("Edge mode: " + value); InitButtonState(UtilGraph.EDGE_MODE, value); } //SetActiveButton(value); }
+        get { return edgeBuildMode; }
+        set { edgeBuildMode = value; }
     }
 
     public void ChangeGridRows(bool increment)
@@ -378,37 +399,34 @@ public class GraphSettings : SettingsBase {
     public bool SelectStartEndNodes
     {
         get { return selectStartEndNodes; }
-        set { selectStartEndNodes = value; InitButtonState("Init", UtilGraph.SELECT_NODE, value); }
+        set { selectStartEndNodes = value; }
     }
 
     public void SetSelectNodes()
     {
         selectStartEndNodes = !selectStartEndNodes;
-        FillTooltips("Select start/end nodes:\n" + selectStartEndNodes);
     }
 
     public void SetShortestPathOneToAll()
     {
         shortestPathOneToAll = !shortestPathOneToAll;
-        FillTooltips("Shortest path one to all:\n" + shortestPathOneToAll);
     }
 
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOneToAll; }
-        set { shortestPathOneToAll = value; FillTooltips("Shortest path one to all: " + value); InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll); } // SetActiveButton(UtilGraph.SHORTEST_PATH_ONE_TO_ALL); }
+        set { shortestPathOneToAll = value; }
     }
 
     public void SetVisitLeftFirst()
     {
         visitLeftFirst = !visitLeftFirst;
-        FillTooltips("Visit left node first:\n" + visitLeftFirst);
     }
 
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }
-        set { visitLeftFirst = value; FillTooltips("Visit left first: " + value); InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst); }//SetActiveButton(UtilGraph.VISIT_LEFT_FIRST); }
+        set { visitLeftFirst = value; }
     }
 
     public int[] GraphSetup()

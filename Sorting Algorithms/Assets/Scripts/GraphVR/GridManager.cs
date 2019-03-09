@@ -10,6 +10,25 @@ public class GridManager : GraphManager {
 
     private GridNode[,] gridNodes;
 
+    // Finds the prefab, but null when Instantiate
+    //protected virtual void Awake()
+    //{
+    //    Debug.Log("Fixing prefabs!");
+    //    nodePrefab = (GameObject)Resources.Load("Assets/Prefabs/Graph/Node", typeof(GameObject));
+    //    undirectedEdgePrefab = (GameObject)Resources.Load("Assets/Prefabs/Graph/UndirectedEdge", typeof(GameObject));
+    //    directedEdgePrefab = (GameObject)Resources.Load("Assets/Prefabs/Graph/DirectedEdge", typeof(GameObject));
+    //    symmetricDirectedEdgePrefab = (GameObject)Resources.Load("Assets/Prefabs/Graph/SymmetricDirectedEdge", typeof(GameObject));
+    //    Debug.Log("Node prefab loaded: " + nodePrefab != null);
+    //}
+
+    public override void InitGraph(int[] graphStructure)
+    {        
+        // Init graph strucutre values
+        rows = graphStructure[0];
+        cols = graphStructure[1];
+        gridSpace = graphStructure[2];
+    }
+
     public override int GetMaxNumberOfNodes()
     {
         return rows * cols;
@@ -18,14 +37,6 @@ public class GridManager : GraphManager {
     public GridNode[,] GridNodes
     {
         get { return gridNodes; }
-    }
-
-    public override void InitGraph(int[] graphStructure)
-    {
-        // Init graph strucutre values
-        rows = graphStructure[0];
-        cols = graphStructure[1];
-        gridSpace = graphStructure[2];
     }
 
     public override void CreateNodes(string mode)
@@ -40,9 +51,9 @@ public class GridManager : GraphManager {
             for (int x = 0; x < cols; x++)
             {
                 int xPos = startX - x * gridSpace;
-                GameObject node = Instantiate(graphSettings.nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
+                GameObject node = Instantiate(nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
                 node.AddComponent<GridNode>();
-                node.GetComponent<GridNode>().InitGridNode(graphAlgorithm.AlgorithmName, new int[2] { z, x });
+                node.GetComponent<GridNode>().InitGridNode(algorithmName, new int[2] { z, x });
                 gridNodes[z, x] = node.GetComponent<GridNode>();
             }
         }
@@ -303,7 +314,7 @@ public class GridManager : GraphManager {
     public override Node GetNode(int a, int b)
     {
         if (a >= 0 && a < rows && b >= 0 && b < cols)
-            return gridNodes[a, b];
+            return gridNodes[b, a];
         Debug.LogError("Invalid node! : a = " + a + ", b = " + b);
         return null;
     }

@@ -93,9 +93,7 @@ public class SortMain : MainManager {
 
         // Algorithm setup
         sortAlgorithm = (SortAlgorithm)GrabAlgorithmFromObj(); // SortAlgorithm object
-        sortAlgorithm.InitTeachingAlgorithm();
-        sortAlgorithm.MainManager = this; // Set main manager
-        sortAlgorithm.DemoStepDuration = new WaitForSeconds(algorithmSpeed); // set algorithm step duration speed
+        sortAlgorithm.InitSortAlgorithm(this, algorithmSpeed);
 
         // Algorithm manager setup
         algorithmManagerBase = ActivateDeactivateSortingManagers(algorithmName);

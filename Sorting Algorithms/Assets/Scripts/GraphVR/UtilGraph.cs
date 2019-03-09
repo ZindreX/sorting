@@ -14,7 +14,7 @@ public class UtilGraph : Util {
     // Graph task
     public const string GRAPH_TASK = "Graph task", TRAVERSE = "Traverse", SHORTEST_PATH = "Shortest path";
     public const string TRAVERSE_SUB_SECTION = "Traverse sub section", SHORTEST_PATH_SUB_SECTION = "Shortest path sub section";
-    public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_MODE = "Edge mode";
+    public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_BUILD_MODE = "Edge mode";
     public const string SELECT_NODE = "Select node";
 
 
@@ -43,7 +43,7 @@ public class UtilGraph : Util {
 
     // Colors
     public static Color TRAVERSE_COLOR = Color.red, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green, SHORTEST_PATH_COLOR = Color.magenta;
-    public static Color CURRENT_NODE_COLOR = Color.red, DIST_UPDATE_COLOR = Color.cyan;
+    public static Color CURRENT_NODE_COLOR = Color.red, DIST_UPDATE_COLOR = Color.cyan, STANDARD_COST_TEXT_COLOR = Color.white;
 
     // *** Instructions ***
     // BFS
@@ -57,6 +57,9 @@ public class UtilGraph : Util {
 
     // Spacing
     public static float SPACE_BETWEEN_CODE_LINES = 0.6f;
+
+    // Height
+    public static Vector3 increaseHeightOfText = new Vector3(0f, 0.5f, 0f);
 
 
     // Converts cost into 'Inf' if cost is infinity, otherwise return input
