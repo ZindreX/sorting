@@ -31,40 +31,12 @@ public abstract class SettingsBase : MonoBehaviour {
     protected DifficultyEditor difficultyEditor;
     protected enum DifficultyEditor { beginner, intermediate, advanced, examination }
 
-    // Old to be removed
-    protected Dictionary<string, OnOffButton> buttons;
-    [SerializeField]
-    protected OnOffButton startButton;
 
-
-
-
-    // New
     protected Dictionary<string, Section> settingsSections;
-    //protected Dictionary<string, SettingsMenuItem> settingsMenuItems;
-
-    [SerializeField]
-    protected ToggleButton startButton2;
-
 
     private void Awake()
     {
-        buttons = new Dictionary<string, OnOffButton>();
-
-        // Get all buttons in the settings menu
-        Component[] buttonComponents = GetComponentsInChildren<OnOffButton>();
-        foreach (OnOffButton component in buttonComponents)
-        {
-            buttons.Add(component.ButtonID, component);
-        }
-
-        // Also add the start button which is located near startpoint/working area
-        buttons.Add("Start", startButton);
-
-
-
-
-        // new stuff
+        // Get all sections from the settings menu
         settingsSections = new Dictionary<string, Section>();
         Component[] sectionComponents = GetComponentsInChildren<Section>();
         foreach (Section section in sectionComponents)
@@ -77,24 +49,11 @@ public abstract class SettingsBase : MonoBehaviour {
         }
 
         Debug.Log("Number of sections added: " + settingsSections.Count);
-
-
-
-        //settingsMenuItems = new Dictionary<string, SettingsMenuItem>();
-        //Component[] newButtonComponents = GetComponentsInChildren<SettingsMenuItem>();
-        //foreach (SettingsMenuItem item in newButtonComponents)
-        //{
-        //    string itemID = item.ItemID;
-        //    if (!settingsMenuItems.ContainsKey(itemID))
-        //        settingsMenuItems[itemID] = item;
-        //    else
-        //        Debug.LogError("Item already in dict: " + itemID);
-        //}
     }
 
 
-    //
-    public virtual void PrepareSettings()
+    // Init settings menu from editor
+    protected virtual void GetSettingsFromEditor()
     {
         switch ((int)teachingModeEditor)
         {
@@ -107,17 +66,19 @@ public abstract class SettingsBase : MonoBehaviour {
         Difficulty = (int)difficultyEditor;
 
     }
+    protected abstract void InitButtons();
 
     // All input from interactable settings menu goes through here
     public virtual void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
     {
-        Debug.Log("base");
         switch (sectionID)
         {
             case Util.ALGORITHM: Algorithm = itemID; break;
             case Util.TEACHING_MODE: TeachingMode = itemID; break;
             case Util.DIFFICULTY: Difficulty = Util.difficultyConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
-            case Util.ALGORITHM_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
+            case Util.DEMO_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
+            case Util.READY: InstantiateTask(); break;
+            case Util.START: StartStopTask(); break;
         }
     }
 
@@ -187,24 +148,21 @@ public abstract class SettingsBase : MonoBehaviour {
     public void StartStopTask()
     {
         if (!MainManager.AlgorithmStarted)
-            MainManager.StartAlgorithm();
+            StartTask();
         else
-        {
-            MainManager.UserStoppedAlgorithm = true; //
-            MainManager.DestroyAndReset();
-        }
-        //SetActiveButton("Start");
+            StopTask();
     }
 
     // Start task from in game
-    public void StartTask()
+    private void StartTask()
     {
         MainManager.StartAlgorithm();
     }
 
     // Stop task from in game
-    public void StopTask()
+    private void StopTask()
     {
+        MainManager.UserStoppedAlgorithm = true;
         MainManager.DestroyAndReset();
     }
 
@@ -215,30 +173,7 @@ public abstract class SettingsBase : MonoBehaviour {
             tooltips.text = text;
     }
 
-    // OLD: To be removed!
-    // Changes the state of the in game menu (marking the selected button with a different material/color)
-    protected void SetActiveButton(string buttonID)
-    {
-        if (buttons.ContainsKey(buttonID))
-        {
-            OnOffButton button = buttons[buttonID];
-
-            if (button != null)
-            {
-                if (button.IsOnOffButton)
-                    button.ToggleState();
-                else
-                    button.ChangeState();
-            }
-            else
-                Debug.LogError("Null button: ID= " + buttonID);
-
-        }
-        else
-            Debug.LogError("No key: " + buttonID);
-    }
-
-    // new stuff
+    // ----------------------- Init settings menu buttons -----------------------
     protected void InitButtonState(string sectionID, string itemID)
     {
         if (settingsSections.ContainsKey(sectionID))
@@ -278,26 +213,10 @@ public abstract class SettingsBase : MonoBehaviour {
             Debug.LogError("No section: " + sectionID);
     }
 
-    protected void HideSubSections()
-    {
-        foreach (KeyValuePair<string, OnOffButton> entry in buttons)
-        {
-            OnOffButton button = entry.Value;
-            if (button.HasSubSection() && !button.State)
-            {
-                //Debug.Log("Has sub section: " + entry.Key);
-                button.HideSubsection();
-            }
-            //else
-            //    Debug.Log("Has no sub section: " + entry.Key);
-        }
-    }
-
-
-    protected abstract MainManager MainManager { get; set; }
-
     public void SetSettingsActive(bool active)
     {
-        Util.HideObject(gameObject, active);
+        Util.HideObject(gameObject, active, true);
     }
+
+    protected abstract MainManager MainManager { get; set; }
 }

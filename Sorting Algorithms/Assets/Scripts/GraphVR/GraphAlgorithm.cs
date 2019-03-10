@@ -114,4 +114,5 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     }
 
     public abstract string GetListType();
+    
 }

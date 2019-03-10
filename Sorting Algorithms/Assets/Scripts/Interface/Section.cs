@@ -15,7 +15,7 @@ public class Section : MonoBehaviour {
     private string sectionID;
 
     [SerializeField]
-    private bool isOneActiveOnlySection, isSubSection;
+    private bool isOneActiveOnlySection, onHideMakeInactive;
 
     [SerializeField]
     private SettingsBase settings;
@@ -33,36 +33,44 @@ public class Section : MonoBehaviour {
         Component[] buttons = GetComponentsInChildren<SettingsMenuItem>();
         foreach (SettingsMenuItem item in buttons)
         {
-            // Item is under this section
-            item.Section = this;
+            if (!item.IsSectionMember)
+            {
+                // Item is under this section
+                item.Section = this;
+                item.IsSectionMember = true;
 
-            // Add item to dictionary
-            string buttonID = item.ItemID;
-            sectionButtons[buttonID] = item;
-
+                // Add item to dictionary
+                string buttonID = item.ItemID;
+                sectionButtons[buttonID] = item;
+            }
         }
     }
 
+    // Section identification such as Algorithm, Teaching Mode, etc...
     public string SectionID
     {
         get { return sectionID; }
     }
 
+    // A section of 2 or more buttons which requires only 1 active at a time
     public bool IsOneActiveOnlySection
     {
         get { return IsOneActiveOnlySection; }
     }
 
-    public bool IsSubSection
+    // If a subsection stacks on top of another sub section
+    public bool OnHideMakeInactive
     {
-        get { return isSubSection; }
+        get { return onHideMakeInactive; }
     }
 
-    public void ReportItemClicked(string itemID, string itemDescription)
+    // A item (button) clicked reports their ID and description which then is sent to the class SettingsBase (GraphSettings/Sortsettings)
+    public void ReportItemClicked(string sectionID, string itemID, string itemDescription)
     {
         settings.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription);
     }
 
+    // ----------------------- Init item methods ----------------------- 
     public void InitItem(string itemID)
     {
         SettingsMenuItem item = sectionButtons[itemID];
@@ -114,7 +122,10 @@ public class Section : MonoBehaviour {
 
     public void SetSectionVisible(bool visible)
     {
-        Util.HideObject(gameObject, visible);
+        //if (onHideMakeInactive)
+        //    Util.MakeInactive(gameObject, visible);
+        //else
+            Util.HideObject(gameObject, visible, false);
     }
 
 }

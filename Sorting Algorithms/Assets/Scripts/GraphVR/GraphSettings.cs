@@ -106,7 +106,7 @@ public class GraphSettings : SettingsBase {
     {
         // Debugging editor (fast edit settings)
         if (useDebuggingSettings)
-            PrepareSettings();
+            GetSettingsFromEditor();
         else
         {
             // Init settings
@@ -141,9 +141,9 @@ public class GraphSettings : SettingsBase {
         InitButtons();
     }
 
-    public override void PrepareSettings()
+    protected override void GetSettingsFromEditor()
     {
-        base.PrepareSettings();
+        base.GetSettingsFromEditor();
 
         switch ((int)algorithmEditor)
         {
@@ -199,16 +199,12 @@ public class GraphSettings : SettingsBase {
             levelDepthLength = ((int)levelDepthLengthEditor + 2) + (int)levelDepthLengthEditor * 2;
         }
 
-        // kinda messed.... but if false 1x gets inverse
         ShortestPathOneToAll = shortestPathOneToAll;
-        ShortestPathOneToAll = shortestPathOneToAll;
-        VisitLeftFirst = visitLeftFirst;
         VisitLeftFirst = visitLeftFirst;
     }
 
     public override void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
     {
-        Debug.Log("Override");
         // Fill information on the "display" on the settings menu about the button just clicked
         FillTooltips(itemDescription);
 
@@ -219,24 +215,33 @@ public class GraphSettings : SettingsBase {
             case UtilGraph.GRAPH_TASK: GraphTask = itemID; break;
             case UtilGraph.EDGE_TYPE: EdgeType = itemID; break;
             case UtilGraph.EDGE_BUILD_MODE: EdgeBuildMode = itemID; break;
+            case UtilGraph.SHORTEST_PATH_ONE_TO_ALL: ShortestPathOneToAll = Util.ConvertStringToBool(itemDescription); break;
+            case UtilGraph.VISIT_LEFT_FIRST: VisitLeftFirst = Util.ConvertStringToBool(itemDescription); break;
+            case Util.OPTIONAL:
+                switch (itemID)
+                {
+                    case UtilGraph.SELECT_NODE: SelectStartEndNodes = Util.ConvertStringToBool(itemDescription); break;
+                    default: Debug.LogError("No optional choice case for '" + itemID + "'."); break;
+                }
+                break;
             default: base.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription); break;
         }
 
     }
 
-    public void InitButtons()
+    protected override void InitButtons()
     {
         InitButtonState(Util.ALGORITHM, algorithm);
         InitButtonState(Util.TEACHING_MODE, teachingMode);
         InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
-        InitButtonState(Util.ALGORITHM_SPEED, Util.ALGORITHM_SPEED, algSpeed);
+        InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, algSpeed);
         InitButtonState(UtilGraph.GRAPH_TASK, graphTask);
         InitButtonState(UtilGraph.GRAPH_STRUCTURE, graphStructure);
         InitButtonState(UtilGraph.EDGE_TYPE, edgeType);
         InitButtonState(UtilGraph.EDGE_BUILD_MODE, edgeBuildMode);
         InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll);
         InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst);
-        InitButtonState("Init", UtilGraph.SELECT_NODE, selectStartEndNodes);
+        InitButtonState(Util.OPTIONAL, UtilGraph.SELECT_NODE, selectStartEndNodes);
     }
 
     protected override MainManager MainManager
@@ -373,18 +378,6 @@ public class GraphSettings : SettingsBase {
         FillTooltips("#Tree depth: " + treeDepth);
     }
 
-    private Node startNode, endNode;
-    public Node PlayerStartNode
-    {
-        get { return startNode; }
-        set { startNode = value; StartCoroutine(startNode.PlayerSelectedNode()); startNode.IsStartNode = true; Debug.Log("Added start node"); }
-    }
-    public Node PlayerEndNode
-    {
-        get { return endNode; }
-        set { endNode = value; StartCoroutine(endNode.PlayerSelectedNode()); endNode.IsEndNode = true; Debug.Log("Added end node"); }
-    }
-
     public int[] StartNode()
     {
         return new int[2] { x1, z1 };
@@ -407,22 +400,11 @@ public class GraphSettings : SettingsBase {
         selectStartEndNodes = !selectStartEndNodes;
     }
 
-    public void SetShortestPathOneToAll()
-    {
-        shortestPathOneToAll = !shortestPathOneToAll;
-    }
-
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOneToAll; }
         set { shortestPathOneToAll = value; }
     }
-
-    public void SetVisitLeftFirst()
-    {
-        visitLeftFirst = !visitLeftFirst;
-    }
-
     public bool VisitLeftFirst
     {
         get { return visitLeftFirst; }

@@ -60,6 +60,15 @@ public class UtilSort : Util {
     public static float COLOR_CHANGE_TIMER = 0.25f;
 
 
+    // ---------------------------------------------- Interface ----------------------------------------------
+
+    // Buttons
+    public const string NUMBER_OF_ELEMENTS = "Number of elements", SORTING_CASE = "Sorting case";
+
+
+
+
+
     // ******************************************** Outdated stuff? ********************************************
     // Buttons
     public const string NUMBER_BUTTONS = "Number buttons", RULE_BUTTONS = "Rule buttons", ON_OR_OFF = "On or off", PORTAL = "Portal", PORTAL_OBJECT = "Portal object", QUIT = "Quit";

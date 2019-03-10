@@ -6,10 +6,14 @@ public class StaticButton : SettingsMenuButton {
 
     // change name and add animation???
 
-
     public override string ItemRole()
     {
         return Util.STATIC_BUTTON;
+    }
+
+    public void DoSomething()
+    {
+
     }
 
 }

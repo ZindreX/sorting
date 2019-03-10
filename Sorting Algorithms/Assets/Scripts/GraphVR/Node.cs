@@ -144,13 +144,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public bool IsStartNode
     {
         get { return isStartNode; }
-        set { isStartNode = value; }
+        set { isStartNode = value; StartCoroutine(PlayerSelectedNode()); }
     }
 
     public bool IsEndNode
     {
         get { return isEndNode; }
-        set { isEndNode = value; }
+        set { isEndNode = value; StartCoroutine(PlayerSelectedNode()); }
     }
        
     public int Dist
@@ -359,7 +359,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     // Instruction methods end
 
 
-    public IEnumerator PlayerSelectedNode()
+    private IEnumerator PlayerSelectedNode()
     {
         for (int i=0; i < 4; i++)
         {

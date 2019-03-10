@@ -46,7 +46,7 @@ public class SortSettings : SettingsBase {
     {
         // Debugging editor (fast edit settings)
         if (useDebuggingSettings)
-            PrepareSettings();
+            GetSettingsFromEditor();
         else
         {
             // Init settings
@@ -60,13 +60,12 @@ public class SortSettings : SettingsBase {
         }
         tooltips.text = "";
 
-        // Hide inactive subsection buttons
-        HideSubSections();
+        InitButtons();
     }
 
-    public override void PrepareSettings()
+    protected override void GetSettingsFromEditor()
     {
-        base.PrepareSettings();
+        base.GetSettingsFromEditor();
 
         switch ((int)algorithmEditor)
         {
@@ -84,15 +83,7 @@ public class SortSettings : SettingsBase {
         }
 
         NumberOfElements = ((int)numberofElementsEditor + 1) * 2;
-
-        if (allowDuplicates)
-            Duplicates = allowDuplicates; // Toggle false -> true
-        else
-        {
-            // No color/text if not toggle 2x (TODO: improve)
-            Duplicates = allowDuplicates; // Toggle false -> true
-            Duplicates = allowDuplicates; // Toggle true -> false (correct color/text)
-        }
+        Duplicates = allowDuplicates;
 
 
         Debug.Log("Algorithm: " + algorithm + ", teachingmode: " + teachingMode + ", difficulty: " + difficulty + ", case: " + sortingCase + ", #: " + numberOfElements + ", allowdup: " + allowDuplicates);
@@ -100,18 +91,32 @@ public class SortSettings : SettingsBase {
     // ********** DEBUGGING **************
 
 
-    [Header("New setup")]
 
+    protected override void InitButtons()
+    {
+        InitButtonState(Util.ALGORITHM, algorithm);
+        InitButtonState(Util.TEACHING_MODE, teachingMode);
+        InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
+        InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, algSpeed);
+        InitButtonState(UtilSort.SORTING_CASE, sortingCase);
+        InitButtonState(UtilSort.DUPLICATES, UtilSort.DUPLICATES, allowDuplicates);
 
-    [Space(4)]
-    [Header("Sub settings")]
+    }
 
-    [SerializeField]
-    private GameObject subSettingsTitle;
+    public override void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
+    {
+        // Fill information on the "display" on the settings menu about the button just clicked
+        FillTooltips(itemDescription);
 
-    [SerializeField]
-    private GameObject[] difficultyButtons, demoSpeedButtons, numberOfElementsButtons, caseButtons, duplicateButtons;
-
+        switch (sectionID)
+        {
+            case Util.ALGORITHM: Algorithm = itemID; break;
+            case UtilSort.SORTING_CASE: SortingCase = itemID; break;
+            case UtilSort.NUMBER_OF_ELEMENTS: ChangeNumberOfElements(itemID); break;
+            case UtilSort.DUPLICATES: Duplicates = Util.ConvertStringToBool(itemDescription); break;
+            default: base.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription); break;
+        }
+    }
 
     protected override MainManager MainManager
     {
@@ -128,33 +133,36 @@ public class SortSettings : SettingsBase {
     public int NumberOfElements
     {
         get { return numberOfElements; }
-        set { numberOfElements = value; FillTooltips("Number of elements:\n" + value); } // remove
+        set { numberOfElements = value; }
     }
 
-    public void IncreaseNumberOfElements()
+    public void ChangeNumberOfElements(string buttonID)
     {
-        if (numberOfElements < UtilSort.MAX_NUMBER_OF_ELEMENTS)
+        bool increaseNumberOfElements = buttonID == Util.PLUS;
+        if (increaseNumberOfElements)
         {
-            numberOfElements += 1;
-            FillTooltips("#Elements:\n" + numberOfElements);
-            //buttons[] >>> fill in text #elements
+            if (numberOfElements < UtilSort.MAX_NUMBER_OF_ELEMENTS)
+            {
+                numberOfElements += 1;
+                FillTooltips("#Elements:" + numberOfElements);
+                //buttons[] >>> fill in text #elements
+            }
+            else
+            {
+                FillTooltips("Can't add more elements!");
+            }
         }
         else
         {
-            FillTooltips("Can't add more elements!");
-        }
-    }
-
-    public void ReduceNumberOfElements()
-    {
-        if (numberOfElements > 2)
-        {
-            numberOfElements -= 1;
-            FillTooltips("#Elements: " + numberOfElements);
-        }
-        else
-        {
-            FillTooltips("Minimum 2 elements.");
+            if (numberOfElements > 2)
+            {
+                numberOfElements -= 1;
+                FillTooltips("#Elements: " + numberOfElements);
+            }
+            else
+            {
+                FillTooltips("Minimum 2 elements.");
+            }
         }
     }
 
@@ -162,14 +170,13 @@ public class SortSettings : SettingsBase {
     public void SetDuplicates()
     {
         allowDuplicates = !allowDuplicates;
-        FillTooltips("Allow duplicates:\n" + allowDuplicates);
     }
 
     // Init setup duplicates
     public bool Duplicates
     {
         get { return allowDuplicates; }
-        set { allowDuplicates = value; FillTooltips("Allow duplicates:\n" + Util.EnabledToString(value)); SetActiveButton(UtilSort.DUPLICATES); }
+        set { allowDuplicates = value; }
     }
     
 
@@ -177,47 +184,8 @@ public class SortSettings : SettingsBase {
     public string SortingCase
     {
         get { return sortingCase; }
-        set { sortingCase = value; FillTooltips("Sorting case:\n" + value); SetActiveButton(value); }
+        set { sortingCase = value; }
     }
 
-    // Changes the sub settings (middle wall w/buttons) based on the chosen teaching mode
-    private void ChangeSubSettingsDisplay(string teachingMode)
-    {
-        switch (teachingMode)
-        {
-            case Util.DEMO:
-                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Demo speed";
-                ActiveButtons(false, true);
-                break;
-            case Util.STEP_BY_STEP:
-                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "";
-                ActiveButtons(false, false);
-                sortMain.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0.5f);
-                break;
-            case Util.USER_TEST:
-                subSettingsTitle.GetComponent<UnityEngine.UI.Text>().text = "Difficulty";
-                ActiveButtons(true, false);
-                sortMain.GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0.5f);
-                break;
-        }
-    }
-
-    /* Activate / deactivate sub settings buttons based on user input
-     * - Display demo speed buttons if demo
-     * - Display difficulty buttons if user test
-    */
-    private void ActiveButtons(bool diffActive, bool speedActive)
-    {
-        foreach (GameObject obj in difficultyButtons)
-        {
-            obj.SetActive(diffActive);
-            //obj.active = diffActive;
-        }
-        foreach (GameObject obj in demoSpeedButtons)
-        {
-            obj.SetActive(speedActive);
-            //obj.active = speedActive;
-        }
-    }
 
 }

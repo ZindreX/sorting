@@ -10,7 +10,8 @@ public class Util : MonoBehaviour {
 
     // Sections
     public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", TEST_SPEED_STR = "Test";
-    public const string ALGORITHM_SPEED = "Algorithm speed";
+    public const string DEMO_SPEED = "Demo speed";
+    public const string PLUS = "Plus", MINUS = "Minus", ON = "ON", OFF = "OFF", START = "Start", READY = "Ready", OPTIONAL = "Optional";
 
 
     // ----------------------------------------- ... ----------------------------------------- 
@@ -108,9 +109,13 @@ public class Util : MonoBehaviour {
     }
 
     public static string EnabledToString(bool enabled)
-
     {
         return enabled ? "Enabled" : "Disabled";
+    }
+
+    public static bool ConvertStringToBool(string str)
+    {
+        return str == ON;
     }
 
     public static void ResetRotation(GameObject obj)
@@ -148,20 +153,31 @@ public class Util : MonoBehaviour {
     //    }
     //}
 
-    public static void HideObject(GameObject obj, bool visible)
+    public static void HideObject(GameObject obj, bool visible, bool moveDown)
     {
+        if (moveDown)
+        {
+            Vector3 pos = obj.transform.position;
+            if (visible)
+                obj.transform.position += new Vector3(pos.x, 10f, pos.z);
+            else
+                obj.transform.position -= new Vector3(pos.x, 10f, pos.z);
+        }
+
         Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
         foreach (MeshRenderer part in visibleParts)
         {
             part.enabled = visible;
+        }
+    }
 
-            //Vector3 pos = part.transform.position;
-            //float yPos = pos.y + 10f;
-            //if (!visible)
-            //    yPos *= -1;
-
-            //part.transform.position += new Vector3(pos.x, yPos, pos.z);
-
+    public static void MakeInactive(GameObject obj, bool active)
+    {
+        Debug.Log(obj);
+        GameObject[] visibleParts = obj.GetComponentsInChildren<GameObject>();
+        foreach (GameObject part in visibleParts)
+        {
+            part.SetActive(active);
         }
     }
 }

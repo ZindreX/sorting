@@ -15,6 +15,9 @@ public class Pointer : MonoBehaviour {
     private GraphMain graphMain;
 
     [SerializeField]
+    private PositionManager positionManager;
+
+    [SerializeField]
     private Transform pointerEnd, hand;
 
     [SerializeField]
@@ -70,21 +73,30 @@ public class Pointer : MonoBehaviour {
                 // If there was a node script attached
                 if (node != null)
                 {
-                    if (graphMain.PlayerChooseStartNode)
+                    // Check if player wants to select start/end nodes
+                    if (graphMain.GraphSettings.SelectStartEndNodes)
                     {
-                        graphMain.GraphSettings.PlayerStartNode = node;
-                        graphMain.PlayerChooseStartNode = false;
+                        // Currently choosing start node
+                        if (graphMain.PlayerChooseStartNode && graphMain.GraphManager.StartNode == null)
+                        {
+                            graphMain.GraphManager.StartNode = node;
 
-                        if (!graphMain.PlayerChooseEndNode)
-                            StartCoroutine(graphMain.InitImportanceNodes());
+                            if (!graphMain.PlayerChooseEndNode)
+                                graphMain.GraphSettings.SelectStartEndNodes = false;
 
+                        }
+                        else if (graphMain.PlayerChooseEndNode && node != graphMain.GraphManager.StartNode)
+                        {
+                            graphMain.GraphManager.EndNode = node;
+                            graphMain.GraphSettings.SelectStartEndNodes = false;
+                            StartCoroutine(graphMain.SetAutomaticallyImportantNodes());
+                        }
                     }
-                    else if (graphMain.PlayerChooseEndNode && node != graphMain.GraphSettings.PlayerStartNode)
-                    {
-                        graphMain.GraphSettings.PlayerEndNode = node;
-                        graphMain.PlayerChooseEndNode = false;
-                        StartCoroutine(graphMain.InitImportanceNodes());
-                    }
+
+                    
+
+                    
+
                     
                     //if (node.NextMove)
 

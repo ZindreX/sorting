@@ -59,6 +59,11 @@ public class GraphMain : MainManager {
         get { return graphSettings; }
     }
 
+    public GraphManager GraphManager
+    {
+        get { return graphManager; }
+    }
+
     protected override void DemoUpdate()
     {
 
@@ -286,28 +291,18 @@ public class GraphMain : MainManager {
                 playerChooseEndNode = true;
         }
         else
-            StartCoroutine(InitImportanceNodes());
+            StartCoroutine(SetAutomaticallyImportantNodes());
     }
 
-    public IEnumerator InitImportanceNodes()
+    public IEnumerator SetAutomaticallyImportantNodes()
     {
-        Debug.Log("Starting building edges");
         yield return loading;
 
         // Set starting nodes
-        if (graphSettings.SelectStartEndNodes)
-        {
-            graphManager.StartNode = graphSettings.PlayerStartNode;
-            graphManager.EndNode = graphSettings.PlayerEndNode;
-        }
-        else
-        {
-            int[] startCell = graphSettings.StartNode();
-            int[] endCell = graphSettings.EndNode();
-            graphManager.StartNode = graphManager.GetNode(startCell[0], startCell[1]);
-            graphManager.EndNode = graphManager.GetNode(endCell[0], endCell[1]);
-        }
-        Debug.Log("Start / end nodes set and ready");
+        int[] startCell = graphSettings.StartNode();
+        int[] endCell = graphSettings.EndNode();
+        graphManager.StartNode = graphManager.GetNode(startCell[0], startCell[1]);
+        graphManager.EndNode = graphManager.GetNode(endCell[0], endCell[1]);
     }
 
     protected override IEnumerator ActivateTaskObjects(bool active)

@@ -5,10 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 using Valve.VR.InteractionSystem;
 
-//[RequireComponent(typeof(Image))]
-//[RequireComponent(typeof(Button))]
-//[RequireComponent(typeof(Interactable))]
-//[RequireComponent(typeof(UIElement))]
+[RequireComponent(typeof(Image))]
+[RequireComponent(typeof(Button))]
+[RequireComponent(typeof(Interactable))]
+[RequireComponent(typeof(UIElement))]
 public abstract class SettingsMenuItem : MonoBehaviour {
 
     [SerializeField]
@@ -16,6 +16,8 @@ public abstract class SettingsMenuItem : MonoBehaviour {
 
     [SerializeField]
     protected string interactionDescription;
+
+    protected bool isSectionMember;
 
     protected Section section;
 
@@ -31,6 +33,12 @@ public abstract class SettingsMenuItem : MonoBehaviour {
         set { section = value; }
     }
 
+    public bool IsSectionMember
+    {
+        get { return isSectionMember; }
+        set { isSectionMember = value; }
+    }
+
     public string InteractionDescription
     {
         get { return interactionDescription; }
@@ -42,13 +50,13 @@ public abstract class SettingsMenuItem : MonoBehaviour {
         switch (ItemRole())
         {
             case Util.ONE_ACTIVE_BUTTON: ((OneActiveButton)this).ActivateItem(); break;
-            case Util.STATIC_BUTTON: break;
+            case Util.STATIC_BUTTON: ((StaticButton)this).DoSomething(); break;
             case Util.TOGGLE_BUTTON: ((ToggleButton)this).Toggle(); break;
             case Util.MULTI_STATE_BUTTON: ((MultiStateButton)this).ToggleNextState(); break;
         }
-
+        Debug.Log("Section: " + section.SectionID + ", item: " + itemID + ", description: " + interactionDescription);
         // Report click to section
-        section.ReportItemClicked(itemID, interactionDescription);
+        section.ReportItemClicked(section.SectionID, itemID, interactionDescription);
     }
 
 
