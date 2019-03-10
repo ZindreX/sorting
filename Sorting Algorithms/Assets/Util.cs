@@ -48,6 +48,10 @@ public class Util : MonoBehaviour {
     // Instruction values (todo: update Utilsort)
     public static readonly int NO_VALUE = -3, NO_INDEX_VALUE = -4;
 
+
+    public const string INIT_INSTRUCTION = "Init instruction", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";
+    public const string INIT_OK = "Init ok", INIT_ERROR = "Init error";
+
     public const string SPLIT_INST = "::";
     public static readonly char PSEUDO_SPLIT_LINE_ID = ':';
 

@@ -46,6 +46,9 @@ public class UtilGraph : Util {
     public static Color CURRENT_NODE_COLOR = Color.red, DIST_UPDATE_COLOR = Color.cyan, STANDARD_COST_TEXT_COLOR = Color.white;
 
     // *** Instructions ***
+    // Validation
+    public const string NODE_VISITED = "Node visited", NODE_ERROR = "Node error";
+
     // BFS
     public const string EMPTY_QUEUE_INST = "Empty queue inst", ENQUEUE_NODE_INST = "Enqueue node inst", MARK_VISITED_INST = "Mark visited inst";
     public const string WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", DEQUEUE_NODE_INST = "Dequeue node inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";

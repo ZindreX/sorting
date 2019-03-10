@@ -25,8 +25,8 @@ public class UtilSort : Util {
     public const int OUTER_LOOP = -1, INNER_LOOP = -2;
 
     // Instructions (strings)
-    public const string INIT_INSTRUCTION = "Init instruction", PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
-    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";
+    public const string PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
+    public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching";
     public const string CREATE_BUCKETS_INST = "Create buckets", BUCKET_INDEX_INST = "Bucket index", MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction", UPDATE_LOOP_INST = "Update loop", DISPLAY_ELEMENT = "Display element";
     public const string END_LOOP_INST = "End of loop", SET_SORTED_INST = "Set sorted";
@@ -36,7 +36,7 @@ public class UtilSort : Util {
     public const string INCREMENT = "Incremenet", DECREMENT = "Decrement";
 
     // Checking instruction (strings)
-    public const string INIT_OK = "Init ok", INIT_ERROR = "Init error", MOVE_INTERMEDIATE = "Move intermediate";
+    public const string MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
 
 

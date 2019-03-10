@@ -9,6 +9,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     // Counter for number of active nodes
     public static int NODE_ID;
+    public static bool nodeSetup = false, startNodeChosen = false, endNodeChosen = false;
 
     // Basic 
     [Header("Basic")]
@@ -26,6 +27,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     // Instruction variables
     protected int userMove = 0, validatedUserMove = 0;
+    protected bool visitNextMove, traverseNextMove;
     protected bool nextMove;
     protected TraverseInstruction nodeInstruction;
 
@@ -118,7 +120,10 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
             // If so report it
             if (playerRelToNodeX < withinNode && playerRelToNodeZ < withinNode)
+            {
                 positionManager.ReportPlayerOnNode(this);
+                PerformUserTraverse();
+            }
         }
     }
 
@@ -144,13 +149,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public bool IsStartNode
     {
         get { return isStartNode; }
-        set { isStartNode = value; StartCoroutine(PlayerSelectedNode()); }
+        set { isStartNode = value; startNodeChosen = true; StartCoroutine(PlayerSelectedNode()); }
     }
 
     public bool IsEndNode
     {
         get { return isEndNode; }
-        set { isEndNode = value; StartCoroutine(PlayerSelectedNode()); }
+        set { isEndNode = value; endNodeChosen = true; StartCoroutine(PlayerSelectedNode()); }
     }
        
     public int Dist
@@ -263,6 +268,135 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         set { nodeInstruction = (TraverseInstruction)value; UpdateNodeState(); }
     }
 
+    private bool shootStatus, traverseStatus;
+    public void PerformUserShoot()
+    {
+        if (nodeSetup)
+        {
+            if (!startNodeChosen)
+                IsStartNode = true;
+            else if (!endNodeChosen && !isStartNode)
+                IsEndNode = true;
+        }
+        else
+        {
+            userMove++;
+
+            if (validatedUserMove < userMove)
+            {
+                string validation = IsCorrectlyShot();
+                switch (validation)
+                {
+                    case Util.INIT_OK:
+                        shootStatus = true;
+                        break;
+
+                    case UtilGraph.NODE_VISITED:
+                        shootStatus = true;
+                        // usertestmanager
+                        break;
+
+                    case Util.INIT_ERROR: case UtilGraph.NODE_ERROR:
+                        shootStatus = false;
+                        // score mistake
+                        break;
+
+                    default: Debug.Log("'Add '" + validation + "' case, or ignore"); break;
+                }
+
+                if (shootStatus)
+                {
+                    status = Util.EXECUTED_INST;
+
+                    if (NextMove)
+                    {
+                        // Usertestmanager readyfornext += 1
+                        NextMove = false;
+                    }
+                }
+                validatedUserMove++;
+            }
+        }
+
+    }
+
+    private string IsCorrectlyShot()
+    {
+        if (nodeInstruction != null)
+        {
+            switch (nodeInstruction.Instruction)
+            {
+                case Util.INIT_INSTRUCTION:
+                    return (!visitNextMove && !traverseNextMove) ? Util.INIT_OK : Util.INIT_ERROR;
+
+                case UtilGraph.ENQUEUE_NODE_INST:
+                    return visitNextMove ? UtilGraph.NODE_VISITED : UtilGraph.NODE_ERROR;
+
+                default: return UtilGraph.NODE_ERROR;
+            }
+        }
+        return UtilSort.CANNOT_VALIDATE_ERROR;
+    }
+
+    protected void PerformUserTraverse()
+    {
+        userMove++;
+
+        if (validatedUserMove < userMove)
+        {
+            string validation = IsCorrectlyTraversed();
+            switch (validation)
+            {
+                case Util.INIT_OK:
+                    traverseStatus = true;
+                    break;
+
+                case UtilGraph.NODE_VISITED:
+                    traverseStatus = true;
+                    // usertestmanager
+                    break;
+
+                case Util.INIT_ERROR:
+                case UtilGraph.NODE_ERROR:
+                    traverseStatus = false;
+                    // score mistake
+                    break;
+
+                default: Debug.Log("'Add '" + validation + "' case, or ignore"); break;
+            }
+
+            if (traverseStatus)
+            {
+                status = Util.EXECUTED_INST;
+
+                if (NextMove)
+                {
+                    // Usertestmanager readyfornext += 1
+                    NextMove = false;
+                }
+            }
+            validatedUserMove++;
+        }
+    }
+
+    private string IsCorrectlyTraversed()
+    {
+        //if (nodeInstruction != null)
+        //{
+        //    switch (nodeInstruction.Instruction)
+        //    {
+        //        case Util.INIT_INSTRUCTION:
+        //            return (!visitNextMove && !traverseNextMove) ? Util.INIT_OK : Util.INIT_ERROR;
+
+        //        case UtilGraph.ENQUEUE_NODE_INST:
+        //            return visitNextMove ? UtilGraph.NODE_VISITED : UtilGraph.NODE_ERROR;
+
+        //        default: return UtilGraph.NODE_ERROR;
+        //    }
+        //}
+        return UtilSort.CANNOT_VALIDATE_ERROR;
+    }
+
     protected void UpdateNodeState()
     {
         if (nodeInstruction != null)
@@ -284,19 +418,18 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 default: Debug.LogError("UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
+            // This node is the next to be visited (shot at)
             if (nodeInstruction.Visited)
-                Visited = true;
-            else
-                Visited = false;
+                visitNextMove = true;
 
-            //if (nodeInstruction.Traversed)
-            //    Traversed = true;
-            //else
-            //    Traversed = false;
+            // This node is the next to be traversed (player move to node)
+            if (nodeInstruction.Traversed)
+                traverseNextMove = true;
 
         }
     }
 
+    // remove when done
     public void PerformUserMove()
     {
         // Check if the user moved the element to a new holder,         TODO: in case of mistake -> avoid new error when fixing the mistake
@@ -308,7 +441,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
             if (validatedUserMove < userMove)
             {
-                string validation = IsCorrectlyPlaced();
+                string validation = ""; //IsCorrectlyPlaced();
                 switch (validation)
                 {
                     case UtilSort.INIT_OK:
@@ -351,10 +484,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                                         //standingInCorrectHolder = true;
     }
 
-    protected virtual string IsCorrectlyPlaced()
-    {
-        return "";
-    }
 
     // Instruction methods end
 

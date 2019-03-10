@@ -210,9 +210,39 @@ public class GraphSettings : SettingsBase {
 
         switch (sectionID)
         {
-            case Util.ALGORITHM: Algorithm = itemID; break;
+            case Util.ALGORITHM:
+                Algorithm = itemID;
+
+                // Algorithm changes graph task (not fully covered***)
+                if (itemID == Util.DIJKSTRA)
+                {
+                    GraphTask = UtilGraph.SHORTEST_PATH;
+                    InitButtonState(UtilGraph.GRAPH_TASK, graphTask);
+                }
+                else
+                {
+                    GraphTask = UtilGraph.TRAVERSE;
+                    InitButtonState(UtilGraph.GRAPH_TASK, graphTask);
+                }
+                break;
+
             case UtilGraph.GRAPH_STRUCTURE: GraphStructure = itemID; break;
-            case UtilGraph.GRAPH_TASK: GraphTask = itemID; break;
+            case UtilGraph.GRAPH_TASK:
+                if (itemID == UtilGraph.SHORTEST_PATH && algorithm == Util.DIJKSTRA || itemID == UtilGraph.TRAVERSE && (algorithm == Util.BFS || algorithm == Util.DFS))
+                {
+                    GraphTask = itemID;
+                }
+                else
+                {
+                    FillTooltips("Not implemented yet.");
+                    if (itemID == UtilGraph.SHORTEST_PATH)
+                        InitButtonState(sectionID, UtilGraph.TRAVERSE);
+                    else
+                        InitButtonState(sectionID, UtilGraph.SHORTEST_PATH);
+                }
+
+                break;
+
             case UtilGraph.EDGE_TYPE: EdgeType = itemID; break;
             case UtilGraph.EDGE_BUILD_MODE: EdgeBuildMode = itemID; break;
             case UtilGraph.SHORTEST_PATH_ONE_TO_ALL: ShortestPathOneToAll = Util.ConvertStringToBool(itemDescription); break;
