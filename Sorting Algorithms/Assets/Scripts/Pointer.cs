@@ -25,6 +25,7 @@ public class Pointer : MonoBehaviour {
     private LineRenderer laserBeam;
 
     public GameObject hitObject;
+    public Node prevNodeShot;
 
 	// Use this for initialization
 	void Start () {
@@ -90,6 +91,16 @@ public class Pointer : MonoBehaviour {
                             graphMain.GraphManager.EndNode = node;
                             graphMain.GraphSettings.SelectStartEndNodes = false;
                             StartCoroutine(graphMain.SetAutomaticallyImportantNodes());
+                        }
+                        prevNodeShot = null;
+                    }
+                    else
+                    {
+                        if (prevNodeShot != node)
+                        {
+                            Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
+                            node.PerformUserMove(true);
+                            prevNodeShot = node;
                         }
                     }
 

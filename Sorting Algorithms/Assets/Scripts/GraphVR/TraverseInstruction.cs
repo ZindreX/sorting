@@ -3,30 +3,35 @@
 public class TraverseInstruction : InstructionLoop {
 
     private Node node;
-    private bool visited, traversed;
+    private Edge prevEdge;
+    private bool visitInst, traverseInst;
 
-    public TraverseInstruction(string instruction, int instructionNr, Node node, bool visited) : base(instruction, instructionNr, Util.NO_INDEX_VALUE)
+    public TraverseInstruction(string instruction, int instructionNr, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, Util.NO_INDEX_VALUE)
     {
         this.node = node;
-        this.visited = visited;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
     }
 
-    public TraverseInstruction(string instruction, int instructionNr, int i, Node node, bool visited) : base(instruction, instructionNr, i)
+    public TraverseInstruction(string instruction, int instructionNr, int i, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, i)
     {
         this.node = node;
-        this.visited = visited;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
     }
 
-    public TraverseInstruction(string instruction, int instructionNr, int i, int j, Node node, bool visited) : base(instruction, instructionNr, i, j)
+    public TraverseInstruction(string instruction, int instructionNr, int i, int j, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, i, j)
     {
         this.node = node;
-        this.visited = visited;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
     }
 
-    public TraverseInstruction(string instruction, int instructionNr, int i, int j, int k, Node node, bool visited) : base(instruction, instructionNr, i, j, k)
+    public TraverseInstruction(string instruction, int instructionNr, int i, int j, int k, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, i, j, k)
     {
         this.node = node;
-        this.visited = visited;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
     }
 
     public Node Node
@@ -34,21 +39,25 @@ public class TraverseInstruction : InstructionLoop {
         get { return node; }
     }
 
-    public bool Visited
+    public bool VisitInst
     {
-        get { return visited; }
-        set { visited = value; }
+        get { return visitInst; }
     }
 
-    public bool Traversed
+    public bool TraverseInst
     {
-        get { return traversed; }
-        set { traversed = value; }
+        get { return traverseInst; }
+    }
+
+    public Edge PrevEdge
+    {
+        get { return prevEdge; }
+        set { prevEdge = value; }
     }
 
     public override string DebugInfo()
     {
-        return base.DebugInfo();
+        return base.DebugInfo() + " || Node: " + node.NodeAlphaID + ", visit instruction=" + visitInst + ", traverse instruction=" + traverseInst;
     }
 
     public override bool HasBeenExecuted()

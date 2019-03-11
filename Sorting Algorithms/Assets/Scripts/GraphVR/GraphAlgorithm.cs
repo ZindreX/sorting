@@ -33,7 +33,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
-        skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.EMPTY_QUEUE_INST);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.EMPTY_LIST_CONTAINER);
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.WHILE_LIST_NOT_EMPTY_INST);
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.END_IF_INST);
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.END_FOR_LOOP_INST);

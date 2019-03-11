@@ -401,23 +401,18 @@ public class GraphMain : MainManager {
 
         if (graphSettings.Algorithm == Util.BFS)
         {
-            string result = "";
+            //string result = "";
             foreach (KeyValuePair<int, InstructionBase> entry in instructions)
             {
                 int instNr = entry.Key;
                 InstructionBase inst = entry.Value;
-
-                if (inst is TraverseInstruction && inst.Instruction == UtilGraph.DEQUEUE_NODE_INST)
-                {
-                    result += ((TraverseInstruction)inst).Node.NodeAlphaID + " ";
-                }
+                Debug.Log(inst.DebugInfo());
             }
-            Debug.Log(result);
         }
 
         graphManager.ResetGraph();
         userTestReady = true;
-        Debug.Log("Ready for user test!");
+        //Debug.Log("Ready for user test!");
     }
 
     public int PrepareNextInstruction(InstructionBase instruction)
@@ -441,7 +436,10 @@ public class GraphMain : MainManager {
             posManager.CurrentGoal = node;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
+            if (instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST || instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
+                node.NextMove = true;
+
+            if (instruction.Instruction == UtilGraph.PUSH_INST || instruction.Instruction == UtilGraph.POP_INST)
                 node.NextMove = true;
         }
 
@@ -451,19 +449,21 @@ public class GraphMain : MainManager {
             BeginnerWait = true;
             StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
 
-            // Node representation
+            // Node representation (destroy previous node)
             switch (instruction.Instruction)
             {
-                case UtilGraph.ENQUEUE_NODE_INST: UpdateListVisual(UtilGraph.ADD_NODE, node, Util.NO_VALUE); break;
-                case UtilGraph.DEQUEUE_NODE_INST: UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); break;
-                case UtilGraph.END_FOR_LOOP_INST: UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); break;
+                case UtilGraph.DEQUEUE_NODE_INST:
+                case UtilGraph.POP_INST:
+                case UtilGraph.END_WHILE_INST:
+                    UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); break;
+
             }
         }
 
-        Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
+        //Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
         if (gotNode && !noDestination)
             return 0;
-        Debug.Log("Nothing to do for player, get another instruction");
+        //Debug.Log("Nothing to do for player, get another instruction");
         return 1;
     }
 

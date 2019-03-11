@@ -47,14 +47,21 @@ public class UtilGraph : Util {
 
     // *** Instructions ***
     // Validation
-    public const string NODE_VISITED = "Node visited", NODE_ERROR = "Node error";
+    public const string NODE_VISITED = "Node visited", NODE_TRAVERSED = "Node traversed", NODE_ERROR = "Node error";
 
-    // BFS
-    public const string EMPTY_QUEUE_INST = "Empty queue inst", ENQUEUE_NODE_INST = "Enqueue node inst", MARK_VISITED_INST = "Mark visited inst";
-    public const string WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", DEQUEUE_NODE_INST = "Dequeue node inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";
+    // Common graph instructions
+    public const string EMPTY_LIST_CONTAINER = "Empty list inst", WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";
     public const string IF_NOT_VISITED_INST = "If not visited inst", END_IF_INST = "End if inst", END_FOR_LOOP_INST = "End for loop inst", END_WHILE_INST = "End while inst";
 
-    // List visual
+    // BFS
+    public const string ENQUEUE_NODE_INST = "Enqueue node inst", DEQUEUE_NODE_INST = "Dequeue node inst";
+
+    // DFS
+    public const string PUSH_INST = "Push node inst", POP_INST = "Pop node inst";
+
+
+
+    // ----------------------------------------- List visual -----------------------------------------
     public const string ADD_NODE = "Add node", PRIORITY_ADD_NODE = "Priority add node", REMOVE_CURRENT_NODE = "Remove current node";
     public const string DESTROY_CURRENT_NODE = "Destroy current node", HAS_NODE_REPRESENTATION = "Has node representation";
 

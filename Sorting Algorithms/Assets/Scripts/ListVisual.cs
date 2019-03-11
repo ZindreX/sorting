@@ -262,7 +262,8 @@ public class ListVisual : MonoBehaviour {
 
     public void DestroyCurrentNode()
     {
-        Destroy(currentNode.gameObject);
+        if (currentNode != null)
+            Destroy(currentNode.gameObject);
     }
 
 
