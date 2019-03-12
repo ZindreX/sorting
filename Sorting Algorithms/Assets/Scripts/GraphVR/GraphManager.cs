@@ -167,6 +167,10 @@ public abstract class GraphManager : MonoBehaviour {
     // Delete graph
     public abstract void DeleteGraph();
 
+    // ------------------ Shortest path ------------------ 
+
+    public abstract void SetAllNodesToInf();
+
     // Backtracks from all nodes in the given graph
     public abstract IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration);
 

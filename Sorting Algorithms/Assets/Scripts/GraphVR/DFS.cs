@@ -231,6 +231,7 @@ public class DFS : GraphAlgorithm, ITraverse {
         stack.Push(startNode);
         startNode.Visited = true;
         instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, 0, startNode, true, false));
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
 
         // Line 3: Mark as visited
         //yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
@@ -244,6 +245,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             Node currentNode = stack.Pop();
             currentNode.Traversed = true;
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.POP_INST, instNr, currentNode, false, true));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
 
             // Line 6: Update for-loop (leaf nodes)
             //if (currentNode.Edges.Count == 0)
@@ -264,25 +266,26 @@ public class DFS : GraphAlgorithm, ITraverse {
                 //    visitNode = currentNode.Edges.Count - 1 - i;
 
                 Edge edge = currentNode.Edges[i]; // visitNode];                
-                Node checkingNode = edge.OtherNodeConnected(currentNode);
+                Node connectedNode = edge.OtherNodeConnected(currentNode);
 
                 // Line 7: If statement (condition)
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, checkingNode, false, false));
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, false, false));
 
-                if (!checkingNode.Visited)
+                if (!connectedNode.Visited)
                 {
                     // Line 8: Push node on top of stack
-                    stack.Push(checkingNode);
-                    checkingNode.Visited = true;
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, checkingNode, true, false));
+                    stack.Push(connectedNode);
+                    connectedNode.Visited = true;
+                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, true, false));
                     ((TraverseInstruction)instructions[instNr - 1]).PrevEdge = edge;
+                    instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode));
                 }
                 // Line 10: End if statement
                 instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
-
             }
             // Line 11: End for-loop
             instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
         // Line 12: End while-loop
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));

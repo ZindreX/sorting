@@ -47,7 +47,7 @@ public class PositionManager : MonoBehaviour {
 
         playerPositionText.text = "Player position: " + node.NodeAlphaID;
         if (showDistance)
-            nodeDistText.text = "Node dist: " + UtilGraph.ConvertIfInf(node.Dist);
+            nodeDistText.text = "Node dist: " + UtilGraph.ConvertDist(node.Dist);
     }
 
     public Node CurrentGoal

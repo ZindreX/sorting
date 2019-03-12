@@ -171,6 +171,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         queue.Enqueue(startNode);
         startNode.Visited = true;
         instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, 0, startNode, true, false));
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
 
         // Line 3: Mark node as visited
         //instructions.Add(instNr++, new TraverseInstruction(UtilGraph.MARK_VISITED_INST, instNr, 0, startNode, true));
@@ -184,6 +185,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             Node currentNode = queue.Dequeue();
             currentNode.Traversed = true;
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, false, true));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
 
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
@@ -191,22 +193,24 @@ public class BFS : GraphAlgorithm, ITraverse {
                 instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false)); //new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode.Edges.Count, Util.NO_INDEX_VALUE));
 
                 Edge edge = currentNode.Edges[i];
-                Node checkingNode = edge.OtherNodeConnected(currentNode);
+                Node connectedNode = edge.OtherNodeConnected(currentNode);
 
                 // Line 7: check neighbor
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, checkingNode, false, false)); // check if correct ***
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, false, false)); // check if correct ***
                 // Check if node has already been traversed or already is marked
-                if (!checkingNode.Visited)
+                if (!connectedNode.Visited)
                 {
                     // Line 8: Enqueue node
-                    queue.Enqueue(checkingNode);
-                    checkingNode.Visited = true;
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, checkingNode, true, false));
+                    queue.Enqueue(connectedNode);
+                    connectedNode.Visited = true;
+                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, connectedNode, true, false));
                     ((TraverseInstruction)instructions[instNr - 1]).PrevEdge = edge;
+                    instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode));
                 }
                 instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
             }
             instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
         return instructions;
@@ -216,8 +220,6 @@ public class BFS : GraphAlgorithm, ITraverse {
     #region User Test Highlight Pseudocode
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
     {
-        //Debug.Log("Starting highlighting pseudocode");
-
         // Gather information from instruction
         if (gotNode)
             node1 = ((TraverseInstruction)instruction).Node;
@@ -276,7 +278,6 @@ public class BFS : GraphAlgorithm, ITraverse {
 
         yield return demoStepDuration;
         graphMain.BeginnerWait = false;
-        //Debug.Log("Pseudocode highlighted!");
     }
     #endregion
 }

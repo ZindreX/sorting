@@ -28,7 +28,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected int userMove = 0, validatedUserMove = 0;
     protected bool visitNextMove, traverseNextMove;
     protected bool nextMove;
-    protected TraverseInstruction nodeInstruction;
+    protected InstructionBase nodeInstruction; // TraverseIntruction
 
 
     // Traversal / Shortest path variables
@@ -69,10 +69,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         SetNodeTextID(true);
 
         this.algorithm = algorithm;
-        if (algorithm == Util.DIJKSTRA)
-            Dist = UtilGraph.INF;
-        else
-            textNodeDist.text = "";
+        Dist = UtilGraph.INIT_NODE_VALUE;
     }
 
     private void Awake()
@@ -176,7 +173,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     private IEnumerator UpdateTextNodeDist(int newDist)
     {
-        textNodeDist.text = UtilGraph.ConvertIfInf(newDist);
+        textNodeDist.text = UtilGraph.ConvertDist(newDist);
 
         for (int i = 0; i < 4; i++)
         {
@@ -259,6 +256,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         traversed = false;
         visited = false;
         prevEdge = null;
+        Dist = UtilGraph.INIT_NODE_VALUE;
         CurrentColor = Util.STANDARD_COLOR;
         isEndNode = false;
     }
@@ -274,7 +272,14 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public InstructionBase Instruction
     {
         get { return nodeInstruction; }
-        set { nodeInstruction = (TraverseInstruction)value; UpdateNodeState(); }
+        set {
+            if (value is TraverseInstruction)
+                nodeInstruction = (TraverseInstruction)value;
+            else if (value is ShortestPathInstruction)
+                nodeInstruction = (ShortestPathInstruction)value;
+                
+            UpdateNodeState();
+        }
     }
 
     private bool shootStatus, traverseStatus;
@@ -304,7 +309,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     if (prevEdge != null)
                         prevEdge.CurrentColor = UtilGraph.VISITED_COLOR;
 
-                    graphMain.UpdateListVisual(UtilGraph.ADD_NODE, this, Util.NO_VALUE);
+                    //graphMain.UpdateListVisual(UtilGraph.ADD_NODE, this, Util.NO_VALUE);
                     graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
                     break;
 
@@ -317,7 +322,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                         prevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
 
 
-                    graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, this, Util.NO_VALUE);
+                    //graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, this, Util.NO_VALUE);
                     graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
                     break;
 
@@ -358,6 +363,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                 case UtilGraph.ENQUEUE_NODE_INST:
                 case UtilGraph.PUSH_INST:
+                case UtilGraph.ADD_NODE:
+                case UtilGraph.VISIT_CONNECTED_NODE:
                     return visitNextMove ? UtilGraph.NODE_VISITED : UtilGraph.NODE_ERROR;
 
                 default: return UtilGraph.NODE_ERROR;
@@ -377,6 +384,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                 case UtilGraph.DEQUEUE_NODE_INST:
                 case UtilGraph.POP_INST:
+                case UtilGraph.PRIORITY_REMOVE_NODE:
                     return traverseNextMove ? UtilGraph.NODE_TRAVERSED : UtilGraph.NODE_ERROR;
 
                 default: return UtilGraph.NODE_ERROR;
@@ -390,35 +398,51 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         if (nodeInstruction != null)
         {
             Debug.Log(nodeInstruction.DebugInfo());
+
             // Debugging
             instruction = nodeInstruction.Instruction;
-
-            if (instruction == UtilGraph.DEQUEUE_NODE_INST)
-                nextNode = true;
-            
-
             switch (instruction)
             {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-                case UtilGraph.ENQUEUE_NODE_INST: status = "Enqueue node to queue"; break;
-                case UtilGraph.DEQUEUE_NODE_INST: status = "Dequeue node of queue"; break;
-                case UtilGraph.PUSH_INST: status = "Push node ontop of stack"; break;
-                case UtilGraph.POP_INST: status = "Pop node of stack"; break;
+                case UtilGraph.ENQUEUE_NODE_INST:
+                case UtilGraph.PUSH_INST:
+                case UtilGraph.ADD_NODE:
+                case UtilGraph.PRIORITY_ADD_NODE:
+                    status = "Shot node";
+                    break;
+
+                case UtilGraph.DEQUEUE_NODE_INST:
+                case UtilGraph.POP_INST:
+                case UtilGraph.PRIORITY_REMOVE_NODE:
+                    status = "Move to node";
+                    break;
+
                 case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
                 default: Debug.LogError("UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
             // This node is the next to be visited (shot at)
-            if (nodeInstruction.VisitInst)
-                visitNextMove = true;
+            if (nodeInstruction is TraverseInstruction)
+            {
+                TraverseInstruction travInst = (TraverseInstruction)nodeInstruction;
+                if (travInst.VisitInst)
+                    visitNextMove = true;
 
-            // This node is the next to be traversed (player move to node)
-            if (nodeInstruction.TraverseInst)
-                traverseNextMove = true;
+                // This node is the next to be traversed (player move to node)
+                if (travInst.TraverseInst)
+                    traverseNextMove = true;
 
-            // Set the edge between the node we traversed from to reach this node
-            if (nodeInstruction.PrevEdge != null)
-                prevEdge = nodeInstruction.PrevEdge;
+                // Set the edge between the node we traversed from to reach this node
+                if (travInst.PrevEdge != null)
+                    prevEdge = travInst.PrevEdge;
+            }
+            else if (nodeInstruction is ShortestPathInstruction)
+            {
+                ShortestPathInstruction spInst = (ShortestPathInstruction)nodeInstruction;
+
+                if (spInst.PrevEdge != null)
+                    PrevEdge = spInst.PrevEdge;
+            }
 
         }
     }

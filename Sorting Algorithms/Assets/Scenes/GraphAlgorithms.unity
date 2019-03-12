@@ -12038,12 +12038,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: gridRowsEditor
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: gridColumnsEditor
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -12063,7 +12063,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: algorithmSpeedEditor
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -12078,7 +12078,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: algorithmEditor
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -12216,7 +12216,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: graphTaskEditor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -12226,7 +12226,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: x1
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}

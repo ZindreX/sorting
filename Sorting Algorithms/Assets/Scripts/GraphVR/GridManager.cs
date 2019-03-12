@@ -342,6 +342,19 @@ public class GridManager : GraphManager {
         }
     }
 
+    public override void SetAllNodesToInf()
+    {
+        for (int i=0; i < rows; i++)
+        {
+            for (int j=0; j < cols; j++)
+            {
+                GridNode gridNode = gridNodes[i, j];
+                if (gridNode != null)
+                    gridNode.Dist = UtilGraph.INF;
+            }
+        }
+    }
+
     public override IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration)
     {
         for (int z=rows-1; z >= 0; z--)

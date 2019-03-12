@@ -392,6 +392,8 @@ public class GraphMain : MainManager {
         if (instructions == null)
             return;
 
+        Debug.Log("Number of instructions: " + instructions.Count);
+
         // Initialize user test
         int movesNeeded = 1;
         userTestManager.InitUserTest(instructions, movesNeeded, FindNumberOfUserAction(instructions));
@@ -417,59 +419,109 @@ public class GraphMain : MainManager {
 
     public int PrepareNextInstruction(InstructionBase instruction)
     {
-        Debug.Log("Preparing next instruction: " + instruction.Instruction);
-        Node node = null;
-        bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-        bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
+        string inst = instruction.Instruction;
+        int difficulty = graphSettings.Difficulty;
+        bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(inst);
+        bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(inst);
 
-        if (gotNode)
+        Debug.Log("Preparing next instruction: " + inst);
+
+        // List visual Update
+        if (instruction is ListVisualInstruction)
         {
-            TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
-
-            // Get the Sorting element
-            node = traverseInstruction.Node;
-
-            // Hands out the next instruction
-            node.Instruction = traverseInstruction;
-
-            // Set goal
-            posManager.CurrentGoal = node;
-
-            // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST || instruction.Instruction == UtilGraph.DEQUEUE_NODE_INST)
-                node.NextMove = true;
-
-            if (instruction.Instruction == UtilGraph.PUSH_INST || instruction.Instruction == UtilGraph.POP_INST)
-                node.NextMove = true;
-        }
-
-        // Display help on blackboard
-        if (graphSettings.Difficulty <= Util.BEGINNER)
-        {
+            Debug.Log("List visual instruction");
             BeginnerWait = true;
-            StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
-
-            // Node representation (destroy previous node)
-            switch (instruction.Instruction)
+            ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
+            switch (inst)
             {
-                case UtilGraph.DEQUEUE_NODE_INST:
-                case UtilGraph.POP_INST:
-                case UtilGraph.END_WHILE_INST:
-                    UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); break;
-
+                case UtilGraph.ADD_NODE: listVisual.AddListObject(listVisualInst.Node); break;
+                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(listVisualInst.Node, listVisualInst.Index); break;
+                case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
+                case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
+                default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
             }
+            BeginnerWait = false; // ???
+
+            return 1;
+        }
+        else
+        {
+            Debug.Log("Other instruction");
+            Node node = null;
+
+            if (gotNode)
+            {
+                if (instruction is TraverseInstruction)
+                {
+                    TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
+
+                    // Get the Sorting element
+                    node = traverseInstruction.Node;
+
+                    // Hands out the next instruction
+                    node.Instruction = traverseInstruction;
+
+                    // Set goal
+                    posManager.CurrentGoal = node;
+
+                    // Give this sorting element permission to give feedback to progress to next intstruction
+                    node.NextMove = NextIsUserMove(inst);
+                }
+                else if (instruction is ShortestPathInstruction)
+                {
+                    ShortestPathInstruction shortestPathInst = (ShortestPathInstruction)instruction;
+
+                    // Get the Sorting element
+                    node = shortestPathInst.CurrentNode;
+
+                    // Hands out the next instruction
+                    node.Instruction = shortestPathInst;
+
+                    // Set goal
+                    posManager.CurrentGoal = node;
+
+                    // Give this sorting element permission to give feedback to progress to next intstruction
+                    node.NextMove = NextIsUserMove(inst);
+                }
+            }
+
+            // Display help on blackboard
+            if (difficulty <= Util.BEGINNER)
+            {
+                BeginnerWait = true;
+                StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
+            }
+
+
+            switch (inst)
+            {
+                case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesToInf(); break;
+                case UtilGraph.SET_START_NODE_DIST_TO_ZERO: graphManager.StartNode.Dist = 0; break;
+            }
+
+            Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
+            if (gotNode && !noDestination)
+                return 0;
+            Debug.Log("Nothing to do for player, get another instruction");
+            return 1;
         }
 
-        //Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
-        if (gotNode && !noDestination)
-            return 0;
-        //Debug.Log("Nothing to do for player, get another instruction");
-        return 1;
     }
 
+    private bool NextIsUserMove(string inst)
+    {
+        switch (algorithmName)
+        {
+            case Util.BFS: return inst == UtilGraph.ENQUEUE_NODE_INST || inst == UtilGraph.DEQUEUE_NODE_INST;
+            case Util.DFS: return inst == UtilGraph.PUSH_INST || inst == UtilGraph.POP_INST;
+            case Util.DIJKSTRA: return inst == UtilGraph.ADD_NODE || inst == UtilGraph.PRIORITY_REMOVE_NODE || inst == UtilGraph.VISIT_CONNECTED_NODE || inst == UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN;
+            default: Debug.LogError("Next move rules not defined for algorithm: " + algorithmName + "'."); return false;
+        }
+    }
 
     // *** List visual / Node representation ***
 
+    // Used by demo to update list visual (node/list representation)
     public void UpdateListVisual(string action, Node node, int index)
     {
         if (graphSettings.Difficulty == Util.BEGINNER)

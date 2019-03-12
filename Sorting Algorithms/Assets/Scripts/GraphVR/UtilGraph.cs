@@ -36,7 +36,7 @@ public class UtilGraph : Util {
     public static string NODE_TAG = "Node", EDGE_TAG = "Edge";
 
     // 
-    public static int INF = int.MaxValue, NO_COST = -1;
+    public static int INF = int.MaxValue, NO_COST = -1, INIT_NODE_VALUE = -2;
 
     // Pseudo code stuff
     public static readonly string START_NODE = "Start node", LENGTH_OF_LIST = "Length of list", NODE = "vertice", NEIGHBOR = "neighbor";
@@ -59,6 +59,11 @@ public class UtilGraph : Util {
     // DFS
     public const string PUSH_INST = "Push node inst", POP_INST = "Pop node inst";
 
+    // Dijkstra
+    public const string SET_ALL_NODES_TO_INFINITY = "Set all nodes to infinity", SET_START_NODE_DIST_TO_ZERO = "Set start node dist to zero", PRIORITY_REMOVE_NODE = "Priority remove node", VISIT_CONNECTED_NODE = "Visit connected node";
+    public const string IF_DIST_PLUS_EDGE_COST_LESS_THAN = "If dist plus edge cost less than", UPDATE_CONNECTED_NODE_DIST = "Update connected node dist", UPDATE_CONNECTED_NODE_PREV_EDGE = "Update connected node prev edge";
+    public const string UPDATE_LIST_VISUAL_VALUE_AND_POSITION = "Update list visual value and position";
+
 
 
     // ----------------------------------------- List visual -----------------------------------------
@@ -73,9 +78,13 @@ public class UtilGraph : Util {
 
 
     // Converts cost into 'Inf' if cost is infinity, otherwise return input
-    public static string ConvertIfInf(int value)
+    public static string ConvertDist(int value)
     {
-        return (value == INF) ? "Inf" : value.ToString();
+        if (value == INF)
+            return "Inf";
+        else if (value == INIT_NODE_VALUE)
+            return "";
+        return value.ToString();
     }
 
     // Converts cost from string to int

@@ -52,6 +52,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         //set { graphStructure = value; }
     }
 
+    // Use value of node
     protected void SetNodePseudoCode(Node node, int nr)
     {
         switch (nr)
@@ -61,6 +62,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         }
     }
 
+    // Insert value
     protected void SetNodePseudoCode(Node node, int nr, int value)
     {
         SetNodePseudoCode(node, nr);

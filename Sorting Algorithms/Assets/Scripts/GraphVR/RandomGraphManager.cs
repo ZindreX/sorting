@@ -177,6 +177,14 @@ public class RandomGraphManager : GraphManager {
         }
     }
 
+    public override void SetAllNodesToInf()
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            nodes[i].Dist = UtilGraph.INF;
+        }
+    }
+
     public override IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration)
     {
         for (int i=nodes.Count-1; i >= 0; i--)

@@ -178,6 +178,14 @@ public class TreeManager : GraphManager {
         }
     }
 
+    public override void SetAllNodesToInf()
+    {
+        for (int i = 0; i < tree.Count; i++)
+        {
+            tree[i].Dist = UtilGraph.INF;
+        }
+    }
+
     public override IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration)
     {
         int numberOfInternalNodes = NumberOfInternalNodes();
