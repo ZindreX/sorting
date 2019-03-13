@@ -170,7 +170,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         // Line 2: Enqueue first node
         queue.Enqueue(startNode);
         startNode.Visited = true;
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, 0, startNode, true, false));
+        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, startNode, true, false));
         instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
 
         // Line 3: Mark node as visited
@@ -222,13 +222,13 @@ public class BFS : GraphAlgorithm, ITraverse {
     {
         // Gather information from instruction
         if (gotNode)
-            node1 = ((TraverseInstruction)instruction).Node;
+            currentNode = ((TraverseInstruction)instruction).Node;
 
         if (instruction is InstructionLoop)
         {
             i = ((InstructionLoop)instruction).I;
-            j = ((InstructionLoop)instruction).J;
-            k = ((InstructionLoop)instruction).K;
+            //j = ((InstructionLoop)instruction).J;
+            //k = ((InstructionLoop)instruction).K;
         }
 
         // Remove highlight from previous instruction
@@ -236,13 +236,18 @@ public class BFS : GraphAlgorithm, ITraverse {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
+        useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
             case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 1; break;
             case UtilGraph.ENQUEUE_NODE_INST:
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
-                if (i == 0)
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                if (!startNodeAdded)
+                {
                     lineOfCode = 2;
+                    startNodeAdded = true;
+                }
                 else
                     lineOfCode = 7;
                 break;
@@ -253,18 +258,19 @@ public class BFS : GraphAlgorithm, ITraverse {
                 break;
 
             case UtilGraph.DEQUEUE_NODE_INST:
-                lineOfCode = 4;
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                lineOfCode = 4;
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                lineOfCode = 5;
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+                lineOfCode = 5;
                 break;
 
             case UtilGraph.IF_NOT_VISITED_INST:
-                lineOfCode = 6;
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 2);
+                lineOfCode = 6;
                 break;
 
             case UtilGraph.END_IF_INST: lineOfCode = 8; break;
@@ -274,7 +280,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
 
         yield return demoStepDuration;
         graphMain.BeginnerWait = false;

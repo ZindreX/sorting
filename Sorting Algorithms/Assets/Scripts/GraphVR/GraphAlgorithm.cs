@@ -8,10 +8,11 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     protected GraphMain graphMain;
 
     // Demo variables
-    protected Node node1, node2;
-    protected Edge edge;
+    protected Node currentNode, connectedNode;
+    protected Edge edge; // prevEdge;
     protected char node1Alpha = 's', node2Alpha = 'w';
     protected int node1Dist, node2Dist, edgeCost, numberOfEdges;
+    protected bool startNodeAdded = false;
 
     // Traverse shared variables
     private bool visitLeftFirst;
@@ -57,8 +58,8 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     {
         switch (nr)
         {
-            case 1: node1 = node; node1Dist = node.Dist; node1Alpha = node.NodeAlphaID; break;
-            case 2: node2 = node; node2Dist = node.Dist; node2Alpha = node.NodeAlphaID; break;
+            case 1: currentNode = node; node1Dist = node.Dist; node1Alpha = node.NodeAlphaID; break;
+            case 2: connectedNode = node; node2Dist = node.Dist; node2Alpha = node.NodeAlphaID; break;
         }
     }
 
@@ -94,13 +95,14 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     public override void ResetSetup()
     {
         base.ResetSetup();
-        node1 = null;
-        node2 = null;
+        currentNode = null;
+        connectedNode = null;
         node1Alpha = 's';
         node2Alpha = 'w';
         node1Dist = 0;
         edgeCost = 0;
         numberOfEdges = 0;
+        startNodeAdded = false;
     }
 
     public bool VisitLeftFirst

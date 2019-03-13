@@ -62,6 +62,9 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_DIST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE);
 
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.HAS_NODE_REPRESENTATION); // ?
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.PRIORITY_ADD_NODE); // ?
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION); // ?
 
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.SET_ALL_NODES_TO_INFINITY);
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.SET_START_NODE_DIST_TO_ZERO);
@@ -77,6 +80,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     public IEnumerator ShortestPathDemo(Node startNode, Node endNode)
     {
         // Line 1: Set all vertices of G to inifity
+        graphMain.GraphManager.SetAllNodesToInf();
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
 
         // Line 2: Create (priority) list
@@ -300,6 +304,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         int instNr = 0;
 
         // Line 1: Set all vertices of G to inifity
+        graphMain.GraphManager.SetAllNodesToInf();
         instructions.Add(instNr++, new InstructionBase(UtilGraph.SET_ALL_NODES_TO_INFINITY, instNr));
 
         // Line 2: Create (priority) list
@@ -310,6 +315,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         // Line 3: Add starting node and set its cost to 0
         list.Add(startNode);
         startNode.Visited = true;
+        startNode.Dist = 0;
         instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ADD_NODE, instNr, startNode, true, false));
         instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
 
@@ -331,19 +337,22 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
             // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
             if (!shortestPathOnToAll && currentNode == endNode)
-                objectiveFound = true; // TODO:::::::::::::::::::::::::::
+            {
+                //instructions.Add(instNr++, new InstructionBase()); // TODO:::::::::::::::::::::::::::
+                objectiveFound = true;
+            }
 
             // Check all nodes connected with current node
             List<Edge> edges = currentNode.Edges;
 
             // Line 7: Update for-loop (if no nodes connected)
             if (edges.Count == 0)
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, 0, currentNode, false, false));
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
 
             for (int i = 0; i < edges.Count; i++)
             {
                 // Line 7: Update for-loop
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode, false, false));
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
 
                 // Checking edge
                 Edge currentEdge = edges[i];
@@ -375,7 +384,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 {
                     // Line 10: Update total cost (Dist) of connected node (w)
                     connectedNode.Dist = currentDistAndEdgeCost;
-                    instructions.Add(instNr++, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_DIST, instNr, currentNode, connectedNode));
+                    instructions.Add(instNr++, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_DIST, instNr, currentNode, connectedNode, currentEdge));
 
                     // Line 11: Update prev edge (Prev) of connected node (w)
                     connectedNode.PrevEdge = currentEdge;
@@ -404,7 +413,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                             //yield return graphMain.ListVisual.UpdateValueAndPositionOf(connectedNode, index); // Create method/action code ???
 
                         // Line 12: Add to list
-                        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, connectedNode, false, false));
+                        instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
                     }
                 }
                 //currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
@@ -414,6 +423,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             }
             // Line 14: End for-loop
             instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, null));
 
             currentNode.Traversed = true;
         }
@@ -426,23 +436,28 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     #region User Test Highlight Pseudocode
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
     {
+        Node n1 = null, n2 = null;
+        Edge currentEdge = null, prevEdge = null;
         // Gather information from instruction
         if (gotNode)
         {
+            Debug.Log("Got node");
             if (instruction is TraverseInstruction)
-                node1 = ((TraverseInstruction)instruction).Node;
+                n1 = ((TraverseInstruction)instruction).Node;
             else if (instruction is ShortestPathInstruction)
             {
-                node1 = ((ShortestPathInstruction)instruction).CurrentNode;
-                node2 = ((ShortestPathInstruction)instruction).ConnectedNode;
+                n1 = ((ShortestPathInstruction)instruction).CurrentNode;
+                n2 = ((ShortestPathInstruction)instruction).ConnectedNode;
+                currentEdge = ((ShortestPathInstruction)instruction).CurrentEdge;
+                prevEdge = ((ShortestPathInstruction)instruction).PrevEdge;
             }
         }
 
         if (instruction is InstructionLoop)
         {
             i = ((InstructionLoop)instruction).I;
-            j = ((InstructionLoop)instruction).J;
-            k = ((InstructionLoop)instruction).K;
+            //j = ((InstructionLoop)instruction).J;
+            //k = ((InstructionLoop)instruction).K;
         }
 
         // Remove highlight from previous instruction
@@ -450,16 +465,26 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
+        useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
-            case UtilGraph.SET_ALL_NODES_TO_INFINITY: lineOfCode = 1; break;
-            case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 2; break;
+            case UtilGraph.SET_ALL_NODES_TO_INFINITY:
+                lineOfCode = 1;
+                break;
+
+            case UtilGraph.EMPTY_LIST_CONTAINER:
+                lineOfCode = 2;
+                break;
+
             case UtilGraph.ADD_NODE:
-                SetNodePseudoCode(node1, 1);
+                SetNodePseudoCode(n1, 1);
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 lineOfCode = 3;
                 break;
 
-            case UtilGraph.SET_START_NODE_DIST_TO_ZERO: lineOfCode = 4; break; // node1Alpha already set
+            case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
+                lineOfCode = 4;
+                break; // node1Alpha already set
 
             case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
                 lineOfCode = 5;
@@ -467,30 +492,38 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.PRIORITY_REMOVE_NODE:
+                SetNodePseudoCode(n1, 1);
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 lineOfCode = 6;
-                SetNodePseudoCode(node1, 1);
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
+                Debug.Log("Node1: " + (n1 == null));
+                Debug.Log(instruction.DebugInfo());
+                SetNodePseudoCode(n1, 1);
                 lineOfCode = 7;
-                SetNodePseudoCode(node1, 1);
                 break;
 
             case UtilGraph.VISIT_CONNECTED_NODE:
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                SetNodePseudoCode(n1, 2);
                 lineOfCode = 8;
                 break;
 
             case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                SetNodePseudoCode(n2, 2);
                 lineOfCode = 9;
-                SetNodePseudoCode(node2, 2);
-                edgeCost = ((ShortestPathInstruction)instruction).CurrentEdge.Cost;
+                edgeCost = currentEdge.Cost;
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
+                connectedNode.Dist = ((ShortestPathInstruction)instruction).NodeDistAndEdgeCostTotal();
                 lineOfCode = 10;
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE:
+                connectedNode.PrevEdge = prevEdge;
                 lineOfCode = 11;
                 break;
 

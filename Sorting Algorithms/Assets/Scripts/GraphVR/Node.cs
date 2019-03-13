@@ -318,7 +318,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                     // Mark as traversed, and change color of visited node & edge leading to this node
                     Traversed = true;
-                    if (prevEdge != null)
+                    if (prevEdge != null && nodeInstruction is TraverseInstruction)
                         prevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
 
 
@@ -404,16 +404,16 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             switch (instruction)
             {
                 case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-                case UtilGraph.ENQUEUE_NODE_INST:
-                case UtilGraph.PUSH_INST:
-                case UtilGraph.ADD_NODE:
-                case UtilGraph.PRIORITY_ADD_NODE:
+                case UtilGraph.ENQUEUE_NODE_INST: // BFS
+                case UtilGraph.PUSH_INST: // DFS
+                case UtilGraph.ADD_NODE: // Dijkstra
+                case UtilGraph.VISIT_CONNECTED_NODE: // Dijkstra <- // PRIORITY_ADD_NODE ?
                     status = "Shot node";
                     break;
 
-                case UtilGraph.DEQUEUE_NODE_INST:
-                case UtilGraph.POP_INST:
-                case UtilGraph.PRIORITY_REMOVE_NODE:
+                case UtilGraph.DEQUEUE_NODE_INST: // BFS
+                case UtilGraph.POP_INST: // DFS
+                case UtilGraph.PRIORITY_REMOVE_NODE: // Dijkstra
                     status = "Move to node";
                     break;
 

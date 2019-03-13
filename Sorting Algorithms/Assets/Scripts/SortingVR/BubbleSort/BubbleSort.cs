@@ -416,7 +416,7 @@ public class BubbleSort : SortAlgorithm {
 
         // Gather part of code to highlight
         List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
-        Color useColor = UtilSort.HIGHLIGHT_COLOR;
+        Color useColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
             case UtilSort.FIRST_INSTRUCTION:
@@ -441,7 +441,7 @@ public class BubbleSort : SortAlgorithm {
 
             case UtilSort.SWITCH_INST:
                 lineOfCode.Add(5);
-                useColor = UtilSort.HIGHLIGHT_MOVE_COLOR;
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
             case UtilSort.COMPARE_END_INST:

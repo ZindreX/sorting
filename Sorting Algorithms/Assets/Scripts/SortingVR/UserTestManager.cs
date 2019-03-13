@@ -11,7 +11,19 @@ public class UserTestManager : InstructionControlBase {
 
     // User test
     private int totalCorrect, totalErrorCount;
+
+    /* readyForNext: incremented whenever a user does a move (value from 0 to N, where N is decied by the algorithm)
+     *  - N: usually 1, so could be changed to a boolean, but for instance BubbleSort use 2
+     * 
+     * userActionToProceed: N (see above)
+     * 
+     * userActionInstruction: the number of instructions where the user needs to perform a action
+     * 
+    */
     private int readyForNext, userActionToProceed, userActionInstructions;
+
+
+
     private Dictionary<string, int> errorLog;
 
     // Score

@@ -1,33 +1,12 @@
 ﻿
 
-public class TraverseInstruction : InstructionLoop {
+public class TraverseInstruction : InstructionBase {
 
     private Node node;
     private Edge prevEdge;
     private bool visitInst, traverseInst;
 
-    public TraverseInstruction(string instruction, int instructionNr, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, Util.NO_INDEX_VALUE)
-    {
-        this.node = node;
-        this.visitInst = visitInst;
-        this.traverseInst = traverseInst;
-    }
-
-    public TraverseInstruction(string instruction, int instructionNr, int i, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, i)
-    {
-        this.node = node;
-        this.visitInst = visitInst;
-        this.traverseInst = traverseInst;
-    }
-
-    public TraverseInstruction(string instruction, int instructionNr, int i, int j, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, i, j)
-    {
-        this.node = node;
-        this.visitInst = visitInst;
-        this.traverseInst = traverseInst;
-    }
-
-    public TraverseInstruction(string instruction, int instructionNr, int i, int j, int k, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr, i, j, k)
+    public TraverseInstruction(string instruction, int instructionNr, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr)
     {
         this.node = node;
         this.visitInst = visitInst;

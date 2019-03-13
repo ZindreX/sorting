@@ -27,6 +27,8 @@ public class GraphMain : MainManager {
     [SerializeField]
     private GameObject graphAlgorithmObj;
 
+    [SerializeField]
+    private Calculator calculator;
 
     private GraphAlgorithm graphAlgorithm;
     private GraphManager graphManager;
@@ -43,7 +45,8 @@ public class GraphMain : MainManager {
     [SerializeField]
     private ListVisual listVisual;
 
-    private bool backtracking = false, userTestGoalActive = false;
+    // Backtracking shortest path, userTestGoalActive: move to node, usingCalculator: calculation in process to progress
+    private bool backtracking = false, userTestGoalActive = false, usingCalculator = false;
 
 
 
@@ -85,6 +88,28 @@ public class GraphMain : MainManager {
         // First check if user test setup is complete
         if (userTestManager.HasInstructions() && !beginnerWait)
         {
+            // If a calculation is required to progress in the algorithm
+            if (usingCalculator)
+            {
+                // Check if it's in process and whether the equal button has been clicked
+                if (calculator.CalculationInProcess && calculator.EqualButtonClicked)
+                {
+                    // When equal buttons has been clicked, check  whether the input data is correct
+                    int nodeDist = ((ShortestPathInstruction)userTestManager.GetInstruction()).CurrentNode.Dist;
+                    int edgeCost = ((ShortestPathInstruction)userTestManager.GetInstruction()).CurrentEdge.Cost;
+                    bool correctUserInput = calculator.ControlUserInput(nodeDist, edgeCost);
+
+                    // If input data was correct, then progress to next instruction (add only one)
+                    if (correctUserInput && userTestManager.ReadyForNext != userTestManager.UserActionToProceed)
+                        userTestManager.ReadyForNext += 1;
+                }
+                else if (!calculator.CalculationInProcess)
+                {
+                    // Feedback is given on the calculator, so when calculationInProcess = false (calculation completed), we continue
+                    usingCalculator = false;
+                }
+            }
+
             if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
             {
                 // Reset counter
@@ -323,6 +348,12 @@ public class GraphMain : MainManager {
     {
         algorithmStarted = false;
 
+        backtracking = false;
+
+        userTestGoalActive = false;
+
+        usingCalculator = false;
+
         // Stop ongoing actions
         UserStoppedAlgorithm = true;
 
@@ -438,6 +469,18 @@ public class GraphMain : MainManager {
                 case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(listVisualInst.Node, listVisualInst.Index); break;
                 case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
                 case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
+                case UtilGraph.HAS_NODE_REPRESENTATION:
+                    Node node = listVisualInst.Node;
+                    int index = listVisualInst.Index;
+                    bool hasNodeRep = listVisual.HasNodeRepresentation(node);
+                    string subInstruction = listVisualInst.GetCase(hasNodeRep);
+
+                    if (!hasNodeRep)
+                        PrepareNextInstruction(new ListVisualInstruction(subInstruction, instruction.INSTRUCION_NR, node, index));
+                    else
+                        StartCoroutine(listVisual.UpdateValueAndPositionOf(node, index));
+
+                    break;
                 default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
             }
             BeginnerWait = false; // ???
@@ -446,7 +489,6 @@ public class GraphMain : MainManager {
         }
         else
         {
-            Debug.Log("Other instruction");
             Node node = null;
 
             if (gotNode)
@@ -472,7 +514,10 @@ public class GraphMain : MainManager {
                     ShortestPathInstruction shortestPathInst = (ShortestPathInstruction)instruction;
 
                     // Get the Sorting element
-                    node = shortestPathInst.CurrentNode;
+                    if (shortestPathInst.CurrentNode != null)
+                        node = shortestPathInst.CurrentNode;
+                    else
+                        node = shortestPathInst.ConnectedNode;
 
                     // Hands out the next instruction
                     node.Instruction = shortestPathInst;
@@ -489,7 +534,7 @@ public class GraphMain : MainManager {
             if (difficulty <= Util.BEGINNER)
             {
                 BeginnerWait = true;
-                StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode && !noDestination));
+                StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode));// && !noDestination));
             }
 
 
@@ -497,6 +542,10 @@ public class GraphMain : MainManager {
             {
                 case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesToInf(); break;
                 case UtilGraph.SET_START_NODE_DIST_TO_ZERO: graphManager.StartNode.Dist = 0; break;
+                case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
+                    usingCalculator = true;
+                    calculator.InitCalculation();
+                    break;
             }
 
             Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
