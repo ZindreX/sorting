@@ -418,7 +418,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     break;
 
                 case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
-                default: Debug.LogError("UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
+                default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
             // This node is the next to be visited (shot at)
@@ -477,7 +477,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                         ////parent.GetComponent<ScoreManager>().Mistake();
                         break;
 
-                    default: Debug.Log("Add '" + validation + "' case, or ignore"); break;
+                    default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Add '" + validation + "' case, or ignore"); break;
                 }
 
                 // Mark instruction as executed if correct

@@ -94,9 +94,15 @@ public class GraphMain : MainManager {
                 // Check if it's in process and whether the equal button has been clicked
                 if (calculator.CalculationInProcess && calculator.EqualButtonClicked)
                 {
+                    ShortestPathInstruction spInst = null;
+                    if (userTestManager.GetInstruction() != null && userTestManager.GetInstruction() is ShortestPathInstruction)
+                        spInst = ((ShortestPathInstruction)userTestManager.GetInstruction());
+                    else
+                        Debug.Log("Check here");
+
                     // When equal buttons has been clicked, check  whether the input data is correct
-                    int nodeDist = ((ShortestPathInstruction)userTestManager.GetInstruction()).CurrentNode.Dist;
-                    int edgeCost = ((ShortestPathInstruction)userTestManager.GetInstruction()).CurrentEdge.Cost;
+                    int nodeDist = spInst.CurrentNode.Dist;
+                    int edgeCost = spInst.CurrentEdge.Cost;
                     bool correctUserInput = calculator.ControlUserInput(nodeDist, edgeCost);
 
                     // If input data was correct, then progress to next instruction (add only one)
@@ -466,17 +472,17 @@ public class GraphMain : MainManager {
             switch (inst)
             {
                 case UtilGraph.ADD_NODE: listVisual.AddListObject(listVisualInst.Node); break;
-                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(listVisualInst.Node, listVisualInst.Index); break;
+                //case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(listVisualInst.Node, listVisualInst.Index); break;
                 case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
                 case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
                 case UtilGraph.HAS_NODE_REPRESENTATION:
                     Node node = listVisualInst.Node;
                     int index = listVisualInst.Index;
                     bool hasNodeRep = listVisual.HasNodeRepresentation(node);
-                    string subInstruction = listVisualInst.GetCase(hasNodeRep);
+                    //string subInstruction = listVisualInst.GetCase(hasNodeRep);
 
                     if (!hasNodeRep)
-                        PrepareNextInstruction(new ListVisualInstruction(subInstruction, instruction.INSTRUCION_NR, node, index));
+                        listVisual.PriorityAdd(node, index); //PrepareNextInstruction(new ListVisualInstruction(subInstruction, instruction.INSTRUCION_NR, node, index));
                     else
                         StartCoroutine(listVisual.UpdateValueAndPositionOf(node, index));
 

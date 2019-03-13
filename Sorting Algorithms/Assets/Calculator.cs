@@ -21,6 +21,10 @@ public class Calculator : MonoBehaviour {
     private char op;
     private bool calculationInProcess, equalButtonClicked;
 
+    // For graph
+    private string newValueLessThanCurrent;
+    public static readonly string ANSWER_NOT_CHOSEN = "No answer";
+
     private Camera playerCamera;
 
     private Vector3 startPos;
@@ -34,6 +38,7 @@ public class Calculator : MonoBehaviour {
 
     private void Update()
     {
+        // Place the calculator in front of the player
         if (calculationInProcess)
         {
             transform.position = playerCamera.transform.position + new Vector3(0f, -0.25f, 0.4f);
@@ -41,6 +46,7 @@ public class Calculator : MonoBehaviour {
         }
     }
 
+    // Prepare for a new calculation
     public void InitCalculation()
     {
         number1 = new List<int>();
@@ -51,34 +57,52 @@ public class Calculator : MonoBehaviour {
         result = BLANK;
         calculationInProcess = true;
         equalButtonClicked = false;
-        UpdateDisplay(false);
-    }
-
-    public void ValueButtonClick(int value)
-    {
-        if (op == NO_OP_CHOSEN)
-        {
-            number1.Insert(0, value);
-            value1 = ValueOf(number1);
-        }
-        else
-        {
-            number2.Insert(0, value);
-            value2 = ValueOf(number2);
-        }
+        newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
 
         UpdateDisplay(false);
     }
 
-    // Called by one of the operator buttons on the calculator
-    public void OperatorButtonClick(string op)
+    // ------------------------------------- Getters/Setters -------------------------------------
+    public int Value1
     {
-        // if user click operator button then set value 1 as zero
-        if (number1.Count == 0)
-            number1.Add(0);
+        get { return value1; }
+    }
 
-        this.op = char.Parse(op);
-        UpdateDisplay(false);
+    public int Value2
+    {
+        get { return value2; }
+    }
+
+    public int Result
+    {
+        get { return result; }
+    }
+
+    public bool CalculationInProcess
+    {
+        get { return calculationInProcess; }
+    }
+
+    public bool EqualButtonClicked
+    {
+        get { return equalButtonClicked; }
+        set { equalButtonClicked = value; }
+    }
+
+    private int ValueOf(List<int> list)
+    {
+        if (list.Count > 0)
+        {
+            int listLength = list.Count;
+            int result = 0;
+
+            for (int i = 0; i < listLength; i++)
+            {
+                result += (int)Mathf.Pow(10, i) * list[i];
+            }
+            return result;
+        }
+        return BLANK;
     }
 
     private void UpdateDisplay(bool equalButtonClicked)
@@ -107,22 +131,37 @@ public class Calculator : MonoBehaviour {
         displayText.text = text;
     }
 
-    private int ValueOf(List<int> list)
+    // ------------------------------------- Button click -------------------------------------
+
+    // Button 0 - 9 input
+    public void ValueButtonClick(int value)
     {
-        if (list.Count > 0)
+        if (op == NO_OP_CHOSEN)
         {
-            int listLength = list.Count;
-            int result = 0;
-
-            for (int i=0; i < listLength; i++)
-            {
-                result += (int)Mathf.Pow(10, i) * list[i];
-            }
-            return result;
+            number1.Insert(0, value);
+            value1 = ValueOf(number1);
         }
-        return BLANK;
-    } 
+        else
+        {
+            number2.Insert(0, value);
+            value2 = ValueOf(number2);
+        }
 
+        UpdateDisplay(false);
+    }
+
+    // Called by one of the operator buttons on the calculator
+    public void OperatorButtonClick(string op)
+    {
+        // if user click operator button then set value 1 as zero
+        if (number1.Count == 0)
+            number1.Add(0);
+
+        this.op = char.Parse(op);
+        UpdateDisplay(false);
+    }
+
+    // Equal (=) button clicked
     public void EqualButtonClick()
     {
         if (value1 != BLANK && value2 != BLANK)
@@ -143,51 +182,49 @@ public class Calculator : MonoBehaviour {
             displayText.text = "Invalid values";
     }
 
-
+    // Undo (TODO: improve)
     public void Undo()
     {
         InitCalculation();
         UpdateDisplay(false);
     }
 
-    public int Value1
+    public void BooleanButtonClick(bool answer)
     {
-        get { return value1; }
+        if (answer)
+            newValueLessThanCurrent = "yes";
+        else
+            newValueLessThanCurrent = "no";
     }
 
-    public int Value2
-    {
-        get { return value2; }
-    }
 
-    public int Result
-    {
-        get { return result; }
-    }
+    // ------------------------------------- Graph related -------------------------------------
 
-    public bool CalculationInProcess
-    {
-        get { return calculationInProcess; }
-    }
-
-    public bool EqualButtonClicked
-    {
-        get { return equalButtonClicked; }
-        set { equalButtonClicked = value; }
-    }
-
+    // Checks whether the input is correct
     public bool ControlUserInput(int correctValue1, int correctValue2)
     {
         if (correctValue1 == value1 && correctValue2 == value2)
         {
-            StartCoroutine(CalculationFeedback(true));
+            StartCoroutine(InputFeedback(true));
             return true;
         }
-        StartCoroutine(CalculationFeedback(false));
+        StartCoroutine(InputFeedback(false));
         return false;
     }
 
-    private IEnumerator CalculationFeedback(bool correctInput)
+    public bool ControlUserInputBoolean(bool correctAnswer)
+    {
+        if (correctAnswer && newValueLessThanCurrent == "yes")
+        {
+            StartCoroutine(InputFeedback(true));
+            return true;
+        }
+        StartCoroutine(InputFeedback(false));
+        return false;
+    }
+
+    // Gives feedback whether the calculation exercise was performed correctly
+    private IEnumerator InputFeedback(bool correctInput)
     {
         if (correctInput)
             displayBackground.material.color = CORRECT_INPUT_ANSWER_COLOR;
@@ -204,7 +241,9 @@ public class Calculator : MonoBehaviour {
         }
         else
             InitCalculation();
-        
     }
+
+
+
 
 }
