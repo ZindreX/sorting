@@ -13,9 +13,8 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     public void InitSortAlgorithm(SortMain sortMain, float algorithmSpeed)
     {
-        base.InitTeachingAlgorithm(algorithmSpeed);
-
         this.sortMain = sortMain;
+        InitTeachingAlgorithm(algorithmSpeed);
     }
 
     public override void AddSkipAbleInstructions()

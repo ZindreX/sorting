@@ -19,6 +19,11 @@ public class MergeSort : SortAlgorithm {
     [SerializeField]
     private MergeSortManager mergeSortManager;
 
+    [Space(2)]
+    [Header("Info plate")]
+    [SerializeField]
+    private GameObject infoPlate;
+
     private int numberOfElements, numberOfSplits;
     private Vector3 splitHolderPos = new Vector3(0f, 0.2f, 0.2f);
     private Dictionary<int, int[]> holderIndex = new Dictionary<int, int[]>();
@@ -41,6 +46,11 @@ public class MergeSort : SortAlgorithm {
     public override string AlgorithmName
     {
         get { return Util.MERGE_SORT; }
+    }
+
+    public override GameObject InfoPlate
+    {
+        get { return infoPlate; }
     }
 
     public override string CollectLine(int lineNr)

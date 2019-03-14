@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class Dijkstra : GraphAlgorithm, IShortestPath {
 
+    [Space(2)]
+    [Header("Info plate")]
+    [SerializeField]
+    private GameObject infoPlate;
+
+
     private bool objectiveFound = false;
 
     public override string AlgorithmName
     {
         get { return Util.DIJKSTRA; }
+    }
+
+    public override GameObject InfoPlate
+    {
+        get { return infoPlate; }
     }
 
     public override string GetListType()

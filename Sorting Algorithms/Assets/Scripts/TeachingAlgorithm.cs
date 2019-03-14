@@ -29,7 +29,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     {
         demoStepDuration = new WaitForSeconds(algorithmSpeed);
         skipDict = new Dictionary<string, List<string>>();
-
+        
         AddSkipAbleInstructions();
     }
 
@@ -136,5 +136,8 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     */
     public abstract IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotElement);
 
+
+    // Infoplate
+    public abstract GameObject InfoPlate { get; }
 
 }

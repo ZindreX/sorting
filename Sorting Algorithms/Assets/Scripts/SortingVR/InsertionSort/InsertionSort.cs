@@ -15,23 +15,34 @@ public class InsertionSort : SortAlgorithm {
     private GameObject pivotHolderPrefab, sortingTableHoldersObj;
     private GameObject pivotHolderClone;
 
-    private InsertionSortHolder pivotHolder;
-    private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
-
     [SerializeField]
     private InsertionSortManager insertionSortManager;
 
+    [Space(2)]
+    [Header("Info plate")]
+    [SerializeField]
+    private GameObject infoPlate;
+
+    private InsertionSortHolder pivotHolder;
+    private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
+
+
     public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
-        base.InitTeachingAlgorithm(algorithmSpeed);
         tutorialPivotElementHeight = pivotHolderPos + new Vector3(0f, 0.1f, 0f);
         element1Value = "list[i]";
         element2Value = "list[j]";
+        base.InitTeachingAlgorithm(algorithmSpeed);
     }
 
     public override string AlgorithmName
     {
         get { return UtilSort.INSERTION_SORT; }
+    }
+
+    public override GameObject InfoPlate
+    {
+        get { return infoPlate; }
     }
 
     public HolderBase PivotHolder
@@ -653,6 +664,7 @@ public class InsertionSort : SortAlgorithm {
 
             case UtilSort.FIRST_INSTRUCTION:
                 lineOfCode.Add(FirstInstructionCodeLine());
+                lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
                 break;
 
             case UtilSort.FIRST_LOOP:
@@ -664,15 +676,15 @@ public class InsertionSort : SortAlgorithm {
                 break;
 
             case UtilSort.PIVOT_START_INST:
-                value1 = sortingElement.Value;
+                PreparePseudocodeValue(sortingElement.Value, 1); // value1 = sortingElement.Value;
                 UtilSort.IndicateElement(sortingElement.gameObject);
-                useColor = UtilSort.HIGHLIGHT_MOVE_COLOR;
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
 
                 lineOfCode.Add(4);
                 break;
 
             case UtilSort.COMPARE_START_INST:
-                value2 = sortingElement.Value;
+                PreparePseudocodeValue(sortingElement.Value, 2); // value2 = sortingElement.Value;
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
                 lineOfCode.Add(5);
@@ -680,7 +692,7 @@ public class InsertionSort : SortAlgorithm {
 
             case UtilSort.SWITCH_INST:
                 lineOfCode.Add(6);
-                useColor = UtilSort.HIGHLIGHT_MOVE_COLOR;
+                useColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
             case UtilSort.UPDATE_VAR_J:

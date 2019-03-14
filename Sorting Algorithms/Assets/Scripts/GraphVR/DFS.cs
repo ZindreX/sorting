@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class DFS : GraphAlgorithm, ITraverse {
 
+    [Space(2)]
+    [Header("Info plate")]
+    [SerializeField]
+    private GameObject infoPlate;
+
     public override string AlgorithmName
     {
         get { return Util.DFS; }
+    }
+
+    public override GameObject InfoPlate
+    {
+        get { return infoPlate; }
     }
 
     public override string GetListType()

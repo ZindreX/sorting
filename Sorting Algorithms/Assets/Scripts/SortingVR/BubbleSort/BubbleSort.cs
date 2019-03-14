@@ -13,17 +13,26 @@ public class BubbleSort : SortAlgorithm {
     [SerializeField]
     private BubbleSortManager bubbleSortManager;
 
+    [Space(2)]
+    [Header("Info plate")]
+    [SerializeField]
+    private GameObject infoPlate;
+
     public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
-        base.InitTeachingAlgorithm(algorithmSpeed);
         element1Value = "list[j]";
         element2Value = "list[j + 1]";
+        base.InitTeachingAlgorithm(algorithmSpeed);
     }
-
 
     public override string AlgorithmName
     {
         get { return UtilSort.BUBBLE_SORT; }
+    }
+
+    public override GameObject InfoPlate
+    {
+        get { return infoPlate; }
     }
 
     public override void AddSkipAbleInstructions()
@@ -391,6 +400,8 @@ public class BubbleSort : SortAlgorithm {
     #region User test display pseudocode as support
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
+        Debug.Log(instruction.DebugInfo());
+
         // Gather information from instruction
         BubbleSortElement se1 = null, se2 = null;
         int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
@@ -415,7 +426,7 @@ public class BubbleSort : SortAlgorithm {
         }
 
         // Gather part of code to highlight
-        List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
+        List<int> lineOfCode = new List<int>();
         Color useColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
@@ -432,8 +443,10 @@ public class BubbleSort : SortAlgorithm {
 
             case UtilSort.COMPARE_START_INST:
                 lineOfCode.Add(4);
-                value1 = se1.Value;
-                value2 = se2.Value;
+                PreparePseudocodeValue(se1.Value, 1);
+                PreparePseudocodeValue(se2.Value, 2);
+                //value1 = se1.Value;
+                //value2 = se2.Value;
 
                 UtilSort.IndicateElement(se1.gameObject);
                 UtilSort.IndicateElement(se2.gameObject);
