@@ -98,6 +98,8 @@ public abstract class Edge : MonoBehaviour {
     private void ChangeApperance(Color color)
     {
         GetComponentInChildren<Renderer>().material.color = color;
+
+        // Demo
         if (color == UtilGraph.TRAVERSE_COLOR)
         {
             costText.color = color;

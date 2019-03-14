@@ -13,6 +13,11 @@ public class GraphMain : MainManager {
     public GameObject symmetricDirectedEdgePrefab;
 
     [Space(5)]
+    [Header("Containers")]
+    [SerializeField]
+    public GameObject nodeContainerObject, edgeContainerObject;
+
+    [Space(5)]
     [Header("Environment objects")]
     [SerializeField]
     private GameObject settingsObj;
@@ -48,7 +53,9 @@ public class GraphMain : MainManager {
     // Backtracking shortest path, userTestGoalActive: move to node, usingCalculator: calculation in process to progress
     private bool backtracking = false, userTestGoalActive = false, usingCalculator = false;
 
-
+    [Header("Debugging")]
+    [SerializeField]
+    private bool doManually;
 
     protected virtual void Awake()
     {
@@ -94,11 +101,12 @@ public class GraphMain : MainManager {
                 // Check if it's in process and whether the equal button has been clicked
                 if (calculator.CalculationInProcess && calculator.EqualButtonClicked)
                 {
+                    InstructionBase inst = userTestManager.GetInstruction();
                     ShortestPathInstruction spInst = null;
-                    if (userTestManager.GetInstruction() != null && userTestManager.GetInstruction() is ShortestPathInstruction)
+                    if (inst != null && inst.Instruction == UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN)
                         spInst = ((ShortestPathInstruction)userTestManager.GetInstruction());
                     else
-                        Debug.Log("Check here");
+                        return;
 
                     // When equal buttons has been clicked, check  whether the input data is correct
                     int nodeDist = spInst.CurrentNode.Dist;
@@ -152,7 +160,10 @@ public class GraphMain : MainManager {
             if (graphAlgorithm.ShortestPathOneToAll)
                 StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
             else
+            {
+                listVisual.CreateBackTrackList(graphManager.EndNode);
                 StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
+            }
             backtracking = true;
         }
     }
@@ -256,11 +267,8 @@ public class GraphMain : MainManager {
 
         // >>> Init Algorithm
         graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
-        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed);
-
-        // Extra settings
-        graphAlgorithm.ShortestPathOneToAll = shortestPathOneToAll;
-        graphAlgorithm.VisitLeftFirst = visitLeftFirst;
+        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed, shortestPathOneToAll);
+        graphAlgorithm.VisitLeftFirst = visitLeftFirst; // needed? remove? fix under tree settings?
 
         // >>> Init position manager
         bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
@@ -279,7 +287,7 @@ public class GraphMain : MainManager {
 
         // >>> Init Graph manager
         graphManager = ActivateDeactivateGraphComponents(graphSettings.GraphStructure);
-        graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict());
+        graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict(), listVisual);
 
         // Graph setup (rows/colums - tree depth/nTree - random?)
         graphManager.InitGraph(graphSetup);
@@ -487,6 +495,8 @@ public class GraphMain : MainManager {
                         StartCoroutine(listVisual.UpdateValueAndPositionOf(node, index));
 
                     break;
+                case UtilGraph.END_NODE_FOUND: break;
+                case UtilGraph.PREPARE_BACKTRACKING: listVisual.CreateBackTrackList(graphManager.EndNode); break;
                 default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
             }
             BeginnerWait = false; // ???
@@ -514,6 +524,15 @@ public class GraphMain : MainManager {
 
                     // Give this sorting element permission to give feedback to progress to next intstruction
                     node.NextMove = NextIsUserMove(inst);
+
+                    // Traverse instruction extra
+                    switch (inst)
+                    {
+                        case UtilGraph.PRIORITY_REMOVE_NODE:
+                            // Highlight the node we currently work at
+                            node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                            break;
+                    }
                 }
                 else if (instruction is ShortestPathInstruction)
                 {
@@ -533,6 +552,28 @@ public class GraphMain : MainManager {
 
                     // Give this sorting element permission to give feedback to progress to next intstruction
                     node.NextMove = NextIsUserMove(inst);
+
+                    // Shortest path extra
+                    switch (inst)
+                    {
+                        case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
+                            // Since we highlighted the color and/or text position of the node/edge we are working on (highlighting purpose) in the previous instruction, now we reset them
+                            // Changed color of node
+                            shortestPathInst.ConnectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
+                            // Reset text color/position of the edge cost
+                            shortestPathInst.CurrentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+
+                            // Perform sub task: calculate dist (current node) + edge cost to the connected node
+                            if (doManually)
+                            {
+                                usingCalculator = true;
+                                calculator.InitCalculation();
+                            }
+                            else
+                                return 1;
+
+                            break;
+                    }
                 }
             }
 
@@ -543,14 +584,15 @@ public class GraphMain : MainManager {
                 StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode));// && !noDestination));
             }
 
-
+            // InstructionBase extra
             switch (inst)
             {
                 case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesToInf(); break;
                 case UtilGraph.SET_START_NODE_DIST_TO_ZERO: graphManager.StartNode.Dist = 0; break;
-                case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
-                    usingCalculator = true;
-                    calculator.InitCalculation();
+                case UtilGraph.MARK_END_NODE:
+                    Node endNode = graphManager.EndNode;
+                    endNode.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                    endNode.PrevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
                     break;
             }
 

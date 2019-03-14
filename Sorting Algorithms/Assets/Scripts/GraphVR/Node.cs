@@ -39,6 +39,9 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     private bool traversed, visited; // need traversed? just check if in list/stack...
 
     [SerializeField]
+    private Edge currentEdge;
+
+    [SerializeField]
     private Edge prevEdge;
 
     [SerializeField]
@@ -258,7 +261,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         prevEdge = null;
         Dist = UtilGraph.INIT_NODE_VALUE;
         CurrentColor = Util.STANDARD_COLOR;
-        isEndNode = false;
+
+        //isEndNode = false;
     }
 
     // --------------------------------------- User test ---------------------------------------
@@ -279,6 +283,68 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 nodeInstruction = (ShortestPathInstruction)value;
                 
             UpdateNodeState();
+        }
+    }
+
+    // Update the node status based on the instruction
+    protected void UpdateNodeState()
+    {
+        if (nodeInstruction != null)
+        {
+            Debug.Log(nodeInstruction.DebugInfo());
+
+            // Debugging
+            instruction = nodeInstruction.Instruction;
+            switch (instruction)
+            {
+                case Util.INIT_INSTRUCTION: status = "Init pos"; break;
+                case UtilGraph.ENQUEUE_NODE_INST: // BFS
+                case UtilGraph.PUSH_INST: // DFS
+                case UtilGraph.ADD_NODE: // Dijkstra
+                case UtilGraph.VISIT_CONNECTED_NODE: // Dijkstra <- // PRIORITY_ADD_NODE ?
+                    status = "Shot node";
+                    break;
+
+                case UtilGraph.DEQUEUE_NODE_INST: // BFS
+                case UtilGraph.POP_INST: // DFS
+                case UtilGraph.PRIORITY_REMOVE_NODE: // Dijkstra
+                    status = "Move to node";
+                    break;
+
+                case UtilGraph.BACKTRACK: status = "Backtracking moving from end to start node"; break;
+
+                case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
+                default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
+            }
+
+            // This node is the next to be visited (shot at)
+            if (nodeInstruction is TraverseInstruction)
+            {
+                TraverseInstruction travInst = (TraverseInstruction)nodeInstruction;
+                if (travInst.VisitInst)
+                    visitNextMove = true;
+
+                // This node is the next to be traversed (player move to node)
+                if (travInst.TraverseInst)
+                    traverseNextMove = true;
+
+                // Set the edge between the node we traversed from to reach this node
+                if (travInst.PrevEdge != null)
+                {
+                    switch (algorithm)
+                    {
+                        case Util.BFS: case Util.DFS: prevEdge = travInst.PrevEdge; break;
+                        case Util.DIJKSTRA: currentEdge = travInst.PrevEdge; break;
+                    }
+                }
+            }
+            else if (nodeInstruction is ShortestPathInstruction)
+            {
+                ShortestPathInstruction spInst = (ShortestPathInstruction)nodeInstruction;
+
+                if (spInst.PrevEdge != null)
+                    PrevEdge = spInst.PrevEdge;
+            }
         }
     }
 
@@ -306,8 +372,17 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                     // Mark as visited, and change color of visited node & edge leading to this node
                     Visited = true;
-                    if (prevEdge != null)
-                        prevEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+
+                    if (algorithm == Util.DIJKSTRA)
+                    {
+                        if (currentEdge != null)
+                            currentEdge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                    }
+                    else
+                    {
+                        if (prevEdge != null)
+                            prevEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+                    }
 
                     //graphMain.UpdateListVisual(UtilGraph.ADD_NODE, this, Util.NO_VALUE);
                     graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
@@ -318,12 +393,18 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                     // Mark as traversed, and change color of visited node & edge leading to this node
                     Traversed = true;
-                    if (prevEdge != null && nodeInstruction is TraverseInstruction)
+                    if (prevEdge != null && algorithm != Util.DIJKSTRA)
                         prevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-
 
                     //graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, this, Util.NO_VALUE);
                     graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
+                    break;
+
+                case UtilGraph.NODE_BACKTRACKED:
+                    if (prevEdge != null)
+                        prevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                    CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
                     break;
 
                 case Util.INIT_ERROR:
@@ -387,121 +468,14 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 case UtilGraph.PRIORITY_REMOVE_NODE:
                     return traverseNextMove ? UtilGraph.NODE_TRAVERSED : UtilGraph.NODE_ERROR;
 
+                case UtilGraph.BACKTRACK:
+                    return traverseNextMove ? UtilGraph.NODE_BACKTRACKED : UtilGraph.NODE_ERROR;
+
                 default: return UtilGraph.NODE_ERROR;
             }
         }
         return UtilSort.CANNOT_VALIDATE_ERROR;
     }
-
-    protected void UpdateNodeState()
-    {
-        if (nodeInstruction != null)
-        {
-            Debug.Log(nodeInstruction.DebugInfo());
-
-            // Debugging
-            instruction = nodeInstruction.Instruction;
-            switch (instruction)
-            {
-                case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-                case UtilGraph.ENQUEUE_NODE_INST: // BFS
-                case UtilGraph.PUSH_INST: // DFS
-                case UtilGraph.ADD_NODE: // Dijkstra
-                case UtilGraph.VISIT_CONNECTED_NODE: // Dijkstra <- // PRIORITY_ADD_NODE ?
-                    status = "Shot node";
-                    break;
-
-                case UtilGraph.DEQUEUE_NODE_INST: // BFS
-                case UtilGraph.POP_INST: // DFS
-                case UtilGraph.PRIORITY_REMOVE_NODE: // Dijkstra
-                    status = "Move to node";
-                    break;
-
-                case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
-                default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
-            }
-
-            // This node is the next to be visited (shot at)
-            if (nodeInstruction is TraverseInstruction)
-            {
-                TraverseInstruction travInst = (TraverseInstruction)nodeInstruction;
-                if (travInst.VisitInst)
-                    visitNextMove = true;
-
-                // This node is the next to be traversed (player move to node)
-                if (travInst.TraverseInst)
-                    traverseNextMove = true;
-
-                // Set the edge between the node we traversed from to reach this node
-                if (travInst.PrevEdge != null)
-                    prevEdge = travInst.PrevEdge;
-            }
-            else if (nodeInstruction is ShortestPathInstruction)
-            {
-                ShortestPathInstruction spInst = (ShortestPathInstruction)nodeInstruction;
-
-                if (spInst.PrevEdge != null)
-                    PrevEdge = spInst.PrevEdge;
-            }
-
-        }
-    }
-
-    // remove when done
-    public void PerformUserMove()
-    {
-        // Check if the user moved the element to a new holder,         TODO: in case of mistake -> avoid new error when fixing the mistake
-        if (true) //holder.HolderID != prevHolderID)
-        {
-            //CurrentStandingOn = holder;
-            userMove++;
-            //holder.HasPermission = true;
-
-            if (validatedUserMove < userMove)
-            {
-                string validation = ""; //IsCorrectlyPlaced();
-                switch (validation)
-                {
-                    case UtilSort.INIT_OK:
-                        //standingInCorrectHolder = true;
-                        break;
-
-                    case UtilSort.CORRECT_HOLDER:
-                        //standingInCorrectHolder = true;
-                        //parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
-                        break;
-
-                    case UtilSort.INIT_ERROR:
-                    case UtilSort.WRONG_HOLDER:
-                        //standingInCorrectHolder = false;
-                        ////parent.GetComponent<ScoreManager>().Mistake();
-                        break;
-
-                    default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Add '" + validation + "' case, or ignore"); break;
-                }
-
-                // Mark instruction as executed if correct
-                if (true) //standingInCorrectHolder && !IntermediateMove)
-                {
-                    //Instruction.Status = Util.EXECUTED_INST;
-                    status = UtilSort.EXECUTED_INST; // + "***"; // Debugging
-
-                    // Check if ready for next round
-                    if (NextMove)
-                    {
-                        //parent.GetComponent<UserTestManager>().ReadyForNext += 1;
-                        NextMove = false;
-                    }
-                }
-                validatedUserMove++;
-            }
-        }
-        else
-            Debug.Log("Back to the same");
-            //CurrentStandingOn = holder; // Back to the same
-                                        //standingInCorrectHolder = true;
-    }
-
 
     // Instruction methods end
 

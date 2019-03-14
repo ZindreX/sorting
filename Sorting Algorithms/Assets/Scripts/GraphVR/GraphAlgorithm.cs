@@ -23,12 +23,13 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     // Instruction variables
     protected int prevHighlightedLineOfCode;
 
-    public void InitGraphAlgorithm(GraphMain graphMain, string graphStructure, float algorithmSpeed)
+    public void InitGraphAlgorithm(GraphMain graphMain, string graphStructure, float algorithmSpeed, bool shortestPathOnToAll)
     {
         base.InitTeachingAlgorithm(algorithmSpeed);
 
         this.graphMain = graphMain;
         this.graphStructure = graphStructure;
+        this.shortestPathOnToAll = shortestPathOnToAll;
     }
 
     public override void AddSkipAbleInstructions()

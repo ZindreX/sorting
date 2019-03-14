@@ -29,6 +29,7 @@ public class NodeRepresentation : MonoBehaviour {
         this.node = node;
         UpdateIndexPosition(index);
         coordinateIndex = transform.position;
+        name = "NodeRep " + node.NodeAlphaID + " (" + index + ")";
     }
 
     public Node Node
@@ -45,7 +46,7 @@ public class NodeRepresentation : MonoBehaviour {
     public int ListIndex
     {
         get { return listIndex; }
-        set { listIndex = value; }
+        set { listIndex = value; name = "NodeRep " + node.NodeAlphaID + " (" + value + ")"; }
     }
 
     public IEnumerator HighlightNodeRepresentation(Color color, float seconds)

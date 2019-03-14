@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class GraphManager : MonoBehaviour {
 
     protected GameObject nodePrefab, undirectedEdgePrefab, directedEdgePrefab, symmetricDirectedEdgePrefab;
+    protected GameObject nodeContainerObject, edgeContainerObject;
 
     protected bool isShortestPath;
     protected string algorithmName, graphStructure, edgeType;
@@ -13,19 +14,25 @@ public abstract class GraphManager : MonoBehaviour {
     private Node startNode, endNode;
     private Dictionary<string, int> rngDict;
 
-    public void InitGraphManager(string algorithmName, string graphStructure, string edgeType, bool isShortestPath, Dictionary<string, int> rngDict)
+    private ListVisual listVisual;
+
+    public void InitGraphManager(string algorithmName, string graphStructure, string edgeType, bool isShortestPath, Dictionary<string, int> rngDict, ListVisual listVisual)
     {
         this.algorithmName = algorithmName;
         this.graphStructure = graphStructure;
         this.edgeType = edgeType;
         this.isShortestPath = isShortestPath;
         this.rngDict = rngDict;
+        this.listVisual = listVisual;
 
         GraphMain graphMain = GetComponent<GraphMain>();
         nodePrefab = graphMain.nodePrefab;
         undirectedEdgePrefab = graphMain.undirectedEdgePrefab;
         directedEdgePrefab = graphMain.directedEdgePrefab;
         symmetricDirectedEdgePrefab = graphMain.symmetricDirectedEdgePrefab;
+
+        nodeContainerObject = graphMain.nodeContainerObject;
+        edgeContainerObject = graphMain.edgeContainerObject;
     }
 
     public int LookUpRNGDict(string key)
@@ -86,6 +93,7 @@ public abstract class GraphManager : MonoBehaviour {
         }
         edge.GetComponent<Edge>().SetAngle(angle);   
         edge.GetComponent<Edge>().SetLength(length);
+        edge.transform.parent = edgeContainerObject.transform;
 
         if (testIsland)
         {
@@ -118,6 +126,10 @@ public abstract class GraphManager : MonoBehaviour {
         // Start backtracking from end node back to start node
         while (node != null)
         {
+            // Node representation
+            listVisual.RemoveCurrentNode();
+            yield return demoStepDuration;
+
             // Change color of node
             node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
 
@@ -138,6 +150,46 @@ public abstract class GraphManager : MonoBehaviour {
             if (backtrackEdge is DirectedEdge)
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
             yield return demoStepDuration;
+
+            listVisual.DestroyCurrentNode();
+
+            yield return demoStepDuration;
+        }
+    }
+
+    // User test backtracking
+    public void ShortestPatBacktrackingInstructions(Dictionary<int, InstructionBase> instructions, int instNr)
+    {
+        // Start backtracking from end node back to start node
+        Node node = EndNode;
+        instructions.Add(instNr++, new InstructionBase(UtilGraph.MARK_END_NODE, instNr));
+
+        // Fix list visual
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PREPARE_BACKTRACKING, instNr, null));
+
+        while (node != null)
+        {
+            // Drag current node out
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, node));
+
+            // Change color of edge leading to previous node
+            Edge backtrackEdge = node.PrevEdge;
+
+            if (backtrackEdge == null)
+                break;
+
+            // Set "next" node
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
+
+            node = backtrackEdge.OtherNodeConnected(node);
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.BACKTRACK, instNr, node, false, true));
+
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
+
+            // Destroy node rep
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, null));
         }
     }
 

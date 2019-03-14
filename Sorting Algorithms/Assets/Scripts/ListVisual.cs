@@ -21,6 +21,9 @@ public class ListVisual : MonoBehaviour {
     [SerializeField]
     public GameObject listObjPrefab, listRoof;
 
+    [SerializeField]
+    private GameObject nodeRepContainerObject;
+
     private string listType;
 
     [SerializeField]
@@ -83,6 +86,7 @@ public class ListVisual : MonoBehaviour {
         listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, index);
         listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID.ToString());
         listObject.GetComponent<MoveObject>().SetDestination(pos);
+        listObject.transform.parent = nodeRepContainerObject.transform;
         return listObject.GetComponent<NodeRepresentation>();
     }
 
@@ -169,7 +173,8 @@ public class ListVisual : MonoBehaviour {
         // Move object to current node location
         currentNodeRep.MoveNodeRepresentation(currentNodePoint.position);
         currentNodeRep.CurrentColor = UtilGraph.CURRENT_NODE_COLOR;
-        
+        currentNode.name = name = "NodeRep " + currentNodeRep.Node.NodeAlphaID + " (X)";
+
         if (moveOther)
         {
             // Move other elements in Queue/Priority list
@@ -264,6 +269,42 @@ public class ListVisual : MonoBehaviour {
     {
         if (currentNode != null)
             Destroy(currentNode.gameObject);
+    }
+
+    public void ClearList()
+    {
+        foreach (NodeRepresentation nodeRep in nodeRepresentations)
+        {
+            Destroy(nodeRep.gameObject);
+        }
+        nodeRepresentations = new List<NodeRepresentation>();
+    }
+
+
+    public void CreateBackTrackList(Node node)
+    {
+        ClearList();
+        listType = Util.QUEUE;
+
+        while (node != null)
+        {
+            AddListObject(node);
+
+            // Change color of edge leading to previous node
+            Edge backtrackEdge = node.PrevEdge;
+
+            if (backtrackEdge == null)
+                break;
+
+            // Set "next" node
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
+
+            node = backtrackEdge.OtherNodeConnected(node);
+
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = false;
+        }
     }
 
 

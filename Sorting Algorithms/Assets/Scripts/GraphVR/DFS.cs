@@ -276,8 +276,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                     // Line 8: Push node on top of stack
                     stack.Push(connectedNode);
                     connectedNode.Visited = true;
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, true, false));
-                    ((TraverseInstruction)instructions[instNr - 1]).PrevEdge = edge;
+                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, edge, true, false));
                     instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode));
                 }
                 // Line 10: End if statement

@@ -47,7 +47,7 @@ public class UtilGraph : Util {
 
     // *** Instructions ***
     // Validation
-    public const string NODE_VISITED = "Node visited", NODE_TRAVERSED = "Node traversed", NODE_ERROR = "Node error";
+    public const string NODE_VISITED = "Node visited", NODE_TRAVERSED = "Node traversed", NODE_BACKTRACKED = "Node backtracked", NODE_ERROR = "Node error";
 
     // Common graph instructions
     public const string EMPTY_LIST_CONTAINER = "Empty list inst", WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";
@@ -62,13 +62,17 @@ public class UtilGraph : Util {
     // Dijkstra
     public const string SET_ALL_NODES_TO_INFINITY = "Set all nodes to infinity", SET_START_NODE_DIST_TO_ZERO = "Set start node dist to zero", PRIORITY_REMOVE_NODE = "Priority remove node", VISIT_CONNECTED_NODE = "Visit connected node";
     public const string IF_DIST_PLUS_EDGE_COST_LESS_THAN = "If dist plus edge cost less than", UPDATE_CONNECTED_NODE_DIST = "Update connected node dist", UPDATE_CONNECTED_NODE_PREV_EDGE = "Update connected node prev edge";
-    public const string UPDATE_LIST_VISUAL_VALUE_AND_POSITION = "Update list visual value and position";
+    public const string UPDATE_LIST_VISUAL_VALUE_AND_POSITION = "Update list visual value and position", END_NODE_FOUND = "End node found";
+
+    // Backtracking
+    public const string MARK_END_NODE = "Mark end node", BACKTRACK = "Backtrack";
 
 
 
     // ----------------------------------------- List visual -----------------------------------------
     public const string ADD_NODE = "Add node", PRIORITY_ADD_NODE = "Priority add node", REMOVE_CURRENT_NODE = "Remove current node";
     public const string DESTROY_CURRENT_NODE = "Destroy current node", HAS_NODE_REPRESENTATION = "Has node representation";
+    public const string PREPARE_BACKTRACKING = "Prepare backtracking";
 
     // Spacing
     public static float SPACE_BETWEEN_CODE_LINES = 0.6f;

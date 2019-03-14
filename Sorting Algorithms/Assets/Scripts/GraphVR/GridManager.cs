@@ -54,7 +54,9 @@ public class GridManager : GraphManager {
                 GameObject node = Instantiate(nodePrefab, new Vector3(xPos, 0f, zPos), Quaternion.identity);
                 node.AddComponent<GridNode>();
                 node.GetComponent<GridNode>().InitGridNode(algorithmName, new int[2] { z, x });
+                node.transform.parent = nodeContainerObject.transform;
                 gridNodes[z, x] = node.GetComponent<GridNode>();
+
             }
         }
 

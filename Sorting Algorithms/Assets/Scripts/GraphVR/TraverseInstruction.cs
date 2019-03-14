@@ -13,6 +13,14 @@ public class TraverseInstruction : InstructionBase {
         this.traverseInst = traverseInst;
     }
 
+    public TraverseInstruction(string instruction, int instructionNr, Node node, Edge prevEdge, bool visitInst, bool traverseInst) : base(instruction, instructionNr)
+    {
+        this.node = node;
+        this.prevEdge = prevEdge;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
+    }
+
     public Node Node
     {
         get { return node; }
@@ -31,7 +39,6 @@ public class TraverseInstruction : InstructionBase {
     public Edge PrevEdge
     {
         get { return prevEdge; }
-        set { prevEdge = value; }
     }
 
     public override string DebugInfo()

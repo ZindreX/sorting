@@ -203,8 +203,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                     // Line 8: Enqueue node
                     queue.Enqueue(connectedNode);
                     connectedNode.Visited = true;
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, connectedNode, true, false));
-                    ((TraverseInstruction)instructions[instNr - 1]).PrevEdge = edge;
+                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, connectedNode, edge, true, false));
                     instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode));
                 }
                 instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));

@@ -90,7 +90,6 @@ public class Pointer : MonoBehaviour {
                         {
                             graphMain.GraphManager.EndNode = node;
                             graphMain.GraphSettings.SelectStartEndNodes = false;
-                            StartCoroutine(graphMain.SetAutomaticallyImportantNodes());
                         }
                         prevNodeShot = null;
                     }
