@@ -7,7 +7,7 @@ public class PositionManager : MonoBehaviour {
 
     [Header("Goal(s)")]
     [SerializeField]
-    private Node currentGoal, reportedNode, prevPerformedUserMove;
+    private Node currentGoal, reportedNode, previousNode;
 
     private bool showDistance, playerWithinGoalPosition;
     private TextMeshPro playerPositionText, nodeDistText;
@@ -39,12 +39,24 @@ public class PositionManager : MonoBehaviour {
                 PlayerWithinGoalPosition = false;
         }
 
+        if (reportedNode != null && previousNode != null)
+        {
+            if (reportedNode != previousNode)
+                previousNode.DisplayNodeInfo();
+        }
+
     }
 
     public void ReportPlayerOnNode(Node node)
     {
+        // Set previous node
+        if (node != reportedNode)
+            previousNode = reportedNode;
+
+        // Set reported node
         reportedNode = node;
 
+        // Display information about the node the player currently is standing on
         playerPositionText.text = "Player position: " + node.NodeAlphaID;
         if (showDistance)
             nodeDistText.text = "Node dist: " + UtilGraph.ConvertDist(node.Dist);
@@ -56,10 +68,15 @@ public class PositionManager : MonoBehaviour {
         set { playerWithinGoalPosition = false; currentGoal = value; }
     }
 
-    public Node PrevPerformedUserMove
+    public Node ReportedNode
     {
-        get { return prevPerformedUserMove; }
-        set { prevPerformedUserMove = value; }
+        get { return reportedNode; }
+    }
+
+    public Node PreviousNode
+    {
+        get { return previousNode; }
+        set { previousNode = value; }
     }
 
     public bool PlayerWithinGoalPosition

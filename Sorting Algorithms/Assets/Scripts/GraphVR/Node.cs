@@ -107,7 +107,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     private void Update()
     {
-        if (playerCamera != null)
+        if (playerCamera != null && positionManager.ReportedNode != this)
         {
             Vector3 playerPos = playerCamera.transform.position;
 
@@ -122,17 +122,19 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             // If so report it
             if (playerRelToNodeX < withinNode && playerRelToNodeZ < withinNode)
             {
-                // Report 
-                positionManager.ReportPlayerOnNode(this);
+                // Hide text
+                textNodeDist.text = "";
+                textNodeID.text = "";
+
 
                 // Perform user move first
-                if (positionManager.PrevPerformedUserMove != this)
+                if (positionManager.ReportedNode != this)
                 {
-                    PerformUserMove(false);
-                    positionManager.PrevPerformedUserMove = this;
+                    // Report 
+                    positionManager.ReportPlayerOnNode(this);
+                    // Perform user move (traverse)
+                    PerformUserMove(UtilGraph.NODE_TRAVERSED);
                 }
-
-
             }
         }
     }
@@ -154,6 +156,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             textNodeID.text = UtilGraph.ConvertIDToAlphabet(nodeID).ToString();
         else
             textNodeID.text = nodeID.ToString();
+    }
+
+    // Used by position manager to turn on text again
+    public void DisplayNodeInfo()
+    {
+        SetNodeTextID(true);
+        textNodeDist.text = dist.ToString();
     }
 
     public bool IsStartNode
@@ -321,6 +330,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             if (nodeInstruction is TraverseInstruction)
             {
                 TraverseInstruction travInst = (TraverseInstruction)nodeInstruction;
+
+                // If visit (shoot at node)
                 if (travInst.VisitInst)
                     visitNextMove = true;
 
@@ -349,17 +360,19 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     }
 
     private bool shootStatus, traverseStatus;
-    public void PerformUserMove(bool isShot)
+    public void PerformUserMove(string userAction)
     {
         userMove++;
 
         if (validatedUserMove < userMove)
         {
             string validation = "";
-            if (isShot)
-                validation = IsCorrectlyShot();
-            else
-                validation = IsCorrectlyTraversed();
+            switch (userAction)
+            {
+                case UtilGraph.NODE_VISITED: validation = IsCorrectlyShot(); break;
+                case UtilGraph.NODE_TRAVERSED: validation = IsCorrectlyTraversed(); break;
+                default: Debug.LogError("Invalid user move: " + userAction); break;
+            }
 
             switch (validation)
             {
@@ -404,6 +417,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     if (prevEdge != null)
                         prevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
 
+                    traverseStatus = true;
                     CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
                     break;
 
@@ -419,9 +433,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             }
         }
 
-        if (shootStatus || shootStatus)
+        if (shootStatus || traverseStatus)
         {
             status = Util.EXECUTED_INST;
+            // Reset
+            shootStatus = false;
+            traverseStatus = false;
 
             if (NextMove)
             {
@@ -469,6 +486,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     return traverseNextMove ? UtilGraph.NODE_TRAVERSED : UtilGraph.NODE_ERROR;
 
                 case UtilGraph.BACKTRACK:
+                    Debug.Log("Backtracking check: " + traverseNextMove);
                     return traverseNextMove ? UtilGraph.NODE_BACKTRACKED : UtilGraph.NODE_ERROR;
 
                 default: return UtilGraph.NODE_ERROR;

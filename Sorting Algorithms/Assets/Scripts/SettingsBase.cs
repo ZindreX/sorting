@@ -47,8 +47,7 @@ public abstract class SettingsBase : MonoBehaviour {
             else
                 Debug.LogError("Section already in dict: " + sectionID);
         }
-
-        Debug.Log("Number of sections added: " + settingsSections.Count);
+        //Debug.Log("Number of sections added: " + settingsSections.Count);
     }
 
 

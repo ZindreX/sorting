@@ -46,7 +46,12 @@ public class ListVisual : MonoBehaviour {
 
     public void DestroyAndReset()
     {
+        // Destroy list objects
+        ClearList();
+
+        // Reset variables
         nodeRepresentations = null;
+        currentNode = null;
         seconds = 0f;
     }
 
@@ -75,7 +80,8 @@ public class ListVisual : MonoBehaviour {
     // An invisible roof is is kept above the list to prevent it from getting buddy (jumping away etc.)
     private void UpdateListRoofPosition()
     {
-        listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, nodeRepresentations.Count + 2f, spawnPointList.transform.position.z);
+        if (nodeRepresentations != null)
+            listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, nodeRepresentations.Count + 2f, spawnPointList.transform.position.z);
     }
 
     // Creates a new node representation of a visited node
@@ -172,7 +178,7 @@ public class ListVisual : MonoBehaviour {
     {
         // Move object to current node location
         currentNodeRep.MoveNodeRepresentation(currentNodePoint.position);
-        currentNodeRep.CurrentColor = UtilGraph.CURRENT_NODE_COLOR;
+        currentNodeRep.CurrentColor = UtilGraph.TRAVERSE_COLOR;
         currentNode.name = name = "NodeRep " + currentNodeRep.Node.NodeAlphaID + " (X)";
 
         if (moveOther)
@@ -277,6 +283,10 @@ public class ListVisual : MonoBehaviour {
         {
             Destroy(nodeRep.gameObject);
         }
+
+        if (currentNode != null)
+            Destroy(currentNode.gameObject);
+
         nodeRepresentations = new List<NodeRepresentation>();
     }
 

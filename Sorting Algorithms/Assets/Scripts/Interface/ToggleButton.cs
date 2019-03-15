@@ -20,6 +20,11 @@ public class ToggleButton : SettingsMenuButton {
         ChangeAppearance(offText, offMaterial);
     }
 
+    public bool State
+    {
+        get { return state; }
+    }
+
     public void InitToggleButton(bool state)
     {
         if (state)

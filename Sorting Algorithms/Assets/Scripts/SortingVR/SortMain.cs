@@ -82,6 +82,10 @@ public class SortMain : MainManager {
      * > Called from UserController
      * > Creates the holders and the sorting elements
     */
+    protected override void PerformAnyCheck()
+    {
+
+    }
     public override void InstantiateSetup()
     {
         // Get values from settings

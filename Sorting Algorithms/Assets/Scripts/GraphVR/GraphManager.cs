@@ -10,6 +10,7 @@ public abstract class GraphManager : MonoBehaviour {
 
     protected bool isShortestPath;
     protected string algorithmName, graphStructure, edgeType;
+    protected List<GameObject> edges;
 
     private Node startNode, endNode;
     private Dictionary<string, int> rngDict;
@@ -25,6 +26,10 @@ public abstract class GraphManager : MonoBehaviour {
         this.rngDict = rngDict;
         this.listVisual = listVisual;
 
+        // Init edges
+        edges = new List<GameObject>();
+
+        // Cleanup?
         GraphMain graphMain = GetComponent<GraphMain>();
         nodePrefab = graphMain.nodePrefab;
         undirectedEdgePrefab = graphMain.undirectedEdgePrefab;
@@ -94,6 +99,7 @@ public abstract class GraphManager : MonoBehaviour {
         edge.GetComponent<Edge>().SetAngle(angle);   
         edge.GetComponent<Edge>().SetLength(length);
         edge.transform.parent = edgeContainerObject.transform;
+        edges.Add(edge);
 
         if (testIsland)
         {
@@ -165,7 +171,7 @@ public abstract class GraphManager : MonoBehaviour {
         instructions.Add(instNr++, new InstructionBase(UtilGraph.MARK_END_NODE, instNr));
 
         // Fix list visual
-        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PREPARE_BACKTRACKING, instNr, null));
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PREPARE_BACKTRACKING, instNr));
 
         while (node != null)
         {
@@ -189,7 +195,19 @@ public abstract class GraphManager : MonoBehaviour {
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
 
             // Destroy node rep
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, null));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
+        }
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
+    }
+
+
+
+    // Delete graph
+    public virtual void DeleteGraph()
+    {
+        foreach (GameObject edge in edges)
+        {
+            Destroy(edge);
         }
     }
 
@@ -215,9 +233,6 @@ public abstract class GraphManager : MonoBehaviour {
 
     // Reset graph (prepare for User Test)
     public abstract void ResetGraph();
-
-    // Delete graph
-    public abstract void DeleteGraph();
 
     // ------------------ Shortest path ------------------ 
 

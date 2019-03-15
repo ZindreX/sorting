@@ -94,14 +94,32 @@ public class DFS : GraphAlgorithm, ITraverse {
         lengthOfList = "1";
         while (stack.Count > 0)
         {
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Line 4: Update while-loop
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             // Line 5: Pop node from stack
             Node currentNode = stack.Pop();
             graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.RemoveCurrentNode(); // Node Representation
             SetNodePseudoCode(currentNode, 1);
             yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             // When visiting current node, change color of edge leading to this node
             if (currentNode.PrevEdge != null)
@@ -110,8 +128,20 @@ public class DFS : GraphAlgorithm, ITraverse {
                 yield return demoStepDuration;
             }
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR; //
             yield return demoStepDuration;
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             // Line 6: Update for-loop (leaf nodes)
             if (currentNode.Edges.Count == 0)
@@ -120,12 +150,30 @@ public class DFS : GraphAlgorithm, ITraverse {
                 yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
             }
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Go through each edge connected to current node
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 // Line 6: Update for-loop
                 this.i = i;
                 yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
 
                 // Fix index according to chosen behavior (e.g. tree: visit left or right child first)
                 //int visitNode = i;
@@ -142,6 +190,12 @@ public class DFS : GraphAlgorithm, ITraverse {
                 // Line 7: If statement (condition)
                 yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 if (!checkingNode.Visited)
                 {
                     // Line 8: Push node on top of stack
@@ -150,6 +204,12 @@ public class DFS : GraphAlgorithm, ITraverse {
                     checkingNode.Visited = true;
                     yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
+                    #region Stop demo
+                    // Check if user wants to stop the demo
+                    if (graphMain.UserStoppedAlgorithm)
+                        break;
+                    #endregion
+
                     // Line 9: Mark node
 
                     // Previous edge
@@ -157,18 +217,38 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                     //yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
                 }
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 // Line 10: End if statement
-                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);                    
+                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
 
             }
             // Line 11: End for-loop
-            yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);                    
+            yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             currentNode.Traversed = true;
             lengthOfList = stack.Count.ToString(); // Pseudocode stack size
 
             graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.DestroyCurrentNode(); // Node Representation
         }
+
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);                    
 
@@ -255,7 +335,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             Node currentNode = stack.Pop();
             currentNode.Traversed = true;
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.POP_INST, instNr, currentNode, false, true));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr));
 
             // Line 6: Update for-loop (leaf nodes)
             //if (currentNode.Edges.Count == 0)
@@ -294,7 +374,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             }
             // Line 11: End for-loop
             instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
         }
         // Line 12: End while-loop
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));

@@ -3,8 +3,14 @@
 public class ListVisualInstruction : InstructionBase {
 
     private Node node;
-    private int index;
+    private int index = Util.NO_INDEX_VALUE;
     private string case1, case2;
+
+    public ListVisualInstruction(string instruction, int instructionNr) : base(instruction, instructionNr)
+    {
+
+    }
+
 
     public ListVisualInstruction(string instruction, int instructionNr, Node node) : base(instruction, instructionNr)
     {
@@ -38,5 +44,14 @@ public class ListVisualInstruction : InstructionBase {
     public string GetCase(bool hasNodeRepresentation)
     {
         return hasNodeRepresentation ? case2 : case1;
+    }
+
+    public override string DebugInfo()
+    {
+        if (node != null && index != Util.NO_INDEX_VALUE)
+            return base.DebugInfo() + " | Node: " + node.NodeAlphaID + ", index: " + index;
+        else if (node != null)
+            return base.DebugInfo() + " | Node: " + node.NodeAlphaID;
+        return base.DebugInfo();
     }
 }

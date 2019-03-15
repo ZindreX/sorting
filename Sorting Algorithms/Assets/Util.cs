@@ -157,15 +157,16 @@ public class Util : MonoBehaviour {
     //    }
     //}
 
+    public static Vector3 moveUnderGround = new Vector3(0f, 10f, 0f);
     public static void HideObject(GameObject obj, bool visible, bool moveDown)
     {
         if (moveDown)
         {
             Vector3 pos = obj.transform.position;
             if (visible)
-                obj.transform.position += new Vector3(pos.x, 10f, pos.z);
+                obj.transform.position += moveUnderGround;
             else
-                obj.transform.position -= new Vector3(pos.x, 10f, pos.z);
+                obj.transform.position -= moveUnderGround;
         }
 
         Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
@@ -175,13 +176,14 @@ public class Util : MonoBehaviour {
         }
     }
 
+    // remove function?
     public static void MakeInactive(GameObject obj, bool active)
     {
-        Debug.Log(obj);
-        GameObject[] visibleParts = obj.GetComponentsInChildren<GameObject>();
-        foreach (GameObject part in visibleParts)
-        {
-            part.SetActive(active);
-        }
+        obj.SetActive(active);
+        //GameObject[] visibleParts = obj.GetComponentsInChildren<GameObject>();
+        //foreach (GameObject part in visibleParts)
+        //{
+        //    part.SetActive(active);
+        //}
     }
 }

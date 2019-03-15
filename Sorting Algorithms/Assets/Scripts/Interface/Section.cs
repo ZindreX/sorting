@@ -16,6 +16,7 @@ public class Section : MonoBehaviour {
 
     [SerializeField]
     private bool isOneActiveOnlySection, onHideMakeInactive;
+    private bool isHidden;
 
     [SerializeField]
     private SettingsBase settings;
@@ -122,9 +123,16 @@ public class Section : MonoBehaviour {
 
     public void SetSectionVisible(bool visible)
     {
-        //if (onHideMakeInactive)
-        //    Util.MakeInactive(gameObject, visible);
-        //else
+        if (onHideMakeInactive)
+        {
+            // Hide object makes them invisible + moves them under floor to avoid buttons to be clicked (setactive not used due to some stuff)
+            if (!visible && isHidden)
+                return;
+
+            isHidden = !visible;
+            Util.HideObject(gameObject, visible, true);
+        }
+        else
             Util.HideObject(gameObject, visible, false);
     }
 

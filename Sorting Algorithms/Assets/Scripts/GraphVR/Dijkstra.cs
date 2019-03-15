@@ -114,8 +114,20 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         lengthOfList = "1";
         while (list.Count > 0 && !objectiveFound)
         {
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Line 5: Update while-loop
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             //
             Node currentNode = list[list.Count - 1];
@@ -127,9 +139,18 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             // Line 6: Remove element with lowest distance
             yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
             if (!shortestPathOnToAll && currentNode == endNode)
+            {
                 objectiveFound = true;
+                continue;
+            }
 
             // Check all nodes connected with current node
             List<Edge> edges = currentNode.Edges;
@@ -142,11 +163,29 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
             }
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             for (int i=0; i < numberOfEdges; i++)
             {
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 // Line 7: Update for-loop
                 this.i = i;
                 yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
 
                 // Checking edge
                 Edge currentEdge = edges[i];
@@ -163,6 +202,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 SetEdge(currentEdge); // Pseudocode
                 yield return demoStepDuration;
 
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 SetNodePseudoCode(connectedNode, 2); // PseudoCode
 
                 if (!connectedNode.Visited)
@@ -171,11 +216,23 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 // Line 8: visit connected node
                 yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 // Cost between nodes
                 int currentDistAndEdgeCost = node1Dist + edgeCost;
 
                 // Line 9: If statement
                 yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
 
                 // Update cost of connected node
                 if (currentDistAndEdgeCost < connectedNode.Dist)
@@ -184,9 +241,21 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     connectedNode.Dist = currentDistAndEdgeCost;
                     yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
 
+                    #region Stop demo
+                    // Check if user wants to stop the demo
+                    if (graphMain.UserStoppedAlgorithm)
+                        break;
+                    #endregion
+
                     // Line 11: Update prev edge (Prev) of connected node (w)
                     connectedNode.PrevEdge = currentEdge;
                     yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
+
+                    #region Stop demo
+                    // Check if user wants to stop the demo
+                    if (graphMain.UserStoppedAlgorithm)
+                        break;
+                    #endregion
 
 
                     if (!list.Contains(connectedNode))
@@ -207,18 +276,42 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                             yield return graphMain.ListVisual.UpdateValueAndPositionOf(connectedNode, index); // Create method/action code ???
                     }
 
+                    #region Stop demo
+                    // Check if user wants to stop the demo
+                    if (graphMain.UserStoppedAlgorithm)
+                        break;
+                    #endregion
+
                     // Line 12: Add to list
                     yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
-
                 }
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
 
                 currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
 
                 // Line 13: End if
                 yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
             }
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Line 14: End for-loop
             yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             currentNode.Traversed = true;
 
@@ -343,13 +436,14 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
             // Line 6: Remove element with lowest distance
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr, currentNode, false, true));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr));
 
             // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
             if (!shortestPathOnToAll && currentNode == endNode)
             {
                 instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.END_NODE_FOUND, instNr, currentNode));
                 objectiveFound = true;
+                continue;
             }
 
             // Check all nodes connected with current node
@@ -423,7 +517,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             }
             // Line 14: End for-loop
             instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, null));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
 
             currentNode.Traversed = true;
         }
@@ -443,7 +537,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         // Gather information from instruction
         if (gotNode)
         {
-            Debug.Log("Got node");
+            //Debug.Log("Got node");
             if (instruction is TraverseInstruction)
                 n1 = ((TraverseInstruction)instruction).Node;
             else if (instruction is ShortestPathInstruction)
@@ -500,8 +594,8 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                Debug.Log("Node1: " + (n1 == null));
-                Debug.Log(instruction.DebugInfo());
+                //Debug.Log("Node1: " + (n1 == null));
+                //Debug.Log(instruction.DebugInfo());
                 SetNodePseudoCode(n1, 1);
                 lineOfCode = 7;
                 break;

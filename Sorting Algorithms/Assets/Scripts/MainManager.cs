@@ -15,18 +15,26 @@ public abstract class MainManager : MonoBehaviour {
     protected bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
     protected bool algorithmStarted = false;
 
+    // test
+    protected bool anyCheck;
+
     protected bool userTestReady = false; // debugging
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
 
     void Update()
     {
+        if (anyCheck)
+            PerformAnyCheck();
+
         if (!algorithmStarted)
             return;
 
         // If the user has clicked the stop button in game
         if (userStoppedAlgorithm)
             return;
+
+
 
         if (GetTeachingAlgorithm().IsTaskCompleted)
         {
@@ -35,20 +43,15 @@ public abstract class MainManager : MonoBehaviour {
         else
         {
             if (Settings.IsStepByStep())
-            {
                 StepByStepUpdate();
-            }
             else if (Settings.IsDemo())
-            {
                 DemoUpdate();
-            }
             else if (Settings.IsUserTest())
-            {
                 UserTestUpdate();
-            }
         }
     }
 
+    protected abstract void PerformAnyCheck();
     protected abstract void DemoUpdate();
     protected abstract void StepByStepUpdate();
     protected abstract void UserTestUpdate();
@@ -78,6 +81,12 @@ public abstract class MainManager : MonoBehaviour {
     {
         get { return controllerReady; }
         //set { controllerReady = value; }
+    }
+
+    public bool AnyCheck
+    {
+        get { return anyCheck; }
+        set { anyCheck = value; }
     }
 
     public void StartAlgorithm()

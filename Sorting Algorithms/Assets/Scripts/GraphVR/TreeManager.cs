@@ -49,14 +49,15 @@ public class TreeManager : GraphManager {
         tree.Add(GenerateNode(null, new Vector3(0f, 0f, 0f), 0));
 
         // Number of nodes w/children (aka no leafs included)
-        int nonLeafNodes = NumberOfInternalNodes();
+        int internalNodes = NumberOfInternalNodes();
+        Debug.Log("Number of internal nodes: " + internalNodes);
 
         // Set level (starting one level below root)
         int currentLevel = 1;
         
         // Variables for x and z position of nodes, and split var
         float xPos = 0, zPos = 0, widthSplit = 0;
-        for (int z = 1; z <= nonLeafNodes; z++)
+        for (int z = 1; z <= internalNodes; z++)
         {
             // Get parent
             TreeNode parent = tree[z-1];
@@ -175,8 +176,11 @@ public class TreeManager : GraphManager {
         Node.NODE_ID = 0;
         for (int i=0; i < tree.Count; i++)
         {
-            Destroy(tree[i]);
+            Destroy(tree[i].gameObject);
         }
+
+        // Delete edges
+        base.DeleteGraph();
     }
 
     public override void SetAllNodesToInf()

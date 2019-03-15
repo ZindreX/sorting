@@ -339,9 +339,12 @@ public class GridManager : GraphManager {
         {
             for (int j = 0; j < cols; j++)
             {
-                Destroy(gridNodes[i, j]);
+                Destroy(gridNodes[i, j].gameObject);
             }
         }
+
+        // Delete edges
+        base.DeleteGraph();
     }
 
     public override void SetAllNodesToInf()

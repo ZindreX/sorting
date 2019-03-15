@@ -96,8 +96,6 @@ public class GraphSettings : SettingsBase {
     [SerializeField]
     private int buildEdgeChance = 1;
 
-    [SerializeField]
-    private bool initGrid;
     private string graphTask, graphStructure, edgeType, edgeBuildMode;
     private int gridRows, gridColumns, gridSpace;
     private int treeDepth, nTree, levelDepthLength;
@@ -123,13 +121,14 @@ public class GraphSettings : SettingsBase {
             GraphStructure = UtilGraph.GRID_GRAPH;
             EdgeType = UtilGraph.UNDIRECTED_EDGE;
             EdgeBuildMode = UtilGraph.FULL_EDGES_NO_CROSSING;
-            if (initGrid)
+
+            if (graphStructure == UtilGraph.GRID_GRAPH)
             {
                 gridRows = 5;
                 gridColumns = 5;
                 gridSpace = 4;
             }
-            else
+            else if (graphStructure == UtilGraph.TREE_GRAPH)
             {
                 treeDepth = 2;
                 nTree = 2;
@@ -181,24 +180,28 @@ public class GraphSettings : SettingsBase {
             case 3: EdgeBuildMode = UtilGraph.PARTIAL_EDGES_NO_CROSSING; break;
         }
 
-        if (graphStructure.Equals(UtilGraph.GRID_GRAPH))
-        {
-            gridRows = (int)gridRowsEditor + 1;
-            gridColumns = (int)gridColumnsEditor + 1;
-            gridSpace = ((int)gridSpaceEditor + 1) * 4;
+        // Grid settings
+        gridRows = (int)gridRowsEditor + 1;
+        gridColumns = (int)gridColumnsEditor + 1;
+        gridSpace = ((int)gridSpaceEditor + 1) * 4;
 
-            if ((int)gridRowsEditor == 5)
-                gridRows += 25;
-            if ((int)gridColumnsEditor == 5)
-                gridColumns += 25;
-        }
-        else if (graphStructure.Equals(UtilGraph.TREE_GRAPH))
+        if ((int)gridRowsEditor == 5)
+            gridRows += 25;
+        if ((int)gridColumnsEditor == 5)
+            gridColumns += 25;
+
+
+        // Tree settings
+        treeDepth = (int)treeDepthEditor;
+        nTree = ((int)nTreeEditor + 2);
+
+        switch ((int)levelDepthLengthEditor)
         {
-            treeDepth = (int)treeDepthEditor;
-            nTree = ((int)nTreeEditor + 2);
-            levelDepthLength = ((int)levelDepthLengthEditor + 2) + (int)levelDepthLengthEditor * 2;
+            case 0: levelDepthLength = 2; break;
+            case 1: levelDepthLength = 4; break;
         }
 
+        // Extra
         ShortestPathOneToAll = shortestPathOneToAll;
         VisitLeftFirst = visitLeftFirst;
     }
@@ -386,7 +389,7 @@ public class GraphSettings : SettingsBase {
     {
         if (increment)
         {
-            if (treeDepth < UtilGraph.MAX_N_TREE)
+            if (nTree < UtilGraph.MAX_N_TREE)
                 nTree++;
             else
             {
@@ -405,7 +408,7 @@ public class GraphSettings : SettingsBase {
             }
 
         }
-        FillTooltips("#Tree depth: " + treeDepth);
+        FillTooltips("n-tree: " + treeDepth);
     }
 
     public int[] StartNode()

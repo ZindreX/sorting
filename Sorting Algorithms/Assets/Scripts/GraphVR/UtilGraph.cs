@@ -42,8 +42,8 @@ public class UtilGraph : Util {
     public static readonly string START_NODE = "Start node", LENGTH_OF_LIST = "Length of list", NODE = "vertice", NEIGHBOR = "neighbor";
 
     // Colors
-    public static Color TRAVERSE_COLOR = Color.red, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green, SHORTEST_PATH_COLOR = Color.magenta;
-    public static Color CURRENT_NODE_COLOR = Color.red, DIST_UPDATE_COLOR = Color.cyan, STANDARD_COST_TEXT_COLOR = Color.white;
+    public static Color TRAVERSE_COLOR = Color.blue, VISITED_COLOR = Color.yellow, TRAVERSED_COLOR = Color.green, SHORTEST_PATH_COLOR = Color.magenta;
+    public static Color DIST_UPDATE_COLOR = Color.cyan, STANDARD_COST_TEXT_COLOR = Color.white;
 
     // *** Instructions ***
     // Validation

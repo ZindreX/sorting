@@ -174,8 +174,11 @@ public class RandomGraphManager : GraphManager {
         Node.NODE_ID = 0;
         for (int i = 0; i < nodes.Count; i++)
         {
-            nodes[i].ResetNode();
+            Destroy(nodes[i].gameObject);
         }
+
+        // Delete edges
+        base.DeleteGraph();
     }
 
     public override void SetAllNodesToInf()

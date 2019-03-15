@@ -77,7 +77,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         // Line 0: Set graph/start node
         SetNodePseudoCode(startNode, 1); // Pseudocode
         yield return HighlightPseudoCode(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
-        
+
         // Line 1: Create empty list (queue)
         Queue<Node> queue = new Queue<Node>();
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
@@ -94,8 +94,20 @@ public class BFS : GraphAlgorithm, ITraverse {
         lengthOfList = "1";
         while (queue.Count > 0)
         {
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Line 4: Update while loop
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             // Line 5: Dequeue node from queue
             Node currentNode = queue.Dequeue();
@@ -103,14 +115,32 @@ public class BFS : GraphAlgorithm, ITraverse {
             SetNodePseudoCode(currentNode, 1); // Pseudocode
             yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             if (currentNode.PrevEdge != null)
             {
                 currentNode.PrevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
                 yield return demoStepDuration;
             }
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
             yield return demoStepDuration;
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
 
             // Line 6: Update for-loop (leaf nodes)
             if (currentNode.Edges.Count == 0)
@@ -119,11 +149,23 @@ public class BFS : GraphAlgorithm, ITraverse {
                 yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
             }
 
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             for (int i=0; i < currentNode.Edges.Count; i++)
             {
                 // Line 6: Update for-loop
                 this.i = i;
                 yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
 
                 Edge edge = currentNode.Edges[i];
 
@@ -136,6 +178,12 @@ public class BFS : GraphAlgorithm, ITraverse {
                 // Line 7: If condition
                 yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
+
                 // Check if node has already been traversed or already is marked
                 if (!checkingNode.Visited)
                 {
@@ -145,17 +193,43 @@ public class BFS : GraphAlgorithm, ITraverse {
                     checkingNode.Visited = true;
                     yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
+                    #region Stop demo
+                    // Check if user wants to stop the demo
+                    if (graphMain.UserStoppedAlgorithm)
+                        break;
+                    #endregion
+
                     // Line 9: Mark node
                     //yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
-                    
+
                     // Previous edge is this one
                     checkingNode.PrevEdge = edge;
                 }
                 // Line 10: End if statement
                 yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+
+                #region Stop demo
+                // Check if user wants to stop the demo
+                if (graphMain.UserStoppedAlgorithm)
+                    break;
+                #endregion
             }
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             // Line 11: End for-loop
             yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+
+            #region Stop demo
+            // Check if user wants to stop the demo
+            if (graphMain.UserStoppedAlgorithm)
+                break;
+            #endregion
+
             currentNode.Traversed = true;
 
             lengthOfList = queue.Count.ToString(); // Pseudo code
@@ -196,7 +270,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             Node currentNode = queue.Dequeue();
             currentNode.Traversed = true;
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, false, true));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr));
 
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
@@ -220,7 +294,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
             }
             instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
         }
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
         return instructions;

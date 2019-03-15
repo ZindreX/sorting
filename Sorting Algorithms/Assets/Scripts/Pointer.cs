@@ -75,7 +75,7 @@ public class Pointer : MonoBehaviour {
                 if (node != null)
                 {
                     // Check if player wants to select start/end nodes
-                    if (graphMain.GraphSettings.SelectStartEndNodes)
+                    if (graphMain.AnyCheck && graphMain.GraphSettings.SelectStartEndNodes)
                     {
                         // Currently choosing start node
                         if (graphMain.PlayerChooseStartNode && graphMain.GraphManager.StartNode == null)
@@ -83,13 +83,17 @@ public class Pointer : MonoBehaviour {
                             graphMain.GraphManager.StartNode = node;
 
                             if (!graphMain.PlayerChooseEndNode)
-                                graphMain.GraphSettings.SelectStartEndNodes = false;
+                            {
+                                graphMain.SelectedNodesReady = true;
+                                //graphMain.GraphSettings.SelectStartEndNodes = false;
+                            }
 
                         }
                         else if (graphMain.PlayerChooseEndNode && node != graphMain.GraphManager.StartNode)
                         {
                             graphMain.GraphManager.EndNode = node;
-                            graphMain.GraphSettings.SelectStartEndNodes = false;
+                            graphMain.SelectedNodesReady = true;
+                            //graphMain.GraphSettings.SelectStartEndNodes = false;
                         }
                         prevNodeShot = null;
                     }
@@ -98,7 +102,7 @@ public class Pointer : MonoBehaviour {
                         if (prevNodeShot != node)
                         {
                             Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
-                            node.PerformUserMove(true);
+                            node.PerformUserMove(UtilGraph.NODE_VISITED);
                             prevNodeShot = node;
                         }
                     }
