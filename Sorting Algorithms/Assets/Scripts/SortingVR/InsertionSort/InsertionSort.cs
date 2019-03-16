@@ -235,14 +235,14 @@ public class InsertionSort : SortAlgorithm {
         while (i < listLength)
         {
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Display pseudocode (1st while)
             yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Get index of first element to the left of the pivot and compare
@@ -252,7 +252,7 @@ public class InsertionSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Get pivot
@@ -277,7 +277,7 @@ public class InsertionSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Start comparing until find the correct position is found
@@ -291,7 +291,7 @@ public class InsertionSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             compare.IsCompare = false;
@@ -300,7 +300,7 @@ public class InsertionSort : SortAlgorithm {
             while (value1 < value2)
             {
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Pivot is smaller, start moving compare element
@@ -316,7 +316,7 @@ public class InsertionSort : SortAlgorithm {
                 yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Preparing for next step
@@ -328,7 +328,7 @@ public class InsertionSort : SortAlgorithm {
 
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Move pivot out and place it ontop of pivot holder (above holder it check whether it's put the element)
@@ -339,7 +339,7 @@ public class InsertionSort : SortAlgorithm {
                 yield return demoStepDuration;
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Check if there are more elements to compare the pivot with
@@ -357,7 +357,7 @@ public class InsertionSort : SortAlgorithm {
                     yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
                     // Check if user wants to stop the demo
-                    if (sortMain.UserStoppedAlgorithm)
+                    if (sortMain.UserStoppedTask)
                         break;
 
                     compare.IsCompare = false;
@@ -370,7 +370,7 @@ public class InsertionSort : SortAlgorithm {
                         yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
                         // Check if user wants to stop the demo
-                        if (sortMain.UserStoppedAlgorithm)
+                        if (sortMain.UserStoppedTask)
                             break;
                     }
                 }
@@ -382,7 +382,7 @@ public class InsertionSort : SortAlgorithm {
                 }
             }
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             if (i == 1 && value1 >= value2)
@@ -398,7 +398,7 @@ public class InsertionSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Display pseudocode (increment i)
@@ -406,7 +406,7 @@ public class InsertionSort : SortAlgorithm {
             i += 1;
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
         }
         // Display pseudocode (end 1st while)
@@ -725,7 +725,7 @@ public class InsertionSort : SortAlgorithm {
         }
 
         yield return demoStepDuration;
-        sortMain.BeginnerWait = false;
+        sortMain.WaitForSupportToComplete = false;
     }
     #endregion
 

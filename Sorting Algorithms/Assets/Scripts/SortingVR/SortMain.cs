@@ -82,7 +82,7 @@ public class SortMain : MainManager {
      * > Called from UserController
      * > Creates the holders and the sorting elements
     */
-    protected override void PerformAnyCheck()
+    protected override void PerformCheckList(string check)
     {
 
     }
@@ -121,7 +121,7 @@ public class SortMain : MainManager {
         // Prepare difficulty level related stuff for user test
         if (sortSettings.TeachingMode == Util.USER_TEST)
         {
-            if (sortSettings.Difficulty <= Util.INTERMEDIATE)
+            if (sortSettings.Difficulty <= Util.PSEUDO_CODE_MAX_DIFFICULTY)
             {
                 displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
             }
@@ -156,10 +156,10 @@ public class SortMain : MainManager {
      */
     public override void DestroyAndReset()
     {
-        algorithmStarted = false;
+        algorithmInitialized = false;
 
         // Stop ongoing actions
-        UserStoppedAlgorithm = true;
+        UserStoppedTask = true;
 
         // Destroy sorting elements
         elementManager.DestroyAndReset();
@@ -265,18 +265,19 @@ public class SortMain : MainManager {
         Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements));
 
         // Initialize user test
-        userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, FindNumberOfUserAction(instructions));
+        int numberOfUserActions = FindNumberOfUserAction(instructions);
+        userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, numberOfUserActions);
 
         // Set start time
         userTestManager.SetStartTime();
 
-        userTestReady = true; // debugging
+        userTestInitialized = true; // debugging
     }
 
     protected override void UserTestUpdate()
     {
         // First check if user test setup is complete
-        if (userTestManager.HasInstructions() && !beginnerWait)
+        if (userTestManager.HasInstructions() && !waitForSupportToComplete)
         {
             // Check if user has done a move, and is ready for next round
             if (elementManager.CurrentMoving != null)

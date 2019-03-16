@@ -5837,7 +5837,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.0056}
+  m_AnchoredPosition: {x: -0.091, y: 0.0056}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &380582313
@@ -5860,7 +5860,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Basic setup
+  m_text: Basic
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5928,10 +5928,10 @@ MonoBehaviour:
   m_margin: {x: 9.635959, y: 2.4906335, z: 9.635685, w: 2.4605002}
   m_textInfo:
     textComponent: {fileID: 380582313}
-    characterCount: 11
+    characterCount: 5
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -8420,8 +8420,11 @@ MonoBehaviour:
   startPillarObj: {fileID: 848887423}
   graphAlgorithmObj: {fileID: 157921380}
   calculator: {fileID: 1572823313}
+  pointer: {fileID: 757146013}
   pseudoCodeViewer: {fileID: 548546077}
   listVisual: {fileID: 1415126236}
+  chosenNodes: 0
+  numberOfNodesToChoose: 0
   autoCalculation: 1
 --- !u!114 &591449221
 MonoBehaviour:
@@ -9966,6 +9969,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 734768309}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &757146013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114131319413516286, guid: 9460ed4ff33ec7a4d9dc6b54f683b0b1,
+    type: 2}
+  m_PrefabInternal: {fileID: 1111465577}
+  m_Script: {fileID: 11500000, guid: 44d815c2826c069439239cea3ae31554, type: 3}
 --- !u!1 &768824846 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1073257464153788, guid: 5c4fc5a06d5535d43a6b50cc68c46535,
@@ -11042,7 +11051,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 848887423}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -9.5, z: -2.121}
+  m_LocalPosition: {x: -0.5, y: -9.5, z: -2.277}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 909558355}
@@ -14090,6 +14099,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1147538674}
         m_MethodName: OnClickDo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 848887425}
+        m_MethodName: ButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19391,7 +19411,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Graph setup
+  m_text: Graph
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -19459,10 +19479,10 @@ MonoBehaviour:
   m_margin: {x: 9.635959, y: 2.4906335, z: 9.635685, w: 2.4605002}
   m_textInfo:
     textComponent: {fileID: 1507222803}
-    characterCount: 11
+    characterCount: 5
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -20276,6 +20296,10 @@ Prefab:
     - target: {fileID: 447954, guid: dc06161b6d97feb419f45f03b62e14b9, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 167242, guid: dc06161b6d97feb419f45f03b62e14b9, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc06161b6d97feb419f45f03b62e14b9, type: 2}

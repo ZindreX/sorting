@@ -239,14 +239,14 @@ public class BucketSort : SortAlgorithm {
         for (i = 0; i < sortingElements.Length; i++)
         {
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Line 2 (Update for-loop)
             yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Get element
@@ -260,7 +260,7 @@ public class BucketSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Get bucket
@@ -280,7 +280,7 @@ public class BucketSort : SortAlgorithm {
         for (int x=0; x < numberOfBuckets; x++)
         {
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Line 6 (For-loop: Sort elements in buckets)
@@ -299,7 +299,7 @@ public class BucketSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Put elements for display on top of buckets
@@ -307,7 +307,7 @@ public class BucketSort : SortAlgorithm {
             for (int y=0; y < numberOfElementsInBucket; y++)
             {
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 SortingElementBase element = bucket.GetElementForDisplay(y);
@@ -332,7 +332,7 @@ public class BucketSort : SortAlgorithm {
         for (i = 0; i < numberOfBuckets; i++)
         {
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             Bucket bucket = buckets[i].GetComponent<Bucket>();
@@ -346,14 +346,14 @@ public class BucketSort : SortAlgorithm {
             for (j = 0; j < loopRange; j++)
             {
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Line 9 (2nd For-loop: Concatenate all buckets)
                 yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
@@ -370,7 +370,7 @@ public class BucketSort : SortAlgorithm {
                 yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 k++;
@@ -381,7 +381,7 @@ public class BucketSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
         }
         // Line 13 (2nd for-loop end)
@@ -692,7 +692,7 @@ public class BucketSort : SortAlgorithm {
         }
 
         yield return demoStepDuration;
-        sortMain.BeginnerWait = false;
+        sortMain.WaitForSupportToComplete = false;
     }
     #endregion
 

@@ -11,6 +11,10 @@ public class Pointer : MonoBehaviour {
     private float laserRange = 50f;
     private int layerMask;
 
+    // 
+    private string currentTask;
+    private int numberOfNodesToChoose;
+
     [SerializeField]
     private GraphMain graphMain;
 
@@ -27,8 +31,27 @@ public class Pointer : MonoBehaviour {
     public GameObject hitObject;
     public Node prevNodeShot;
 
-	// Use this for initialization
-	void Start () {
+    public void InitPointer(string startTask, int numberOfNodesToChoose)
+    {
+        currentTask = startTask;
+        this.numberOfNodesToChoose = numberOfNodesToChoose;
+    }
+
+    public void ResetPointer()
+    {
+        currentTask = "";
+        numberOfNodesToChoose = 0;
+        hitObject = null;
+        prevNodeShot = null;
+    }
+
+    private void Awake()
+    {
+        currentTask = "";
+    }
+
+    // Use this for initialization
+    void Start () {
         laserBeam = GetComponent<LineRenderer>();
         laserBeam.material = laserMaterial;
 
@@ -47,118 +70,106 @@ public class Pointer : MonoBehaviour {
         transform.position = hand.position;
         transform.rotation = hand.rotation;
 
-
-        if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.RightHand)) // input steamvr
+        // Debugging without VR
+        if (Input.GetKeyDown(KeyCode.G))
         {
-            laserBeam.enabled = true;
-
-            // Declare a raycast hit to store information about what our raycast hit
-            RaycastHit hit;
-
-            // Set the start position of our visual effect for our laser to the position of the pointerEnd
-            laserBeam.SetPosition(0, pointerEnd.position);
-
-            // Check if our raycast has hit anything
-            if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-                //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
+            if (currentTask == "Start nodes")
             {
-                // Set the end position for our laser line
-                laserBeam.SetPosition(1, hit.point);
-
-                //Debug.Log("Gameobject: " + hit.collider.gameObject);
-                hitObject = hit.collider.gameObject;
-
-                // Get a reference to the node the raycast collided with
-                Node node = hit.collider.GetComponent<Node>();
-
-                // If there was a node script attached
-                if (node != null)
+                // Check if player wants to select start/end nodes
+                if (graphMain.ChosenNodes < numberOfNodesToChoose)
                 {
-                    // Check if player wants to select start/end nodes
-                    if (graphMain.AnyCheck && graphMain.GraphSettings.SelectStartEndNodes)
+                    // Currently choosing start node
+                    if (graphMain.ChosenNodes == 0)
                     {
-                        // Currently choosing start node
-                        if (graphMain.PlayerChooseStartNode && graphMain.GraphManager.StartNode == null)
-                        {
-                            graphMain.GraphManager.StartNode = node;
-
-                            if (!graphMain.PlayerChooseEndNode)
-                            {
-                                graphMain.SelectedNodesReady = true;
-                                //graphMain.GraphSettings.SelectStartEndNodes = false;
-                            }
-
-                        }
-                        else if (graphMain.PlayerChooseEndNode && node != graphMain.GraphManager.StartNode)
-                        {
-                            graphMain.GraphManager.EndNode = node;
-                            graphMain.SelectedNodesReady = true;
-                            //graphMain.GraphSettings.SelectStartEndNodes = false;
-                        }
-                        prevNodeShot = null;
+                        graphMain.GraphManager.StartNode = prevNodeShot;
+                        graphMain.ChosenNodes++;
                     }
-                    else
+                    else if (prevNodeShot != graphMain.GraphManager.StartNode)
                     {
-                        if (prevNodeShot != node)
-                        {
-                            Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
-                            node.PerformUserMove(UtilGraph.NODE_VISITED);
-                            prevNodeShot = node;
-                        }
+                        graphMain.GraphManager.EndNode = prevNodeShot;
+                        graphMain.ChosenNodes++;
                     }
-
-                    
-
-                    
-
-                    
-                    //if (node.NextMove)
-
-                    //node.Visited = !node.Visited;
                 }
+            }
+        }
 
+        if (currentTask != "")
+        {
+            if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.RightHand))
+            {
+                laserBeam.enabled = true;
+
+                // Declare a raycast hit to store information about what our raycast hit
+                RaycastHit hit;
+
+                // Set the start position of our visual effect for our laser to the position of the pointerEnd
+                laserBeam.SetPosition(0, pointerEnd.position);
+
+                // Check if our raycast has hit anything
+                if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+                    //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
+                {
+                    // Set the end position for our laser line
+                    laserBeam.SetPosition(1, hit.point);
+
+                    //Debug.Log("Gameobject: " + hit.collider.gameObject);
+                    hitObject = hit.collider.gameObject;
+
+                    // Get a reference to the node the raycast collided with
+                    Node node = hit.collider.GetComponent<Node>();
+
+                    // If there was a node script attached
+                    if (node != null)
+                    {
+                        if (currentTask == "Start nodes")
+                        {
+                            // Check if player wants to select start/end nodes
+                            if (graphMain.ChosenNodes < numberOfNodesToChoose)
+                            {
+                                // Currently choosing start node
+                                if (graphMain.ChosenNodes == 0)
+                                {
+                                    graphMain.GraphManager.StartNode = node;
+                                    graphMain.ChosenNodes++;
+                                }
+                                else if (node != graphMain.GraphManager.StartNode)
+                                {
+                                    graphMain.GraphManager.EndNode = prevNodeShot;
+                                    graphMain.ChosenNodes++;
+                                }
+                                prevNodeShot = null;
+                            }
+                        }
+                        else if (currentTask == Util.USER_TEST)
+                        {
+                            if (prevNodeShot != node)
+                            {
+                                Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
+                                node.PerformUserMove(UtilGraph.NODE_VISITED);
+                                prevNodeShot = node;
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    // If we didn't hit anything, set the end of the line to a position directly in front of the camera at the distance of laserRange
+                    //laserBeam.SetPosition(1, pointerEnd.transform.position * laserRange);
+                    //laserBeam.SetPosition(1, rayOrigin + (vrCamera.transform.position * laserRange));
+                }
             }
             else
             {
-                // If we didn't hit anything, set the end of the line to a position directly in front of the camera at the distance of laserRange
-                //laserBeam.SetPosition(1, pointerEnd.transform.position * laserRange);
-                //laserBeam.SetPosition(1, rayOrigin + (vrCamera.transform.position * laserRange));
+                laserBeam.enabled = false;
             }
-
-        }
-        else
-        {
-            laserBeam.enabled = false;
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void Test()
+    public string CurrentTask
     {
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-        {
-            Debug.DrawRay(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-        }
-        else
-        {
-            Debug.DrawRay(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward) * 1000, Color.red);
-        }
+        get { return currentTask; }
+        set { currentTask = value; }
     }
+
 }

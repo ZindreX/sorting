@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Util : MonoBehaviour {
 
-    // ----------------------------------------- Interface ----------------------------------------- 
+    // Support until lvl
+    public static readonly int PSEUDO_CODE_MAX_DIFFICULTY = INTERMEDIATE, PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY = BEGINNER;
+
+    // ----------------------------------------- GUI ----------------------------------------- 
     // Buttons
     public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
 

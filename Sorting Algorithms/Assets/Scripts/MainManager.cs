@@ -12,36 +12,49 @@ public abstract class MainManager : MonoBehaviour {
     */
 
     protected string algorithmName;
-    protected bool userStoppedAlgorithm = false, beginnerWait = false, controllerReady = false;
-    protected bool algorithmStarted = false;
 
-    // test
-    protected bool anyCheck;
+    // When the user click a button in game to stop the current process (demo, step-by-step, user test)
+    protected bool userStoppedTask = false;
 
-    protected bool userTestReady = false; // debugging
+    // Used to pause the Update loop while learning assitance is working (difficulty=beginner -> pseudocode highlighting)
+    protected bool waitForSupportToComplete = false;
+
+    // Used to check whether the controller is ready for input (see method below)
+    protected bool controllerReady = false;
+
+    // Blocks the Update loop until the application is ready and initialized
+    protected bool algorithmInitialized = false;
+
+    // debugging, remove now?
+    protected bool userTestInitialized = false; 
+    
+    // Check list (startup, shutdown)
+    public const string START_UP_CHECK = "Start up check", SHUT_DOWN_CHECK = "Shut down check";
+    protected bool checkListModeActive;
+    protected string activeChecklist;
+    protected Dictionary<string, bool> subUnitChecks;
+
+
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
 
     void Update()
     {
-        if (anyCheck)
-            PerformAnyCheck();
+        if (checkListModeActive)
+            PerformCheckList(activeChecklist);
 
-        if (!algorithmStarted)
+        // Stop update loop in case algorithm task isnt initialized, or user stopped the task
+        if (!algorithmInitialized || userStoppedTask)
             return;
-
-        // If the user has clicked the stop button in game
-        if (userStoppedAlgorithm)
-            return;
-
-
 
         if (GetTeachingAlgorithm().IsTaskCompleted)
         {
+            // When an algorithm task is finished, do some stuff
             TaskCompletedFinishOff();
         }
         else
         {
+            // Update based on the active teaching mode
             if (Settings.IsStepByStep())
                 StepByStepUpdate();
             else if (Settings.IsDemo())
@@ -51,42 +64,55 @@ public abstract class MainManager : MonoBehaviour {
         }
     }
 
-    protected abstract void PerformAnyCheck();
+    // Check list used for start/stop
+    protected abstract void PerformCheckList(string check);
+
+    // Called when user click a stop button in game
+    public void SafeStop()
+    {
+        userStoppedTask = true;
+
+        activeChecklist = SHUT_DOWN_CHECK;
+        checkListModeActive = true;
+    }
+
+    // Teaching mode updates
     protected abstract void DemoUpdate();
     protected abstract void StepByStepUpdate();
     protected abstract void UserTestUpdate();
+
+    // Finish off visualization
     protected abstract void TaskCompletedFinishOff();
 
     // Algorithm is initialized and ready to go
-    public bool AlgorithmStarted
+    public bool AlgorithmInitialized
     {
-        get { return algorithmStarted; }
+        get { return algorithmInitialized; }
     }
 
     // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
-    public bool BeginnerWait
+    public bool WaitForSupportToComplete
     {
-        get { return beginnerWait; }
-        set { beginnerWait = value; }
+        get { return waitForSupportToComplete; }
+        set { waitForSupportToComplete = value; }
     }
 
-    public bool UserStoppedAlgorithm
+    public bool UserStoppedTask
     {
-        get { return userStoppedAlgorithm; }
-        set { userStoppedAlgorithm = value; }
+        get { return userStoppedTask; }
+        set { userStoppedTask = value; }
     }
 
-    // ?
+    // Checks whether the controller is ready (old: menu button start/stop, insertion sort: move pivot holder, step-by-step: instruction swapping)
     public bool ControllerReady
     {
         get { return controllerReady; }
-        //set { controllerReady = value; }
     }
 
-    public bool AnyCheck
+    public bool CheckListModeActive
     {
-        get { return anyCheck; }
-        set { anyCheck = value; }
+        get { return checkListModeActive; }
+        set { checkListModeActive = value; }
     }
 
     public void StartAlgorithm()
@@ -98,10 +124,9 @@ public abstract class MainManager : MonoBehaviour {
             case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
-        userStoppedAlgorithm = false;
-        //
-        controllerReady = true;
-        algorithmStarted = true;
+        userStoppedTask = false;
+        controllerReady = true; // ???
+        algorithmInitialized = true;
     }
 
 

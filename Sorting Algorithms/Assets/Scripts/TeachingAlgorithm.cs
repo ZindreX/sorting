@@ -67,7 +67,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public PseudoCodeViewer PseudoCodeViewer
     {
         get { return pseudoCodeViewer; }
-        set { pseudoCodeViewer = value; pseudoCodeViewer.InitPseudoCodeViewer(this, GetLineSpacing(), GetLineRTDelta()); }
+        set { pseudoCodeViewer = value; pseudoCodeViewer.InitPseudoCodeViewer(this, GetLineSpacing(), GetLineRTDelta()); } // move init to main?
     }
 
     // Reach to line of code which are not mentioned in instructions

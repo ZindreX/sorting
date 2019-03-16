@@ -35,6 +35,9 @@ public class GraphMain : MainManager {
     [SerializeField]
     private Calculator calculator;
 
+    [SerializeField]
+    private Pointer pointer;
+
     private GraphAlgorithm graphAlgorithm;
     private GraphManager graphManager;
     private UserTestManager userTestManager;
@@ -52,6 +55,9 @@ public class GraphMain : MainManager {
 
     // Backtracking shortest path, userTestGoalActive: move to node, usingCalculator: calculation in process to progress
     private bool backtracking = false, userTestGoalActive = false, usingCalculator = false;
+
+    // Used by Pointer when selecting start-/end node(s)
+    private int chosenNodes, numberOfNodesToChoose;
 
     [Header("Debugging")]
     [SerializeField]
@@ -89,44 +95,65 @@ public class GraphMain : MainManager {
         get { return graphSettings; }
     }
 
-    // Player choose start-/end nodes
-    private bool playerChooseStartNode = false;
-    public bool PlayerChooseStartNode
+    public int ChosenNodes
     {
-        get { return playerChooseStartNode; }
-        set { playerChooseStartNode = value; }
+        get { return chosenNodes; }
+        set { chosenNodes = value; }
     }
 
-    private bool playerChooseEndNode = false;
-    public bool PlayerChooseEndNode
+    public int NumberOfNodesToChoose
     {
-        get { return playerChooseEndNode; }
-        set { playerChooseEndNode = value; }
+        get { return numberOfNodesToChoose; }
     }
 
     //  --------------------------------------- Initialization methods ---------------------------------------
 
-    private bool selectedNodesReady = false;
-    public bool SelectedNodesReady
+    protected override void PerformCheckList(string check)
     {
-        get { return selectedNodesReady; }
-        set { selectedNodesReady = value; Debug.Log("Selected nodes ready: " + value); }
-    }
-
-    protected override void PerformAnyCheck()
-    {
-        Debug.Log("Any check????");
-        if (selectedNodesReady)
+        switch (check)
         {
-            Debug.Log("Selecting done");
-            startPillar.SetButtonActive(true);
-            anyCheck = false;
+            case START_UP_CHECK:
+
+                if (chosenNodes == numberOfNodesToChoose)
+                {
+                    startPillar.SetButtonActive(true);
+                    checkListModeActive = false;
+                }
+                break;
+
+
+            case SHUT_DOWN_CHECK:
+                // Get feedback from sub units whenever they are ready to shut down
+                // if nodes etc. ready -> destroy
+
+                bool readyForDestroy = true;
+                foreach (KeyValuePair<string, bool> entry in subUnitChecks)
+                {
+                    string key = entry.Key;
+                    if (!subUnitChecks[key])
+                    {
+                        readyForDestroy = false;
+                        break;
+                    }
+
+                }
+
+                if (readyForDestroy)
+                {
+                    checkListModeActive = false;
+                    DestroyAndReset();
+                }
+
+                break;
+            default: Debug.Log(">>>>>>>>> Unknown check '" + check + "'."); break;
         }
     }
 
     public override void InstantiateSetup()
     {
-        anyCheck = true;
+        // Used for shut down process
+        subUnitChecks = new Dictionary<string, bool>();
+        checkListModeActive = false;
 
         // >>> Grab variable data from settings
         algorithmName = graphSettings.Algorithm;
@@ -144,7 +171,8 @@ public class GraphMain : MainManager {
 
         // >>> Init Algorithm
         graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
-        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed, shortestPathOneToAll);
+        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed, shortestPathOneToAll); // shortestPathOneToAll remove???
+
         graphAlgorithm.VisitLeftFirst = visitLeftFirst; // needed? remove? fix under tree settings?
 
         // >>> Init position manager
@@ -158,10 +186,6 @@ public class GraphMain : MainManager {
         listVisual.InitListVisual(listType, algorithmSpeed);
 
         // Pseudocode
-        graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer;
-        pseudoCodeViewer.PseudoCodeSetup();
-        // pseudoCodeInitilized????
-
 
         // >>> Init Graph manager
         graphManager = ActivateDeactivateGraphComponents(graphSettings.GraphStructure);
@@ -176,23 +200,22 @@ public class GraphMain : MainManager {
         // Prepare difficulty level related stuff for user test (copied from sort)
         if (graphSettings.TeachingMode == Util.USER_TEST)
         {
-            if (difficulty <= Util.INTERMEDIATE)
+            if (difficulty <= Util.PSEUDO_CODE_MAX_DIFFICULTY)
             {
-                //displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+                // Pseudocode
+                graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer; // initialized in algorithm
+                pseudoCodeViewer.PseudoCodeSetup();
             }
-            else if (difficulty == Util.ADVANCED)
+
+            if (difficulty <= Util.ADVANCED)
             {
-                //isplayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
-                // Ideas for left/center blackboard?
-            }
-            else
-            {
-                // Ideas for left/center? (Examination)
+
             }
         }
         else
         {
-            //displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
+            graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer; // initialized in algorithm (move it here?)
+            pseudoCodeViewer.PseudoCodeSetup();
         }
 
         // Hide menu
@@ -202,11 +225,23 @@ public class GraphMain : MainManager {
         bool selectNodes = graphSettings.SelectStartEndNodes;
         startPillar.InitStartPillar(selectNodes, isShortestPath);
 
+        // If user want to select nodes, then start button will become inactive until node(s) have been chosen
         if (selectNodes)
         {
-            playerChooseStartNode = true;
+            // Start node
+            chosenNodes = 0;
+            numberOfNodesToChoose = 1;
+
+            // End node
             if (isShortestPath)
-                playerChooseEndNode = true;
+                numberOfNodesToChoose++;
+
+            // Start check list
+            activeChecklist = START_UP_CHECK;
+            checkListModeActive = true;
+
+            // Init pointer with start task
+            pointer.InitPointer("Start nodes", numberOfNodesToChoose);
         }
         else
             StartCoroutine(SetAutomaticallyImportantNodes(isShortestPath));
@@ -218,15 +253,15 @@ public class GraphMain : MainManager {
 
         // Set starting nodes
         int[] startCell = graphSettings.StartNode();
-        graphManager.StartNode = graphManager.GetNode(startCell[0], startCell[1]);
+        graphManager.SetNode(startCell, true);
 
         if (isShortestPath)
         {
             int[] endCell = graphSettings.EndNode();
-            graphManager.EndNode = graphManager.GetNode(endCell[0], endCell[1]);
+            graphManager.SetNode(endCell, false);
         }
 
-        anyCheck = false;
+        checkListModeActive = false;
     }
 
     protected override IEnumerator ActivateTaskObjects(bool active)
@@ -240,24 +275,27 @@ public class GraphMain : MainManager {
         Util.HideObject(startPillarObj, active, true);
 
         yield return loading;
+        graphSettings.FillTooltips("");
     }
 
     //  --------------------------------------- Reset methods ---------------------------------------
     public override void DestroyAndReset()
     {
-        anyCheck = false;
+        checkListModeActive = false;
+        chosenNodes = 0;
+        numberOfNodesToChoose = 0;
 
         // Variable reset
-        algorithmStarted = false;
+        algorithmInitialized = false;
         backtracking = false;
         userTestGoalActive = false;
         usingCalculator = false;
 
         // ???
-        selectedNodesReady = false;
+        //selectedNodesReady = false;
 
         // Stop ongoing actions
-        UserStoppedAlgorithm = true;
+        UserStoppedTask = true;
 
         // Delete list visual
         listVisual.DestroyAndReset();
@@ -271,7 +309,8 @@ public class GraphMain : MainManager {
         // Pseudocode
         pseudoCodeViewer.DestroyPseudoCode();
 
-
+        // Pointer
+        pointer.ResetPointer();
 
         StartCoroutine(ActivateTaskObjects(false));
     }
@@ -288,46 +327,11 @@ public class GraphMain : MainManager {
             case UtilGraph.TRAVERSE: StartCoroutine(((ITraverse)graphAlgorithm).TraverseDemo(graphManager.StartNode)); break;
             case UtilGraph.SHORTEST_PATH: StartCoroutine(((IShortestPath)graphAlgorithm).ShortestPathDemo(graphManager.StartNode, graphManager.EndNode)); break;
         }
-
-        //switch (graphSettings.Algorithm)
-        //{
-        //    case Util.BFS: StartCoroutine(((BFS)graphAlgorithm).Demo(graphManager.StartNode)); break;
-
-        //    case Util.DFS:
-        //        StartCoroutine(((DFS)graphAlgorithm).Demo(graphManager.StartNode));
-        //        break;
-
-        //    case Util.DFS_RECURSIVE:
-        //        //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
-        //        StartCoroutine(((DFS)graphAlgorithm).DemoRecursive(graphManager.StartNode));
-        //        break;
-
-        //    case Util.DIJKSTRA:
-        //        StartCoroutine(((Dijkstra)graphAlgorithm).Demo(graphManager.StartNode, );
-        //        //StartCoroutine(((Dijkstra)graphAlgorithm).DemoNoPseudocode(startNode, endNode));
-        //        break;
-
-        //    default: Debug.LogError("'" + algorithmName + "' unknown."); break;
-        //}
     }
 
     protected override void DemoUpdate()
     {
-        if (graphAlgorithm.IsTaskCompleted)
-        {
-            if (!backtracking && graphAlgorithm is IShortestPath)
-            {
-                Debug.Log("Starting backtracking");
-                if (graphAlgorithm.ShortestPathOneToAll)
-                    StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
-                else
-                {
-                    listVisual.CreateBackTrackList(graphManager.EndNode);
-                    StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
-                }
-                backtracking = true;
-            }
-        }
+
     }
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
@@ -349,8 +353,6 @@ public class GraphMain : MainManager {
     */
     public override void PerformAlgorithmUserTest()
     {
-        Debug.Log("Starting " + algorithmName + " " + graphSettings.GraphTask + " user test.");
-
         // Getting instructions for this sample of sorting elements
         Dictionary<int, InstructionBase> instructions = null;
 
@@ -367,26 +369,16 @@ public class GraphMain : MainManager {
         Debug.Log("Number of instructions: " + instructions.Count);
 
         // Initialize user test
-        int movesNeeded = 1;
-        userTestManager.InitUserTest(instructions, movesNeeded, FindNumberOfUserAction(instructions));
+        userTestManager.InitUserTest(instructions, 1, FindNumberOfUserAction(instructions));
 
         // Set start time
         userTestManager.SetStartTime();
 
-        if (graphSettings.Algorithm == Util.BFS)
-        {
-            //string result = "";
-            foreach (KeyValuePair<int, InstructionBase> entry in instructions)
-            {
-                int instNr = entry.Key;
-                InstructionBase inst = entry.Value;
-                Debug.Log(inst.DebugInfo());
-            }
-        }
-
         graphManager.ResetGraph();
-        userTestReady = true;
-        //Debug.Log("Ready for user test!");
+        userTestInitialized = true;
+
+        // Give pointer new task
+        pointer.CurrentTask = Util.USER_TEST;
     }
 
     protected override void UserTestUpdate()
@@ -398,7 +390,7 @@ public class GraphMain : MainManager {
             userTestGoalActive = false;
 
         // First check if user test setup is complete
-        if (userTestManager.HasInstructions() && !beginnerWait)
+        if (userTestManager.HasInstructions() && !waitForSupportToComplete)
         {
             // If a calculation is required to progress in the algorithm
             if (usingCalculator)
@@ -429,20 +421,20 @@ public class GraphMain : MainManager {
                 }
             }
 
+            // Continue when user has finished sub task, or else whenever ready
             if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
             {
                 // Reset counter
                 userTestManager.ReadyForNext = 0;
 
-                // Checking if all sorting elements are sorted
-                if (!userTestManager.HasInstructions()) // && elementManager.AllSorted())
+                // Check if we still have any instructions
+                if (!userTestManager.HasInstructions())
                 {
                     graphAlgorithm.IsTaskCompleted = true;
-                    // ?
                 }
                 else
                 {
-                    // Still some elements not sorted, so go on to next round
+                    // Still got instructions?
                     bool hasInstruction = userTestManager.IncrementToNextInstruction();
 
                     // Hot fix - solve in some other way?
@@ -453,21 +445,25 @@ public class GraphMain : MainManager {
 
                 }
             }
-            //displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
         }
     }
 
     public int PrepareNextInstruction(InstructionBase instruction)
     {
         string inst = instruction.Instruction;
-        int difficulty = graphSettings.Difficulty;
+
+        // First check whether the instruction contains a node and/or destination
         bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(inst);
         bool noDestination = graphAlgorithm.SkipDict[Util.SKIP_NO_DESTINATION].Contains(inst);
 
         // List visual Update
         if (instruction is ListVisualInstruction)
         {
-            BeginnerWait = true;
+            // Only provide list visual support until <lvl>
+            if (graphSettings.Difficulty >= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+                return 1;
+
+            WaitForSupportToComplete = true;
             ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
             Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
 
@@ -499,7 +495,7 @@ public class GraphMain : MainManager {
                 case UtilGraph.PREPARE_BACKTRACKING: listVisual.CreateBackTrackList(graphManager.EndNode); break;
                 default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
             }
-            BeginnerWait = false; // ???
+            WaitForSupportToComplete = false; // move out? because of coroutine
 
             return 1;
         }
@@ -585,9 +581,9 @@ public class GraphMain : MainManager {
 
 
             // Display help on blackboard
-            if (difficulty <= Util.BEGINNER)
+            if (graphSettings.Difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
             {
-                BeginnerWait = true;
+                WaitForSupportToComplete = true;
                 StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode));// && !noDestination));
             }
 
@@ -628,7 +624,20 @@ public class GraphMain : MainManager {
     // --------------------------------------- Finish off ---------------------------------------
     protected override void TaskCompletedFinishOff()
     {
-
+        if (graphAlgorithm.IsTaskCompleted)
+        {
+            if (!backtracking && graphAlgorithm is IShortestPath)
+            {
+                if (graphAlgorithm.ShortestPathOneToAll)
+                    StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
+                else
+                {
+                    listVisual.CreateBackTrackList(graphManager.EndNode);
+                    StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
+                }
+                backtracking = true;
+            }
+        }
     }
 
 
@@ -639,7 +648,7 @@ public class GraphMain : MainManager {
     // Used by demo to update list visual (node/list representation)
     public void UpdateListVisual(string action, Node node, int index)
     {
-        if (graphSettings.Difficulty == Util.BEGINNER)
+        if (graphSettings.Difficulty < UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
         {
             switch (action)
             {
@@ -653,7 +662,7 @@ public class GraphMain : MainManager {
 
     public bool CheckListVisual(string action, Node node)
     {
-        if (graphSettings.Difficulty == Util.BEGINNER)
+        if (graphSettings.Difficulty == UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
         {
             switch (action)
             {
@@ -729,4 +738,34 @@ public class GraphMain : MainManager {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+    //switch (graphSettings.Algorithm)
+    //{
+    //    case Util.BFS: StartCoroutine(((BFS)graphAlgorithm).Demo(graphManager.StartNode)); break;
+
+    //    case Util.DFS:
+    //        StartCoroutine(((DFS)graphAlgorithm).Demo(graphManager.StartNode));
+    //        break;
+
+    //    case Util.DFS_RECURSIVE:
+    //        //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
+    //        StartCoroutine(((DFS)graphAlgorithm).DemoRecursive(graphManager.StartNode));
+    //        break;
+
+    //    case Util.DIJKSTRA:
+    //        StartCoroutine(((Dijkstra)graphAlgorithm).Demo(graphManager.StartNode, );
+    //        //StartCoroutine(((Dijkstra)graphAlgorithm).DemoNoPseudocode(startNode, endNode));
+    //        break;
+
+    //    default: Debug.LogError("'" + algorithmName + "' unknown."); break;
+    //}
 }

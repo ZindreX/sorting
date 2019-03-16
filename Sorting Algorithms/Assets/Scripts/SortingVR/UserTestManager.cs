@@ -22,6 +22,10 @@ public class UserTestManager : InstructionControlBase {
     */
     private int readyForNext, userActionToProceed, userActionInstructions;
 
+    [SerializeField]
+    private ProgressTracker progressTracker;
+
+
 
 
     private Dictionary<string, int> errorLog;
@@ -50,6 +54,9 @@ public class UserTestManager : InstructionControlBase {
         totalErrorCount = 0;
         errorLog = new Dictionary<string, int>();
         scoreUpdateDuration = new WaitForSeconds(SCORE_UPDATE);
+
+        // Progress tracker (just visualization of progress)
+        progressTracker.InitProgressTracker(userActionInstructions, instructions.Count);
     }
 
     // Added methods from scoremanager
@@ -57,6 +64,7 @@ public class UserTestManager : InstructionControlBase {
     public void IncrementTotalCorrect()
     {
         totalCorrect++;
+        progressTracker.Increment();
     }
 
     public string DifficultyLevel

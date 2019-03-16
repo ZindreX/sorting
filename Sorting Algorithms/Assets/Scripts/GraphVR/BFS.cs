@@ -11,7 +11,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
     public override string AlgorithmName
     {
-        get { return UtilGraph.BFS; }
+        get { return Util.BFS; }
     }
 
     public override GameObject InfoPlate
@@ -22,7 +22,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
     public override string GetListType()
     {
-        return UtilGraph.QUEUE;
+        return Util.QUEUE;
     }
 
     public override string CollectLine(int lineNr)
@@ -96,7 +96,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         {
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -105,7 +105,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -117,7 +117,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -129,7 +129,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -138,7 +138,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -151,7 +151,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -163,7 +163,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -180,7 +180,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -195,7 +195,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
                     #region Stop demo
                     // Check if user wants to stop the demo
-                    if (graphMain.UserStoppedAlgorithm)
+                    if (graphMain.UserStoppedTask)
                         break;
                     #endregion
 
@@ -210,14 +210,14 @@ public class BFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
             }
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -226,7 +226,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -237,7 +237,6 @@ public class BFS : GraphAlgorithm, ITraverse {
         }
         // Line 12: End while-loop
         yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
-
         IsTaskCompleted = true;
     }
     #endregion
@@ -367,7 +366,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
 
         yield return demoStepDuration;
-        graphMain.BeginnerWait = false;
+        graphMain.WaitForSupportToComplete = false;
     }
     #endregion
 }

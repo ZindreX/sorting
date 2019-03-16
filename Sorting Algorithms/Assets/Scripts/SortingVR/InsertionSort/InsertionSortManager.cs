@@ -40,7 +40,7 @@ public class InsertionSortManager : AlgorithmManagerBase {
         // Display help on blackboard
         if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
         {
-            sortMain.BeginnerWait = true;
+            sortMain.WaitForSupportToComplete = true;
             StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
 

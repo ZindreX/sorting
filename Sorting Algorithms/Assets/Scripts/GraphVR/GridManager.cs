@@ -343,6 +343,8 @@ public class GridManager : GraphManager {
             }
         }
 
+        gridNodes = null;
+
         // Delete edges
         base.DeleteGraph();
     }

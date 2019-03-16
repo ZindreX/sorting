@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class UtilGraph : Util {
 
+    // ----------------------------------------- Graph limitations ----------------------------------------- 
     public static readonly int MAX_ROWS = 5, MAX_COLUMNS = 5;
     public static readonly int MAX_TREE_DEPTH = 3, MAX_N_TREE = 3;
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
+    // ----------------------------------------- Support until lvl ----------------------------------------- 
+    public static readonly int LIST_VISUAL_MAX_DIFFICULTY = ADVANCED;
 
-    // ----------------------------------------- Interface ----------------------------------------- 
+
+    // ----------------------------------------- GUI ----------------------------------------- 
     // Graph task
     public const string GRAPH_TASK = "Graph task", TRAVERSE = "Traverse", SHORTEST_PATH = "Shortest path";
     public const string TRAVERSE_SUB_SECTION = "Traverse sub section", SHORTEST_PATH_SUB_SECTION = "Shortest path sub section";
@@ -70,6 +74,7 @@ public class UtilGraph : Util {
 
 
     // ----------------------------------------- List visual -----------------------------------------
+
     public const string ADD_NODE = "Add node", PRIORITY_ADD_NODE = "Priority add node", REMOVE_CURRENT_NODE = "Remove current node";
     public const string DESTROY_CURRENT_NODE = "Destroy current node", HAS_NODE_REPRESENTATION = "Has node representation";
     public const string PREPARE_BACKTRACKING = "Prepare backtracking";

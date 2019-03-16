@@ -17,8 +17,13 @@ public class ProgressTracker : MonoBehaviour {
 
     public void InitProgressTracker(int userActionCount, int totaltInstructions)
     {
+        currentProgress = 0;
         this.userActionCount = userActionCount;
         this.totaltInstructions = totaltInstructions;
+
+        float progress = (float)userActionCount / 100f;
+        increaseProgressSize = new Vector3(0f, progress, 0f);
+        moveProgressBar = new Vector3(progress, 0f, 0f);
     }
 
     public void Increment()
@@ -30,16 +35,16 @@ public class ProgressTracker : MonoBehaviour {
         progressbar.transform.position += moveProgressBar;
 
         // Instructions
-        instructionsText.text = currentProgress + "/" + totaltInstructions;
+        instructionsText.text = currentProgress + "/" + userActionCount;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Increment();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.E))
+    //    {
+    //        Increment();
+    //    }
+    //}
 
 
 }

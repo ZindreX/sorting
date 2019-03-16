@@ -146,7 +146,7 @@ public abstract class SettingsBase : MonoBehaviour {
     // Start/stop algorithm in game
     public void StartStopTask()
     {
-        if (!MainManager.AlgorithmStarted)
+        if (!MainManager.AlgorithmInitialized)
             StartTask();
         else
             StopTask();
@@ -161,8 +161,7 @@ public abstract class SettingsBase : MonoBehaviour {
     // Stop task from in game
     private void StopTask()
     {
-        MainManager.UserStoppedAlgorithm = true;
-        MainManager.DestroyAndReset();
+        MainManager.SafeStop();
     }
 
     // Set thje settings menu text

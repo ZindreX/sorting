@@ -46,7 +46,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
 
         if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
         {
-            sortMain.BeginnerWait = true;
+            sortMain.WaitForSupportToComplete = true;
             StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
 

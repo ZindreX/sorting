@@ -96,7 +96,7 @@ public class DFS : GraphAlgorithm, ITraverse {
         {
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -105,7 +105,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -117,7 +117,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -130,7 +130,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -139,7 +139,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -152,7 +152,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -161,7 +161,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             {
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -171,7 +171,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -192,7 +192,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -206,7 +206,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                     #region Stop demo
                     // Check if user wants to stop the demo
-                    if (graphMain.UserStoppedAlgorithm)
+                    if (graphMain.UserStoppedTask)
                         break;
                     #endregion
 
@@ -220,7 +220,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -229,7 +229,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                 #region Stop demo
                 // Check if user wants to stop the demo
-                if (graphMain.UserStoppedAlgorithm)
+                if (graphMain.UserStoppedTask)
                     break;
                 #endregion
 
@@ -239,7 +239,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
             #region Stop demo
             // Check if user wants to stop the demo
-            if (graphMain.UserStoppedAlgorithm)
+            if (graphMain.UserStoppedTask)
                 break;
             #endregion
 
@@ -451,7 +451,7 @@ public class DFS : GraphAlgorithm, ITraverse {
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
 
         yield return demoStepDuration;
-        graphMain.BeginnerWait = false;
+        graphMain.WaitForSupportToComplete = false;
     }
     #endregion
 }

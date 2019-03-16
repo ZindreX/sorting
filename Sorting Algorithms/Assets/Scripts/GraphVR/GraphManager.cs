@@ -45,6 +45,21 @@ public abstract class GraphManager : MonoBehaviour {
         return rngDict.ContainsKey(key) ? rngDict[key] : Util.NO_VALUE;
     }
 
+    public void SetNode(int[] cell, bool startNode)
+    {
+        Debug.Log("Cell: " + cell[0] + ", " + cell[1] + ", start=" + startNode);
+        Debug.Log("Node: " + GetNode(cell[0], cell[1]) == null);
+
+        if (startNode)
+        {
+            StartNode = GetNode(cell[0], cell[1]);
+        }
+        else
+        {
+            EndNode = GetNode(cell[0], cell[1]);
+        }
+    }
+
     public Node StartNode
     {
         get { return startNode; }
@@ -209,6 +224,8 @@ public abstract class GraphManager : MonoBehaviour {
         {
             Destroy(edge);
         }
+        startNode = null;
+        endNode = null;
     }
 
     // ************************************ Abstract methods ************************************ 

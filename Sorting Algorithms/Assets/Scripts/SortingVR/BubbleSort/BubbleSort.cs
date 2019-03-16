@@ -147,7 +147,7 @@ public class BubbleSort : SortAlgorithm {
         for (i=0; i < N; i++)
         {
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Display outer loop
@@ -156,14 +156,14 @@ public class BubbleSort : SortAlgorithm {
             for (j = 0; j < N - i - 1; j++)
             {
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Display pseudocode (update for-loops)
                 yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 // Choose sorting elements to compare
@@ -190,7 +190,7 @@ public class BubbleSort : SortAlgorithm {
                 yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 if (value1 > value2)
@@ -212,14 +212,14 @@ public class BubbleSort : SortAlgorithm {
                     yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
 
                     // Check if user wants to stop the demo
-                    if (sortMain.UserStoppedAlgorithm)
+                    if (sortMain.UserStoppedTask)
                         break;
                 }
                 // Display pseudocode (comparison/if end)
                 yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
 
                 // Check if user wants to stop the demo
-                if (sortMain.UserStoppedAlgorithm)
+                if (sortMain.UserStoppedTask)
                     break;
 
                 p1.IsCompare = false;
@@ -233,7 +233,7 @@ public class BubbleSort : SortAlgorithm {
             yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
 
             // Check if user wants to stop the demo
-            if (sortMain.UserStoppedAlgorithm)
+            if (sortMain.UserStoppedTask)
                 break;
 
             // Biggest element moved to the last* index, mark it as sorted
@@ -481,7 +481,7 @@ public class BubbleSort : SortAlgorithm {
         }
 
         yield return demoStepDuration;
-        sortMain.BeginnerWait = false;
+        sortMain.WaitForSupportToComplete = false;
     }
     #endregion
 

@@ -68,7 +68,7 @@ public class AlgorithmUserController : MonoBehaviour {
         // *************
 
         // Do actions according to what teaching mode the player has activated
-        if (sortMain.AlgorithmStarted)
+        if (sortMain.AlgorithmInitialized)
         {
             switch (sortMain.SortSettings.TeachingMode)
             {
