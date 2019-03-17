@@ -32,7 +32,7 @@ public abstract class MainManager : MonoBehaviour {
     public const string START_UP_CHECK = "Start up check", SHUT_DOWN_CHECK = "Shut down check";
     protected bool checkListModeActive;
     protected string activeChecklist;
-    protected Dictionary<string, bool> subUnitChecks;
+    protected Dictionary<string, bool> safeStopChecklist;
 
 
 
@@ -114,6 +114,23 @@ public abstract class MainManager : MonoBehaviour {
         get { return checkListModeActive; }
         set { checkListModeActive = value; }
     }
+
+    public void AddToCheckList(string unit)
+    {
+        if (!safeStopChecklist.ContainsKey(unit))
+        {
+            safeStopChecklist.Add(unit, false);
+        }
+    }
+
+    public void UpdateCheckList(string unit, bool ready)
+    {
+        if (safeStopChecklist.ContainsKey(unit))
+        {
+            safeStopChecklist[unit] = ready;
+        }
+    }
+
 
     public void StartAlgorithm()
     {

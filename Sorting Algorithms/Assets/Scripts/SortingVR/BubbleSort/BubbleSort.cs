@@ -135,8 +135,7 @@ public class BubbleSort : SortAlgorithm {
 
     #region Bubble Sort: All Moves Demo (Visual)
     public override IEnumerator Demo(GameObject[] list)
-    {
-        Debug.Log("Starting Bubble sort demo!!!");
+    {     
         int N = list.Length;
         i = 0;
         j = 0;
@@ -247,10 +246,14 @@ public class BubbleSort : SortAlgorithm {
             UtilSort.IndicateElement(list[N - i - 1]); //list[N - i - 1].transform.position += Util.ABOVE_HOLDER_VR;
             yield return demoStepDuration;
         }
-        isTaskCompleted = true;
 
         // Display pseudocode (end 1st for-loop)
         yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+
+        if (sortMain.UserStoppedTask)
+            sortMain.UpdateCheckList(Util.DEMO, true);
+        else
+            isTaskCompleted = true;
     }
     #endregion
 

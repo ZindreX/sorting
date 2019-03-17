@@ -89,7 +89,6 @@ public class Util : MonoBehaviour {
     // Destroys all objects in a list
     public static void DestroyObjects(GameObject[] objects)
     {
-        Debug.Log("Destroying objects: " + objects.Length);
         if (objects != null)
         {
             for (int i = 0; i < objects.Length; i++)

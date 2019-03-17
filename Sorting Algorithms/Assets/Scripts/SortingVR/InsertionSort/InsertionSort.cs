@@ -422,7 +422,11 @@ public class InsertionSort : SortAlgorithm {
 
         // Finished off; remove pivot holder
         PivotHolderVisible(false);
-        IsTaskCompleted = true;
+
+        if (sortMain.UserStoppedTask)
+            sortMain.UpdateCheckList(Util.DEMO, true);
+        else
+            isTaskCompleted = true;
     }
     #endregion
 

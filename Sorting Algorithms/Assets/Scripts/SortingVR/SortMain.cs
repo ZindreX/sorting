@@ -84,10 +84,46 @@ public class SortMain : MainManager {
     */
     protected override void PerformCheckList(string check)
     {
+        switch (check)
+        {
+            case START_UP_CHECK:
+                break;
 
+
+            case SHUT_DOWN_CHECK:
+                // Get feedback from sub units whenever they are ready to shut down
+                // if nodes etc. ready -> destroy
+                displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Stopping " + SortSettings.TeachingMode);
+
+                bool readyForDestroy = true;
+                foreach (KeyValuePair<string, bool> entry in safeStopChecklist)
+                {
+                    string key = entry.Key;
+                    if (!safeStopChecklist[key])
+                    {
+                        readyForDestroy = false;
+                        break;
+                    }
+
+                }
+
+                if (readyForDestroy)
+                {
+                    Debug.Log("Starting safe shutdown");
+                    checkListModeActive = false;
+                    DestroyAndReset();
+                }
+
+                break;
+            default: Debug.Log(">>>>>>>>> Unknown check '" + check + "'."); break;
+        }
     }
+
     public override void InstantiateSetup()
     {
+        // Used when shutting down
+        safeStopChecklist = new Dictionary<string, bool>();
+
         // Get values from settings
         algorithmName = sortSettings.Algorithm; // string name
         int numberOfElements = sortSettings.NumberOfElements;
@@ -156,6 +192,8 @@ public class SortMain : MainManager {
      */
     public override void DestroyAndReset()
     {
+        safeStopChecklist = null;
+
         algorithmInitialized = false;
 
         // Stop ongoing actions
@@ -199,6 +237,9 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
+        // Add to checklist (used for safe shutdown)
+        AddToCheckList(Util.DEMO);
+
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn");
 
         elementManager.InteractionWithSortingElements(false);
@@ -219,6 +260,8 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmStepByStep()
     {
+        //AddToCheckList(Util.STEP_BY_STEP);
+
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use grip buttons\n to progress");
 
         // Getting instructions for this sample of sorting elements
@@ -353,15 +396,21 @@ public class SortMain : MainManager {
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading complete!", 1);
 
         // Settings menu
-        sortSettings.SetSettingsActive(!active);
+        Util.HideObject(sortSettings.gameObject, !active, true);
+        //sortSettings.SetSettingsActive(!active);
 
         // Sorting table
-        sortingTableObj.SetActive(active);
+        Util.HideObject(sortingTableObj, active, true);
+        //sortingTableObj.SetActive(active);
 
         yield return loading;
 
         if (active)
             displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Teaching mode: " + sortSettings.TeachingMode, 1);
+        else
+        {
+            sortSettings.FillTooltips("Loading complete!");
+        }
 
     }
 

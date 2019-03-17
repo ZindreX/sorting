@@ -127,10 +127,10 @@ public class GraphMain : MainManager {
                 // if nodes etc. ready -> destroy
 
                 bool readyForDestroy = true;
-                foreach (KeyValuePair<string, bool> entry in subUnitChecks)
+                foreach (KeyValuePair<string, bool> entry in safeStopChecklist)
                 {
                     string key = entry.Key;
-                    if (!subUnitChecks[key])
+                    if (!safeStopChecklist[key])
                     {
                         readyForDestroy = false;
                         break;
@@ -152,7 +152,7 @@ public class GraphMain : MainManager {
     public override void InstantiateSetup()
     {
         // Used for shut down process
-        subUnitChecks = new Dictionary<string, bool>();
+        safeStopChecklist = new Dictionary<string, bool>();
         checkListModeActive = false;
 
         // >>> Grab variable data from settings

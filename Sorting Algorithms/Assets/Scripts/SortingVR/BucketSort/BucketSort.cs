@@ -387,7 +387,11 @@ public class BucketSort : SortAlgorithm {
         // Line 13 (2nd for-loop end)
         yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
 
-        IsTaskCompleted = true;
+
+        if (sortMain.UserStoppedTask)
+            sortMain.UpdateCheckList(Util.DEMO, true);
+        else
+            isTaskCompleted = true;
     }
     #endregion
 
