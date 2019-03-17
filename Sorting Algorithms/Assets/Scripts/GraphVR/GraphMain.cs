@@ -179,14 +179,6 @@ public class GraphMain : MainManager {
         bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
         posManager.InitPositionManager(isShortestPath);
 
-
-        // >>> Extra learning material
-        // Init list visual
-        string listType = graphAlgorithm.GetListType();
-        listVisual.InitListVisual(listType, algorithmSpeed);
-
-        // Pseudocode
-
         // >>> Init Graph manager
         graphManager = ActivateDeactivateGraphComponents(graphSettings.GraphStructure);
         graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict(), listVisual);
@@ -197,6 +189,8 @@ public class GraphMain : MainManager {
         // Create graph based on init variables
         graphManager.CreateGraph(edgeBuildMode);
 
+
+        // >>> Support
         // Prepare difficulty level related stuff for user test (copied from sort)
         if (graphSettings.TeachingMode == Util.USER_TEST)
         {
@@ -207,15 +201,25 @@ public class GraphMain : MainManager {
                 pseudoCodeViewer.PseudoCodeSetup();
             }
 
-            if (difficulty <= Util.ADVANCED)
+            if (difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
             {
-
+                // List visual
+                string listType = graphAlgorithm.GetListType();
+                listVisual.InitListVisual(listType, algorithmSpeed);
+                //AddToCheckList(UtilGraph.LIST_VISUAL);
             }
         }
         else
         {
+            // >>> Demo
+
+            // Pseudocode
             graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer; // initialized in algorithm (move it here?)
             pseudoCodeViewer.PseudoCodeSetup();
+
+            // List visual
+            listVisual.InitListVisual(graphAlgorithm.GetListType(), algorithmSpeed);
+            //AddToCheckList(UtilGraph.LIST_VISUAL);
         }
 
         // Hide menu
@@ -245,6 +249,24 @@ public class GraphMain : MainManager {
         }
         else
             StartCoroutine(SetAutomaticallyImportantNodes(isShortestPath));
+    }
+
+    private void InitSupport(int difficulty)
+    {
+        switch (difficulty)
+        {
+            case Util.BEGINNER:
+
+                break;
+
+            case Util.INTERMEDIATE:
+
+                break;
+
+            case Util.ADVANCED:
+
+                break;
+        }
     }
 
     public IEnumerator SetAutomaticallyImportantNodes(bool isShortestPath)

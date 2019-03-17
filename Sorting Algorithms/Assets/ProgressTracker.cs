@@ -12,6 +12,7 @@ public class ProgressTracker : MonoBehaviour {
     private TextMeshPro percentText, instructionsText;
 
     private int currentProgress, userActionCount, totaltInstructions;
+
     private Vector3 increaseProgressSize = new Vector3(0f, 0.01f, 0f);
     private Vector3 moveProgressBar = new Vector3(0.01f, 0f, 0f);
 
@@ -21,7 +22,7 @@ public class ProgressTracker : MonoBehaviour {
         this.userActionCount = userActionCount;
         this.totaltInstructions = totaltInstructions;
 
-        float progress = (float)userActionCount / 100f;
+        float progress = 1f / userActionCount;
         increaseProgressSize = new Vector3(0f, progress, 0f);
         moveProgressBar = new Vector3(progress, 0f, 0f);
     }

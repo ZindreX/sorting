@@ -24,7 +24,7 @@ public class InsertionSort : SortAlgorithm {
     private GameObject infoPlate;
 
     private InsertionSortHolder pivotHolder;
-    private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
+    private Vector3 pivotHolderPos = new Vector3(0f, 10.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
 
 
     public override void InitTeachingAlgorithm(float algorithmSpeed)

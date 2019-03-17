@@ -70,6 +70,9 @@ public abstract class MainManager : MonoBehaviour {
     // Called when user click a stop button in game
     public void SafeStop()
     {
+        if (Settings.TeachingMode != Util.DEMO)
+            UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in step/user test
+
         userStoppedTask = true;
 
         activeChecklist = SHUT_DOWN_CHECK;
@@ -134,13 +137,19 @@ public abstract class MainManager : MonoBehaviour {
 
     public void StartAlgorithm()
     {
+        string teachingMode = Settings.TeachingMode;
+
+        // Add to checklist (used for safe shutdown)
+        AddToCheckList(teachingMode);
+
         // Start algorithm
-        switch (Settings.TeachingMode)
+        switch (teachingMode)
         {
             case Util.DEMO: PerformAlgorithmDemo(); break;
             case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
+
         userStoppedTask = false;
         controllerReady = true; // ???
         algorithmInitialized = true;

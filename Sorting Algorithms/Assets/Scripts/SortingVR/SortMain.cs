@@ -237,9 +237,6 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
-        // Add to checklist (used for safe shutdown)
-        AddToCheckList(Util.DEMO);
-
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn");
 
         elementManager.InteractionWithSortingElements(false);
@@ -260,8 +257,6 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmStepByStep()
     {
-        //AddToCheckList(Util.STEP_BY_STEP);
-
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use grip buttons\n to progress");
 
         // Getting instructions for this sample of sorting elements
@@ -389,7 +384,6 @@ public class SortMain : MainManager {
     // Makes specific objects visible/invisible based on when they should be active
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
-
         sortSettings.FillTooltips("Loading setup...");
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading setup", 1);
         yield return loading;
@@ -420,7 +414,7 @@ public class SortMain : MainManager {
         switch (sortAlgorithm)
         {
             case Util.BUBBLE_SORT:
-                GetComponentInChildren<BubbleSortManager>().enabled = true; //todo: change to a list instead
+                GetComponentInChildren<BubbleSortManager>().enabled = true; // needed to enable/disable?
                 GetComponentInChildren<InsertionSortManager>().enabled = false;
                 GetComponentInChildren<BucketSortManager>().enabled = false;
                 GetComponentInChildren<BucketManager>().enabled = false;

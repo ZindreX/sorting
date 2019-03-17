@@ -250,9 +250,12 @@ public class DFS : GraphAlgorithm, ITraverse {
         }
 
         // Line 12: End while-loop
-        yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);                    
+        yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
 
-        IsTaskCompleted = true;
+        if (graphMain.UserStoppedTask)
+            graphMain.UpdateCheckList(Util.DEMO, true);
+        else
+            isTaskCompleted = true;
     }
     #endregion
 

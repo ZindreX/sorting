@@ -37,6 +37,8 @@ public class UserTestManager : InstructionControlBase {
     private float startTime, endTime, timeSpent;
     private int streakScore, totalScore, currentStreak, longestStreak, difficultyMultiplier;
     private string difficultyLevel;
+
+
     private WaitForSeconds scoreUpdateDuration;
 
     /* Parameters:
@@ -63,6 +65,9 @@ public class UserTestManager : InstructionControlBase {
 
     public void IncrementTotalCorrect()
     {
+        if (mainManager.Settings.Algorithm == Util.BUBBLE_SORT && totalCorrect % 2 == 1) // Bubble sort sends 2x correct
+            return;
+
         totalCorrect++;
         progressTracker.Increment();
     }
@@ -81,7 +86,7 @@ public class UserTestManager : InstructionControlBase {
 
     public int CalculateScore()
     {
-        if (sortMain.GetTeachingAlgorithm().IsTaskCompleted)
+        if (mainManager.GetTeachingAlgorithm().IsTaskCompleted)
             return CalculateTotalScore();
         return CalculateIntermediateScore();
     }
@@ -114,7 +119,7 @@ public class UserTestManager : InstructionControlBase {
     // Sets when User Test ends
     public void SetEndTime()
     {
-        if (endTime == 0 && sortMain.GetTeachingAlgorithm().IsTaskCompleted)
+        if (endTime == 0 && mainManager.GetTeachingAlgorithm().IsTaskCompleted)
         {
             endTime = Time.deltaTime;
             timeSpent = endTime - startTime;

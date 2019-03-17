@@ -320,7 +320,11 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         }
         // Line 15: End while-loop
         yield return HighlightPseudoCode(CollectLine(15), Util.HIGHLIGHT_COLOR);
-        IsTaskCompleted = true;
+
+        if (graphMain.UserStoppedTask)
+            graphMain.UpdateCheckList(Util.DEMO, true);
+        else
+            isTaskCompleted = true;
     }
     #endregion
 
