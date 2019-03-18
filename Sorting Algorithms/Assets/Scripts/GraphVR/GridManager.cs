@@ -330,6 +330,8 @@ public class GridManager : GraphManager {
                 gridNodes[i, j].ResetNode();
             }
         }
+
+        base.ResetGraph();
     }
 
     public override void DeleteGraph()

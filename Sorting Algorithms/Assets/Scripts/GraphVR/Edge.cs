@@ -16,6 +16,8 @@ public abstract class Edge : MonoBehaviour {
     [SerializeField]
     protected int edgeID, cost;
     protected string graphStructure;
+    protected bool displayCost;
+
     protected Color currentColor;
 
     protected TextMeshPro costText;
@@ -68,8 +70,23 @@ public abstract class Edge : MonoBehaviour {
     public int Cost
     {
         get { return cost; }
-        set { cost = value; costText.text = value.ToString(); }
+        set { cost = value; }
     }
+
+    public Node GetNode(int i)
+    {
+        return (i == 1) ? node1 : node2;
+    }
+
+    public void DisplayCost(bool display)
+    {
+        displayCost = display;
+        if (display)
+            costText.text = cost.ToString();
+        else
+            costText.text = "";
+    }
+
 
     // *** Object settings ***
 

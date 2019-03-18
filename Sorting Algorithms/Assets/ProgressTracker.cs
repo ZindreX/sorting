@@ -47,5 +47,11 @@ public class ProgressTracker : MonoBehaviour {
     //    }
     //}
 
+    public void ResetProgress()
+    {
+        progressbar.transform.localScale -= increaseProgressSize * currentProgress;
+        progressbar.transform.position -= moveProgressBar * currentProgress;
+        currentProgress = 0;
+    }
 
 }

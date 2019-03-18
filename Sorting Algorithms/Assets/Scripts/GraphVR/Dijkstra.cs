@@ -69,7 +69,8 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.FOR_ALL_NEIGHBORS_INST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.SET_START_NODE_DIST_TO_ZERO);
-        // ..
+        
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_DIST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE);
 
@@ -132,6 +133,8 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             //
             Node currentNode = list[list.Count - 1];
             list.RemoveAt(list.Count - 1);
+            currentNode.DisplayEdgeCost(true);
+
             SetNodePseudoCode(currentNode, 1); // PseudoCode
             graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); // listVisual.RemoveCurrentNode(); // List visual
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;

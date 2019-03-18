@@ -216,6 +216,36 @@ public abstract class GraphManager : MonoBehaviour {
     }
 
 
+    // Reset graph (prepare for User Test)
+    public virtual void ResetGraph()
+    {
+        foreach (GameObject edgeObj in edges)
+        {
+            edgeObj.GetComponent<Edge>().DisplayCost(false);
+        }
+    }
+
+    public void MakeEdgeCostVisible(bool visible)
+    {
+        foreach (GameObject edgeObj in edges)
+        {
+            Edge edge = edgeObj.GetComponent<Edge>();
+
+            if (!visible)
+                edge.DisplayCost(false);
+            else
+            {
+                Node node1 = edge.GetNode(1);
+                Node node2 = edge.GetNode(2);
+
+                if (node1.Traversed || node2.Traversed)
+                    edge.DisplayCost(true);
+            }
+
+            
+        }
+    }
+
 
     // Delete graph
     public virtual void DeleteGraph()
@@ -247,9 +277,6 @@ public abstract class GraphManager : MonoBehaviour {
 
     // #Edges
     public abstract int GetNumberOfEdges();
-
-    // Reset graph (prepare for User Test)
-    public abstract void ResetGraph();
 
     // ------------------ Shortest path ------------------ 
 

@@ -169,6 +169,8 @@ public class TreeManager : GraphManager {
         {
             tree[i].ResetNode();
         }
+
+        base.ResetGraph();
     }
 
     public override void DeleteGraph()

@@ -24,6 +24,9 @@ public class ListVisual : MonoBehaviour {
     [SerializeField]
     private GameObject nodeRepContainerObject;
 
+    [SerializeField]
+    private GraphMain graphMain;
+
     private string listType;
 
     [SerializeField]
@@ -42,6 +45,7 @@ public class ListVisual : MonoBehaviour {
         seconds = algorithmSpeed;
 
         nodeRepresentations = new List<NodeRepresentation>();
+        graphMain.AddToCheckList(UtilGraph.LIST_VISUAL, true);
     }
 
     public void DestroyAndReset()
@@ -203,6 +207,8 @@ public class ListVisual : MonoBehaviour {
     // Updates value and position of one node representation and other involved node reps.
     public IEnumerator UpdateValueAndPositionOf(Node node, int index)
     {
+        graphMain.UpdateCheckList(UtilGraph.LIST_VISUAL, false);
+
         Color prevColor = node.CurrentColor;
         node.CurrentColor = UtilGraph.DIST_UPDATE_COLOR;
         // Node representation we want to move
@@ -258,6 +264,9 @@ public class ListVisual : MonoBehaviour {
             SetGravityForMultipleNodeReps(0, index, true);
         }
         node.CurrentColor = prevColor;
+
+        graphMain.UpdateCheckList(UtilGraph.LIST_VISUAL, true);
+        graphMain.WaitForSupportToComplete = false;
     }
 
     public NodeRepresentation FindNodeRepresentation(Node node)

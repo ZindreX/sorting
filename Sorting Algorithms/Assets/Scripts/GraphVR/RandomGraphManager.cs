@@ -167,6 +167,8 @@ public class RandomGraphManager : GraphManager {
         {
             nodes[i].ResetNode();
         }
+
+        base.ResetGraph();
     }
 
     public override void DeleteGraph()

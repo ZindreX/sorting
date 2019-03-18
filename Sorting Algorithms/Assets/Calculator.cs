@@ -9,6 +9,7 @@ public class Calculator : MonoBehaviour {
     public static readonly char NO_OP_CHOSEN = ' ';
     public static readonly Color STANDARD_BACKGROUND_COLOR = Color.black, CORRECT_INPUT_ANSWER_COLOR = Color.green, INCORRECT_INPUT_ANSWER_COLOR = Color.red;
     public static int BLANK = -1;
+    public const string VALUE1_ACTION = "Value 1 action", VALUE2_ACTION = "Value 2 action", OP_ACTION = "OP action";
 
     [SerializeField]
     private TextMeshPro displayText;
@@ -16,10 +17,20 @@ public class Calculator : MonoBehaviour {
     [SerializeField]
     private Renderer displayBackground;
 
+    /* Value represented by a list
+     * 
+     * List: [ 7, 3, 3, 1 ] -> 1*10^3 + 3*10^2 + 3*10^1 + 7*10^0 = 1337
+     * 
+     * 
+     * 
+    */
+
+
     private List<int> number1, number2; // Could just concacinate a string and parse to integer?
     private int value1, value2, result;
     private char op;
     private bool calculationInProcess, equalButtonClicked;
+    private Stack<string> undoActions;
 
     // For graph
     private string newValueLessThanCurrent;
@@ -58,6 +69,7 @@ public class Calculator : MonoBehaviour {
         calculationInProcess = true;
         equalButtonClicked = false;
         newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
+        undoActions = new Stack<string>();
 
         UpdateDisplay(false);
     }
@@ -140,11 +152,13 @@ public class Calculator : MonoBehaviour {
         {
             number1.Insert(0, value);
             value1 = ValueOf(number1);
+            undoActions.Push(VALUE1_ACTION);
         }
         else
         {
             number2.Insert(0, value);
             value2 = ValueOf(number2);
+            undoActions.Push(VALUE2_ACTION);
         }
 
         UpdateDisplay(false);
@@ -155,9 +169,15 @@ public class Calculator : MonoBehaviour {
     {
         // if user click operator button then set value 1 as zero
         if (number1.Count == 0)
+        {
             number1.Add(0);
+            value1 = ValueOf(number1);
+            undoActions.Push(VALUE1_ACTION);
+        }
 
         this.op = char.Parse(op);
+        undoActions.Push(OP_ACTION);
+
         UpdateDisplay(false);
     }
 
@@ -185,8 +205,30 @@ public class Calculator : MonoBehaviour {
     // Undo (TODO: improve)
     public void Undo()
     {
-        InitCalculation();
-        UpdateDisplay(false);
+        //InitCalculation();
+        if (undoActions.Count > 0)
+        {
+            string prevAction = undoActions.Pop();
+
+            switch (prevAction)
+            {
+                case VALUE1_ACTION:
+                    number1.RemoveAt(0);
+                    value1 = ValueOf(number1);
+                    break;
+
+                case VALUE2_ACTION:
+                    number2.RemoveAt(0);
+                    value2 = ValueOf(number2);
+                    break;
+
+                case OP_ACTION:
+                    op = NO_OP_CHOSEN;
+                    break;
+            }
+            UpdateDisplay(false);
+        }
+
     }
 
     public void BooleanButtonClick(bool answer)

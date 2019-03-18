@@ -102,6 +102,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         nodePosition = transform.position;
 
         // "Set"
+        edges = new List<Edge>();
         ResetNode();
     }
 
@@ -125,7 +126,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 // Hide text
                 textNodeDist.text = "";
                 textNodeID.text = "";
-
 
                 // Perform user move first
                 if (positionManager.ReportedNode != this)
@@ -162,7 +162,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public void DisplayNodeInfo()
     {
         SetNodeTextID(true);
-        textNodeDist.text = dist.ToString();
+        textNodeDist.text = UtilGraph.ConvertDist(dist);
     }
 
     public bool IsStartNode
@@ -176,7 +176,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         get { return isEndNode; }
         set { isEndNode = value; StartCoroutine(PlayerSelectedNode()); }
     }
-       
+    
+    // Remember to convert through Utilgraph.ConvertDist
     public int Dist
     {
         get { return dist; }
@@ -229,6 +230,14 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         }
     }
 
+    public void DisplayEdgeCost(bool display)
+    {
+        foreach (Edge edge in edges)
+        {
+            edge.DisplayCost(display);
+        }
+    }
+
     public List<Edge> Edges
     {
         get { return edges; }
@@ -264,7 +273,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     public virtual void ResetNode()
     {
-        edges = new List<Edge>();
         traversed = false;
         visited = false;
         prevEdge = null;
@@ -398,11 +406,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     }
 
                     //graphMain.UpdateListVisual(UtilGraph.ADD_NODE, this, Util.NO_VALUE);
-                    graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
                     break;
 
                 case UtilGraph.NODE_TRAVERSED:
                     traverseStatus = true;
+
+                    // Display the edge cost of each edge connected to this node
+                    DisplayEdgeCost(true);
 
                     // Mark as traversed, and change color of visited node & edge leading to this node
                     Traversed = true;
@@ -410,7 +420,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                         prevEdge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
 
                     //graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, this, Util.NO_VALUE);
-                    graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
                     break;
 
                 case UtilGraph.NODE_BACKTRACKED:
@@ -439,6 +448,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             // Reset
             shootStatus = false;
             traverseStatus = false;
+
+            graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
 
             if (NextMove)
             {

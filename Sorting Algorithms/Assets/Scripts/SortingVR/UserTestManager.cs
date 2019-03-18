@@ -238,6 +238,8 @@ public class UserTestManager : InstructionControlBase {
         currentStreak = 0;
         longestStreak = 0;
         scoreUpdateDuration = null;
+
+        progressTracker.ResetProgress();
     }
 
     public override string FillInBlackboard()

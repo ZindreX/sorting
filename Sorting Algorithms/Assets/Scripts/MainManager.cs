@@ -29,7 +29,7 @@ public abstract class MainManager : MonoBehaviour {
     protected bool userTestInitialized = false; 
     
     // Check list (startup, shutdown)
-    public const string START_UP_CHECK = "Start up check", SHUT_DOWN_CHECK = "Shut down check";
+    public const string START_UP_CHECK = "Start up check", WAIT_FOR_SUPPORT = "Wait for support", SHUT_DOWN_CHECK = "Shut down check";
     protected bool checkListModeActive;
     protected string activeChecklist;
     protected Dictionary<string, bool> safeStopChecklist;
@@ -60,7 +60,10 @@ public abstract class MainManager : MonoBehaviour {
             else if (Settings.IsDemo())
                 DemoUpdate();
             else if (Settings.IsUserTest())
-                UserTestUpdate();
+            {
+                if (!waitForSupportToComplete)
+                    UserTestUpdate();
+            }
         }
     }
 
@@ -118,11 +121,20 @@ public abstract class MainManager : MonoBehaviour {
         set { checkListModeActive = value; }
     }
 
-    public void AddToCheckList(string unit)
+    public bool CheckList(string unit)
+    {
+        if (safeStopChecklist.ContainsKey(unit))
+        {
+            return safeStopChecklist[unit];
+        }
+        return false;
+    }
+
+    public void AddToCheckList(string unit, bool ready)
     {
         if (!safeStopChecklist.ContainsKey(unit))
         {
-            safeStopChecklist.Add(unit, false);
+            safeStopChecklist.Add(unit, ready);
         }
     }
 
@@ -140,7 +152,7 @@ public abstract class MainManager : MonoBehaviour {
         string teachingMode = Settings.TeachingMode;
 
         // Add to checklist (used for safe shutdown)
-        AddToCheckList(teachingMode);
+        AddToCheckList(teachingMode, false);
 
         // Start algorithm
         switch (teachingMode)
@@ -159,12 +171,21 @@ public abstract class MainManager : MonoBehaviour {
     // Finds the number of instructions which the player has to do something to progress  
     protected int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
     {
+        Dictionary<string, List<string>> skipDict = GetTeachingAlgorithm().SkipDict;
+
         int count = 0;
         for (int x = 0; x < instructions.Count; x++)
         {
-            if (GetTeachingAlgorithm().SkipDict.ContainsKey(Util.SKIP_NO_ELEMENT) && GetTeachingAlgorithm().SkipDict.ContainsKey(Util.SKIP_NO_DESTINATION))
+            InstructionBase inst = instructions[x];
+
+            if (inst is ListVisualInstruction)
+                continue;
+
+            if (skipDict.ContainsKey(Util.SKIP_NO_ELEMENT) && skipDict.ContainsKey(Util.SKIP_NO_DESTINATION))
             {
-                if (!GetTeachingAlgorithm().SkipDict[Util.SKIP_NO_ELEMENT].Contains(instructions[x].Instruction) && !GetTeachingAlgorithm().SkipDict[Util.SKIP_NO_DESTINATION].Contains(instructions[x].Instruction))
+                string instruction = instructions[x].Instruction;
+
+                if (!skipDict[Util.SKIP_NO_ELEMENT].Contains(instruction) && !skipDict[Util.SKIP_NO_DESTINATION].Contains(instruction))
                     count++;
             }
         }

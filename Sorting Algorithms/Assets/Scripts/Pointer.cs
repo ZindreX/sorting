@@ -67,31 +67,31 @@ public class Pointer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         // Set position & rotation to hand
-        transform.position = hand.position;
+        transform.position = hand.position;// + new Vector3(0f, 0.05f, 0f);
         transform.rotation = hand.rotation;
 
         // Debugging without VR
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            if (currentTask == "Start nodes")
-            {
-                // Check if player wants to select start/end nodes
-                if (graphMain.ChosenNodes < numberOfNodesToChoose)
-                {
-                    // Currently choosing start node
-                    if (graphMain.ChosenNodes == 0)
-                    {
-                        graphMain.GraphManager.StartNode = prevNodeShot;
-                        graphMain.ChosenNodes++;
-                    }
-                    else if (prevNodeShot != graphMain.GraphManager.StartNode)
-                    {
-                        graphMain.GraphManager.EndNode = prevNodeShot;
-                        graphMain.ChosenNodes++;
-                    }
-                }
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.G))
+        //{
+        //    if (currentTask == "Start nodes")
+        //    {
+        //        // Check if player wants to select start/end nodes
+        //        if (graphMain.ChosenNodes < numberOfNodesToChoose)
+        //        {
+        //            // Currently choosing start node
+        //            if (graphMain.ChosenNodes == 0)
+        //            {
+        //                graphMain.GraphManager.StartNode = prevNodeShot;
+        //                graphMain.ChosenNodes++;
+        //            }
+        //            else if (prevNodeShot != graphMain.GraphManager.StartNode)
+        //            {
+        //                graphMain.GraphManager.EndNode = prevNodeShot;
+        //                graphMain.ChosenNodes++;
+        //            }
+        //        }
+        //    }
+        //}
 
         if (currentTask != "")
         {
@@ -121,7 +121,7 @@ public class Pointer : MonoBehaviour {
                     // If there was a node script attached
                     if (node != null)
                     {
-                        if (currentTask == "Start nodes")
+                        if (currentTask == UtilGraph.SELECT_NODE)
                         {
                             // Check if player wants to select start/end nodes
                             if (graphMain.ChosenNodes < numberOfNodesToChoose)
@@ -134,7 +134,7 @@ public class Pointer : MonoBehaviour {
                                 }
                                 else if (node != graphMain.GraphManager.StartNode)
                                 {
-                                    graphMain.GraphManager.EndNode = prevNodeShot;
+                                    graphMain.GraphManager.EndNode = node;
                                     graphMain.ChosenNodes++;
                                 }
                                 prevNodeShot = null;

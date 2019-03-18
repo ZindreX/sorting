@@ -80,6 +80,7 @@ public class UtilGraph : Util {
     public const string DESTROY_CURRENT_NODE = "Destroy current node", HAS_NODE_REPRESENTATION = "Has node representation";
     public const string PREPARE_BACKTRACKING = "Prepare backtracking";
 
+
     // Spacing
     public static float SPACE_BETWEEN_CODE_LINES = 0.6f;
 

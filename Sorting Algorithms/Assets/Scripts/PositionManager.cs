@@ -65,7 +65,15 @@ public class PositionManager : MonoBehaviour {
     public Node CurrentGoal
     {
         get { return currentGoal; }
-        set { playerWithinGoalPosition = false; currentGoal = value; }
+        set { currentGoal = value; UpdateNewGoal(value); }
+    }
+
+    private void UpdateNewGoal(Node node)
+    {
+        playerWithinGoalPosition = false;
+
+        if (currentGoal == previousNode)
+            previousNode = null;
     }
 
     public Node ReportedNode

@@ -121,6 +121,10 @@ public class GraphMain : MainManager {
                 }
                 break;
 
+            case WAIT_FOR_SUPPORT:
+
+
+                break;
 
             case SHUT_DOWN_CHECK:
                 // Get feedback from sub units whenever they are ready to shut down
@@ -240,12 +244,12 @@ public class GraphMain : MainManager {
             if (isShortestPath)
                 numberOfNodesToChoose++;
 
+            // Init pointer with start task
+            pointer.InitPointer(UtilGraph.SELECT_NODE, numberOfNodesToChoose);
+
             // Start check list
             activeChecklist = START_UP_CHECK;
             checkListModeActive = true;
-
-            // Init pointer with start task
-            pointer.InitPointer("Start nodes", numberOfNodesToChoose);
         }
         else
             StartCoroutine(SetAutomaticallyImportantNodes(isShortestPath));
@@ -303,6 +307,7 @@ public class GraphMain : MainManager {
     //  --------------------------------------- Reset methods ---------------------------------------
     public override void DestroyAndReset()
     {
+        activeChecklist = "";
         checkListModeActive = false;
         chosenNodes = 0;
         numberOfNodesToChoose = 0;
@@ -312,9 +317,6 @@ public class GraphMain : MainManager {
         backtracking = false;
         userTestGoalActive = false;
         usingCalculator = false;
-
-        // ???
-        //selectedNodesReady = false;
 
         // Stop ongoing actions
         UserStoppedTask = true;
@@ -335,6 +337,14 @@ public class GraphMain : MainManager {
         pointer.ResetPointer();
 
         StartCoroutine(ActivateTaskObjects(false));
+
+
+        switch (graphSettings.TeachingMode)
+        {
+            case Util.DEMO: break;
+            case Util.STEP_BY_STEP: break;
+            case Util.USER_TEST: userTestManager.ResetState(); break;
+        }
     }
 
     /* --------------------------------------- Demo ---------------------------------------
@@ -412,7 +422,7 @@ public class GraphMain : MainManager {
             userTestGoalActive = false;
 
         // First check if user test setup is complete
-        if (userTestManager.HasInstructions() && !waitForSupportToComplete)
+        if (userTestManager.HasInstructions())
         {
             // If a calculation is required to progress in the algorithm
             if (usingCalculator)
@@ -486,6 +496,7 @@ public class GraphMain : MainManager {
                 return 1;
 
             WaitForSupportToComplete = true;
+
             ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
             Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
 
@@ -512,14 +523,22 @@ public class GraphMain : MainManager {
 
                 case UtilGraph.END_NODE_FOUND:
                     // Stat backtracking
-
+                    pseudoCodeViewer.DestroyPseudoCode();
                     break;
-                case UtilGraph.PREPARE_BACKTRACKING: listVisual.CreateBackTrackList(graphManager.EndNode); break;
+
+                case UtilGraph.PREPARE_BACKTRACKING:
+                    listVisual.CreateBackTrackList(graphManager.EndNode);
+                    break;
+
                 default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
             }
-            WaitForSupportToComplete = false; // move out? because of coroutine
+
+            // Check if list visual is ready (if coroutine is started -> false)
+            if (CheckList(UtilGraph.LIST_VISUAL))
+                waitForSupportToComplete = false;
 
             return 1;
+
         }
         else
         {
@@ -550,6 +569,14 @@ public class GraphMain : MainManager {
                         case UtilGraph.PRIORITY_REMOVE_NODE:
                             // Highlight the node we currently work at
                             node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+
+                            // Hide all edge cost to make it easier to see node distances
+                            graphManager.MakeEdgeCostVisible(false);
+                            break;
+
+                        case UtilGraph.FOR_ALL_NEIGHBORS_INST:
+                            // Make edge cost visible again
+                            graphManager.MakeEdgeCostVisible(true);
                             break;
                     }
                 }
@@ -589,8 +616,8 @@ public class GraphMain : MainManager {
                                 usingCalculator = true;
                                 calculator.InitCalculation();
                             }
-                            else
-                                return 1;
+                            //else
+                            //    return 1;
 
                             break;
                     }
@@ -627,7 +654,6 @@ public class GraphMain : MainManager {
             Debug.Log("Nothing to do for player, get another instruction");
             return 1;
         }
-
     }
 
     // Check whether the current instruction requires an action performed by the player
@@ -670,28 +696,23 @@ public class GraphMain : MainManager {
     // Used by demo to update list visual (node/list representation)
     public void UpdateListVisual(string action, Node node, int index)
     {
-        if (graphSettings.Difficulty < UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+        switch (action)
         {
-            switch (action)
-            {
-                case UtilGraph.ADD_NODE: listVisual.AddListObject(node); break;
-                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(node, index); break;
-                case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
-                case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
-            }
+            case UtilGraph.ADD_NODE: listVisual.AddListObject(node); break;
+            case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(node, index); break;
+            case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
+            case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
         }
     }
 
     public bool CheckListVisual(string action, Node node)
     {
-        if (graphSettings.Difficulty == UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+        switch (action)
         {
-            switch (action)
-            {
-                case UtilGraph.HAS_NODE_REPRESENTATION: return listVisual.HasNodeRepresentation(node);
-                default: Debug.LogError("Add case!"); return false;
-            }
+            case UtilGraph.HAS_NODE_REPRESENTATION: return listVisual.HasNodeRepresentation(node);
+            default: Debug.LogError("Add case!"); return false;
         }
+
         Debug.LogError("False false!");
         return true; // returning true leads to UpdateListVisual which will be blocked anyways
     }
