@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Valve.VR.InteractionSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Portal : MonoBehaviour {
@@ -17,16 +18,70 @@ public class Portal : MonoBehaviour {
     [SerializeField]
     private int sceneBuildIndex;
 
+    // New feature
+    private int countdown;
+    private float withinWidth = 1f, withinDepth = 0.5f;
+    private bool playerStandingNearPortal, countdownStarted;
+
+    private WaitForSeconds portalSubLoadDuration = new WaitForSeconds(0.5f);
+
     [SerializeField]
     private TextMeshPro portalTitle;
 
     private Rigidbody rb;
+    private Player player;
 
+    // Audio
+    private AudioSource audioSource;
 
     private void Awake()
     {
         rb = GetComponent(typeof(Rigidbody)) as Rigidbody;
         portalTitle.text = ConvertSceneBuildIndexToName(sceneBuildIndex);
+
+        player = FindObjectOfType<Player>();
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        Vector3 playerPos = player.transform.position;
+
+        // >>> Check if player is standing near this portal
+        float playerRelToNodeX = Mathf.Abs(playerPos.x - transform.position.x);
+        float playerRelToNodeZ = Mathf.Abs(playerPos.z - transform.position.z);
+ 
+        if (playerRelToNodeX < withinWidth && playerRelToNodeZ < withinDepth)
+        {
+            playerStandingNearPortal = true;
+
+            if (!countdownStarted)
+                StartCoroutine(PortalStart());
+        }
+        else
+        {
+            playerStandingNearPortal = false;
+        }
+
+
+    }
+
+    private IEnumerator PortalStart()
+    {
+        countdownStarted = true;
+        countdown = 3;
+        audioSource.Play();
+        for (int i=0; i < 3; i++)
+        {
+            Debug.Log("Countdown: " + countdown);
+            yield return portalSubLoadDuration;
+            countdown--;
+        }
+
+        if (playerStandingNearPortal && countdownStarted)
+            LoadLevel();
+        else
+            countdownStarted = false;
     }
 
     private void LoadLevel()

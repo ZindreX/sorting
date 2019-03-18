@@ -51,6 +51,7 @@ public abstract class MainManager : MonoBehaviour {
         {
             // When an algorithm task is finished, do some stuff
             TaskCompletedFinishOff();
+            UpdateCheckList(Settings.TeachingMode, true);
         }
         else
         {

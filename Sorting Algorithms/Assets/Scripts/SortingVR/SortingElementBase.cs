@@ -24,6 +24,8 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected HolderBase currentStandingOn;
     protected Vector3 placementAboveHolder;
 
+    protected AudioSource audioSource;
+
     // Debugging
     #region Debugging variables:
     [SerializeField]
@@ -36,6 +38,9 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     {
         sortingElementID = SORTING_ELEMENT_NR++;
         name = MyRole();
+
+        // Audio
+        audioSource = GetComponent<AudioSource>();
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -62,7 +67,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     public bool IsSorted
     {
         get { return isSorted; }
-        set { isSorted = value; }
+        set { isSorted = value; if (value) audioSource.Play(); }
     }
 
     public bool IsCompare
@@ -102,7 +107,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                 currentHolderID = value.HolderID;
                 PlacementAboveHolder = value.transform.position;
             }
-            } // new stuff
+            }
     }
 
     public int SortingElementID

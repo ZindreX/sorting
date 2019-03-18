@@ -2981,13 +2981,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltips: {fileID: 721067195}
   useDebuggingSettings: 1
-  teachingModeEditor: 2
+  teachingModeEditor: 0
   algorithmSpeedEditor: 2
   difficultyEditor: 0
   allowDuplicates: 0
   sortMain: {fileID: 236630474}
   algorithmEditor: 0
-  numberofElementsEditor: 0
+  numberofElementsEditor: 1
   sortingCaseEditor: 2
 --- !u!4 &360338525 stripped
 Transform:

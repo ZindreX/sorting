@@ -99,9 +99,11 @@ public class SortMain : MainManager {
                 foreach (KeyValuePair<string, bool> entry in safeStopChecklist)
                 {
                     string key = entry.Key;
+                    Debug.Log("Key: " + key);
                     if (!safeStopChecklist[key])
                     {
                         readyForDestroy = false;
+                        Debug.Log("Not ready");
                         break;
                     }
 
