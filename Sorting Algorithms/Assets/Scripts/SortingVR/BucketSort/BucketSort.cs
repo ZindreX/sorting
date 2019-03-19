@@ -24,6 +24,15 @@ public class BucketSort : SortAlgorithm {
     [SerializeField]
     private GameObject infoPlate;
 
+
+    public override void InitTeachingAlgorithm(float algorithmSpeed)
+    {
+        element1Value = "list[i]";
+        //element2Value = "list[j + 1]";
+
+        base.InitTeachingAlgorithm(algorithmSpeed);
+    }
+
     public override string AlgorithmName
     {
         get { return UtilSort.BUCKET_SORT; }
@@ -43,20 +52,32 @@ public class BucketSort : SortAlgorithm {
             case 0: lineOfCode += string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets); break;
             case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets); break;
             case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, (sortMain.SortSettings.NumberOfElements - 1)); break;
-            case 3: lineOfCode += string.Format("        {0} = {1} * {2} / {3}", bucketIndex, value1, bucketSortManager.NumberOfBuckets, UtilSort.MAX_VALUE); break;
+            case 3: lineOfCode += string.Format("        bucket = {0}", bucketIndex); break;
             case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, value1); break;
             case 5: lineOfCode += "    end for"; break;
-            case 6: lineOfCode += "    Sorting each bucket w/InsertionSort"; break; //case 6: return string.Format("    for i={0} to {1}:", i, j);
+            case 6: lineOfCode += "    Sorting each bucket w/InsertionSort"; break;
             case 7: lineOfCode += "    k = 0"; break;
             case 8: lineOfCode += string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1)); break;
             case 9: lineOfCode += string.Format("        for j={0} to {1}:", j, loopRange); break;
-            case 10: lineOfCode += string.Format("            list[{0}] = " + value1, k); break; //buckets[{1}][{2}]", k, i, j);
-            case 11: lineOfCode += "            " + k + " = " + (k-1) + " + " + "1"; break;
+            case 10: lineOfCode += string.Format("            list[{0}] = " + value1, k); break;
+            case 11: lineOfCode += "            k = " + k; break; // already updated
             case 12: lineOfCode += "        end for"; break;
             case 13: lineOfCode += "    end for"; break;
             default: return "X";
         }
         return lineOfCode;
+    }
+
+    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    {
+        switch (lineNr)
+        {
+            case 3: return init ? "        bucket = list[i] * N / MAX_VALUE" : "        bucket = list[" + i + "] * " + bucketSortManager.NumberOfBuckets + " / " + UtilSort.MAX_VALUE;
+            case 4: return init ? "        buckets[bucket] <- list[i]" : "        buckets[" + bucketIndex + "] <- list[" + i + "]";
+            case 10: return init ? "            list[k] = buckets[i][j]" : "            list[" + k + "] = buckets[" + i + "][" + j + "]";
+            case 11: return init ? "            k = k + 1" : "            k = " + (k - 1) + " + 1";
+            default: return "X";
+        }
     }
 
     public override int FirstInstructionCodeLine()

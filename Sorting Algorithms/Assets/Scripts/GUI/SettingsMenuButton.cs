@@ -7,8 +7,10 @@ public abstract class SettingsMenuButton : SettingsMenuItem {
 
     protected TextMeshPro buttonText;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         buttonText = GetComponentInChildren<TextMeshPro>();
 
         if (!this is StaticButton)

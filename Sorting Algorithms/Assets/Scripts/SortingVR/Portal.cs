@@ -23,7 +23,7 @@ public class Portal : MonoBehaviour {
     private float withinWidth = 1f, withinDepth = 0.5f;
     private bool playerStandingNearPortal, countdownStarted;
 
-    private WaitForSeconds portalSubLoadDuration = new WaitForSeconds(0.5f);
+    private WaitForSeconds portalSubLoadDuration = new WaitForSeconds(1f);
 
     [SerializeField]
     private TextMeshPro portalTitle;
@@ -50,10 +50,13 @@ public class Portal : MonoBehaviour {
         // >>> Check if player is standing near this portal
         float playerRelToNodeX = Mathf.Abs(playerPos.x - transform.position.x);
         float playerRelToNodeZ = Mathf.Abs(playerPos.z - transform.position.z);
- 
+
         if (playerRelToNodeX < withinWidth && playerRelToNodeZ < withinDepth)
         {
             playerStandingNearPortal = true;
+
+            if (sceneBuildIndex > LARGEST_BUILD_INDEX)
+                return;
 
             if (!countdownStarted)
                 StartCoroutine(PortalStart());
@@ -62,8 +65,6 @@ public class Portal : MonoBehaviour {
         {
             playerStandingNearPortal = false;
         }
-
-
     }
 
     private IEnumerator PortalStart()
@@ -78,7 +79,7 @@ public class Portal : MonoBehaviour {
             countdown--;
         }
 
-        if (playerStandingNearPortal && countdownStarted)
+        if (playerStandingNearPortal)
             LoadLevel();
         else
             countdownStarted = false;
@@ -107,7 +108,9 @@ public class Portal : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag(UtilSort.PLAYER_TAG) || collision.collider.CompareTag(UtilSort.PORTAL_OBJECT))
+        Player player = collision.collider.GetComponent<Player>();
+
+        if (player != null)
         {
             if (sceneBuildIndex <= LARGEST_BUILD_INDEX)
                 LoadLevel();

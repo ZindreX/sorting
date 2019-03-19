@@ -71,9 +71,25 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    public TextMeshPro CodeLine(int index)
+    //public TextMeshPro CodeLine(int index)
+    //{
+    //    return codeLines[index];
+    //}
+
+    public void SetCodeLine(int lineNr, string text, Color color)
     {
-        return codeLines[index];
+        // Check if lineNr exists
+        if (ValidIndex(lineNr))
+        {
+            // Change text (with or without lineNr)
+            if (algorithm.IncludeLineNr)
+                codeLines[lineNr].text = lineNr + text;
+            else
+                codeLines[lineNr].text = text;
+
+            // Change color
+            codeLines[lineNr].color = color;
+        }
     }
 
     public void SetCodeLine(string text, Color color)
@@ -87,11 +103,13 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
                 codeLines[index].text = text;
             else
                 codeLines[index].text = lineOfCodeSplit[1];
-                
+
             codeLines[index].color = color;
         }
     }
 
+
+    // Used to remove highlight
     public void ChangeColorOfText(int index, Color color)
     {
         if (ValidIndex(index))
@@ -103,30 +121,30 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         return index >= 0 && index < codeLines.Length;
     }
 
-    public void CLEAN_HIGHTLIGHT(int start, int end)
-    {
-        for (int x=start; x <= end; x++)
-        {
-            ChangeColorOfText(x, Util.BLACKBOARD_TEXT_COLOR);
-        }
-    }
+    //public void CLEAN_HIGHTLIGHT(int start, int end)
+    //{
+    //    for (int x=start; x <= end; x++)
+    //    {
+    //        ChangeColorOfText(x, Util.BLACKBOARD_TEXT_COLOR);
+    //    }
+    //}
 
 
-    private void PseudoCodeFirstFinal(string instruction, Color color)
-    {
-        switch (instruction)
-        {
-            case UtilSort.FIRST_INSTRUCTION:
-                CLEAN_HIGHTLIGHT(algorithm.FirstInstructionCodeLine() + 1, algorithm.FinalInstructionCodeLine());
-                ChangeColorOfText(algorithm.FirstInstructionCodeLine(), color);
-                break;
+    //private void PseudoCodeFirstFinal(string instruction, Color color)
+    //{
+    //    switch (instruction)
+    //    {
+    //        case UtilSort.FIRST_INSTRUCTION:
+    //            CLEAN_HIGHTLIGHT(algorithm.FirstInstructionCodeLine() + 1, algorithm.FinalInstructionCodeLine());
+    //            ChangeColorOfText(algorithm.FirstInstructionCodeLine(), color);
+    //            break;
 
-            case UtilSort.FINAL_INSTRUCTION:
-                CLEAN_HIGHTLIGHT(0, algorithm.FinalInstructionCodeLine() - 1);
-                ChangeColorOfText(algorithm.FinalInstructionCodeLine(), color);
-                break;
-        }
-    }
+    //        case UtilSort.FINAL_INSTRUCTION:
+    //            CLEAN_HIGHTLIGHT(0, algorithm.FinalInstructionCodeLine() - 1);
+    //            ChangeColorOfText(algorithm.FinalInstructionCodeLine(), color);
+    //            break;
+    //    }
+    //}
 
     public void EmptyContent()
     {
@@ -151,6 +169,5 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             if (codeLines[x] != null)
                 Destroy(codeLines[x].gameObject);
         }
-        //PseudoCodeSetup();
     }
 }

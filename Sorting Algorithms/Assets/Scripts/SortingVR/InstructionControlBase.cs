@@ -14,6 +14,13 @@ public abstract class InstructionControlBase : MonoBehaviour {
 
     protected MainManager mainManager;
 
+    protected AudioManager audioManager;
+
+    private void Awake()
+    {
+        audioManager = FindObjectOfType<AudioManager>();
+    }
+
     public virtual void Init(Dictionary<int, InstructionBase> instructions)
     {
         this.instructions = instructions;

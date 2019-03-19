@@ -21,6 +21,13 @@ public abstract class SettingsMenuItem : MonoBehaviour {
 
     protected Section section;
 
+    protected AudioManager audioManager;
+
+    protected virtual void Awake()
+    {
+        audioManager = FindObjectOfType<AudioManager>();
+    }
+
     public string ItemID
     {
         get { return itemID; }
@@ -46,6 +53,8 @@ public abstract class SettingsMenuItem : MonoBehaviour {
 
     public void OnClickDo()
     {
+        audioManager.Play("ButtonClick");
+
         // Perform item role first
         switch (ItemRole())
         {

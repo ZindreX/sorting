@@ -34,9 +34,15 @@ public abstract class MainManager : MonoBehaviour {
     protected string activeChecklist;
     protected Dictionary<string, bool> safeStopChecklist;
 
-
+    // Audio
+    protected AudioManager audioManager;
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
+
+    protected virtual void Awake()
+    {
+        audioManager = FindObjectOfType<AudioManager>();
+    }
 
     void Update()
     {

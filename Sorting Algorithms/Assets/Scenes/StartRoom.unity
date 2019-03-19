@@ -173,7 +173,7 @@ MonoBehaviour:
   - {fileID: 44487353}
   - {fileID: 224696123}
   withinValue: 0.6
-  playerWithinGoalPosition: 0
+  playerWithinAreas: 
 --- !u!4 &143943238
 Transform:
   m_ObjectHideFlags: 0
@@ -759,13 +759,15 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1849810679}
-  m_Text: 'Welcome to SortingVR!
+  m_Text: 'Welcome to
+
+    <insert_name>VR!
 
 
     Tutorial --->
 
 
-    <--- SortingVR
+    <--- Main menu
 
 '
   m_OffsetZ: 0

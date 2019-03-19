@@ -24,7 +24,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected HolderBase currentStandingOn;
     protected Vector3 placementAboveHolder;
 
-    protected AudioSource audioSource;
+    protected AudioManager audioManager;
 
     // Debugging
     #region Debugging variables:
@@ -40,7 +40,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         name = MyRole();
 
         // Audio
-        audioSource = GetComponent<AudioSource>();
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -67,7 +67,13 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     public bool IsSorted
     {
         get { return isSorted; }
-        set { isSorted = value; if (value) audioSource.Play(); }
+        set { ElementBecomeSorted(value); isSorted = value; }
+    }
+
+    private void ElementBecomeSorted(bool sorted)
+    {
+        if (!isSorted && sorted)
+            audioManager.Play("Sorted");
     }
 
     public bool IsCompare
@@ -153,7 +159,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
 
                     case UtilSort.INIT_ERROR: case UtilSort.WRONG_HOLDER:
                         standingInCorrectHolder = false;
-                        //parent.GetComponent<ScoreManager>().Mistake();
+                        parent.GetComponent<UserTestManager>().Mistake();
                         break;
 
                     default: Debug.Log("Add '" + validation + "' case, or ignore"); break;
@@ -191,6 +197,8 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     {
         if (collision.collider.tag == UtilSort.HOLDER_TAG)
         {
+            audioManager.Play("Collision");
+
             HolderBase holder = collision.collider.GetComponent<HolderBase>();
             if (parent.SortSettings.IsDemo())
             {

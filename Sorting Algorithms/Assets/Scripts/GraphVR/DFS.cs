@@ -48,6 +48,11 @@ public class DFS : GraphAlgorithm, ITraverse {
         return codeLine;
     }
 
+    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    {
+        return "X";
+    }
+
     public override int FirstInstructionCodeLine()
     {
         return 1;

@@ -19,8 +19,9 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // Demo variables
     protected int i, j, k;
-    protected string i_str = "i", j_str = "j", k_str = "k";
+    //protected string i_str = "i", j_str = "j", k_str = "k";
     protected string lengthOfList = "len(list)";
+    protected bool lineCalculation = true;
 
     // User Test
     protected Dictionary<string, List<string>> skipDict;
@@ -28,8 +29,8 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public virtual void InitTeachingAlgorithm(float algorithmSpeed)
     {
         demoStepDuration = new WaitForSeconds(algorithmSpeed);
-        skipDict = new Dictionary<string, List<string>>();
         
+        skipDict = new Dictionary<string, List<string>>();
         AddSkipAbleInstructions();
     }
 
@@ -39,7 +40,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         get { return pseudoCodeInitilized; }
         set { pseudoCodeInitilized = value; }
     }
-
 
     public WaitForSeconds DemoStepDuration
     {
@@ -79,9 +79,41 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     // Used in Demo for highlighting pseudo code line for <seconds> then go back to normal color
     protected IEnumerator HighlightPseudoCode(string text, Color color)
     {
-        pseudoCodeViewer.SetCodeLine(text, color);
+        string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
+        int index = UtilGraph.ConvertCostToInt(lineOfCodeSplit[0]);
+        string pseudoCodeLine = lineOfCodeSplit[1];
+
+        /* If a calculation takes place, then first display formula/pseudocode -> insert values -> result
+         * E.g.:
+         * Step 1: i = i + 1
+         * Step 2: i = 1 + 1
+         * Step 3: i = 2
+        */
+        if (lineCalculation)
+        {
+            bool valuesNotInserted = true;
+            for (int x=0; x < 2; x++)
+            {
+                string calculation = PseudocodeIntoSteps(index, valuesNotInserted);
+
+                if (calculation == "X")
+                    break;
+
+                pseudoCodeViewer.SetCodeLine(index, calculation, color);
+                yield return demoStepDuration;
+                pseudoCodeViewer.SetCodeLine(index, calculation, Util.BLACKBOARD_TEXT_COLOR);
+
+                valuesNotInserted = false;
+            }
+
+        }
+
+        // Result
+        pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, color);
         yield return demoStepDuration;
-        pseudoCodeViewer.SetCodeLine(text, Util.BLACKBOARD_TEXT_COLOR);
+        pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, Util.BLACKBOARD_TEXT_COLOR);
+
+
     }
 
 
@@ -98,10 +130,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         i = 0;
         j = 0;
         k = 0;
-        i_str = "i";
-        j_str = "j";
-        k_str = "k";
-        lengthOfList = "len(Q)";
+        lengthOfList = "len(list)";
         isTaskCompleted = false;
         demoStepDuration = null;
         skipDict = null;
@@ -126,10 +155,14 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     */
     public abstract string CollectLine(int lineNr);
 
+    // Used to display (calculation) pseudocode in more steps
+    protected abstract string PseudocodeIntoSteps(int lineNr, bool init);
+
     // first instruction line of code
     public abstract int FirstInstructionCodeLine();
     // final instruction line of code
     public abstract int FinalInstructionCodeLine();
+
 
     /* Almost the same method as for the Step by step teaching method
      * - Only does the visualization of the pseudocode

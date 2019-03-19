@@ -58,6 +58,11 @@ public class MergeSort : SortAlgorithm {
         return "0: No pseudocode for merge sort yet.";
     }
 
+    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override int FirstInstructionCodeLine()
     {
         return 0;

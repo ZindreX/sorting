@@ -53,6 +53,18 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         return lineOfCode;
     }
 
+    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    {
+        switch (lineNr)
+        {
+            case 6: return init ? "       w <- list.PriorityRemove()" : "       " + node1Alpha + " <- list.PriorityRemove()";
+            case 7: return init ? "       for all neighbors of w in Graph:" : "       for all neighbors of " + node1Alpha + " in Graph:";
+            case 8: return init ? "           Visit neighbor v" : "           Visit neighbor " +  node2Alpha;
+            case 9: return init ? "           if (w.Dist + edge(w, v).Cost < v.Dist):" : "           if (" + node1Alpha + ".Dist + edge(" + node1Alpha + ", " + node2Alpha + ").Cost < " + node2Alpha + ".Dist):";
+            default: return "X";
+        }
+    }
+
     public override int FirstInstructionCodeLine()
     {
         return 1;

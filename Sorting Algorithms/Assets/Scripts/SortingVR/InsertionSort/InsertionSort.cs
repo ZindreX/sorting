@@ -24,7 +24,7 @@ public class InsertionSort : SortAlgorithm {
     private GameObject infoPlate;
 
     private InsertionSortHolder pivotHolder;
-    private Vector3 pivotHolderPos = new Vector3(0f, 10.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
+    private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
 
 
     public override void InitTeachingAlgorithm(float algorithmSpeed)
@@ -77,10 +77,10 @@ public class InsertionSort : SortAlgorithm {
         {
             case 0: lineOfCode +=  "InsertionSort(list)"; break;
             case 1: lineOfCode +=  "i = 1"; break;
-            case 2: lineOfCode +=  "while ( " + i_str + " < " + lengthOfList + " )"; break;
-            case 3: lineOfCode +=  "   j = " + iMinus1; break;
+            case 2: lineOfCode +=  "while ( " + i + " < " + lengthOfList + " )"; break;
+            case 3: lineOfCode +=  "   j = " + iMinus1; lineCalculation = true; break;
             case 4: lineOfCode +=  "   pivot = " + element1Value; break;
-            case 5: lineOfCode +=  "   while ( " + j_str + " >= 0 and pivot < " + element2Value + " )"; break;
+            case 5: lineOfCode +=  "   while ( " + j + " >= 0 and pivot < " + element2Value + " )"; break;
             case 6: lineOfCode +=  "       move " + element2Value + " to list[" + jPlus1 + "]"; break; // (j_str + 1) 
             case 7: lineOfCode +=  "       j = " + jMinus1; break; // j_str = (j_str + 1) - 1
             case 8: lineOfCode +=  "   end while"; break;
@@ -92,12 +92,26 @@ public class InsertionSort : SortAlgorithm {
         return lineOfCode;
     }
 
+    // Extra
+    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    {
+        switch (lineNr)
+        {
+            case 2: return init ? "while ( i < len(list) )" : "while ( " + i + " < " + lengthOfList + " )";
+            case 3: return init ? "   j = i - 1" :  "   j = " + i + " - 1";
+            case 4: return init ? "   pivot = list[i]" : "   pivot = list[" + i + "]";
+            case 5: return init ? "   while ( j >= 0 and pivot < list[j] )" : "   while ( " + j + " >= 0 and pivot < list[" + j + "] )";
+            case 6: return init ? "       move list[j] to list[j + 1]" : "       move list[" + j + "] to list[" + j + " + 1]";
+            case 7: return init ? "       j = j - 1" : "       j = " + j + " - 1";
+            case 9: return init ? "   list[j + 1] = pivot" : "   list[" + j + " + 1] = pivot";
+            case 10: return init ? "   i = i + 1" : "   i = " + i + " + 1";
+            default: return "X";
+        }
+    }
+
     private string iMinus1 = "i - 1", iPlus1 = "i + 1", jMinus1 = "j - 1", jPlus1 = "j + 1";
     private void UpdatePseudoValues(int lineNr)
     {
-        i_str = i.ToString();
-        j_str = j.ToString();
-
         iMinus1 = (i - 1).ToString();
         iPlus1 = (i + 1).ToString();
 
@@ -130,6 +144,7 @@ public class InsertionSort : SortAlgorithm {
     {
         switch (method)
         {
+            case UtilSort.INIT: CreatePivotHolder(); break;
             case UtilSort.INCREMENT: MovePivotHolder(true); break;
             case UtilSort.DECREMENT: MovePivotHolder(false); break;
         }
@@ -217,8 +232,6 @@ public class InsertionSort : SortAlgorithm {
     #region Insertion Sort: All Moves Demo (Visuals)
     public override IEnumerator Demo(GameObject[] list)
     {
-        // Create pivot holder
-        CreatePivotHolder();
         Vector3 temp = new Vector3();
 
         // Testing
@@ -436,7 +449,6 @@ public class InsertionSort : SortAlgorithm {
         // Gather information from instruction
         InsertionSortInstruction insertionInstruction = null;
         InsertionSortElement sortingElement = null;
-        int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE; // k = Util.NO_VALUE;
 
         if (gotSortingElement)
         {
@@ -479,6 +491,7 @@ public class InsertionSort : SortAlgorithm {
 
             case UtilSort.FIRST_INSTRUCTION:
                 lineOfCode.Add(FirstInstructionCodeLine());
+                lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
                 break;
 
             case UtilSort.FIRST_LOOP:
@@ -495,7 +508,7 @@ public class InsertionSort : SortAlgorithm {
                 else
                     sortingElement.IsPivot = !insertionInstruction.IsPivot;
 
-                value1 = sortingElement.Value;
+                PreparePseudocodeValue(sortingElement.Value, 1);
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
                 lineOfCode.Add(4);
@@ -516,7 +529,7 @@ public class InsertionSort : SortAlgorithm {
                         sortingElement.IsSorted = !insertionInstruction.IsSorted;
                 }
 
-                value2 = sortingElement.Value;
+                PreparePseudocodeValue(sortingElement.Value, 2);
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
                 lineOfCode.Add(5);
@@ -635,10 +648,8 @@ public class InsertionSort : SortAlgorithm {
     #region User test display pseudocode as support
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
-        //Debug.LogError("Instruction: " + instruction.Instruction);
         // Gather information from instruction
         InsertionSortElement sortingElement = null;
-        //i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE; // k = Util.NO_VALUE;
 
         if (gotSortingElement)
             sortingElement = sortMain.ElementManager.GetSortingElement(((InsertionSortInstruction)instruction).SortingElementID).GetComponent<InsertionSortElement>();
@@ -736,9 +747,6 @@ public class InsertionSort : SortAlgorithm {
     #region Insertion Sort: User Test / Tutorial step by step --> Instructions creator
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
-        // Create pivot holder
-        CreatePivotHolder();
-
         // Instructions for user test + pseudo code
         int instructionNr = 0;
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();

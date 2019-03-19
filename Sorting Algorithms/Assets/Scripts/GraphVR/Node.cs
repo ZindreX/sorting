@@ -25,6 +25,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     private WaitForSeconds selectedDuration = new WaitForSeconds(0.5f);
 
     // Instruction variables
+    private bool shootStatus, traverseStatus;
     protected int userMove = 0, validatedUserMove = 0;
     protected bool visitNextMove, traverseNextMove;
     protected bool nextMove;
@@ -53,6 +54,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     private float withinNode = 0.6f;
     private PositionManager positionManager;
     private GraphMain graphMain;
+
+    private AudioManager audioManager;
 
     // Debugging
     #region Debugging variables:
@@ -97,6 +100,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
         positionManager = FindObjectOfType<PositionManager>();
         graphMain = FindObjectOfType<GraphMain>();
+        audioManager = FindObjectOfType<AudioManager>();
 
         // Node position
         nodePosition = transform.position;
@@ -200,13 +204,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public bool Traversed
     {
         get { return traversed; }
-        set { traversed = value; CurrentColor = UtilGraph.TRAVERSED_COLOR; }
+        set { traversed = value; CurrentColor = UtilGraph.TRAVERSED_COLOR; if (value) audioManager.Play("Traverse"); }
     }
 
     public bool Visited
     {
         get { return visited; }
-        set { visited = value; CurrentColor = UtilGraph.VISITED_COLOR; }
+        set { visited = value; CurrentColor = UtilGraph.VISITED_COLOR; if (value) audioManager.Play("Visit"); }
     }
 
     public Color CurrentColor
@@ -367,7 +371,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         }
     }
 
-    private bool shootStatus, traverseStatus;
     public void PerformUserMove(string userAction)
     {
         userMove++;
@@ -432,29 +435,32 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                 case Util.INIT_ERROR:
                 case UtilGraph.NODE_ERROR:
-                    Debug.Log("Node status: error");
                     shootStatus = false;
                     traverseStatus = false;
-                    //graphMain.GetComponent<UserTestManager>().Mistake();
+                    graphMain.GetComponent<UserTestManager>().Mistake();
                     break;
 
                 default: Debug.Log("'Add '" + validation + "' case, or ignore"); break;
             }
         }
 
-        if (shootStatus || traverseStatus)
+        if (shootStatus && userAction == UtilGraph.NODE_VISITED || traverseStatus && userAction == UtilGraph.NODE_TRAVERSED)
         {
             status = Util.EXECUTED_INST;
+            
             // Reset
             shootStatus = false;
             traverseStatus = false;
 
-            graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
-
             if (NextMove)
             {
                 graphMain.GetComponent<UserTestManager>().ReadyForNext += 1;
+                graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
+
+                // Reset
                 NextMove = false;
+                visitNextMove = false;
+                traverseNextMove = false;
             }
         }
         validatedUserMove++;
@@ -497,7 +503,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     return traverseNextMove ? UtilGraph.NODE_TRAVERSED : UtilGraph.NODE_ERROR;
 
                 case UtilGraph.BACKTRACK:
-                    Debug.Log("Backtracking check: " + traverseNextMove);
                     return traverseNextMove ? UtilGraph.NODE_BACKTRACKED : UtilGraph.NODE_ERROR;
 
                 default: return UtilGraph.NODE_ERROR;

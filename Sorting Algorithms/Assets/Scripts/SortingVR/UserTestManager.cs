@@ -25,9 +25,6 @@ public class UserTestManager : InstructionControlBase {
     [SerializeField]
     private ProgressTracker progressTracker;
 
-
-
-
     private Dictionary<string, int> errorLog;
 
     // Score
@@ -37,7 +34,6 @@ public class UserTestManager : InstructionControlBase {
     private float startTime, endTime, timeSpent;
     private int streakScore, totalScore, currentStreak, longestStreak, difficultyMultiplier;
     private string difficultyLevel;
-
 
     private WaitForSeconds scoreUpdateDuration;
 
@@ -65,6 +61,8 @@ public class UserTestManager : InstructionControlBase {
 
     public void IncrementTotalCorrect()
     {
+        audioManager.Play("Correct");
+
         if (mainManager.Settings.Algorithm == Util.BUBBLE_SORT && totalCorrect % 2 == 1) // Bubble sort sends 2x correct
             return;
 
@@ -139,6 +137,8 @@ public class UserTestManager : InstructionControlBase {
 
     public void Mistake()
     {
+        audioManager.Play("Mistake");
+
         // Update score
         totalScore += CalculateIntermediateScore();
 

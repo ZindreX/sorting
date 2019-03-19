@@ -49,9 +49,10 @@ public class BubbleSort : SortAlgorithm {
     {
         int n = sortMain.SortSettings.NumberOfElements;
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
+
         switch (lineNr)
         {
-            case 0: lineOfCode += "BubbleSort( list ):"; break; // add case for this line(?): BubbleSort(4, 1, 10, ... etc.)
+            case 0: lineOfCode += "BubbleSort( list ):"; break;
             case 1: lineOfCode += string.Format("  n = {0}", n); break;
             case 2: lineOfCode += string.Format("  for i={0} to {1}:", i, (n-1)); break;
             case 3: lineOfCode += string.Format("      for j={0} to {1}:", j, (n-i-1)); break;
@@ -63,6 +64,16 @@ public class BubbleSort : SortAlgorithm {
             default: return "lineNr " + lineNr + " not found!";
         }
         return lineOfCode;
+    }
+
+    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    {
+        switch (lineNr)
+        {
+            case 4: return init ? "          if ( list[j] > list[j+1] ):" : "          if ( list[" + j + "] > list[" + (j + 1) + "] ):";
+            case 5: return init ? "              swap list[j] and list[j+1]" : "              swap list[" + j + "] and list[" + (j + 1) + "]";
+            default: return "X";
+        }
     }
 
     public override int FirstInstructionCodeLine()
@@ -263,7 +274,6 @@ public class BubbleSort : SortAlgorithm {
         // Gather information from instruction
         BubbleSortInstruction bubbleInstruction = null;
         BubbleSortElement se1 = null, se2 = null;
-        int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
 
         if (gotSortingElement)
         {
@@ -407,7 +417,6 @@ public class BubbleSort : SortAlgorithm {
 
         // Gather information from instruction
         BubbleSortElement se1 = null, se2 = null;
-        int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
 
         if (gotSortingElement)
         {
