@@ -71,7 +71,7 @@ public class InsertionSort : SortAlgorithm {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
 
         if (pseudoCodeInitilized)
-            UpdatePseudoValues(lineNr);
+            UpdatePseudoValues();
 
         switch (lineNr)
         {
@@ -93,7 +93,7 @@ public class InsertionSort : SortAlgorithm {
     }
 
     // Extra
-    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
         switch (lineNr)
         {
@@ -110,14 +110,13 @@ public class InsertionSort : SortAlgorithm {
     }
 
     private string iMinus1 = "i - 1", iPlus1 = "i + 1", jMinus1 = "j - 1", jPlus1 = "j + 1";
-    private void UpdatePseudoValues(int lineNr)
+    private void UpdatePseudoValues()
     {
         iMinus1 = (i - 1).ToString();
         iPlus1 = (i + 1).ToString();
 
         jMinus1 = (j - 1).ToString();
-        jPlus1 = (j + 1).ToString();
-        
+        jPlus1 = (j + 1).ToString(); 
     }
 
     public override int FirstInstructionCodeLine()

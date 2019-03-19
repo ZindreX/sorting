@@ -94,7 +94,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
             bool valuesNotInserted = true;
             for (int x=0; x < 2; x++)
             {
-                string calculation = PseudocodeIntoSteps(index, valuesNotInserted);
+                string calculation = PseudocodeLineIntoSteps(index, valuesNotInserted);
 
                 if (calculation == "X")
                     break;
@@ -156,7 +156,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public abstract string CollectLine(int lineNr);
 
     // Used to display (calculation) pseudocode in more steps
-    protected abstract string PseudocodeIntoSteps(int lineNr, bool init);
+    protected abstract string PseudocodeLineIntoSteps(int lineNr, bool init);
 
     // first instruction line of code
     public abstract int FirstInstructionCodeLine();

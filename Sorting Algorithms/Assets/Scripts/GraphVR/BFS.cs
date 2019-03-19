@@ -48,7 +48,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         return lineOfCode;
     }
 
-    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
         return "X";
     }

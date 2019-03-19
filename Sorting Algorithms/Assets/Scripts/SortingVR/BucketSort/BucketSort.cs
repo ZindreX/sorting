@@ -28,7 +28,7 @@ public class BucketSort : SortAlgorithm {
     public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
         element1Value = "list[i]";
-        //element2Value = "list[j + 1]";
+        element2Value = "buckets[i][j]";
 
         base.InitTeachingAlgorithm(algorithmSpeed);
     }
@@ -47,20 +47,23 @@ public class BucketSort : SortAlgorithm {
     {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
 
+        if (pseudoCodeInitilized)
+            UpdatePseudoValues();
+
         switch (lineNr)
         {
-            case 0: lineOfCode += string.Format("BucketSort(list, {0}):", bucketSortManager.NumberOfBuckets); break;
-            case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", bucketSortManager.NumberOfBuckets); break;
-            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, (sortMain.SortSettings.NumberOfElements - 1)); break;
-            case 3: lineOfCode += string.Format("        bucket = {0}", bucketIndex); break;
-            case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, value1); break;
+            case 0: lineOfCode += string.Format("BucketSort(list, {0}):", numberOfBuckets); break;
+            case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", numberOfBuckets); break;
+            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfBuckets); break;
+            case 3: lineOfCode += string.Format("        bucket = {0}", bucketIndexStr); break;
+            case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, element1Value); break;
             case 5: lineOfCode += "    end for"; break;
             case 6: lineOfCode += "    Sorting each bucket w/InsertionSort"; break;
             case 7: lineOfCode += "    k = 0"; break;
-            case 8: lineOfCode += string.Format("    for i={0} to {1}:", i, (bucketSortManager.NumberOfBuckets - 1)); break;
-            case 9: lineOfCode += string.Format("        for j={0} to {1}:", j, loopRange); break;
-            case 10: lineOfCode += string.Format("            list[{0}] = " + value1, k); break;
-            case 11: lineOfCode += "            k = " + k; break; // already updated
+            case 8: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfBuckets); break;
+            case 9: lineOfCode += string.Format("        for j={0} to {1}:", j, bucketSize); break;
+            case 10: lineOfCode += string.Format("            list[{0}] = " + element2Value, k); break; // 
+            case 11: lineOfCode += "            k = " + kPlus1; break;
             case 12: lineOfCode += "        end for"; break;
             case 13: lineOfCode += "    end for"; break;
             default: return "X";
@@ -68,14 +71,25 @@ public class BucketSort : SortAlgorithm {
         return lineOfCode;
     }
 
-    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    private string kPlus1 = "k + 1", numberOfBuckets = "N", bucketSize = "len(buckets[i])", bucketIndexStr = "list[i] * N / MAX_VALUE";
+    private void UpdatePseudoValues()
+    {
+        bucketIndexStr = bucketIndex.ToString();
+        bucketSize = loopRange.ToString();
+        kPlus1 = (k + 1).ToString();
+
+        // Unchanged, move somewhere...
+        numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
+    }
+
+    protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
         switch (lineNr)
         {
-            case 3: return init ? "        bucket = list[i] * N / MAX_VALUE" : "        bucket = list[" + i + "] * " + bucketSortManager.NumberOfBuckets + " / " + UtilSort.MAX_VALUE;
-            case 4: return init ? "        buckets[bucket] <- list[i]" : "        buckets[" + bucketIndex + "] <- list[" + i + "]";
+            case 3: return init ? "        bucket = list[" + i + "] * N / MAX_VALUE" : "        bucket = " + element1Value  + " * " + numberOfBuckets + " / " + UtilSort.MAX_VALUE;
+            //case 4: return init ? "        buckets[bucket] <- list[i]" : "        buckets[" + bucketIndex + "] <- list[" + i + "]";
             case 10: return init ? "            list[k] = buckets[i][j]" : "            list[" + k + "] = buckets[" + i + "][" + j + "]";
-            case 11: return init ? "            k = k + 1" : "            k = " + (k - 1) + " + 1";
+            case 11: return init ? "            k = k + 1" : "            k = " + k + " + 1";
             default: return "X";
         }
     }
@@ -93,6 +107,14 @@ public class BucketSort : SortAlgorithm {
     public override void ResetSetup()
     {
         base.ResetSetup();
+
+        element1Value = "list[i]";
+        element2Value = "buckets[i][j]";
+        kPlus1 = "k + 1";
+        numberOfBuckets = "N";
+        bucketSize = "len(buckets[i])";
+        bucketIndexStr = "list[i] * N / MAX_VALUE";
+
         bucketManager.ResetSetup();
     }
 
@@ -272,7 +294,7 @@ public class BucketSort : SortAlgorithm {
 
             // Get element
             GameObject element = sortingElements[i];
-            value1 = element.GetComponent<SortingElementBase>().Value;
+            PreparePseudocodeValue(element.GetComponent<SortingElementBase>().Value, 1);
 
             // Bucket index
             bucketIndex = BucketIndex(value1, numberOfBuckets);
@@ -380,7 +402,7 @@ public class BucketSort : SortAlgorithm {
                 sortingElements[k] = bucket.RemoveSoringElement().gameObject;
                 
                 // Value of sorting element
-                value1 = sortingElements[k].GetComponent<SortingElementBase>().Value;
+                PreparePseudocodeValue(sortingElements[k].GetComponent<SortingElementBase>().Value, 2);
 
                 // Move element back to holder
                 sortingElements[k].transform.position = holderPos[k] + UtilSort.ABOVE_HOLDER_VR;
@@ -394,9 +416,9 @@ public class BucketSort : SortAlgorithm {
                 if (sortMain.UserStoppedTask)
                     break;
 
-                k++;
                 // Line 11 (Update k)
                 yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
+                k++;
             }
             // Line 12 (2nd for-inner-loop end)
             yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);

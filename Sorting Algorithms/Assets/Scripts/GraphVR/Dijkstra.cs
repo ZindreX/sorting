@@ -53,7 +53,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         return lineOfCode;
     }
 
-    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
         switch (lineNr)
         {

@@ -66,7 +66,7 @@ public class BubbleSort : SortAlgorithm {
         return lineOfCode;
     }
 
-    protected override string PseudocodeIntoSteps(int lineNr, bool init)
+    protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
         switch (lineNr)
         {
