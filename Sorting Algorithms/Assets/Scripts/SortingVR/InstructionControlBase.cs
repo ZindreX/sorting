@@ -28,6 +28,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         mainManager = GetComponent<MainManager>();
     }
 
+    // Returns false if there are no instructions or all instructions have been dealt out, otherwise true
     public bool HasInstructions()
     {
         if (instructions != null)
@@ -35,11 +36,13 @@ public abstract class InstructionControlBase : MonoBehaviour {
         return false;
     }
 
+    // Last instruction check
     public bool LastInstruction()
     {
         return currentInstructionNr == (instructions.Count - 1);
     }
 
+    // Returns correct instruction (within the bounderies - step by step might fall outside?)
     public InstructionBase GetInstruction()
     {
         if (currentInstructionNr < 0)
@@ -49,6 +52,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         return instructions[currentInstructionNr];
     }
 
+    // Get specific instrution
     protected InstructionBase GetInstruction(int index)
     {
         if (instructions.ContainsKey(index))
@@ -71,6 +75,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         }
     }
 
+    // Decrementing instruction counter as long there is one
     public bool DecrementToPreviousInstruction()
     {
         if (currentInstructionNr >= 0) // ***
@@ -94,6 +99,9 @@ public abstract class InstructionControlBase : MonoBehaviour {
     {
         instructions = null;
         currentInstructionNr = -1;
+
+        mainManager = null;
+        audioManager = null;
     }
 
     public abstract string FillInBlackboard();

@@ -32,7 +32,7 @@ public class UserTestManager : InstructionControlBase {
     public readonly float SCORE_UPDATE = 0.1f;
 
     private float startTime, endTime, timeSpent;
-    private int streakScore, totalScore, currentStreak, longestStreak, difficultyMultiplier;
+    private int totalScore, currentStreak, longestStreak, difficultyMultiplier;
     private string difficultyLevel;
 
     private WaitForSeconds scoreUpdateDuration;
@@ -57,23 +57,12 @@ public class UserTestManager : InstructionControlBase {
         progressTracker.InitProgressTracker(userActionInstructions, instructions.Count);
     }
 
-    // Added methods from scoremanager
-
-    public void IncrementTotalCorrect()
-    {
-        audioManager.Play("Correct");
-
-        if (mainManager.Settings.Algorithm == Util.BUBBLE_SORT && totalCorrect % 2 == 1) // Bubble sort sends 2x correct
-            return;
-
-        totalCorrect++;
-        progressTracker.Increment();
-    }
+    // -------------------------------------------- Getters/Setters --------------------------------------------
 
     public string DifficultyLevel
     {
         get { return difficultyLevel; }
-        set { difficultyLevel = value; }
+        //set { difficultyLevel = value; }
     }
 
     public int DifficultyMultiplier
@@ -82,29 +71,32 @@ public class UserTestManager : InstructionControlBase {
         set { difficultyMultiplier = value; }
     }
 
-    public int CalculateScore()
+    /* Checking whether a new instruction can be given
+     * ...
+    */
+    public int ReadyForNext
     {
-        if (mainManager.GetTeachingAlgorithm().IsTaskCompleted)
-            return CalculateTotalScore();
-        return CalculateIntermediateScore();
+        get { return readyForNext; }
+        set { readyForNext = value; }
     }
 
-    private int CalculateTotalScore()
+    /* The number of moves needed before handing out a new instruction
+     * > Usually 1, but for some there might be more (like bubblesort with 2 element switching per instruction) 
+    */
+    public int UserActionToProceed
     {
-        totalScore += CalculateIntermediateScore() + (int)TimeSpent;
-        return totalScore;
+        get { return userActionToProceed; }
+        set { userActionToProceed = value; }
     }
 
-    private int CalculateIntermediateScore()
+    public float TimeSpent
     {
-        return streakScore * difficultyMultiplier;
+        get { return timeSpent; }
     }
 
-    // Show of at the end of the user test
-    public IEnumerator VisualizeScore()
+    public int TotalErrorCount
     {
-        // TODO: display score on blackboard at end of game
-        yield return scoreUpdateDuration;
+        get { return totalErrorCount; }
     }
 
     // Sets when User Test begins
@@ -124,15 +116,24 @@ public class UserTestManager : InstructionControlBase {
         }
     }
 
-    public float TimeSpent
-    {
-        get { return timeSpent; }
-    }
+    // -------------------------------------------- Report methods --------------------------------------------
 
-    public void IncrementStreak()
+    public void IncrementTotalCorrect()
     {
+        audioManager.Play("Correct");
+
+        if (mainManager.Settings.Algorithm == Util.BUBBLE_SORT && totalCorrect % 2 == 1) // Bubble sort sends 2x correct
+            return;
+
+        // > Increment
+        // Streak
         currentStreak++;
-        streakScore = SCORE_PER_STREAK * currentStreak;
+
+        // Number of correct actions
+        totalCorrect++;
+
+        // Visual
+        progressTracker.Increment();
     }
 
     public void Mistake()
@@ -148,7 +149,32 @@ public class UserTestManager : InstructionControlBase {
 
         // Reset streak counter
         currentStreak = 0;
-        streakScore = 0;
+    }
+
+
+    // -------------------------------------------- Score stuff --------------------------------------------
+
+    private int StreakScore()
+    {
+        return SCORE_PER_STREAK * currentStreak;
+    }
+
+    public int CalculateScore()
+    {
+        if (mainManager.GetTeachingAlgorithm().IsTaskCompleted)
+            return CalculateTotalScore();
+        return CalculateIntermediateScore();
+    }
+
+    private int CalculateTotalScore()
+    {
+        totalScore += CalculateIntermediateScore() + (int)TimeSpent;
+        return totalScore;
+    }
+
+    private int CalculateIntermediateScore()
+    {
+        return StreakScore() * difficultyMultiplier;
     }
 
     // Drop this function ?
@@ -165,13 +191,7 @@ public class UserTestManager : InstructionControlBase {
         }
     }
 
-    //
-
-
-    public int TotalErrorCount
-    {
-        get { return totalErrorCount; }
-    }
+    // -------------------------------------------- Feedback stuff --------------------------------------------
 
     public string GetExaminationResult()
     {
@@ -204,23 +224,11 @@ public class UserTestManager : InstructionControlBase {
 
     }
 
-    /* Checking whether a new instruction can be given
-     * ...
-    */
-    public int ReadyForNext
+    public override string FillInBlackboard()
     {
-        get { return readyForNext; }
-        set { readyForNext = value; }
+        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + UtilSort.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
     }
 
-    /* The number of moves needed before handing out a new instruction
-     * > Usually 1, but for some there might be more (like bubblesort with 2 element switching per instruction) 
-    */
-    public int UserActionToProceed
-    {
-        get { return userActionToProceed; }
-        set { userActionToProceed = value; }
-    }
 
     public override void ResetState()
     {
@@ -234,7 +242,6 @@ public class UserTestManager : InstructionControlBase {
         endTime = 0;
         timeSpent = 0;
         totalScore = 0;
-        streakScore = 0;
         currentStreak = 0;
         longestStreak = 0;
         scoreUpdateDuration = null;
@@ -242,9 +249,18 @@ public class UserTestManager : InstructionControlBase {
         progressTracker.ResetProgress();
     }
 
-    public override string FillInBlackboard()
-    {
-        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + UtilSort.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
-    }
 
+
+
+
+
+
+
+
+    // Show of at the end of the user test
+    public IEnumerator VisualizeScore()
+    {
+        // TODO: display score on blackboard at end of game
+        yield return scoreUpdateDuration;
+    }
 }

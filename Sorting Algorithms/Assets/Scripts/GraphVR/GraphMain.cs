@@ -139,7 +139,6 @@ public class GraphMain : MainManager {
                         readyForDestroy = false;
                         break;
                     }
-
                 }
 
                 if (readyForDestroy)
@@ -223,7 +222,6 @@ public class GraphMain : MainManager {
 
             // List visual
             listVisual.InitListVisual(graphAlgorithm.GetListType(), algorithmSpeed);
-            //AddToCheckList(UtilGraph.LIST_VISUAL);
         }
 
         // Hide menu
