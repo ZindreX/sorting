@@ -63,8 +63,10 @@ public class GraphMain : MainManager {
     [SerializeField]
     private bool autoCalculation;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // >>> Basic components
         graphSettings = settingsObj.GetComponent<GraphSettings>();
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
@@ -154,15 +156,14 @@ public class GraphMain : MainManager {
 
     public override void InstantiateSetup()
     {
-        // Used for shut down process
-        safeStopChecklist = new Dictionary<string, bool>();
-        checkListModeActive = false;
+        base.InstantiateSetup();
 
         // >>> Grab variable data from settings
-        algorithmName = graphSettings.Algorithm;
         int difficulty = graphSettings.Difficulty;
-        string graphTask = graphSettings.GraphTask; //..
         float algorithmSpeed = graphSettings.AlgorithmSpeed;
+
+
+        string graphTask = graphSettings.GraphTask; //..
         string graphStructure = graphSettings.GraphStructure;
         string edgeType = graphSettings.EdgeType;
         string edgeBuildMode = graphSettings.EdgeBuildMode;
@@ -305,19 +306,15 @@ public class GraphMain : MainManager {
     //  --------------------------------------- Reset methods ---------------------------------------
     public override void DestroyAndReset()
     {
-        activeChecklist = "";
-        checkListModeActive = false;
+        base.DestroyAndReset();
+
         chosenNodes = 0;
         numberOfNodesToChoose = 0;
 
         // Variable reset
-        algorithmInitialized = false;
         backtracking = false;
         userTestGoalActive = false;
         usingCalculator = false;
-
-        // Stop ongoing actions
-        UserStoppedTask = true;
 
         // Delete list visual
         listVisual.DestroyAndReset();
@@ -335,6 +332,8 @@ public class GraphMain : MainManager {
         pointer.ResetPointer();
 
         StartCoroutine(ActivateTaskObjects(false));
+
+        calculator.ResetCalculator();
 
 
         switch (graphSettings.TeachingMode)
@@ -405,7 +404,6 @@ public class GraphMain : MainManager {
         userTestManager.SetStartTime();
 
         graphManager.ResetGraph();
-        userTestInitialized = true;
 
         // Give pointer new task
         pointer.CurrentTask = Util.USER_TEST;
@@ -436,13 +434,18 @@ public class GraphMain : MainManager {
                         return;
 
                     // When equal buttons has been clicked, check  whether the input data is correct
-                    int nodeDist = spInst.CurrentNode.Dist;
+                    int node1Dist = spInst.CurrentNode.Dist;
                     int edgeCost = spInst.CurrentEdge.Cost;
-                    bool correctUserInput = calculator.ControlUserInput(nodeDist, edgeCost);
+                    int node2Dist = spInst.ConnectedNode.Dist;
+
+                    bool correctUserInput = calculator.ControlUserInput(node1Dist, edgeCost, node2Dist);
 
                     // If input data was correct, then progress to next instruction (add only one)
                     if (correctUserInput && userTestManager.ReadyForNext != userTestManager.UserActionToProceed)
+                    {
                         userTestManager.ReadyForNext += 1;
+                        pseudoCodeViewer.SetCodeLine(9, "           if (" + calculator.DisplayText + ")", Util.BLACKBOARD_TEXT_COLOR);
+                    }
                 }
                 else if (!calculator.CalculationInProcess)
                 {
@@ -490,10 +493,10 @@ public class GraphMain : MainManager {
         if (instruction is ListVisualInstruction)
         {
             // Only provide list visual support until <lvl>
-            if (graphSettings.Difficulty >= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+            if (graphSettings.Difficulty > UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
                 return 1;
 
-            WaitForSupportToComplete = true;
+            WaitForSupportToComplete++;
 
             ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
             Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
@@ -501,8 +504,10 @@ public class GraphMain : MainManager {
             switch (inst)
             {
                 case UtilGraph.ADD_NODE: listVisual.AddListObject(listVisualInst.Node); break;
+                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(listVisualInst.Node, listVisualInst.Index); break;
                 case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
                 case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
+                case UtilGraph.SET_START_NODE_DIST_TO_ZERO: StartCoroutine(listVisual.UpdateValueAndPositionOf(listVisualInst.Node, 0)); break;
                 case UtilGraph.HAS_NODE_REPRESENTATION:
                     /* This case has two outcomes:
                      * 1) If the node doesn't have any node representations in the current list, then create and add a new one
@@ -533,7 +538,7 @@ public class GraphMain : MainManager {
 
             // Check if list visual is ready (if coroutine is started -> false)
             if (CheckList(UtilGraph.LIST_VISUAL))
-                waitForSupportToComplete = false;
+                WaitForSupportToComplete--;
 
             return 1;
 
@@ -566,7 +571,8 @@ public class GraphMain : MainManager {
                     {
                         case UtilGraph.PRIORITY_REMOVE_NODE:
                             // Highlight the node we currently work at
-                            node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                            if (GraphSettings.Difficulty < Util.ADVANCED)
+                                node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
 
                             // Hide all edge cost to make it easier to see node distances
                             graphManager.MakeEdgeCostVisible(false);
@@ -580,17 +586,17 @@ public class GraphMain : MainManager {
                 }
                 else if (instruction is ShortestPathInstruction)
                 {
-                    ShortestPathInstruction shortestPathInst = (ShortestPathInstruction)instruction;
-                    Debug.Log("Shortest path instruction: " + shortestPathInst.DebugInfo());
+                    ShortestPathInstruction spInst = (ShortestPathInstruction)instruction;
+                    Debug.Log("Shortest path instruction: " + spInst.DebugInfo());
 
                     // Get the Sorting element
-                    if (shortestPathInst.CurrentNode != null)
-                        node = shortestPathInst.CurrentNode;
+                    if (spInst.CurrentNode != null)
+                        node = spInst.CurrentNode;
                     else
-                        node = shortestPathInst.ConnectedNode;
+                        node = spInst.ConnectedNode;
 
                     // Hands out the next instruction
-                    node.Instruction = shortestPathInst;
+                    node.Instruction = spInst;
 
                     // Set goal
                     posManager.CurrentGoal = node;
@@ -604,15 +610,23 @@ public class GraphMain : MainManager {
                         case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
                             // Since we highlighted the color and/or text position of the node/edge we are working on (highlighting purpose) in the previous instruction, now we reset them
                             // Changed color of node
-                            shortestPathInst.ConnectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
+                            spInst.ConnectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
                             // Reset text color/position of the edge cost
-                            shortestPathInst.CurrentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+                            spInst.CurrentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
 
                             // Perform sub task: calculate dist (current node) + edge cost to the connected node
                             if (!autoCalculation)
                             {
                                 usingCalculator = true;
-                                calculator.InitCalculation();
+                                calculator.InitCalculation(Calculator.GRAPH_TASK);
+
+                                if (graphSettings.Difficulty == Util.BEGINNER)
+                                {
+
+                                    pseudoCodeViewer.SetCodeLine(9, "           if (" + spInst.CurrentNode.NodeAlphaID + ".Dist + edge(" + spInst.CurrentNode.NodeAlphaID + ", " + spInst.ConnectedNode.NodeAlphaID + ").Cost" + " <? " + spInst.ConnectedNode.NodeAlphaID + ".Dist)", Util.HIGHLIGHT_COLOR);
+                                    return 0; // to avoid pseudocode update below
+                                }
+
                             }
                             //else
                             //    return 1;
@@ -630,7 +644,7 @@ public class GraphMain : MainManager {
             // Display help on blackboard
             if (graphSettings.Difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
             {
-                WaitForSupportToComplete = true;
+                WaitForSupportToComplete++;
                 StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode));// && !noDestination));
             }
 

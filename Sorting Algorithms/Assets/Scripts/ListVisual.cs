@@ -183,7 +183,7 @@ public class ListVisual : MonoBehaviour {
         // Move object to current node location
         currentNodeRep.MoveNodeRepresentation(currentNodePoint.position);
         currentNodeRep.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-        currentNode.name = name = "NodeRep " + currentNodeRep.Node.NodeAlphaID + " (X)";
+        currentNodeRep.name = name = "NodeRep " + currentNodeRep.Node.NodeAlphaID + " (X)";
 
         if (moveOther)
         {
@@ -266,7 +266,7 @@ public class ListVisual : MonoBehaviour {
         node.CurrentColor = prevColor;
 
         graphMain.UpdateCheckList(UtilGraph.LIST_VISUAL, true);
-        graphMain.WaitForSupportToComplete = false;
+        graphMain.WaitForSupportToComplete--;
     }
 
     public NodeRepresentation FindNodeRepresentation(Node node)

@@ -493,7 +493,7 @@ public class BubbleSort : SortAlgorithm {
         }
 
         yield return demoStepDuration;
-        sortMain.WaitForSupportToComplete = false;
+        sortMain.WaitForSupportToComplete--;
     }
     #endregion
 

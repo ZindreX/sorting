@@ -125,8 +125,7 @@ public class SortMain : MainManager {
 
     public override void InstantiateSetup()
     {
-        // Used when shutting down
-        safeStopChecklist = new Dictionary<string, bool>();
+        base.InstantiateSetup();
 
         // Get values from settings
         algorithmName = sortSettings.Algorithm; // string name
@@ -199,12 +198,7 @@ public class SortMain : MainManager {
      */
     public override void DestroyAndReset()
     {
-        safeStopChecklist = null;
-
-        algorithmInitialized = false;
-
-        // Stop ongoing actions
-        UserStoppedTask = true;
+        base.DestroyAndReset();
 
         // Destroy sorting elements
         elementManager.DestroyAndReset();
@@ -221,9 +215,6 @@ public class SortMain : MainManager {
 
         // Hide sorting table and bring back menu
         StartCoroutine(ActivateTaskObjects(false));
-
-        //
-        controllerReady = false;
 
         // Cleanup pseudocode
         sortAlgorithm.PseudoCodeViewer.DestroyPseudoCode();
@@ -315,14 +306,12 @@ public class SortMain : MainManager {
 
         // Set start time
         userTestManager.SetStartTime();
-
-        userTestInitialized = true; // debugging
     }
 
     protected override void UserTestUpdate()
     {
-        // First check if user test setup is complete
-        if (userTestManager.HasInstructions() && !waitForSupportToComplete)
+        // First check if user test setup is complete (instructions available)
+        if (userTestManager.HasInstructions())
         {
             // Check if user has done a move, and is ready for next round
             if (elementManager.CurrentMoving != null)

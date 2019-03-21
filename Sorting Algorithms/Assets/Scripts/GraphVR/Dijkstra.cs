@@ -41,7 +41,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             case 6:  lineOfCode += string.Format("       {0} <- list.PriorityRemove()", node1Alpha); break;
             case 7:  lineOfCode += string.Format("       for all neighbors of {0} in Graph:", node1Alpha); break;
             case 8:  lineOfCode += string.Format("           Visit neighbor {0}", node2Alpha); break;
-            case 9:  lineOfCode += string.Format("           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
+            case 9:  lineOfCode += string.Format("           if ({0} < {1})", node1Dist + edgeCost, UtilGraph.ConvertDist(node2Dist)); break;   //"           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
             case 10: lineOfCode += string.Format("              {0}.Dist = {1}", node2Alpha, (node1Dist + edgeCost)); break;
             case 11: lineOfCode += string.Format("              {0}.Prev = {1}", node2Alpha, node1Alpha); break;
             case 12: lineOfCode += string.Format("              list.PriorityAdd({0})", node2Alpha); break;
@@ -57,10 +57,10 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     {
         switch (lineNr)
         {
-            case 6: return init ? "       w <- list.PriorityRemove()" : "       " + node1Alpha + " <- list.PriorityRemove()";
-            case 7: return init ? "       for all neighbors of w in Graph:" : "       for all neighbors of " + node1Alpha + " in Graph:";
-            case 8: return init ? "           Visit neighbor v" : "           Visit neighbor " +  node2Alpha;
-            case 9: return init ? "           if (w.Dist + edge(w, v).Cost < v.Dist):" : "           if (" + node1Alpha + ".Dist + edge(" + node1Alpha + ", " + node2Alpha + ").Cost < " + node2Alpha + ".Dist):";
+            //case 6: return init ? "       w <- list.PriorityRemove()" : "       " + node1Alpha + " <- list.PriorityRemove()";
+            //case 7: return init ? "       for all neighbors of w in Graph:" : "       for all neighbors of " + node1Alpha + " in Graph:";
+            //case 8: return init ? "           Visit neighbor v" : "           Visit neighbor " +  node2Alpha;
+            case 9: return init ? "           if (" + node1Alpha + ".Dist + edge(" + node1Alpha + ", " + node2Alpha + ").Cost < " + node2Alpha + ".Dist):" : "           if (" + node1Dist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(node2Dist) + "):";
             default: return "X";
         }
     }
@@ -82,7 +82,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.FOR_ALL_NEIGHBORS_INST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.SET_START_NODE_DIST_TO_ZERO);
         
-        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
+        //skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_DIST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE);
 
@@ -439,10 +439,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         startNode.Visited = true;
         startNode.Dist = 0;
         instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ADD_NODE, instNr, startNode, true, false));
-        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, startNode, 0));
 
         // Line 4: Set total cost (Dist) of start node to 0
         instructions.Add(instNr++, new InstructionBase(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr));
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr, startNode, 0));
+
         
         while (list.Count > 0 && !objectiveFound)
         {
@@ -553,6 +555,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     {
         Node n1 = null, n2 = null;
         Edge currentEdge = null, prevEdge = null;
+
         // Gather information from instruction
         if (gotNode)
         {
@@ -613,8 +616,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                //Debug.Log("Node1: " + (n1 == null));
-                //Debug.Log(instruction.DebugInfo());
                 SetNodePseudoCode(n1, 1);
                 lineOfCode = 7;
                 break;
@@ -633,12 +634,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
-                connectedNode.Dist = ((ShortestPathInstruction)instruction).NodeDistAndEdgeCostTotal();
+                //connectedNode.Dist = ((ShortestPathInstruction)instruction).NodeDistAndEdgeCostTotal();
                 lineOfCode = 10;
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE:
-                connectedNode.PrevEdge = prevEdge;
+                //connectedNode.PrevEdge = prevEdge;
                 lineOfCode = 11;
                 break;
 
@@ -656,7 +657,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
 
         yield return demoStepDuration;
-        graphMain.WaitForSupportToComplete = false;
+        graphMain.WaitForSupportToComplete--;
     }
     #endregion
 

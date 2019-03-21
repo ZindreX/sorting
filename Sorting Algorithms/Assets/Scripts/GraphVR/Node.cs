@@ -357,7 +357,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     switch (algorithm)
                     {
                         case Util.BFS: case Util.DFS: prevEdge = travInst.PrevEdge; break;
-                        case Util.DIJKSTRA: currentEdge = travInst.PrevEdge; break;
+                        case Util.DIJKSTRA:
+                            currentEdge = travInst.PrevEdge; break;
                     }
                 }
             }
@@ -365,8 +366,26 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             {
                 ShortestPathInstruction spInst = (ShortestPathInstruction)nodeInstruction;
 
-                if (spInst.PrevEdge != null)
-                    PrevEdge = spInst.PrevEdge;
+                switch (spInst.Instruction)
+                {
+                    case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
+                        if (spInst.CurrentNode == this)
+                            spInst.ConnectedNode.Dist = spInst.ConnectedNodeNewDist;
+                        else if (spInst.ConnectedNode == this)
+                            Dist = spInst.ConnectedNodeNewDist;
+                        break;
+
+                    case UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE:
+                        if (spInst.CurrentNode == this)
+                            spInst.ConnectedNode.PrevEdge = spInst.PrevEdge;
+                        else if (spInst.ConnectedNode == this)
+                            prevEdge = spInst.PrevEdge;
+
+                        break;
+                }
+
+                //if (spInst.PrevEdge != null)
+                //    PrevEdge = spInst.PrevEdge;
             }
         }
     }

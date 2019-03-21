@@ -376,7 +376,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
 
         yield return demoStepDuration;
-        graphMain.WaitForSupportToComplete = false;
+        graphMain.WaitForSupportToComplete--;
     }
     #endregion
 }

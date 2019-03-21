@@ -101,7 +101,6 @@ public abstract class InstructionControlBase : MonoBehaviour {
         currentInstructionNr = -1;
 
         mainManager = null;
-        audioManager = null;
     }
 
     public abstract string FillInBlackboard();

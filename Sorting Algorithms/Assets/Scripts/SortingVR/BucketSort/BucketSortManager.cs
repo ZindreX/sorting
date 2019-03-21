@@ -83,7 +83,7 @@ public class BucketSortManager : AlgorithmManagerBase {
         // Display help on blackboard
         if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
         {
-            sortMain.WaitForSupportToComplete = true;
+            sortMain.WaitForSupportToComplete++;
             StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
         if (gotSortingElement && !noDestination)

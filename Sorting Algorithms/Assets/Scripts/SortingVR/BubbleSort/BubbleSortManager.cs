@@ -44,9 +44,9 @@ public class BubbleSortManager : AlgorithmManagerBase {
             }
         }
 
-        if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
+        if (sortMain.SortSettings.Difficulty <= Util.BEGINNER)
         {
-            sortMain.WaitForSupportToComplete = true;
+            sortMain.WaitForSupportToComplete++;
             StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
 

@@ -8,8 +8,11 @@ public class Calculator : MonoBehaviour {
 
     public static readonly char NO_OP_CHOSEN = ' ';
     public static readonly Color STANDARD_BACKGROUND_COLOR = Color.black, CORRECT_INPUT_ANSWER_COLOR = Color.green, INCORRECT_INPUT_ANSWER_COLOR = Color.red;
-    public static int BLANK = -1;
-    public const string VALUE1_ACTION = "Value 1 action", VALUE2_ACTION = "Value 2 action", OP_ACTION = "OP action";
+    public static int BLANK = -1, INF = -2;
+    public const string NORMAL_FUNCTION = "Normal function";
+    public const string VALUE1_ACTION = "Value 1 action", VALUE2_ACTION = "Value 2 action", VALUE3_ACTION = "Value 3 action", OP_ACTION = "OP action", LESS_GREATER_ACTION = "Less greater action";
+
+    private AudioSource audioSource;
 
     [SerializeField]
     private TextMeshPro displayText;
@@ -25,7 +28,7 @@ public class Calculator : MonoBehaviour {
      * 
     */
 
-
+    private string task;
     private List<int> number1, number2; // Could just concacinate a string and parse to integer?
     private int value1, value2, result;
     private char op;
@@ -33,10 +36,14 @@ public class Calculator : MonoBehaviour {
     private Stack<string> undoActions;
 
     // For graph
-    private string newValueLessThanCurrent;
+    public const string GRAPH_TASK = "Graph task";
     public static readonly string ANSWER_NOT_CHOSEN = "No answer";
+    private List<int> number3;
+    private int value3;
+    private string newValueLessThanCurrent;
 
     private Camera playerCamera;
+    private Transform pocket;
 
     private Vector3 startPos;
     private WaitForSeconds feedbackDuration = new WaitForSeconds(3f);
@@ -45,6 +52,7 @@ public class Calculator : MonoBehaviour {
     {
         startPos = transform.position;
         playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
+        audioSource = GetComponentInParent<AudioSource>();
     }
 
     private void Update()
@@ -52,23 +60,41 @@ public class Calculator : MonoBehaviour {
         // Place the calculator in front of the player
         if (calculationInProcess)
         {
-            transform.position = playerCamera.transform.position + new Vector3(0f, -0.25f, 0.4f);
+            //transform.position = playerCamera.transform.position + new Vector3(0f, 2f, 0f);
+            // Place infront of player
+            transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.4f;
+
+            // Rotate towards the player
             transform.LookAt(2 * transform.position - playerCamera.transform.position);
         }
     }
 
     // Prepare for a new calculation
-    public void InitCalculation()
+    public void InitCalculation(string task)
     {
+        displayText.text = "value1 OP value2 l/g value3";
+        this.task = task;
+
         number1 = new List<int>();
         number2 = new List<int>();
-        op = NO_OP_CHOSEN;
+
         value1 = BLANK;
         value2 = BLANK;
         result = BLANK;
+
+        op = NO_OP_CHOSEN;
+
+
+        if (task == GRAPH_TASK)
+        {
+            number3 = new List<int>();
+            value3 = BLANK;
+            newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
+
+        }
+
         calculationInProcess = true;
         equalButtonClicked = false;
-        newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
         undoActions = new Stack<string>();
 
         UpdateDisplay(false);
@@ -101,15 +127,28 @@ public class Calculator : MonoBehaviour {
         set { equalButtonClicked = value; }
     }
 
+    public string DisplayText
+    {
+        get { return displayText.text; }
+    }
+
+    // ------------------------------------- Methods -------------------------------------
+
     private int ValueOf(List<int> list)
     {
-        if (list.Count > 0)
+        int listLength = list.Count;
+        if (listLength > 0)
         {
-            int listLength = list.Count;
             int result = 0;
 
             for (int i = 0; i < listLength; i++)
             {
+                if (list[i] == INF)
+                {
+                    result = INF;
+                    break;
+                }
+
                 result += (int)Mathf.Pow(10, i) * list[i];
             }
             return result;
@@ -124,7 +163,7 @@ public class Calculator : MonoBehaviour {
         // Check if value(s) and operator is inserted, display what have been inserted so far
         if (value1 != BLANK)
         {
-            text += value1;
+            text += ConvertInf(value1);
 
             if (op != NO_OP_CHOSEN)
             {
@@ -132,10 +171,22 @@ public class Calculator : MonoBehaviour {
 
                 if (value2 != BLANK)
                 {
-                    text += value2;
+                    text += ConvertInf(value2);
 
-                    if (equalButtonClicked)
-                        text += " = " + result;
+                    switch (task)
+                    {
+                        case NORMAL_FUNCTION: if (equalButtonClicked) text += " = " + result; break;
+                        case GRAPH_TASK:
+
+                            if (newValueLessThanCurrent != ANSWER_NOT_CHOSEN)
+                            {
+                                text += newValueLessThanCurrent;
+
+                                if (value3 != BLANK)
+                                    text += ConvertInf(value3);
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -143,22 +194,39 @@ public class Calculator : MonoBehaviour {
         displayText.text = text;
     }
 
+    private string ConvertInf(int value)
+    {
+        return (value == int.MaxValue) ? "Inf" : value.ToString();
+    }
+
     // ------------------------------------- Button click -------------------------------------
 
     // Button 0 - 9 input
     public void ValueButtonClick(int value)
     {
+        audioSource.Play();
+
+        if (value == INF)
+            value = int.MaxValue;
+
+
         if (op == NO_OP_CHOSEN)
         {
             number1.Insert(0, value);
             value1 = ValueOf(number1);
             undoActions.Push(VALUE1_ACTION);
         }
-        else
+        else if (newValueLessThanCurrent == ANSWER_NOT_CHOSEN)
         {
             number2.Insert(0, value);
             value2 = ValueOf(number2);
             undoActions.Push(VALUE2_ACTION);
+        }
+        else
+        {
+            number3.Insert(0, value);
+            value3 = ValueOf(number3);
+            undoActions.Push(VALUE3_ACTION);
         }
 
         UpdateDisplay(false);
@@ -167,6 +235,8 @@ public class Calculator : MonoBehaviour {
     // Called by one of the operator buttons on the calculator
     public void OperatorButtonClick(string op)
     {
+        audioSource.Play();
+
         // if user click operator button then set value 1 as zero
         if (number1.Count == 0)
         {
@@ -184,6 +254,8 @@ public class Calculator : MonoBehaviour {
     // Equal (=) button clicked
     public void EqualButtonClick()
     {
+        audioSource.Play();
+
         if (value1 != BLANK && value2 != BLANK)
         {
             switch (op)
@@ -205,7 +277,8 @@ public class Calculator : MonoBehaviour {
     // Undo (TODO: improve)
     public void Undo()
     {
-        //InitCalculation();
+        audioSource.Play();
+
         if (undoActions.Count > 0)
         {
             string prevAction = undoActions.Pop();
@@ -225,43 +298,70 @@ public class Calculator : MonoBehaviour {
                 case OP_ACTION:
                     op = NO_OP_CHOSEN;
                     break;
+
+                case VALUE3_ACTION:
+                    number3.RemoveAt(0);
+                    value3 = ValueOf(number3);
+                    break;
+
+                case LESS_GREATER_ACTION:
+                    newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
+                    break;
             }
             UpdateDisplay(false);
         }
 
     }
 
-    public void BooleanButtonClick(bool answer)
+    public void GreaterOrLessAnswerButtonClick(string answer)
     {
-        if (answer)
-            newValueLessThanCurrent = "yes";
-        else
-            newValueLessThanCurrent = "no";
+        audioSource.Play();
+
+        newValueLessThanCurrent = answer;
+        undoActions.Push(LESS_GREATER_ACTION);
+
+        UpdateDisplay(false);
+
     }
 
 
     // ------------------------------------- Graph related -------------------------------------
 
     // Checks whether the input is correct
-    public bool ControlUserInput(int correctValue1, int correctValue2)
+    public bool ControlUserInput(int correctNode1Dist, int correctEdgeCost, int correctNode2Dist)
     {
-        if (correctValue1 == value1 && correctValue2 == value2)
+        Debug.Log(correctNode1Dist + ", " + correctEdgeCost + ", " + correctNode2Dist);
+
+        if (correctNode1Dist == value1 && correctEdgeCost == value2)
         {
-            StartCoroutine(InputFeedback(true));
-            return true;
+            int newDist = correctNode1Dist + correctEdgeCost;
+
+            if (newDist < correctNode2Dist && newValueLessThanCurrent == "<" || newDist > correctNode2Dist && newValueLessThanCurrent == ">")
+            {
+                if (correctNode2Dist == value3)
+                {
+
+                    return Feedback(true, null);
+                }
+                else
+                    return Feedback(false, "Connected node distance error");
+
+            }
+            else
+                return Feedback(false, "Less/Greater");
         }
-        StartCoroutine(InputFeedback(false));
-        return false;
+
+        return Feedback(false, "Current node or edge cost wrong");
     }
 
-    public bool ControlUserInputBoolean(bool correctAnswer)
+    public bool Feedback(bool correctAnswer, string feedback)
     {
-        if (correctAnswer && newValueLessThanCurrent == "yes")
-        {
-            StartCoroutine(InputFeedback(true));
+        StartCoroutine(InputFeedback(correctAnswer));
+
+        if (correctAnswer)
             return true;
-        }
-        StartCoroutine(InputFeedback(false));
+
+        displayText.text = feedback;
         return false;
     }
 
@@ -282,10 +382,13 @@ public class Calculator : MonoBehaviour {
             transform.position = startPos;
         }
         else
-            InitCalculation();
+            InitCalculation(GRAPH_TASK);
     }
 
-
+    public void ResetCalculator()
+    {
+        transform.position = startPos;
+    }
 
 
 }

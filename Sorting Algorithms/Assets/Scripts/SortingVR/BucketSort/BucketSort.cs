@@ -628,7 +628,7 @@ public class BucketSort : SortAlgorithm {
         // Gather information from instruction
         BucketSortInstruction bucketInstruction = null;
         BucketSortElement sortingElement = null;
-        int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
+        //int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
 
         if (gotSortingElement)
         {
@@ -649,7 +649,7 @@ public class BucketSort : SortAlgorithm {
         // Remove highlight from previous instruction
         for (int x = 0; x < prevHighlight.Count; x++)
         {
-            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
         }
 
         // Gather part of code to highlight
@@ -712,7 +712,7 @@ public class BucketSort : SortAlgorithm {
                 break;
 
             case UtilSort.UPDATE_LOOP_INST:
-                if (j == UtilSort.NO_VALUE)
+                if (j == Util.NO_VALUE)
                     lineOfCode.Add(10);
                 else
                     lineOfCode.Add(11);
@@ -735,11 +735,11 @@ public class BucketSort : SortAlgorithm {
         // Highlight part of code in pseudocode
         for (int x = 0; x < lineOfCode.Count; x++)
         {
-            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), Util.HIGHLIGHT_COLOR);
         }
 
         yield return demoStepDuration;
-        sortMain.WaitForSupportToComplete = false;
+        sortMain.WaitForSupportToComplete--;
     }
     #endregion
 

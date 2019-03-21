@@ -4,20 +4,22 @@ public class ShortestPathInstruction : InstructionBase {
 
     private Node currentNode, connectedNode;
     private Edge currentEdge, prevEdge;
-    private int index;
+    private int index, connectedNodeNewDist;
 
     public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode, Edge currentEdge) : base(instruction, instructionNr)
     {
         this.currentNode = currentNode;
         this.connectedNode = connectedNode;
         this.currentEdge = currentEdge;
+
+        connectedNodeNewDist = CurrentNode.Dist + currentEdge.Cost;
     }
 
-    public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode) : base(instruction, instructionNr)
-    {
-        this.currentNode = currentNode;
-        this.connectedNode = connectedNode;
-    }
+    //public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode) : base(instruction, instructionNr)
+    //{
+    //    this.currentNode = currentNode;
+    //    this.connectedNode = connectedNode;
+    //}
 
     public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, Edge prevEdge) : base(instruction, instructionNr)
     {
@@ -51,9 +53,9 @@ public class ShortestPathInstruction : InstructionBase {
         get { return prevEdge; }
     }
 
-    public int NodeDistAndEdgeCostTotal()
+    public int ConnectedNodeNewDist
     {
-        return currentNode.Dist + currentEdge.Cost;
+        get { return connectedNodeNewDist; }
     }
 
     public override bool HasBeenExecuted()
@@ -74,6 +76,6 @@ public class ShortestPathInstruction : InstructionBase {
         if (connectedNode != null)
             shortestPathInfo += connectedNode.NodeAlphaID + ".dist=" + connectedNode.Dist + ", ";
 
-        return base.DebugInfo() + shortestPathInfo;
+        return base.DebugInfo() + shortestPathInfo + "new dist=" + connectedNodeNewDist;
     }
 }

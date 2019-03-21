@@ -118,7 +118,9 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     private bool ValidIndex(int index)
     {
-        return index >= 0 && index < codeLines.Length;
+        if (codeLines != null)
+            return index >= 0 && index < codeLines.Length;
+        return false;
     }
 
     //public void CLEAN_HIGHTLIGHT(int start, int end)
@@ -148,26 +150,35 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
     public void EmptyContent()
     {
-        foreach (TextMeshPro line in codeLines)
+        if (codeLines != null)
         {
-            line.text = "";
+            foreach (TextMeshPro line in codeLines)
+            {
+                line.text = "";
+            }
         }
     }
 
     public void RemoveHightlight()
     {
-        foreach (TextMeshPro line in codeLines)
+        if (codeLines != null)
         {
-            line.color = Util.BLACKBOARD_TEXT_COLOR;
+            foreach (TextMeshPro line in codeLines)
+            {
+                line.color = Util.BLACKBOARD_TEXT_COLOR;
+            }
         }
     }
 
     public void DestroyPseudoCode()
     {
-        for (int x=0; x < codeLines.Length; x++)
+        if (codeLines != null)
         {
-            if (codeLines[x] != null)
-                Destroy(codeLines[x].gameObject);
+            for (int x=0; x < codeLines.Length; x++)
+            {
+                if (codeLines[x] != null)
+                    Destroy(codeLines[x].gameObject);
+            }
         }
     }
 }

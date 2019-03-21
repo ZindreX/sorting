@@ -17,7 +17,7 @@ public abstract class MainManager : MonoBehaviour {
     protected bool userStoppedTask = false;
 
     // Used to pause the Update loop while learning assitance is working (difficulty=beginner -> pseudocode highlighting)
-    protected bool waitForSupportToComplete = false;
+    protected int waitForSupportToComplete = 0;
 
     // Used to check whether the controller is ready for input (see method below)
     protected bool controllerReady = false;
@@ -25,8 +25,6 @@ public abstract class MainManager : MonoBehaviour {
     // Blocks the Update loop until the application is ready and initialized
     protected bool algorithmInitialized = false;
 
-    // debugging, remove now?
-    protected bool userTestInitialized = false; 
     
     // Check list (startup, shutdown)
     public const string START_UP_CHECK = "Start up check", WAIT_FOR_SUPPORT = "Wait for support", SHUT_DOWN_CHECK = "Shut down check";
@@ -68,8 +66,10 @@ public abstract class MainManager : MonoBehaviour {
                 DemoUpdate();
             else if (Settings.IsUserTest())
             {
-                if (!waitForSupportToComplete)
+                if (waitForSupportToComplete == 0)
                     UserTestUpdate();
+                else
+                    Debug.Log("Waiting for support: #" + waitForSupportToComplete);
             }
         }
     }
@@ -103,11 +103,11 @@ public abstract class MainManager : MonoBehaviour {
         get { return algorithmInitialized; }
     }
 
-    // A boolean used to wait entering the update cycle while beginner's help (pseudocode) is being written
-    public bool WaitForSupportToComplete
+    // A variable used to wait entering the update cycle while beginner's help (pseudocode) is being written (used to be boolean, now int to support multiple supports going on)
+    public int WaitForSupportToComplete
     {
         get { return waitForSupportToComplete; }
-        set { waitForSupportToComplete = value; }
+        set { if (value >= 0) waitForSupportToComplete = value; }
     }
 
     public bool UserStoppedTask
@@ -211,12 +211,32 @@ public abstract class MainManager : MonoBehaviour {
      * > Called from UserController
      * > Creates the holders and the sorting elements
     */
-    public abstract void InstantiateSetup();
+    public virtual void InstantiateSetup()
+    {
+        // Used for shut down process
+        safeStopChecklist = new Dictionary<string, bool>();
+        algorithmName = Settings.Algorithm;
+
+    }
+
     /* --------------------------------------- Destroy & Restart ---------------------------------------
      * > Called from UserController
      * > Destroys all the gameobjects
      */
-    public abstract void DestroyAndReset();
+    public virtual void DestroyAndReset()
+    {
+        algorithmName = "";
+
+        activeChecklist = "";
+        checkListModeActive = false;
+        safeStopChecklist = null;
+
+        algorithmInitialized = false;
+        controllerReady = false;
+        userStoppedTask = false;
+
+        WaitForSupportToComplete = 0;
+    }
 
     /* --------------------------------------- Demo ---------------------------------------
      * - Gives a visual presentation of <algorithm>

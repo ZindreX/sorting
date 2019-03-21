@@ -165,9 +165,9 @@ public class Util : MonoBehaviour {
         if (moveDown)
         {
             Vector3 pos = obj.transform.position;
-            if (visible)
+            if (visible && obj.transform.position.y < 0)
                 obj.transform.position += moveUnderGround;
-            else
+            else if (obj.transform.position.y > 0)
                 obj.transform.position -= moveUnderGround;
         }
 

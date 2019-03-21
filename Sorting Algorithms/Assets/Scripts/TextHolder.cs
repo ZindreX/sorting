@@ -23,7 +23,7 @@ public class TextHolder : MonoBehaviour {
             if (i % 2 == 0)
                 surfaceTexts[i].text = id.ToString();
             else
-                surfaceTexts[i].text = value.ToString();
+                surfaceTexts[i].text = UtilGraph.ConvertDist(value);
         }
     }
 

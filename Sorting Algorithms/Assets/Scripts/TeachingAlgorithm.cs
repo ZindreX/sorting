@@ -91,7 +91,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         */
         if (lineCalculation)
         {
-            bool valuesNotInserted = true;
+            bool valuesNotInserted = true; // First show step 1
             for (int x=0; x < 2; x++)
             {
                 string calculation = PseudocodeLineIntoSteps(index, valuesNotInserted);
@@ -101,14 +101,13 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
                 pseudoCodeViewer.SetCodeLine(index, calculation, color);
                 yield return demoStepDuration;
-                pseudoCodeViewer.SetCodeLine(index, calculation, Util.BLACKBOARD_TEXT_COLOR);
 
-                valuesNotInserted = false;
+                valuesNotInserted = false; // Then show step 2
             }
 
         }
 
-        // Result
+        // At last show step 3 (result)
         pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, color);
         yield return demoStepDuration;
         pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, Util.BLACKBOARD_TEXT_COLOR);
