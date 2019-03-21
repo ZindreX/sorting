@@ -83,12 +83,12 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         edgeCost = edge.Cost;
     }
 
-    protected override float GetLineSpacing()
+    public override float GetLineSpacing()
     {
         return UtilGraph.SPACE_BETWEEN_CODE_LINES;
     }
 
-    protected override Vector2 GetLineRTDelta()
+    public override Vector2 GetLineRTDelta()
     {
         return new Vector2(10, 2);
     }

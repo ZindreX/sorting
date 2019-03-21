@@ -39,32 +39,32 @@ public class GraphSettings : SettingsBase {
     [Space(2)]
     [Header("Grid graph settings")]
     [SerializeField]
-    private GridRowsEditor gridRowsEditor;
-    private enum GridRowsEditor { One, Two, Three, Four, Five, Test }
+    [Range(1, 5)]
+    private int gridRows;
 
     [SerializeField]
-    private GridColumnsEditor gridColumnsEditor;
-    private enum GridColumnsEditor { One, Two, Three, Four, Five, Test }
+    [Range(1, 5)]
+    private int gridColumns;
 
     [SerializeField]
-    private GridSpaceEditor gridSpaceEditor;
-    private enum GridSpaceEditor { Four, Eight }
+    [Range(1, 2)]
+    private int gridSpace;
 
 
     // *** Tree graph ***
     [Space(2)]
     [Header("Tree graph settings")]
     [SerializeField]
-    private TreeDepth treeDepthEditor;
-    private enum TreeDepth { Zero, One, Two, Three, Four, Five }
+    [Range(0, 5)]
+    private int treeDepth;
 
     [SerializeField]
-    private NTree nTreeEditor;
-    private enum NTree { Binary, Ternary }
+    [Range(2, 3)]
+    private int nTree;
 
     [SerializeField]
-    private LevelDepthLengthEditor levelDepthLengthEditor;
-    private enum LevelDepthLengthEditor { Two, Four }
+    [Range(1, 2)]
+    private int levelDepthLength;
 
     [SerializeField]
     private bool visitLeftFirst;
@@ -90,15 +90,18 @@ public class GraphSettings : SettingsBase {
     // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
     [Header("RNG stuff")]
     [SerializeField]
-    private int symmetricEdgeChance = 10;
+    [Range(0, 10)]
+    private int symmetricEdgeChance;
+
     [SerializeField]
-    private int partialBuildTreeChildChance = 4;
+    [Range(0, 10)]
+    private int partialBuildTreeChildChance;
+
     [SerializeField]
-    private int buildEdgeChance = 1;
+    [Range(0, 10)]
+    private int buildEdgeChance;
 
     private string graphTask, graphStructure, edgeType, edgeBuildMode;
-    private int gridRows, gridColumns, gridSpace;
-    private int treeDepth, nTree, levelDepthLength;
 
     private void Start()
     {
@@ -181,25 +184,16 @@ public class GraphSettings : SettingsBase {
         }
 
         // Grid settings
-        gridRows = (int)gridRowsEditor + 1;
-        gridColumns = (int)gridColumnsEditor + 1;
-        gridSpace = ((int)gridSpaceEditor + 1) * 4;
-
-        if ((int)gridRowsEditor == 5)
+        if (gridRows == 6)
             gridRows += 25;
-        if ((int)gridColumnsEditor == 5)
+
+        if (gridColumns == 6)
             gridColumns += 25;
 
+        gridSpace *= 2;
 
         // Tree settings
-        treeDepth = (int)treeDepthEditor;
-        nTree = ((int)nTreeEditor + 2);
-
-        switch ((int)levelDepthLengthEditor)
-        {
-            case 0: levelDepthLength = 2; break;
-            case 1: levelDepthLength = 4; break;
-        }
+        levelDepthLength *= 2;
 
         // Extra
         ShortestPathOneToAll = shortestPathOneToAll;

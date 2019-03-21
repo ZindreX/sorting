@@ -2928,8 +2928,8 @@ MonoBehaviour:
   difficultyEditor: 0
   allowDuplicates: 0
   sortMain: {fileID: 236630474}
-  algorithmEditor: 0
-  numberofElementsEditor: 1
+  algorithmEditor: 1
+  numberOfElements: 8
   sortingCaseEditor: 2
 --- !u!4 &360338525 stripped
 Transform:

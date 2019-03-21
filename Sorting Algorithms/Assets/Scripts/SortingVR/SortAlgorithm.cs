@@ -30,12 +30,12 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_VAR_J);
     }
 
-    protected override float GetLineSpacing()
+    public override float GetLineSpacing()
     {
         return UtilSort.SPACE_BETWEEN_CODE_LINES;
     }
 
-    protected override Vector2 GetLineRTDelta() // ????
+    public override Vector2 GetLineRTDelta() // ????
     {
         return new Vector2(1f, 0.2f);
     }

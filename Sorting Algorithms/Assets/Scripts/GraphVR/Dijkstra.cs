@@ -39,7 +39,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             case 4:  lineOfCode += string.Format("   {0}.Dist = 0", node1Alpha); break;
             case 5:  lineOfCode += string.Format("   while ({0} > 0):", lengthOfList); break;
             case 6:  lineOfCode += string.Format("       {0} <- list.PriorityRemove()", node1Alpha); break;
-            case 7:  lineOfCode += string.Format("       for all neighbors of {0} in Graph:", node1Alpha); break;
+            case 7:  lineOfCode += string.Format("       for all untraversed neighbors of {0} in Graph:", node1Alpha); break;
             case 8:  lineOfCode += string.Format("           Visit neighbor {0}", node2Alpha); break;
             case 9:  lineOfCode += string.Format("           if ({0} < {1})", node1Dist + edgeCost, UtilGraph.ConvertDist(node2Dist)); break;   //"           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
             case 10: lineOfCode += string.Format("              {0}.Dist = {1}", node2Alpha, (node1Dist + edgeCost)); break;
@@ -464,7 +464,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             {
                 instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.END_NODE_FOUND, instNr, currentNode));
                 objectiveFound = true;
-                continue;
+                break;
             }
 
             // Check all nodes connected with current node
@@ -523,16 +523,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
 
                     // List visual
-                    int index = list.IndexOf(connectedNode); //(list.Count - 1 ) - list.IndexOf(connectedNode); // OBS: list is inverted (removes the last element instead of index 0)
-                    //int currentNodeRepIndex = graphMain.ListVisual.ListIndexOf(connectedNode); // Create method/action code ???
+                    int index = list.IndexOf(connectedNode);
 
                     instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.HAS_NODE_REPRESENTATION, instNr, connectedNode, index, UtilGraph.PRIORITY_ADD_NODE, UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION));
 
                     // Line 12: Add to list
                     instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
                 }
-                //currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
-
                 // Line 13: End if
                 instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
             }

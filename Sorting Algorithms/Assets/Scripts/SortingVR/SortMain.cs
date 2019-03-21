@@ -142,8 +142,6 @@ public class SortMain : MainManager {
         algorithmManagerBase = ActivateDeactivateSortingManagers(algorithmName);
         algorithmManagerBase.InitSortingManager(this);
 
-        sortAlgorithm.PseudoCodeViewer = displayUnitManager.PseudoCodeViewer;
-
         // Init display unit manager
         displayUnitManager.InitDisplayUnitManager(sortAlgorithm);
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, algorithmName, 0);

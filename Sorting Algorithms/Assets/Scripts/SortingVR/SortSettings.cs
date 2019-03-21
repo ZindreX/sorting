@@ -15,7 +15,6 @@ public class SortSettings : SettingsBase {
     [SerializeField]
     private bool allowDuplicates;
 
-    private int numberOfElements;
     private string sortingCase;
 
     [Space(2)]
@@ -35,8 +34,8 @@ public class SortSettings : SettingsBase {
     [Space(2)]
     [Header("Rules / extra")]
     [SerializeField]
-    private NumberofElementsEditor numberofElementsEditor;
-    private enum NumberofElementsEditor { two, four, six, eight }
+    [Range(2, 8)]
+    private int numberOfElements;
 
     [SerializeField]
     private CaseEditor sortingCaseEditor;
@@ -81,8 +80,6 @@ public class SortSettings : SettingsBase {
             case 1: SortingCase = UtilSort.BEST_CASE; break;
             case 2: SortingCase = UtilSort.WORST_CASE; break;
         }
-
-        NumberOfElements = ((int)numberofElementsEditor + 1) * 2;
         Duplicates = allowDuplicates;
 
 

@@ -18914,7 +18914,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: treeDepthEditor
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -18929,7 +18929,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: algorithmSpeedEditor
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -18944,7 +18944,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: algorithmEditor
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19049,7 +19049,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: nTreeEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19064,7 +19064,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: teachingModeEditor
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4012415558095806, guid: c2c37000dfbdf3042be94bd4f2cb00df, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -19077,12 +19077,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: selectStartEndNodes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: graphTaskEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19092,12 +19092,52 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: x1
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: z1
-      value: 0
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: gridRowz
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: gridRows
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: gridColumns
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: gridSpace
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: treeDepth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: nTree
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: levelDepthLength
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 2}
+      propertyPath: buildEdgeChance
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2c37000dfbdf3042be94bd4f2cb00df, type: 2}
@@ -20364,7 +20404,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c6451f883ea41a847ac589af33f090bf, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

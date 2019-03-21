@@ -67,7 +67,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public PseudoCodeViewer PseudoCodeViewer
     {
         get { return pseudoCodeViewer; }
-        set { pseudoCodeViewer = value; pseudoCodeViewer.InitPseudoCodeViewer(this, GetLineSpacing(), GetLineRTDelta()); } // move init to main?
+        set { pseudoCodeViewer = value; }
     }
 
     // Reach to line of code which are not mentioned in instructions
@@ -144,9 +144,9 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public abstract MainManager MainManager { get; }
 
     // Space between lines of code
-    protected abstract float GetLineSpacing();
+    public abstract float GetLineSpacing();
 
-    protected abstract Vector2 GetLineRTDelta();
+    public abstract Vector2 GetLineRTDelta();
 
     /* Collects one line of code at a time and rewrites it into pseudocode
      * - Sort: old system in use (todo: fix)

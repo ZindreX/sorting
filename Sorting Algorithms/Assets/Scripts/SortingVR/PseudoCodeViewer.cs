@@ -17,12 +17,14 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     private TeachingAlgorithm algorithm;
     private Vector2 rtDelta;
 
-    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm, float spaceBetweenLines, Vector2 rtDelta)
+    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm)
     {
         this.algorithm = algorithm;
+        algorithm.PseudoCodeViewer = this;
+
         demoStepDuration = algorithm.DemoStepDuration;
-        this.spaceBetweenLines = spaceBetweenLines;
-        this.rtDelta = rtDelta;
+        spaceBetweenLines = algorithm.GetLineSpacing();
+        rtDelta = algorithm.GetLineRTDelta();
     }
 
     // Initializes the pseudocode (Instantiating each line of code and making them fit among each other/within the blackboard)

@@ -52,9 +52,9 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     private Camera playerCamera;
     private Vector3 nodePosition;
     private float withinNode = 0.6f;
+
     private PositionManager positionManager;
     private GraphMain graphMain;
-
     private AudioManager audioManager;
 
     // Debugging
@@ -485,7 +485,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         validatedUserMove++;
     }
 
-
+    // Check whether the player visited (shot) the correct node
     private string IsCorrectlyShot()
     {
         if (nodeInstruction != null)
@@ -507,6 +507,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         return UtilSort.CANNOT_VALIDATE_ERROR;
     }
 
+    // Check whether the player traversed (teleported) the correct node
     private string IsCorrectlyTraversed()
     {
         if (nodeInstruction != null)
@@ -532,7 +533,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     // Instruction methods end
 
-
+    // Visualization
     private IEnumerator PlayerSelectedNode()
     {
         for (int i=0; i < 4; i++)

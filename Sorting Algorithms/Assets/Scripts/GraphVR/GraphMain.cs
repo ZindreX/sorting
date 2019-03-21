@@ -201,9 +201,9 @@ public class GraphMain : MainManager {
             if (difficulty <= Util.PSEUDO_CODE_MAX_DIFFICULTY)
             {
                 // Pseudocode
-                graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer; // initialized in algorithm
+                pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm);
                 pseudoCodeViewer.PseudoCodeSetup();
-            }
+}
 
             if (difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
             {
@@ -218,7 +218,7 @@ public class GraphMain : MainManager {
             // >>> Demo
 
             // Pseudocode
-            graphAlgorithm.PseudoCodeViewer = pseudoCodeViewer; // initialized in algorithm (move it here?)
+            pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm);
             pseudoCodeViewer.PseudoCodeSetup();
 
             // List visual
@@ -254,24 +254,7 @@ public class GraphMain : MainManager {
             StartCoroutine(SetAutomaticallyImportantNodes(isShortestPath));
     }
 
-    private void InitSupport(int difficulty)
-    {
-        switch (difficulty)
-        {
-            case Util.BEGINNER:
-
-                break;
-
-            case Util.INTERMEDIATE:
-
-                break;
-
-            case Util.ADVANCED:
-
-                break;
-        }
-    }
-
+    // Start-/end node(s) set automatically (settings in editor)
     public IEnumerator SetAutomaticallyImportantNodes(bool isShortestPath)
     {
         yield return loading;
@@ -289,6 +272,7 @@ public class GraphMain : MainManager {
         checkListModeActive = false;
     }
 
+    // Makes the settings menu and start pillar visible/invisible
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
         graphSettings.FillTooltips("Loading setup...");
@@ -421,7 +405,7 @@ public class GraphMain : MainManager {
         if (userTestManager.HasInstructions())
         {
             // If a calculation is required to progress in the algorithm
-            if (usingCalculator)
+            if (algorithmName == Util.DIJKSTRA && usingCalculator)
             {
                 // Check if it's in process and whether the equal button has been clicked
                 if (calculator.CalculationInProcess && calculator.EqualButtonClicked)
@@ -443,9 +427,12 @@ public class GraphMain : MainManager {
                     // If input data was correct, then progress to next instruction (add only one)
                     if (correctUserInput && userTestManager.ReadyForNext != userTestManager.UserActionToProceed)
                     {
+                        userTestManager.IncrementTotalCorrect();
                         userTestManager.ReadyForNext += 1;
                         pseudoCodeViewer.SetCodeLine(9, "           if (" + calculator.DisplayText + ")", Util.BLACKBOARD_TEXT_COLOR);
                     }
+                    else
+                        userTestManager.Mistake();
                 }
                 else if (!calculator.CalculationInProcess)
                 {

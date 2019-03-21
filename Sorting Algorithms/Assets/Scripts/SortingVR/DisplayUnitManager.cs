@@ -19,7 +19,7 @@ public class DisplayUnitManager : MonoBehaviour {
 
     public void InitDisplayUnitManager(SortAlgorithm algorithm)
     {
-        centerBlackboard.InitPseudoCodeViewer(algorithm, UtilSort.SPACE_BETWEEN_CODE_LINES, new Vector2(10, 2));
+        centerBlackboard.InitPseudoCodeViewer(algorithm);
         leftInfoBoardText.text = "";
         sortingTableText.text = "";
         settingsMenuText.text = "";
