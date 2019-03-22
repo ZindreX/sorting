@@ -13,7 +13,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // Basis variables for all modes
     protected WaitForSeconds demoStepDuration;
-    protected bool pseudoCodeInitilized = false, isTaskCompleted = false, includeLineNr = false; // isReadyForNextMove = false;
+    protected bool pseudoCodeInitilized = false, isTaskCompleted = false, includeLineNr = false;
     protected PseudoCodeViewer pseudoCodeViewer;
     protected Color useHighlightColor = Util.HIGHLIGHT_COLOR;
 
@@ -122,6 +122,8 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public virtual void AddSkipAbleInstructions()
     {
         skipDict.Add(Util.SKIP_NO_ELEMENT, new List<string>());
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.FINAL_INSTRUCTION);
     }
 
     public virtual void ResetSetup()

@@ -42,8 +42,15 @@ public class Calculator : MonoBehaviour {
     private int value3;
     private string newValueLessThanCurrent;
 
+
+
+    [SerializeField]
+    private Transform leftHand;
     private Camera playerCamera;
-    private Transform pocket;
+    private Rigidbody rb;
+
+    private bool playerHoldingCalculator;
+
 
     private Vector3 startPos;
     private WaitForSeconds feedbackDuration = new WaitForSeconds(3f);
@@ -52,27 +59,20 @@ public class Calculator : MonoBehaviour {
     {
         startPos = transform.position;
         playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
+        rb = GetComponent<Rigidbody>();
         audioSource = GetComponentInParent<AudioSource>();
     }
 
     private void Update()
     {
-        // Place the calculator in front of the player
-        if (calculationInProcess)
-        {
-            //transform.position = playerCamera.transform.position + new Vector3(0f, 2f, 0f);
-            // Place infront of player
-            transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.4f;
-
-            // Rotate towards the player
-            transform.LookAt(2 * transform.position - playerCamera.transform.position);
-        }
+        if (throwAble && transform.position.y < 0.1f)
+            PlaceCalculator();
     }
 
     // Prepare for a new calculation
     public void InitCalculation(string task)
     {
-        displayText.text = "value1 OP value2 l/g value3";
+        displayText.text = "Fill in the\n if-statement";
         this.task = task;
 
         number1 = new List<int>();
@@ -95,12 +95,31 @@ public class Calculator : MonoBehaviour {
 
         calculationInProcess = true;
         equalButtonClicked = false;
+        feedbackReceived = false;
         undoActions = new Stack<string>();
-
-        UpdateDisplay(false);
     }
 
     // ------------------------------------- Getters/Setters -------------------------------------
+
+    private bool throwAble;
+    public void PlayerHoldingCalculator(bool holding)
+    {
+        playerHoldingCalculator = holding;
+
+        if (holding)
+        {
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        else
+        {
+            if (!throwAble)
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
+
+    }
+
     public int Value1
     {
         get { return value1; }
@@ -151,6 +170,10 @@ public class Calculator : MonoBehaviour {
 
                 result += (int)Mathf.Pow(10, i) * list[i];
             }
+
+            // For fun
+            throwAble = (result == 1337);
+
             return result;
         }
         return BLANK;
@@ -167,7 +190,7 @@ public class Calculator : MonoBehaviour {
 
             if (op != NO_OP_CHOSEN)
             {
-                text += op;
+                text += " " + op + " ";
 
                 if (value2 != BLANK)
                 {
@@ -180,7 +203,7 @@ public class Calculator : MonoBehaviour {
 
                             if (newValueLessThanCurrent != ANSWER_NOT_CHOSEN)
                             {
-                                text += newValueLessThanCurrent;
+                                text += " " + newValueLessThanCurrent + " ";
 
                                 if (value3 != BLANK)
                                     text += ConvertInf(value3);
@@ -190,7 +213,6 @@ public class Calculator : MonoBehaviour {
                 }
             }
         }
-
         displayText.text = text;
     }
 
@@ -204,6 +226,9 @@ public class Calculator : MonoBehaviour {
     // Button 0 - 9 input
     public void ValueButtonClick(int value)
     {
+        if (!calculationInProcess)
+            return;
+
         audioSource.Play();
 
         if (value == INF)
@@ -235,6 +260,9 @@ public class Calculator : MonoBehaviour {
     // Called by one of the operator buttons on the calculator
     public void OperatorButtonClick(string op)
     {
+        if (!calculationInProcess)
+            return;
+
         audioSource.Play();
 
         // if user click operator button then set value 1 as zero
@@ -254,6 +282,9 @@ public class Calculator : MonoBehaviour {
     // Equal (=) button clicked
     public void EqualButtonClick()
     {
+        if (!calculationInProcess)
+            return;
+
         audioSource.Play();
 
         if (value1 != BLANK && value2 != BLANK)
@@ -277,6 +308,9 @@ public class Calculator : MonoBehaviour {
     // Undo (TODO: improve)
     public void Undo()
     {
+        if (!calculationInProcess)
+            return;
+
         audioSource.Play();
 
         if (undoActions.Count > 0)
@@ -315,6 +349,9 @@ public class Calculator : MonoBehaviour {
 
     public void GreaterOrLessAnswerButtonClick(string answer)
     {
+        if (!calculationInProcess)
+            return;
+
         audioSource.Play();
 
         newValueLessThanCurrent = answer;
@@ -327,10 +364,29 @@ public class Calculator : MonoBehaviour {
 
     // ------------------------------------- Graph related -------------------------------------
 
+    private bool feedbackReceived;    
+    public bool FeedbackReceived
+    {
+        get { return feedbackReceived; }
+        set { feedbackReceived = value; }
+    }
+
+    public void PlaceCalculator()
+    {
+        rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+
+        // Place infront of player
+        transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.4f;
+        
+        // Rotate towards the player
+        transform.LookAt(2 * transform.position - playerCamera.transform.position);
+    }
+
     // Checks whether the input is correct
     public bool ControlUserInput(int correctNode1Dist, int correctEdgeCost, int correctNode2Dist)
     {
-        Debug.Log(correctNode1Dist + ", " + correctEdgeCost + ", " + correctNode2Dist);
+        string feedback = "";
 
         if (correctNode1Dist == value1 && correctEdgeCost == value2)
         {
@@ -340,24 +396,36 @@ public class Calculator : MonoBehaviour {
             {
                 if (correctNode2Dist == value3)
                 {
-
-                    return Feedback(true, null);
+                    return Feedback(true, feedback);
                 }
                 else
-                    return Feedback(false, "Connected node distance error");
-
+                {
+                    feedback = "right hand side error";
+                    return Feedback(false, feedback);
+                }
             }
             else
-                return Feedback(false, "Less/Greater");
+            {
+                feedback += "krokodille kjeft error";
+                return Feedback(false, feedback);
+            }
         }
 
-        return Feedback(false, "Current node or edge cost wrong");
+        if (correctNode1Dist != value1)
+            feedback += "> w node dist error\n";
+
+        if (op != '+')
+            feedback += "operand error";
+
+        if (correctEdgeCost != value2)
+            feedback += "> edge cost error\n";
+
+        return Feedback(false, feedback);
     }
 
     public bool Feedback(bool correctAnswer, string feedback)
     {
         StartCoroutine(InputFeedback(correctAnswer));
-
         if (correctAnswer)
             return true;
 
@@ -387,6 +455,7 @@ public class Calculator : MonoBehaviour {
 
     public void ResetCalculator()
     {
+        rb.useGravity = true;
         transform.position = startPos;
     }
 

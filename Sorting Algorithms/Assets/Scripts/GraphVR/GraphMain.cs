@@ -429,10 +429,15 @@ public class GraphMain : MainManager {
                     {
                         userTestManager.IncrementTotalCorrect();
                         userTestManager.ReadyForNext += 1;
-                        pseudoCodeViewer.SetCodeLine(9, "           if (" + calculator.DisplayText + ")", Util.BLACKBOARD_TEXT_COLOR);
+                        ((Dijkstra)graphAlgorithm).IfStatementContent = calculator.DisplayText;
+                        pseudoCodeViewer.SetCodeLine(((Dijkstra)graphAlgorithm).CollectLine(9), Util.BLACKBOARD_TEXT_COLOR);
+                        calculator.FeedbackReceived = true;
                     }
-                    else
+                    else if (!calculator.FeedbackReceived)
+                    {
                         userTestManager.Mistake();
+                        calculator.FeedbackReceived = true;
+                    }
                 }
                 else if (!calculator.CalculationInProcess)
                 {
@@ -595,6 +600,9 @@ public class GraphMain : MainManager {
                     switch (inst)
                     {
                         case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
+                            // Turn off highlight effect of previous line
+                            pseudoCodeViewer.ChangeColorOfText(8, Util.BLACKBOARD_TEXT_COLOR);
+
                             // Since we highlighted the color and/or text position of the node/edge we are working on (highlighting purpose) in the previous instruction, now we reset them
                             // Changed color of node
                             spInst.ConnectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
@@ -606,11 +614,13 @@ public class GraphMain : MainManager {
                             {
                                 usingCalculator = true;
                                 calculator.InitCalculation(Calculator.GRAPH_TASK);
+                                calculator.PlaceCalculator();
 
                                 if (graphSettings.Difficulty == Util.BEGINNER)
                                 {
-
-                                    pseudoCodeViewer.SetCodeLine(9, "           if (" + spInst.CurrentNode.NodeAlphaID + ".Dist + edge(" + spInst.CurrentNode.NodeAlphaID + ", " + spInst.ConnectedNode.NodeAlphaID + ").Cost" + " <? " + spInst.ConnectedNode.NodeAlphaID + ".Dist)", Util.HIGHLIGHT_COLOR);
+                                    // Fix the pseudocode for simple thought process
+                                    ((Dijkstra)graphAlgorithm).IfStatementContent = spInst.CurrentNode.NodeAlphaID + ".Dist + edge(" + spInst.CurrentNode.NodeAlphaID + ", " + spInst.ConnectedNode.NodeAlphaID + ").Cost" + " <? " + spInst.ConnectedNode.NodeAlphaID + ".Dist)";
+                                    pseudoCodeViewer.SetCodeLine(((Dijkstra)graphAlgorithm).CollectLine(9), Util.HIGHLIGHT_COLOR);
                                     return 0; // to avoid pseudocode update below
                                 }
 

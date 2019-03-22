@@ -11,10 +11,24 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
 
     private bool objectiveFound = false;
+    private string ifStatementContent;
+
+    public override void InitTeachingAlgorithm(float algorithmSpeed)
+    {
+        ifStatementContent = "w.Dist + edge(w, v).Cost < v.Dist";
+        base.InitTeachingAlgorithm(algorithmSpeed);
+    }
+
 
     public override string AlgorithmName
     {
         get { return Util.DIJKSTRA; }
+    }
+
+    public string IfStatementContent
+    {
+        get { return ifStatementContent; }
+        set { ifStatementContent = value; }
     }
 
     public override GameObject InfoPlate
@@ -32,16 +46,16 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
         switch (lineNr)
         {
-            case 0:  lineOfCode += string.Format("Dijkstra({0}, {1}):", graphStructure, node1Alpha); break;
+            case 0:  lineOfCode += string.Format("Dijkstra({0}, {1}):", graphStructure, startNodeAlpha); break;
             case 1:  lineOfCode += "   Set all vertices of Graph to infinity"; break;
             case 2:  lineOfCode += string.Format("   list = [ ]         // Priority queue"); break;
-            case 3:  lineOfCode += string.Format("   list.Add({0})", node1Alpha); break;
-            case 4:  lineOfCode += string.Format("   {0}.Dist = 0", node1Alpha); break;
+            case 3:  lineOfCode += string.Format("   list.Add({0})", startNodeAlpha); break;
+            case 4:  lineOfCode += string.Format("   {0}.Dist = 0", startNodeAlpha); break;
             case 5:  lineOfCode += string.Format("   while ({0} > 0):", lengthOfList); break;
             case 6:  lineOfCode += string.Format("       {0} <- list.PriorityRemove()", node1Alpha); break;
             case 7:  lineOfCode += string.Format("       for all untraversed neighbors of {0} in Graph:", node1Alpha); break;
             case 8:  lineOfCode += string.Format("           Visit neighbor {0}", node2Alpha); break;
-            case 9:  lineOfCode += string.Format("           if ({0} < {1})", node1Dist + edgeCost, UtilGraph.ConvertDist(node2Dist)); break;   //"           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
+            case 9:  lineOfCode += string.Format("           if ({0})", ifStatementContent); break;   //"           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
             case 10: lineOfCode += string.Format("              {0}.Dist = {1}", node2Alpha, (node1Dist + edgeCost)); break;
             case 11: lineOfCode += string.Format("              {0}.Prev = {1}", node2Alpha, node1Alpha); break;
             case 12: lineOfCode += string.Format("              list.PriorityAdd({0})", node2Alpha); break;
@@ -100,12 +114,17 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     {
         base.ResetSetup();
         objectiveFound = false;
+        ifStatementContent = "";
     }
 
     // Dijkstra on Tree: must start at 0, or atleast have end node in the same subtree underneath start node
     #region Dijkstra Demo
     public IEnumerator ShortestPathDemo(Node startNode, Node endNode)
     {
+        // Line 0: Set graph/start node
+        SetNodePseudoCode(startNode, 1); // Pseudocode
+        yield return HighlightPseudoCode(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
+
         // Line 1: Set all vertices of G to inifity
         graphMain.GraphManager.SetAllNodesToInf();
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
@@ -239,6 +258,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
                 // Cost between nodes
                 int currentDistAndEdgeCost = node1Dist + edgeCost;
+                ifStatementContent = currentDistAndEdgeCost +  " < " + UtilGraph.ConvertDist(node2Dist);
 
                 // Line 9: If statement
                 yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
@@ -425,6 +445,9 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instNr = 0;
 
+        // Line 0: (update startnode)
+        instructions.Add(instNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instNr));
+
         // Line 1: Set all vertices of G to inifity
         graphMain.GraphManager.SetAllNodesToInf();
         instructions.Add(instNr++, new InstructionBase(UtilGraph.SET_ALL_NODES_TO_INFINITY, instNr));
@@ -583,6 +606,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode = 0;
+                SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
+                useHighlightColor = Util.BLACKBOARD_TEXT_COLOR;
+                break;
+
             case UtilGraph.SET_ALL_NODES_TO_INFINITY:
                 lineOfCode = 1;
                 break;
@@ -592,14 +621,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.ADD_NODE:
-                SetNodePseudoCode(n1, 1);
                 useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 lineOfCode = 3;
                 break;
 
             case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
                 lineOfCode = 4;
-                break; // node1Alpha already set
+                break;
 
             case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
                 lineOfCode = 5;

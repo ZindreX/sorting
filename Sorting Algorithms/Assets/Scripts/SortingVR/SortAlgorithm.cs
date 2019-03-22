@@ -20,11 +20,9 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_INSTRUCTION);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_LOOP);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_LOOP_INST);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.END_LOOP_INST);
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FINAL_INSTRUCTION);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.INCREMENT_VAR_I);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.SET_VAR_J);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_VAR_J);

@@ -73,11 +73,6 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    //public TextMeshPro CodeLine(int index)
-    //{
-    //    return codeLines[index];
-    //}
-
     public void SetCodeLine(int lineNr, string text, Color color)
     {
         // Check if lineNr exists

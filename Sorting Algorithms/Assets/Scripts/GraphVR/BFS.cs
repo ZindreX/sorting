@@ -30,16 +30,14 @@ public class BFS : GraphAlgorithm, ITraverse {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;
         switch (lineNr)
         {
-            case 0: lineOfCode += string.Format("BFS({0}, {1}):", graphStructure, node1Alpha); break;
+            case 0: lineOfCode += string.Format("BFS({0}, {1}):", graphStructure, startNodeAlpha); break;
             case 1: lineOfCode += string.Format("   queue = [ ]"); break;
-            case 2: lineOfCode += string.Format("   queue.Enqueue({0})", node1Alpha); break;
-            //case 3: lineOfCode += string.Format("   {0}.visited = true", node1Alpha); break;
+            case 2: lineOfCode += string.Format("   queue.Enqueue({0})", startNodeAlpha); break;
             case 3: lineOfCode += string.Format("   while ({0} > 0):", lengthOfList); break;
             case 4: lineOfCode += string.Format("       {0} <- queue.Dequeue()", node1Alpha); break;
             case 5: lineOfCode += string.Format("       for all neighbors of {0} in Graph:", node1Alpha); break; //case 6: lineOfCode += string.Format("       for i={0} to {1}:", i, node1.Edges.Count-1); break;
             case 6: lineOfCode += string.Format("           if (!{0}.visited):", node2Alpha); break;
             case 7: lineOfCode += string.Format("               queue.Enqueue({0})", node2Alpha); break;
-            //case 9: lineOfCode += string.Format("               {0}.visited = true", node2Alpha); break;
             case 8: lineOfCode += string.Format("          end if"); break;
             case 9: lineOfCode += string.Format("      end for"); break;
             case 10: lineOfCode += string.Format("  end while"); break;
@@ -80,7 +78,7 @@ public class BFS : GraphAlgorithm, ITraverse {
     public IEnumerator TraverseDemo(Node startNode)
     {
         // Line 0: Set graph/start node
-        SetNodePseudoCode(startNode, 1); // Pseudocode
+        SetNodePseudoCode(startNode, 0); // Pseudocode
         yield return HighlightPseudoCode(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
 
         // Line 1: Create empty list (queue)
@@ -344,6 +342,11 @@ public class BFS : GraphAlgorithm, ITraverse {
         useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
+            case Util.FIRST_INSTRUCTION:
+                SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
+                lineOfCode = 0;
+                break;
+
             case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 1; break;
             case UtilGraph.ENQUEUE_NODE_INST:
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);

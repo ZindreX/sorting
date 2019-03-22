@@ -30,16 +30,14 @@ public class DFS : GraphAlgorithm, ITraverse {
         
         switch (lineNr)
         {
-            case 0: codeLine += string.Format("DFS({0}, {1}):", graphStructure, node1Alpha); break;
+            case 0: codeLine += string.Format("DFS({0}, {1}):", graphStructure, startNodeAlpha); break;
             case 1: codeLine += "    stack = [ ]"; break;
-            case 2: codeLine += string.Format("    stack.Push({0})", node1Alpha); break;
-            //case 3: codeLine += string.Format("    {0}.visited = true", node1Alpha); break;
+            case 2: codeLine += string.Format("    stack.Push({0})", startNodeAlpha); break;
             case 3: codeLine += string.Format("    while ({0} > 0):", lengthOfList); break;
             case 4: codeLine += string.Format("        {0} <- stack.Pop()", node1Alpha); break;
             case 5: codeLine += string.Format("        for all neighbors of {0} in Graph:", node1Alpha); break;
             case 6: codeLine += string.Format("            if (!{0}.visited):", node2Alpha); break;
             case 7: codeLine += string.Format("                stack.Push({0})", node2Alpha); break;
-            //case 9: codeLine += string.Format("                {0}.visited = true", node2Alpha); break;
             case 8: codeLine += "           end if"; break;
             case 9: codeLine += "       end for"; break;
             case 10: codeLine += "   end while"; break;
@@ -80,7 +78,7 @@ public class DFS : GraphAlgorithm, ITraverse {
     public IEnumerator TraverseDemo(Node startNode)
     {
         // Line 0: Set graph/start node
-        SetNodePseudoCode(startNode, 1);
+        SetNodePseudoCode(startNode, 0);
         yield return HighlightPseudoCode(CollectLine(0), Util.BLACKBOARD_TEXT_COLOR);
 
         // Line 1: Create an empty list (stack)
@@ -413,6 +411,11 @@ public class DFS : GraphAlgorithm, ITraverse {
         useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
+            case Util.FIRST_INSTRUCTION:
+                SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
+                lineOfCode = 0;
+                break;
+
             case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 1; break;
             case UtilGraph.PUSH_INST:
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
