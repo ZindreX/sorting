@@ -40,6 +40,7 @@ public class GraphMain : MainManager {
 
     private GraphAlgorithm graphAlgorithm;
     private GraphManager graphManager;
+    private StepByStepManager stepByStepManager;
     private UserTestManager userTestManager;
     private PositionManager posManager;
 
@@ -70,6 +71,7 @@ public class GraphMain : MainManager {
         // >>> Basic components
         graphSettings = settingsObj.GetComponent<GraphSettings>();
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
+        stepByStepManager = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
         posManager = FindObjectOfType<PositionManager>();
 
         startPillar = startPillarObj.GetComponent<StartPillar>();
@@ -335,16 +337,115 @@ public class GraphMain : MainManager {
     public override void PerformAlgorithmDemo()
     {
         Debug.Log("Performing " + algorithmName + " " + graphSettings.GraphTask + " demo.");
+        //switch (graphSettings.GraphTask)
+        //{
+        //    case UtilGraph.TRAVERSE: StartCoroutine(((ITraverse)graphAlgorithm).TraverseDemo(graphManager.StartNode)); break;
+        //    case UtilGraph.SHORTEST_PATH: StartCoroutine(((IShortestPath)graphAlgorithm).ShortestPathDemo(graphManager.StartNode, graphManager.EndNode)); break;
+        //}
+
+        // Getting instructions for this sample of sorting elements
+        Dictionary<int, InstructionBase> instructions = null;
+
         switch (graphSettings.GraphTask)
         {
-            case UtilGraph.TRAVERSE: StartCoroutine(((ITraverse)graphAlgorithm).TraverseDemo(graphManager.StartNode)); break;
-            case UtilGraph.SHORTEST_PATH: StartCoroutine(((IShortestPath)graphAlgorithm).ShortestPathDemo(graphManager.StartNode, graphManager.EndNode)); break;
+            case UtilGraph.TRAVERSE: instructions = ((ITraverse)graphAlgorithm).TraverseUserTestInstructions(graphManager.StartNode); break;
+            case UtilGraph.SHORTEST_PATH: instructions = ((IShortestPath)graphAlgorithm).ShortestPathUserTestInstructions(graphManager.StartNode, graphManager.EndNode); break;
+            default: Debug.LogError("Graph task '" + graphSettings.GraphTask + "' invalid."); break;
         }
+
+        if (instructions == null)
+            return;
+
+        Debug.Log("Number of instructions: " + instructions.Count);
+
+        stepByStepManager.Init(instructions);
+
+        graphManager.ResetGraph();
+
     }
 
     protected override void DemoUpdate()
     {
+        // First check if user test setup is complete
+        if (stepByStepManager.HasInstructions())
+        {
+            // Continue when user has finished sub task, or else whenever ready
+            if (waitForSupportToComplete == 0)
+            {
+                // Check if we still have any instructions
+                if (!stepByStepManager.HasInstructions())
+                {
+                    graphAlgorithm.IsTaskCompleted = true;
+                }
+                else
+                {
+                    // Still got instructions?
+                    bool hasInstruction = stepByStepManager.IncrementToNextInstruction();
 
+                    // Hot fix - solve in some other way?
+                    if (hasInstruction)
+                    {
+                        InstructionBase instruction = stepByStepManager.GetInstruction();
+
+                        if (instruction is ListVisualInstruction)
+                        {
+                            ListVisualInstruction lvInstruction = (ListVisualInstruction)instruction;
+                            switch (lvInstruction.Instruction)
+                            {
+                                case UtilGraph.ADD_NODE: listVisual.AddListObject(lvInstruction.Node); break;
+                                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(lvInstruction.Node, lvInstruction.Index); break;
+                                case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
+                                case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
+                                case UtilGraph.SET_START_NODE_DIST_TO_ZERO: StartCoroutine(listVisual.UpdateValueAndPositionOf(lvInstruction.Node, 0)); break;
+                                case UtilGraph.HAS_NODE_REPRESENTATION:
+                                    /* This case has two outcomes:
+                                     * 1) If the node doesn't have any node representations in the current list, then create and add a new one
+                                     * 2) There is currently a node representation, so update this one
+                                    */
+
+                                    Node node = lvInstruction.Node;
+                                    int index = lvInstruction.Index;
+                                    bool hasNodeRep = listVisual.HasNodeRepresentation(node);
+
+                                    if (!hasNodeRep) // Case 1
+                                        listVisual.PriorityAdd(node, index);
+                                    else // Case 2
+                                        StartCoroutine(listVisual.UpdateValueAndPositionOf(node, index));
+                                    break;
+
+                                case UtilGraph.END_NODE_FOUND:
+                                    // Stat backtracking
+                                    pseudoCodeViewer.DestroyPseudoCode();
+                                    break;
+
+                                case UtilGraph.PREPARE_BACKTRACKING:
+                                    listVisual.CreateBackTrackList(graphManager.EndNode);
+                                    break;
+
+                                default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
+                            }
+                        }
+                        else if (instruction is TraverseInstruction)
+                        {
+                            //bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+                            StartCoroutine(((BFS)graphAlgorithm).NewDemo(instruction, true));
+                            waitForSupportToComplete++;
+                        }
+                        else
+                        {
+                            StartCoroutine(((BFS)graphAlgorithm).NewDemo(instruction, false));
+                            waitForSupportToComplete++;
+                        }
+                    }
+
+
+
+                        //userTestManager.ReadyForNext += PrepareNextInstruction());
+
+                    
+                }
+            }
+        }
     }
 
     /* --------------------------------------- Step-By-Step ---------------------------------------

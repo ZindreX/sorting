@@ -8650,6 +8650,7 @@ GameObject:
   - component: {fileID: 591449217}
   - component: {fileID: 591449219}
   - component: {fileID: 591449221}
+  - component: {fileID: 591449218}
   m_Layer: 0
   m_Name: GraphManager
   m_TagString: Untagged
@@ -8690,6 +8691,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a6697376a1a0848b813fcf1dba106e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &591449218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 591449214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3e4f8122557fd448817fb9109d99f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &591449219
@@ -19269,12 +19281,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: x2
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: z2
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19314,12 +19326,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: graphStructureEditor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: algorithmEditor
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19439,7 +19451,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: teachingModeEditor
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4012415558095806, guid: c2c37000dfbdf3042be94bd4f2cb00df, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -19452,12 +19464,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: selectStartEndNodes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: graphTaskEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19467,12 +19479,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: x1
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: z1
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
