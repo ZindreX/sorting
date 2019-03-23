@@ -5,6 +5,7 @@ using UnityEngine;
 //[RequireComponent(typeof(MergeSort))]
 public class MergeSortManager : AlgorithmManagerBase {
 
+    [SerializeField]
     private MergeSort mergeSort;
 
     public override string AlgorithmManager
@@ -19,9 +20,19 @@ public class MergeSortManager : AlgorithmManagerBase {
 
     public override int PrepareNextInstruction(InstructionBase instruction)
     {
-        MergeSortInstruction mergeSortInstruction = (MergeSortInstruction)instruction;
-        Debug.Log("FIX");
+        if (instruction is MergeSortInstruction)
+        {
+            MergeSortInstruction mergeSortInstruction = (MergeSortInstruction)instruction;
 
+        }
+        else if (instruction is MergeSortHolderInstruction)
+        {
+
+        }
+        else
+        {
+
+        }
 
         // Display help on blackboard
         if (false) // help enabled
@@ -57,7 +68,7 @@ public class MergeSortManager : AlgorithmManagerBase {
             int value = element.Value;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new MergeSortInstruction(UtilSort.INIT_INSTRUCTION, 0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, sortingElementID, value, isCompare, isSorted, holderID, UtilSort.NO_DESTINATION); // new MergeSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isCompare, isSorted);
+            elementStates[i] = new MergeSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, holderID, UtilSort.NO_DESTINATION, value, isCompare, isSorted);
         }
         return elementStates;
     }

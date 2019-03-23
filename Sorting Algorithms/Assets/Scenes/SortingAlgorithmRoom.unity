@@ -2923,12 +2923,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltips: {fileID: 721067195}
   useDebuggingSettings: 1
-  teachingModeEditor: 0
+  teachingModeEditor: 2
   algorithmSpeedEditor: 0
   difficultyEditor: 0
   allowDuplicates: 0
   sortMain: {fileID: 236630474}
-  algorithmEditor: 1
+  algorithmEditor: 3
   numberOfElements: 8
   sortingCaseEditor: 2
 --- !u!4 &360338525 stripped
@@ -14903,3 +14903,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d6e3f69bd7a904e817a2be2ceea0e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mergeSort: {fileID: 999074481}

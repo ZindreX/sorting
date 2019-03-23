@@ -269,7 +269,7 @@ public class MergeSort : SortAlgorithm {
     private Dictionary<int, GameObject[]> rightSplits = new Dictionary<int, GameObject[]>();
     private Dictionary<int, GameObject[]> allMerges = new Dictionary<int, GameObject[]>();
 
-    #region Merge Sort: Demo visual
+    #region Merge Sort: OLD Demo visual (not working)
     public override IEnumerator Demo(GameObject[] list)
     {
         Debug.Log("Demo: " + DebugList(list));
@@ -456,12 +456,122 @@ public class MergeSort : SortAlgorithm {
     {
         throw new System.NotImplementedException();
     }
-    
+
     #region Merge Sort: All Moves User Test TODO: implement
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list)
     {
-        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
+        instructions = new Dictionary<int, InstructionBase>();
+        instNr = 0;
+        nextMergeSortHolderID = list.Length;
+
+        MergeSortInstruction[] mergeSortInitInst = new MergeSortInstruction[list.Length];
+        for (int i=0; i < list.Length; i++)
+        {
+            mergeSortInitInst[i] = (MergeSortInstruction)list[i];
+        }
+
+        MergeSortInstructions(mergeSortInitInst);
+
         return instructions;
+    }
+
+    private Dictionary<int, InstructionBase> instructions;
+    private int instNr;
+    private int nextMergeSortHolderID;
+    public const string CREATE_HOLDER = "Create holder", MOVE_ELEMENT_TO_MERGE_HOLDER = "Move element to merge holder", MERGE_START = "Merge start", MERGE_ELEMENT = "Merge element";
+
+    private MergeSortInstruction[] MergeSortInstructions(MergeSortInstruction[] list)
+    {
+        Debug.Log("Test: Length " + list.Length);
+        if (list.Length <= 1)
+        {
+            return list;
+        }
+
+        int leftLength = list.Length / 2;
+        int rightLength = list.Length - leftLength;
+
+        MergeSortInstruction[] left = new MergeSortInstruction[leftLength];
+        MergeSortInstruction[] right = new MergeSortInstruction[rightLength];
+
+        int leftHolderID = nextMergeSortHolderID++;
+        int rightHolderID = nextMergeSortHolderID++;
+
+        // Create new holders
+        instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, leftHolderID));
+        instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, rightHolderID));
+
+        for (int x = 0; x < list.Length; x++)
+        {
+            if (x < leftLength)
+            {
+                left[x] = list[x];
+                instructions.Add(instNr++, new MergeSortInstruction(MOVE_ELEMENT_TO_MERGE_HOLDER, instNr, x, Util.NO_VALUE, Util.NO_VALUE, list[x].SortingElementID, list[x].HolderID, leftHolderID, list[x].Value, false, false));
+            }
+            else
+            {
+                right[x - rightLength] = list[x];
+                instructions.Add(instNr++, new MergeSortInstruction(MOVE_ELEMENT_TO_MERGE_HOLDER, instNr, x, Util.NO_VALUE, Util.NO_VALUE, list[x].SortingElementID, list[x].HolderID, rightHolderID, list[x].Value, false, false));
+            }
+        }
+
+        left = MergeSortInstructions(left);
+        right = MergeSortInstructions(right);
+
+        return MergeInstructions(left, right);
+    }
+
+    private MergeSortInstruction[] MergeInstructions(MergeSortInstruction[] left, MergeSortInstruction[] right)
+    {
+        Debug.Log("Merge: left length = " + left.Length + ", right length = " + right.Length);
+
+        MergeSortInstruction[] result = new MergeSortInstruction[left.Length + right.Length];
+        int l = 0, r = 0;
+
+        instructions.Add(instNr++, new InstructionBase(MERGE_START, instNr));
+
+        while (l < left.Length && r < right.Length)
+        {
+            if (left[l].Value <= right[r].Value)
+            {
+                result[l + r] = left[l];
+                l += 1;
+            }
+            else
+            {
+                result[l + r] = right[r];
+                r += 1;
+            }
+
+            // Add merged element
+            int q = l + r - 1;
+            bool isSorted = left.Length + right.Length == sortMain.SortSettings.NumberOfElements;
+            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, l + r, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, l + r, result[q].Value, true, isSorted));
+
+        }
+
+        while (l < left.Length)
+        {
+            result[l + r] = left[l];
+            l += 1;
+
+            // Add remaining merging element
+            int q = l - 1;
+            bool isSorted = left.Length + right.Length == sortMain.SortSettings.NumberOfElements;
+            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, l, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, l, result[q].Value, true, isSorted));
+        }
+
+        while (r < right.Length)
+        {
+            result[l + r] = right[r];
+            r += 1;
+
+            // Add remaining merging element
+            int q = r - 1;
+            bool isSorted = left.Length + right.Length == sortMain.SortSettings.NumberOfElements;
+            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, r, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, r, result[q].Value, true, isSorted));
+        }
+        return result;
     }
     #endregion
 

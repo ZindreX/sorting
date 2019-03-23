@@ -304,6 +304,11 @@ public class SortMain : MainManager {
 
         // Set start time
         userTestManager.SetStartTime();
+
+        foreach (KeyValuePair<int, InstructionBase> entry in instructions)
+        {
+            Debug.Log(entry.Value.DebugInfo());
+        }
     }
 
     protected override void UserTestUpdate()

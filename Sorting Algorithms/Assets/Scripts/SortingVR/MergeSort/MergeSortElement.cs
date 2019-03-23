@@ -15,11 +15,11 @@ public class MergeSortElement : SortingElementBase {
 
     protected override string IsCorrectlyPlaced()
     {
-        throw new System.NotImplementedException();
+        return "Implement this...";
     }
 
     protected override void UpdateSortingElementState()
     {
-        throw new System.NotImplementedException();
+
     }
 }

@@ -326,12 +326,13 @@ public class BFS : GraphAlgorithm, ITraverse {
     }
     #endregion
 
-    #region User Test Highlight Pseudocode
-    public IEnumerator NewDemo(InstructionBase instruction, bool gotNode)
+    #region New Demo version (Demo/Step-by-step)
+    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
         Debug.Log(instruction.DebugInfo());
+
         // Gather information from instruction
-        if (gotNode)
+        if (instruction is TraverseInstruction)
         {
             if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
                 connectedNode = ((TraverseInstruction)instruction).Node;
@@ -340,8 +341,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             edge = ((TraverseInstruction)instruction).PrevEdge;
         }
-
-        if (instruction is InstructionLoop)
+        else if (instruction is InstructionLoop)
         {
             i = ((InstructionLoop)instruction).I;
             //j = ((InstructionLoop)instruction).J;

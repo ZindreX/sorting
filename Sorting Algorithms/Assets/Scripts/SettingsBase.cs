@@ -179,7 +179,6 @@ public abstract class SettingsBase : MonoBehaviour {
             Section section = settingsSections[sectionID];
 
             section.InitItem(itemID);
-
         }
         else
             Debug.LogError("No section: " + sectionID);

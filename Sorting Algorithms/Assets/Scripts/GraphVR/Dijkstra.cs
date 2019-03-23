@@ -570,10 +570,165 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         return instructions;
     }
 
+
+    #region User Test Highlight Pseudocode
+    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
+    {
+        Node currentNode = null, connectedNode = null;
+        Edge currentEdge = null, prevEdge = null;
+
+        // Gather information from instruction
+        if (instruction is TraverseInstruction)
+        {
+            if (instruction.Instruction == UtilGraph.ADD_NODE || instruction.Instruction == UtilGraph.PRIORITY_REMOVE_NODE || instruction.Instruction == UtilGraph.FOR_ALL_NEIGHBORS_INST)
+                currentNode = ((TraverseInstruction)instruction).Node;
+            else
+                connectedNode = ((TraverseInstruction)instruction).Node;
+
+            currentEdge = ((TraverseInstruction)instruction).PrevEdge;
+        }
+        else if (instruction is ShortestPathInstruction)
+        {
+            currentNode = ((ShortestPathInstruction)instruction).CurrentNode;
+            connectedNode = ((ShortestPathInstruction)instruction).ConnectedNode;
+            currentEdge = ((ShortestPathInstruction)instruction).CurrentEdge;
+            prevEdge = ((ShortestPathInstruction)instruction).PrevEdge;
+        }
+        else if (instruction is InstructionLoop)
+        {
+            i = ((InstructionLoop)instruction).I;
+            //j = ((InstructionLoop)instruction).J;
+            //k = ((InstructionLoop)instruction).K;
+        }
+
+        // Remove highlight from previous instruction
+        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
+
+        // Gather part of code to highlight
+        int lineOfCode = Util.NO_VALUE;
+        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        switch (instruction.Instruction)
+        {
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode = 0;
+                SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
+                useHighlightColor = Util.BLACKBOARD_TEXT_COLOR;
+                break;
+
+            case UtilGraph.SET_ALL_NODES_TO_INFINITY:
+                lineOfCode = 1;
+                graphMain.GraphManager.SetAllNodesToInf();
+                break;
+
+            case UtilGraph.EMPTY_LIST_CONTAINER:
+                lineOfCode = 2;
+                break;
+
+            case UtilGraph.ADD_NODE:
+                SetNodePseudoCode(currentNode, 0); // start node
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                lineOfCode = 3;
+                break;
+
+            case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
+                lineOfCode = 4;
+                startNode.Dist = 0;
+                break;
+
+            case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
+                lineOfCode = 5;
+                lengthOfList = i.ToString();
+                break;
+
+            case UtilGraph.PRIORITY_REMOVE_NODE:
+                // Hide all edge cost to make it easier to see node distances
+                graphMain.GraphManager.MakeEdgeCostVisible(false);
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                SetNodePseudoCode(currentNode, 1);
+                lineOfCode = 6;
+
+                yield return demoStepDuration;
+
+                // Show the next node we'll work from
+                currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                currentNode.DisplayEdgeCost(true);
+
+                // Display edge costs again
+                graphMain.GraphManager.MakeEdgeCostVisible(true);
+                break;
+
+            case UtilGraph.FOR_ALL_NEIGHBORS_INST:
+                SetNodePseudoCode(currentNode, 1);
+                lineOfCode = 7;
+                break;
+
+            case UtilGraph.VISIT_CONNECTED_NODE:
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                SetNodePseudoCode(connectedNode, 2);
+                lineOfCode = 8;
+
+                if (currentEdge != null)
+                {
+                    currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+                    connectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
+                }
+                break;
+
+            case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                SetNodePseudoCode(connectedNode, 2);
+                lineOfCode = 9;
+                edgeCost = currentEdge.Cost;
+                ifStatementContent = this.currentNode.Dist + " + " + edgeCost;
+                if (this.currentNode.Dist + edgeCost < connectedNode.Dist)
+                    ifStatementContent += " < " + UtilGraph.ConvertDist(connectedNode.Dist);
+                else
+                    ifStatementContent += " > " + UtilGraph.ConvertDist(connectedNode.Dist);
+                break;
+
+            case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
+                connectedNode.Dist = ((ShortestPathInstruction)instruction).ConnectedNodeNewDist;
+                lineOfCode = 10;
+                break;
+
+            case UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE:
+                connectedNode.PrevEdge = prevEdge;
+                lineOfCode = 11;
+                break;
+
+            case UtilGraph.PRIORITY_ADD_NODE:
+                lineOfCode = 12;
+                break;
+
+            case UtilGraph.END_IF_INST:
+                lineOfCode = 13;
+                break;
+
+            case UtilGraph.END_FOR_LOOP_INST:
+                lineOfCode = 14;
+                if (this.currentNode != null)
+                    this.currentNode.Traversed = true;
+                break;
+
+            case UtilGraph.END_WHILE_INST:
+                lineOfCode = 15;
+                IsTaskCompleted = true;
+                break;
+        }
+        prevHighlightedLineOfCode = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
+        graphMain.WaitForSupportToComplete--;
+    }
+    #endregion
+
+
+
     #region User Test Highlight Pseudocode
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
     {
-        Node n1 = null, n2 = null;
+        Node currentNode = null, connectedNode = null;
         Edge currentEdge = null, prevEdge = null;
 
         // Gather information from instruction
@@ -581,11 +736,16 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         {
             //Debug.Log("Got node");
             if (instruction is TraverseInstruction)
-                n1 = ((TraverseInstruction)instruction).Node;
+            {
+                if (instruction.Instruction == UtilGraph.ADD_NODE || instruction.Instruction == UtilGraph.PRIORITY_REMOVE_NODE || instruction.Instruction == UtilGraph.FOR_ALL_NEIGHBORS_INST)
+                    currentNode = ((TraverseInstruction)instruction).Node;
+                else
+                    connectedNode = ((TraverseInstruction)instruction).Node;
+            }
             else if (instruction is ShortestPathInstruction)
             {
-                n1 = ((ShortestPathInstruction)instruction).CurrentNode;
-                n2 = ((ShortestPathInstruction)instruction).ConnectedNode;
+                currentNode = ((ShortestPathInstruction)instruction).CurrentNode;
+                connectedNode = ((ShortestPathInstruction)instruction).ConnectedNode;
                 currentEdge = ((ShortestPathInstruction)instruction).CurrentEdge;
                 prevEdge = ((ShortestPathInstruction)instruction).PrevEdge;
             }
@@ -635,25 +795,25 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.PRIORITY_REMOVE_NODE:
-                SetNodePseudoCode(n1, 1);
+                SetNodePseudoCode(currentNode, 1);
                 useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 lineOfCode = 6;
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                SetNodePseudoCode(n1, 1);
+                SetNodePseudoCode(currentNode, 1);
                 lineOfCode = 7;
                 break;
 
             case UtilGraph.VISIT_CONNECTED_NODE:
                 useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
-                SetNodePseudoCode(n1, 2);
+                SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 8;
                 break;
 
             case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
                 useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
-                SetNodePseudoCode(n2, 2);
+                SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 9;
                 edgeCost = currentEdge.Cost;
                 break;

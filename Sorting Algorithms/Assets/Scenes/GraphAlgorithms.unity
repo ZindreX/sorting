@@ -19281,12 +19281,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: x2
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: z2
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19326,12 +19326,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: graphStructureEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: algorithmEditor
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19469,7 +19469,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: graphTaskEditor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19479,7 +19479,7 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: x1
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
@@ -19494,12 +19494,12 @@ Prefab:
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: gridRows
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}
       propertyPath: gridColumns
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114492261461970166, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 2}

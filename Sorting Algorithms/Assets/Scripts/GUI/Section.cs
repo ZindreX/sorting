@@ -74,6 +74,9 @@ public class Section : MonoBehaviour {
     // ----------------------- Init item methods ----------------------- 
     public void InitItem(string itemID)
     {
+        if (!sectionButtons.ContainsKey(itemID))
+            return;
+
         SettingsMenuItem item = sectionButtons[itemID];
 
         switch (item.ItemRole())
@@ -85,6 +88,9 @@ public class Section : MonoBehaviour {
 
     public void InitItem(string itemID, int value)
     {
+        if (!sectionButtons.ContainsKey(itemID))
+            return;
+
         SettingsMenuItem item = sectionButtons[itemID];
 
         switch (item.ItemRole())
@@ -95,6 +101,9 @@ public class Section : MonoBehaviour {
 
     public void InitItem(string itemID, bool value)
     {
+        if (!sectionButtons.ContainsKey(itemID))
+            return;
+
         SettingsMenuItem item = sectionButtons[itemID];
 
         switch (item.ItemRole())

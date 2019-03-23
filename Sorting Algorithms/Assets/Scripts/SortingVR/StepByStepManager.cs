@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class StepByStepManager : InstructionControlBase {
 
-    /* -------------------------------------------- Step by step --------------------------------------------
+    /* -------------------------------------------- New Demo / Step by step --------------------------------------------
      * 
      * 
     */
+
     private bool playerMove = false, playerIncremented = false, isValidStep = false, firstInstruction = false, finalInstruction = false;
 
+    public void InitDemo(Dictionary<int, InstructionBase> instructions)
+    {
+        base.Init(instructions);
 
+
+    }
+
+    //  -------------------------------------------- Demo --------------------------------------------
+
+
+
+    //  -------------------------------------------- Step by step --------------------------------------------
     public bool PlayerMove
     {
         get { return playerMove; }

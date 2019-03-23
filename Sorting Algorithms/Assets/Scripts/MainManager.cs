@@ -13,6 +13,9 @@ public abstract class MainManager : MonoBehaviour {
 
     protected string algorithmName;
 
+    // When the user pause
+    protected bool userPausedTask;
+
     // When the user click a button in game to stop the current process (demo, step-by-step, user test)
     protected bool userStoppedTask = false;
 
@@ -51,6 +54,12 @@ public abstract class MainManager : MonoBehaviour {
         if (!algorithmInitialized || userStoppedTask)
             return;
 
+        if (waitForSupportToComplete > 0)
+        {
+            Debug.Log("Waiting for support to finish: #" + waitForSupportToComplete);
+            return;
+        }
+
         if (GetTeachingAlgorithm().IsTaskCompleted)
         {
             // When an algorithm task is finished, do some stuff
@@ -65,12 +74,7 @@ public abstract class MainManager : MonoBehaviour {
             else if (Settings.IsDemo())
                 DemoUpdate();
             else if (Settings.IsUserTest())
-            {
-                if (waitForSupportToComplete == 0)
                     UserTestUpdate();
-                else
-                    Debug.Log("Waiting for support: #" + waitForSupportToComplete);
-            }
         }
     }
 

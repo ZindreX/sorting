@@ -326,6 +326,95 @@ public class ListVisual : MonoBehaviour {
         }
     }
 
+    public void ExecuteInstruction(ListVisualInstruction instruction, bool increment)
+    {
+        switch (instruction.Instruction)
+        {
+            case UtilGraph.ADD_NODE:
+                if (increment)
+                    AddListObject(instruction.Node);
+                else
+                {
+                    NodeRepresentation nodeRep = FindNodeRepresentation(instruction.Node);
+                    Destroy(nodeRep); // Fix other indexes????
+                }
+                break;
+
+            case UtilGraph.PRIORITY_ADD_NODE:
+                if (increment)
+                    PriorityAdd(instruction.Node, instruction.Index);
+                else
+                {
+                    NodeRepresentation nodeRep = FindNodeRepresentation(instruction.Node);
+                    Destroy(nodeRep); // Fix other indexes????
+                }
+                break;
+
+            case UtilGraph.REMOVE_CURRENT_NODE:
+                if (increment)
+                    RemoveCurrentNode();
+                else
+                {
+                    if (listType == Util.PRIORITY_LIST)
+                        PriorityAdd(instruction.Node, instruction.Index); // TODO: insert node/index in instruction
+                    else
+                        AddListObject(instruction.Node);
+                }
+                break;
+
+            case UtilGraph.DESTROY_CURRENT_NODE:
+                if (increment)
+                    DestroyCurrentNode();
+                else
+                    Instantiate(listObjPrefab, currentNodePoint.position, Quaternion.identity);
+                break;
+
+            case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
+                if (increment)
+                    StartCoroutine(UpdateValueAndPositionOf(instruction.Node, 0));
+                else
+                    StartCoroutine(UpdateValueAndPositionOf(instruction.Node, 0));
+                break;
+
+            case UtilGraph.HAS_NODE_REPRESENTATION:
+                /* This case has two outcomes:
+                    * 1) If the node doesn't have any node representations in the current list, then create and add a new one
+                    * 2) There is currently a node representation, so update this one
+                */
+
+                Node node = instruction.Node;
+                int index = instruction.Index;
+                bool hasNodeRep = HasNodeRepresentation(node);
+
+                if (!hasNodeRep) // Case 1
+                {
+                    if (increment)
+                        PriorityAdd(node, index);
+                    else
+                        ExecuteInstruction(new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instruction.INSTRUCION_NR, node), false);
+                }
+                else // Case 2
+                {
+                    graphMain.WaitForSupportToComplete++;
+                    StartCoroutine(UpdateValueAndPositionOf(node, index));
+                }
+                break;
+
+            // ????? move these out?
+            //case UtilGraph.END_NODE_FOUND:
+            //    // Stat backtracking
+            //    pseudoCodeViewer.DestroyPseudoCode();
+            //    break;
+
+            //case UtilGraph.PREPARE_BACKTRACKING:
+            //    listVisual.CreateBackTrackList(graphManager.EndNode);
+            //    break;
+
+            default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
+        }
+
+    }
+
 
     // *** Debugging ***
 

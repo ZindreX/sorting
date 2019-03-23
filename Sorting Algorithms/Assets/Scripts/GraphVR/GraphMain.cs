@@ -366,87 +366,48 @@ public class GraphMain : MainManager {
 
     protected override void DemoUpdate()
     {
-        // First check if user test setup is complete
-        if (stepByStepManager.HasInstructions())
+        // Step by step activated by pausing, and step requested
+        if (userPausedTask && stepByStepManager.PlayerMove)
         {
-            // Continue when user has finished sub task, or else whenever ready
-            if (waitForSupportToComplete == 0)
+            stepByStepManager.PlayerMove = false;
+            InstructionBase stepInstruction = stepByStepManager.GetStep();
+            bool increment = stepByStepManager.PlayerIncremented;
+
+            //Debug.Log(">>> " + instruction.Instruction);
+            //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
+            //Debug.Log(tutorialStep.CurrentInstructionNr);
+            PerformInstruction(stepInstruction, increment);
+        }
+        else if (!userPausedTask) // Demo mode
+        {
+            // First check if user test setup is complete
+            if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
             {
-                // Check if we still have any instructions
-                if (!stepByStepManager.HasInstructions())
-                {
-                    graphAlgorithm.IsTaskCompleted = true;
-                }
-                else
-                {
-                    // Still got instructions?
-                    bool hasInstruction = stepByStepManager.IncrementToNextInstruction();
+                InstructionBase instruction = stepByStepManager.GetInstruction();
 
-                    // Hot fix - solve in some other way?
-                    if (hasInstruction)
-                    {
-                        InstructionBase instruction = stepByStepManager.GetInstruction();
-
-                        if (instruction is ListVisualInstruction)
-                        {
-                            ListVisualInstruction lvInstruction = (ListVisualInstruction)instruction;
-                            switch (lvInstruction.Instruction)
-                            {
-                                case UtilGraph.ADD_NODE: listVisual.AddListObject(lvInstruction.Node); break;
-                                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(lvInstruction.Node, lvInstruction.Index); break;
-                                case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
-                                case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
-                                case UtilGraph.SET_START_NODE_DIST_TO_ZERO: StartCoroutine(listVisual.UpdateValueAndPositionOf(lvInstruction.Node, 0)); break;
-                                case UtilGraph.HAS_NODE_REPRESENTATION:
-                                    /* This case has two outcomes:
-                                     * 1) If the node doesn't have any node representations in the current list, then create and add a new one
-                                     * 2) There is currently a node representation, so update this one
-                                    */
-
-                                    Node node = lvInstruction.Node;
-                                    int index = lvInstruction.Index;
-                                    bool hasNodeRep = listVisual.HasNodeRepresentation(node);
-
-                                    if (!hasNodeRep) // Case 1
-                                        listVisual.PriorityAdd(node, index);
-                                    else // Case 2
-                                        StartCoroutine(listVisual.UpdateValueAndPositionOf(node, index));
-                                    break;
-
-                                case UtilGraph.END_NODE_FOUND:
-                                    // Stat backtracking
-                                    pseudoCodeViewer.DestroyPseudoCode();
-                                    break;
-
-                                case UtilGraph.PREPARE_BACKTRACKING:
-                                    listVisual.CreateBackTrackList(graphManager.EndNode);
-                                    break;
-
-                                default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
-                            }
-                        }
-                        else if (instruction is TraverseInstruction)
-                        {
-                            //bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-                            StartCoroutine(((BFS)graphAlgorithm).NewDemo(instruction, true));
-                            waitForSupportToComplete++;
-                        }
-                        else
-                        {
-                            StartCoroutine(((BFS)graphAlgorithm).NewDemo(instruction, false));
-                            waitForSupportToComplete++;
-                        }
-                    }
-
-
-
-                        //userTestManager.ReadyForNext += PrepareNextInstruction());
-
-                    
-                }
+                Debug.Log(instruction.DebugInfo());
+                PerformInstruction(instruction, true);
+                stepByStepManager.IncrementToNextInstruction();
             }
         }
+        else
+            Debug.Log("Demo paused");
     }
+
+    private void PerformInstruction(InstructionBase instruction, bool increment)
+    {
+        if (instruction is ListVisualInstruction)
+        {
+            ListVisualInstruction lvInstruction = (ListVisualInstruction)instruction;
+            listVisual.ExecuteInstruction(lvInstruction, increment);
+        }
+        else
+        {
+            waitForSupportToComplete++;
+            StartCoroutine(graphAlgorithm.ExecuteDemoInstruction(instruction, increment));
+        }
+    }
+
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
      * - Not implemented yet
