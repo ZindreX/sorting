@@ -5,10 +5,23 @@ using UnityEngine;
 public class MergeSortHolder : HolderBase {
 
     private int holdingNumberOfElements;
+    private bool isSplitHolder;
 
     private void Awake()
     {
         holdingNumberOfElements = 0;
+    }
+
+    private void Update()
+    {
+        // raycast to check how many elements?
+
+    }
+
+    public bool IsSplitHolder
+    {
+        get { return isSplitHolder; }
+        set { isSplitHolder = value; }
     }
 
     public int HoldingNumberOfElements

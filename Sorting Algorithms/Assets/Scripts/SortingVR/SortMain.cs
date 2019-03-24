@@ -17,10 +17,6 @@ public class SortMain : MainManager {
     // Visual
     protected DisplayUnitManager displayUnitManager;
 
-    // Teaching modes
-    protected StepByStepManager stepByStepManager;
-    protected UserTestManager userTestManager;
-
     [SerializeField]
     protected AlgorithmUserController algorithmUserController;
 
@@ -235,14 +231,52 @@ public class SortMain : MainManager {
     {
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn");
 
-        elementManager.InteractionWithSortingElements(false);
-        //MergeSort.MergeSortStandard(elementManager.SortingElements);
-        //Debug.Log("----------------------------------------------------------------------");
-        StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
+        if (algorithmName == Util.MERGE_SORT)
+        {
+            Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements));
+            stepByStepManager.InitDemo(instructions);
+        }
+        else
+        {
+            elementManager.InteractionWithSortingElements(false);
+            StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
+        }
+
     }
 
     protected override void DemoUpdate()
     {
+        if (algorithmName == Util.MERGE_SORT)
+        {
+            // Step by step activated by pausing, and step requested
+            if (userPausedTask && stepByStepManager.PlayerMove)
+            {
+                stepByStepManager.PlayerMove = false;
+                InstructionBase stepInstruction = stepByStepManager.GetStep();
+                bool increment = stepByStepManager.PlayerIncremented;
+
+                //Debug.Log(">>> " + instruction.Instruction);
+                //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
+                //Debug.Log(tutorialStep.CurrentInstructionNr);
+                //((MergeSort)sortAlgorithm).NewDemo(instructio)
+            }
+            else if (!userPausedTask) // Demo mode
+            {
+                // First check if user test setup is complete
+                if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
+                {
+                    InstructionBase instruction = stepByStepManager.GetInstruction();
+
+                    Debug.Log(instruction.DebugInfo());
+                    WaitForSupportToComplete++;
+                    StartCoroutine(((MergeSort)sortAlgorithm).NewDemo(instruction, true));
+                    stepByStepManager.IncrementToNextInstruction();
+
+                }
+            }
+            else
+                Debug.Log("Demo paused");
+        }
 
     }
 
@@ -258,13 +292,6 @@ public class SortMain : MainManager {
         // Getting instructions for this sample of sorting elements
         elementManager.InteractionWithSortingElements(false);
         stepByStepManager.Init(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
-    }
-
-    // Input from user during Step-By-Step (increment/decrement)
-    public void PlayerStepByStepInput(bool increment)
-    {
-        if (ControllerReady)
-            stepByStepManager.NotifyUserInput(increment);
     }
 
     protected override void StepByStepUpdate()
@@ -305,10 +332,10 @@ public class SortMain : MainManager {
         // Set start time
         userTestManager.SetStartTime();
 
-        foreach (KeyValuePair<int, InstructionBase> entry in instructions)
-        {
-            Debug.Log(entry.Value.DebugInfo());
-        }
+        //foreach (KeyValuePair<int, InstructionBase> entry in instructions)
+        //{
+        //    Debug.Log(entry.Value.DebugInfo());
+        //}
     }
 
     protected override void UserTestUpdate()

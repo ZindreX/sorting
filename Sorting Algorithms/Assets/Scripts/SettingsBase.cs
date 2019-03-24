@@ -78,6 +78,7 @@ public abstract class SettingsBase : MonoBehaviour {
             case Util.DEMO_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
             case Util.READY: InstantiateTask(); break;
             case Util.START: StartStopTask(); break;
+            case "Demo device": MainManager.DemoDevice(itemID); break;
         }
     }
 

@@ -11,6 +11,11 @@ public class MergeSortHolderInstruction : InstructionBase {
         this.mergeHolderID = mergeHolderID;
     }
 
+    public int MergeHolderID
+    {
+        get { return mergeHolderID; }
+    }
+
 
     public override string DebugInfo()
     {

@@ -24,7 +24,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     public virtual void Init(Dictionary<int, InstructionBase> instructions)
     {
         this.instructions = instructions;
-        currentInstructionNr = -1;
+        currentInstructionNr = -1; // ?
         mainManager = GetComponent<MainManager>();
     }
 

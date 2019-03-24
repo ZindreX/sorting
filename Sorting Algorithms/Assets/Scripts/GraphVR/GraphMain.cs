@@ -40,8 +40,6 @@ public class GraphMain : MainManager {
 
     private GraphAlgorithm graphAlgorithm;
     private GraphManager graphManager;
-    private StepByStepManager stepByStepManager;
-    private UserTestManager userTestManager;
     private PositionManager posManager;
 
 
@@ -336,62 +334,72 @@ public class GraphMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
+        newDemoImplemented = false;
+
         Debug.Log("Performing " + algorithmName + " " + graphSettings.GraphTask + " demo.");
-        //switch (graphSettings.GraphTask)
-        //{
-        //    case UtilGraph.TRAVERSE: StartCoroutine(((ITraverse)graphAlgorithm).TraverseDemo(graphManager.StartNode)); break;
-        //    case UtilGraph.SHORTEST_PATH: StartCoroutine(((IShortestPath)graphAlgorithm).ShortestPathDemo(graphManager.StartNode, graphManager.EndNode)); break;
-        //}
 
-        // Getting instructions for this sample of sorting elements
-        Dictionary<int, InstructionBase> instructions = null;
-
-        switch (graphSettings.GraphTask)
+        if (algorithmName == Util.BFS)
         {
-            case UtilGraph.TRAVERSE: instructions = ((ITraverse)graphAlgorithm).TraverseUserTestInstructions(graphManager.StartNode); break;
-            case UtilGraph.SHORTEST_PATH: instructions = ((IShortestPath)graphAlgorithm).ShortestPathUserTestInstructions(graphManager.StartNode, graphManager.EndNode); break;
-            default: Debug.LogError("Graph task '" + graphSettings.GraphTask + "' invalid."); break;
-        }
+            // Getting instructions for this sample of sorting elements
+            Dictionary<int, InstructionBase> instructions = null;
 
-        if (instructions == null)
-            return;
-
-        Debug.Log("Number of instructions: " + instructions.Count);
-
-        stepByStepManager.Init(instructions);
-
-        graphManager.ResetGraph();
-
-    }
-
-    protected override void DemoUpdate()
-    {
-        // Step by step activated by pausing, and step requested
-        if (userPausedTask && stepByStepManager.PlayerMove)
-        {
-            stepByStepManager.PlayerMove = false;
-            InstructionBase stepInstruction = stepByStepManager.GetStep();
-            bool increment = stepByStepManager.PlayerIncremented;
-
-            //Debug.Log(">>> " + instruction.Instruction);
-            //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
-            //Debug.Log(tutorialStep.CurrentInstructionNr);
-            PerformInstruction(stepInstruction, increment);
-        }
-        else if (!userPausedTask) // Demo mode
-        {
-            // First check if user test setup is complete
-            if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
+            switch (graphSettings.GraphTask)
             {
-                InstructionBase instruction = stepByStepManager.GetInstruction();
-
-                Debug.Log(instruction.DebugInfo());
-                PerformInstruction(instruction, true);
-                stepByStepManager.IncrementToNextInstruction();
+                case UtilGraph.TRAVERSE: instructions = ((ITraverse)graphAlgorithm).TraverseUserTestInstructions(graphManager.StartNode); break;
+                case UtilGraph.SHORTEST_PATH: instructions = ((IShortestPath)graphAlgorithm).ShortestPathUserTestInstructions(graphManager.StartNode, graphManager.EndNode); break;
+                default: Debug.LogError("Graph task '" + graphSettings.GraphTask + "' invalid."); break;
             }
+
+            if (instructions == null)
+                return;
+
+            Debug.Log("Number of instructions: " + instructions.Count);
+
+            stepByStepManager.Init(instructions);
+
+            graphManager.ResetGraph();
+
+            newDemoImplemented = true;
         }
         else
-            Debug.Log("Demo paused");
+        {
+            switch (graphSettings.GraphTask)
+            {
+                case UtilGraph.TRAVERSE: StartCoroutine(((ITraverse)graphAlgorithm).TraverseDemo(graphManager.StartNode)); break;
+                case UtilGraph.SHORTEST_PATH: StartCoroutine(((IShortestPath)graphAlgorithm).ShortestPathDemo(graphManager.StartNode, graphManager.EndNode)); break;
+            }
+        }
+    }
+
+    private bool newDemoImplemented;
+    protected override void DemoUpdate()
+    {
+        if (newDemoImplemented)
+        {
+            // Step by step activated by pausing, and step requested
+            if (userPausedTask && stepByStepManager.PlayerMove)
+            {
+                stepByStepManager.PlayerMove = false;
+                InstructionBase stepInstruction = stepByStepManager.GetStep();
+                Debug.Log(">>> " + stepInstruction.DebugInfo());
+
+                bool increment = stepByStepManager.PlayerIncremented;
+
+                PerformInstruction(stepInstruction, increment);
+            }
+            else if (!userPausedTask) // Demo mode
+            {
+                // First check if user test setup is complete
+                if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
+                {
+                    InstructionBase instruction = stepByStepManager.GetInstruction();
+                    Debug.Log(instruction.DebugInfo());
+
+                    PerformInstruction(instruction, true);
+                    stepByStepManager.IncrementToNextInstruction();
+                }
+            }
+        }
     }
 
     private void PerformInstruction(InstructionBase instruction, bool increment)

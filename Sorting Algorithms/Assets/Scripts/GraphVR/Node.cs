@@ -204,13 +204,32 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public bool Traversed
     {
         get { return traversed; }
-        set { traversed = value; CurrentColor = UtilGraph.TRAVERSED_COLOR; if (value) audioManager.Play("Traverse"); }
+        set { traversed = value;
+            if (value)
+            {
+                CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                audioManager.Play("Traverse");
+            }
+            else
+                CurrentColor = UtilGraph.TRAVERSE_COLOR;
+        }
+
     }
 
     public bool Visited
     {
         get { return visited; }
-        set { visited = value; CurrentColor = UtilGraph.VISITED_COLOR; if (value) audioManager.Play("Visit"); }
+        set
+        {
+            visited = value;
+            if (value)
+            {
+                CurrentColor = UtilGraph.VISITED_COLOR;
+                audioManager.Play("Visit");
+            }
+            else
+                CurrentColor = Util.STANDARD_COLOR;
+        }
     }
 
     public Color CurrentColor

@@ -42,7 +42,7 @@ public class MergeSortManager : AlgorithmManagerBase {
         else
         {
             //if (instruction.NextHolderID == Util.NO_INSTRUCTION) // skipping until next move // TODO: FIX
-            Debug.LogError("FIX");
+            Debug.Log("PrepareNextInstruction not implemented!");
             return 1;
         }
         return 0;
@@ -53,7 +53,7 @@ public class MergeSortManager : AlgorithmManagerBase {
     public override HolderBase GetCorrectHolder(int index)
     {
         MergeSortHolder holder = (MergeSortHolder)sortMain.HolderManager.GetHolder(index);
-        return (holder != null) ? holder : mergeSort.GetExtraHolder(index).GetComponent<MergeSortHolder>();
+        return (holder != null) ? holder : mergeSort.GetExtraHolder(index);
     }
 
     public override InstructionBase[] CopyFirstState(GameObject[] sortingElements)

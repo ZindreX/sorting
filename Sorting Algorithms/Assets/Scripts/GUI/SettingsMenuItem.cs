@@ -63,7 +63,8 @@ public abstract class SettingsMenuItem : MonoBehaviour {
             case Util.TOGGLE_BUTTON: ((ToggleButton)this).Toggle(); break;
             case Util.MULTI_STATE_BUTTON: ((MultiStateButton)this).ToggleNextState(); break;
         }
-        Debug.Log("Section: " + section.SectionID + ", item: " + itemID + ", description: " + interactionDescription);
+        //Debug.Log("Section: " + section.SectionID + ", item: " + itemID + ", description: " + interactionDescription);
+        
         // Report click to section
         section.ReportItemClicked(section.SectionID, itemID, interactionDescription);
     }

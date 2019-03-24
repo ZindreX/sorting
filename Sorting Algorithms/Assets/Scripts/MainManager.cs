@@ -40,6 +40,9 @@ public abstract class MainManager : MonoBehaviour {
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
 
+    protected StepByStepManager stepByStepManager;
+    protected UserTestManager userTestManager;
+
     protected virtual void Awake()
     {
         audioManager = FindObjectOfType<AudioManager>();
@@ -54,9 +57,9 @@ public abstract class MainManager : MonoBehaviour {
         if (!algorithmInitialized || userStoppedTask)
             return;
 
-        if (waitForSupportToComplete > 0)
+        if (WaitingForSupportToFinish())
         {
-            Debug.Log("Waiting for support to finish: #" + waitForSupportToComplete);
+            //Debug.Log("Waiting for support to finish: #" + waitForSupportToComplete);
             return;
         }
 
@@ -78,6 +81,8 @@ public abstract class MainManager : MonoBehaviour {
         }
     }
 
+    // --------------------------------------- Checklist / Safe stop ---------------------------------------
+
     // Check list used for start/stop
     protected abstract void PerformCheckList(string check);
 
@@ -91,45 +96,6 @@ public abstract class MainManager : MonoBehaviour {
 
         activeChecklist = SHUT_DOWN_CHECK;
         checkListModeActive = true;
-    }
-
-    // Teaching mode updates
-    protected abstract void DemoUpdate();
-    protected abstract void StepByStepUpdate();
-    protected abstract void UserTestUpdate();
-
-    // Finish off visualization
-    protected abstract void TaskCompletedFinishOff();
-
-    // Algorithm is initialized and ready to go
-    public bool AlgorithmInitialized
-    {
-        get { return algorithmInitialized; }
-    }
-
-    // A variable used to wait entering the update cycle while beginner's help (pseudocode) is being written (used to be boolean, now int to support multiple supports going on)
-    public int WaitForSupportToComplete
-    {
-        get { return waitForSupportToComplete; }
-        set { if (value >= 0) waitForSupportToComplete = value; }
-    }
-
-    public bool UserStoppedTask
-    {
-        get { return userStoppedTask; }
-        set { userStoppedTask = value; }
-    }
-
-    // Checks whether the controller is ready (old: menu button start/stop, insertion sort: move pivot holder, step-by-step: instruction swapping)
-    public bool ControllerReady
-    {
-        get { return controllerReady; }
-    }
-
-    public bool CheckListModeActive
-    {
-        get { return checkListModeActive; }
-        set { checkListModeActive = value; }
     }
 
     public bool CheckList(string unit)
@@ -157,6 +123,91 @@ public abstract class MainManager : MonoBehaviour {
         }
     }
 
+    // --------------------------------------- Getters / Setters ---------------------------------------
+
+    // Algorithm is initialized and ready to go
+    public bool AlgorithmInitialized
+    {
+        get { return algorithmInitialized; }
+    }
+
+    // A variable used to wait entering the update cycle while beginner's help (pseudocode) is being written (used to be boolean, now int to support multiple supports going on)
+    // Value range: 0, n | 0: Ready, else not ready
+    public int WaitForSupportToComplete
+    {
+        get { return waitForSupportToComplete; }
+        set { if (value >= 0) waitForSupportToComplete = value; }
+    }
+
+    public bool WaitingForSupportToFinish()
+    {
+        return waitForSupportToComplete > 0;
+    }
+
+    public bool UserStoppedTask
+    {
+        get { return userStoppedTask; }
+        set { userStoppedTask = value; }
+    }
+
+    // Checks whether the controller is ready (old: menu button start/stop, insertion sort: move pivot holder, step-by-step: instruction swapping)
+    public bool ControllerReady
+    {
+        get { return controllerReady; }
+    }
+
+    public bool CheckListModeActive
+    {
+        get { return checkListModeActive; }
+        set { checkListModeActive = value; }
+    }
+
+    public bool UserPausedTask
+    {
+        get { return userPausedTask; }
+        set { userPausedTask = value; }
+    }
+
+    // --------------------------------------- Demo Device ---------------------------------------
+
+    public void DemoDevice(string itemID)
+    {
+        switch (itemID)
+        {
+            case "Step back":
+                if (!WaitingForSupportToFinish())
+                    PlayerStepByStepInput(false);
+                else
+                    Debug.Log("Can't perform step yet. Wait for support to finish");
+                break;
+
+            case "Pause":
+                userPausedTask = !userPausedTask;
+
+                if (userPausedTask)
+                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
+                else
+                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed); // Use demo speed
+                break;
+
+            case "Step forward":
+                if (!WaitingForSupportToFinish())
+                    PlayerStepByStepInput(true);
+                else
+                    Debug.Log("Can't perform step yet. Wait for support to finish");
+                break;
+        }
+    }
+
+    // Input from user during Step-By-Step (increment/decrement)
+    public void PlayerStepByStepInput(bool increment)
+    {
+        if (ControllerReady)
+            stepByStepManager.NotifyUserInput(increment);
+    }
+
+
+    // --------------------------------------- Settings menu / Start pillar ---------------------------------------
 
     public void StartAlgorithm()
     {
@@ -178,6 +229,8 @@ public abstract class MainManager : MonoBehaviour {
         algorithmInitialized = true;
     }
 
+
+    // --------------------------------------- Extra methods ---------------------------------------
 
     // Finds the number of instructions which the player has to do something to progress  
     protected int FindNumberOfUserAction(Dictionary<int, InstructionBase> instructions)
@@ -241,6 +294,14 @@ public abstract class MainManager : MonoBehaviour {
 
         WaitForSupportToComplete = 0;
     }
+
+
+
+    // --------------------------------------- Teaching mode updates ---------------------------------------
+    protected abstract void DemoUpdate();
+    protected abstract void StepByStepUpdate();
+    protected abstract void UserTestUpdate();
+    protected abstract void TaskCompletedFinishOff(); // Finish off visualization
 
     /* --------------------------------------- Demo ---------------------------------------
      * - Gives a visual presentation of <algorithm>

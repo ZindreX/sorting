@@ -27,20 +27,12 @@ public class MergeSort : SortAlgorithm {
     private int numberOfElements, numberOfSplits;
     private Vector3 splitHolderPos = new Vector3(0f, 0.2f, 0.2f);
     private Dictionary<int, int[]> holderIndex = new Dictionary<int, int[]>();
-    
-    private void Start()
-    {
-        //numberOfElements = sortMain.SortSettings.NumberOfElements;
-        //numberOfSplits = FindNumberOfSplits(numberOfElements, 0);
-        //Debug.Log(numberOfSplits);
-        //splitLeft = numberOfSplits;
-        //splitRight = numberOfSplits;
 
-        ////
-        //holderIndex.Add(8, new int[8] { 0, 4, 2, 1, 3, 6, 5, 7 });
-        //holderIndex.Add(6, new int[6] { 0, 3, 2, 1, 5, 4 });
-        //holderIndex.Add(4, new int[4] { 0, 2, 1, 3 });
-        //holderIndex.Add(2, new int[2] { 0, 1 });
+
+    public override void InitTeachingAlgorithm(float algorithmSpeed)
+    {
+        base.InitTeachingAlgorithm(algorithmSpeed);
+        numberOfElements = sortMain.SortSettings.NumberOfElements;
     }
 
     public override string AlgorithmName
@@ -86,16 +78,14 @@ public class MergeSort : SortAlgorithm {
     {
         switch (method)
         {
-            case "Somemethod": FirstInstructionCodeLine(); break; // example: some void method
+            case "....": FirstInstructionCodeLine(); break; // example: some void method
         }
     }
 
-    // Tutorial & User test stuff
-
-    private List<GameObject> extras = new List<GameObject>();
-    public GameObject GetExtraHolder(int holder)
+    public MergeSortHolder GetExtraHolder(int holderID)
     {
-        return extras[holder];
+        int splitHolderIndex = numberOfElements - holderID;
+        return (splitHolderIndex >= 0 && splitHolderIndex < splitHolders.Count) ? splitHolders[splitHolderIndex] : null;
     }
 
 
@@ -427,7 +417,7 @@ public class MergeSort : SortAlgorithm {
     private MergeSortHolder CreateSplitHolder(int aboveHolder)
     {
         // Instantiate
-        Vector3 pos = sortMain.HolderPositions[aboveHolder] + splitHolderPos;
+        Vector3 pos = sortMain.HolderManager.GetHolder(aboveHolder).transform.position + splitHolderPos;
 
         GameObject splitHolder = Instantiate(holderPrefab, pos, Quaternion.identity);
         splitHolder.AddComponent<MergeSortHolder>();
@@ -437,10 +427,11 @@ public class MergeSort : SortAlgorithm {
         //pivotHolder = pivotHolderClone.GetComponent<InsertionSortHolder>();
 
         // Mark as split holder
-        //mergeSortHolder.IsSplitHolder = true;
+        mergeSortHolder.IsSplitHolder = true;
 
         // Set gameobject parent
         mergeSortHolder.SuperElement = GetComponentInParent<SortMain>();
+
         // Make the pivot holder position visible
         //PivotHolderVisible(true);
         return mergeSortHolder;
@@ -478,7 +469,9 @@ public class MergeSort : SortAlgorithm {
     private Dictionary<int, InstructionBase> instructions;
     private int instNr;
     private int nextMergeSortHolderID;
+    private bool firstSplit = true;
     public const string CREATE_HOLDER = "Create holder", MOVE_ELEMENT_TO_MERGE_HOLDER = "Move element to merge holder", MERGE_START = "Merge start", MERGE_ELEMENT = "Merge element";
+    public const string MERGE_REMAINING_ELEMENT = "Merge remaining element";
 
     private MergeSortInstruction[] MergeSortInstructions(MergeSortInstruction[] list)
     {
@@ -494,12 +487,24 @@ public class MergeSort : SortAlgorithm {
         MergeSortInstruction[] left = new MergeSortInstruction[leftLength];
         MergeSortInstruction[] right = new MergeSortInstruction[rightLength];
 
-        int leftHolderID = nextMergeSortHolderID++;
-        int rightHolderID = nextMergeSortHolderID++;
 
-        // Create new holders
-        instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, leftHolderID));
-        instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, rightHolderID));
+        int leftHolderID = -1, rightHolderID = -1;
+        if (firstSplit)
+        {
+            // Create new holders
+            leftHolderID = 0;
+            rightHolderID = numberOfElements / 2;
+            instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, leftHolderID));
+            instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, rightHolderID));
+            firstSplit = false;
+        }
+        else
+        {
+            // When the number of extra holders are equal to the number of elements, place half at the same holder they are standing on, the rest the next holder to the right
+            leftHolderID = list[0].HolderID;
+            rightHolderID = leftHolderID + 1;
+            instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, rightHolderID));
+        }
 
         for (int x = 0; x < list.Length; x++)
         {
@@ -532,6 +537,9 @@ public class MergeSort : SortAlgorithm {
 
         while (l < left.Length && r < right.Length)
         {
+            instructions.Add(instNr++, new MergeSortInstruction(UtilSort.COMPARE_START_INST, instNr, l + r, Util.NO_VALUE, Util.NO_VALUE, left[l].SortingElementID, left[l].HolderID, UtilSort.NO_DESTINATION, left[l].Value, true, false));
+            instructions.Add(instNr++, new MergeSortInstruction(UtilSort.COMPARE_START_INST, instNr, l + r, Util.NO_VALUE, Util.NO_VALUE, right[r].SortingElementID, right[r].HolderID, UtilSort.NO_DESTINATION, right[r].Value, true, false));
+
             if (left[l].Value <= right[r].Value)
             {
                 result[l + r] = left[l];
@@ -546,7 +554,7 @@ public class MergeSort : SortAlgorithm {
             // Add merged element
             int q = l + r - 1;
             bool isSorted = left.Length + right.Length == sortMain.SortSettings.NumberOfElements;
-            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, l + r, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, l + r, result[q].Value, true, isSorted));
+            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, l + r, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, l + r, result[q].Value, false, isSorted));
 
         }
 
@@ -558,7 +566,7 @@ public class MergeSort : SortAlgorithm {
             // Add remaining merging element
             int q = l - 1;
             bool isSorted = left.Length + right.Length == sortMain.SortSettings.NumberOfElements;
-            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, l, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, l, result[q].Value, true, isSorted));
+            instructions.Add(instNr++, new MergeSortInstruction(MERGE_REMAINING_ELEMENT, instNr, l, 0, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, l, result[q].Value, false, isSorted));
         }
 
         while (r < right.Length)
@@ -569,11 +577,151 @@ public class MergeSort : SortAlgorithm {
             // Add remaining merging element
             int q = r - 1;
             bool isSorted = left.Length + right.Length == sortMain.SortSettings.NumberOfElements;
-            instructions.Add(instNr++, new MergeSortInstruction(MERGE_ELEMENT, instNr, r, Util.NO_VALUE, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, r, result[q].Value, true, isSorted));
+            instructions.Add(instNr++, new MergeSortInstruction(MERGE_REMAINING_ELEMENT, instNr, r, 1, Util.NO_VALUE, result[q].SortingElementID, result[q].HolderID, r, result[q].Value, true, isSorted));
         }
         return result;
     }
     #endregion
 
+    public IEnumerator NewDemo(InstructionBase instruction, bool increment)
+    {
+        // Gather information from instruction
+        MergeSortInstruction mergeSortInstruction = null;
+        MergeSortHolderInstruction mergeSortHolderInstruction = null;
+        MergeSortElement sortingElement = null;
+        MergeSortHolder holder = null;
 
+        if (instruction is MergeSortInstruction)
+        {
+            mergeSortInstruction = (MergeSortInstruction)instruction;
+            sortingElement = sortMain.ElementManager.GetSortingElement(mergeSortInstruction.SortingElementID).GetComponent<MergeSortElement>();
+            holder = sortMain.HolderManager.GetHolder(mergeSortInstruction.HolderID).GetComponent<MergeSortHolder>();
+        }
+        else if (instruction is MergeSortHolderInstruction)
+        {
+            mergeSortHolderInstruction = (MergeSortHolderInstruction)instruction;
+
+        }
+        else if (instruction is InstructionLoop)
+        {
+            i = ((InstructionLoop)instruction).I;
+            j = ((InstructionLoop)instruction).J;
+            //k = ((InstructionLoop)instruction).K;
+        }
+
+        // Remove highlight from previous instruction
+        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
+
+        // Gather part of code to highlight
+        int lineOfCode = 0;
+        switch (instruction.Instruction)
+        {
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode = 0;
+
+                if (increment)
+                {
+                    lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
+                }
+                else
+                {
+                    lengthOfList = "N";
+                }
+                break;
+
+            case CREATE_HOLDER:
+                lineOfCode = 0;
+
+                if (increment)
+                {
+                    CreateSplitHolder(mergeSortHolderInstruction.MergeHolderID);
+                }
+                else
+                {
+                    Destroy(splitHolders[splitHolders.Count - 1].gameObject);
+                }
+                break;
+
+            case MOVE_ELEMENT_TO_MERGE_HOLDER:
+                lineOfCode = 0;
+                if (increment)
+                {
+                    sortingElement.transform.position = mergeSortManager.GetCorrectHolder(mergeSortInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                }
+                else
+                {
+                    sortingElement.transform.position = sortMain.HolderManager.GetHolder(mergeSortInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                }
+                break;
+
+            case MERGE_START:
+                lineOfCode = 0;
+                if (increment)
+                {
+
+                }
+                else
+                {
+
+                }
+                break;
+
+            case UtilSort.COMPARE_START_INST:
+                lineOfCode = 0;
+
+                if (increment)
+                {
+                    sortingElement.IsCompare = mergeSortInstruction.IsCompare;
+                    sortingElement.IsSorted = mergeSortInstruction.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsCompare = !mergeSortInstruction.IsCompare;
+                    if (mergeSortInstruction.HolderID == sortingElement.SortingElementID) // works for worst case, none might be buggy
+                        sortingElement.IsSorted = mergeSortInstruction.IsSorted;
+                    else
+                        sortingElement.IsSorted = !mergeSortInstruction.IsSorted;
+                }
+
+                //PreparePseudocodeValue(sortingElement.Value, 2);
+                UtilSort.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case MERGE_ELEMENT:
+                lineOfCode = 0;
+
+                if (increment)
+                {
+                    sortingElement.transform.position = sortMain.HolderManager.GetHolder(mergeSortInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                }
+                else
+                {
+                    sortingElement.transform.position = sortMain.HolderManager.GetHolder(mergeSortInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                }
+                break;
+
+            case MERGE_REMAINING_ELEMENT:
+                lineOfCode = 0;
+
+                if (increment)
+                {
+                    sortingElement.transform.position = sortMain.HolderManager.GetHolder(mergeSortInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                }
+                else
+                {
+                    sortingElement.transform.position = sortMain.HolderManager.GetHolder(mergeSortInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                }
+                break;
+
+            case UtilSort.FINAL_INSTRUCTION:
+                lineOfCode = 0;
+                break;
+        }
+        prevHighlightedLineOfCode = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        yield return demoStepDuration;
+        sortMain.WaitForSupportToComplete--;
+    }
 }

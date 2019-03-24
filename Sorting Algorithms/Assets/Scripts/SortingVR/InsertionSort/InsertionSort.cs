@@ -153,7 +153,7 @@ public class InsertionSort : SortAlgorithm {
     {
         Debug.Log("Creating pivot holder");
         // Instantiate
-        Vector3 pos = GetComponentInParent<SortMain>().HolderPositions[1] + pivotHolderPos;
+        Vector3 pos = sortMain.HolderPositions[1] + pivotHolderPos;
 
         pivotHolderClone = Instantiate(pivotHolderPrefab, pos, Quaternion.identity);
         pivotHolderClone.AddComponent<InsertionSortHolder>();

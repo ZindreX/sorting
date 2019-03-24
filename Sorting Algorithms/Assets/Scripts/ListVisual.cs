@@ -336,7 +336,8 @@ public class ListVisual : MonoBehaviour {
                 else
                 {
                     NodeRepresentation nodeRep = FindNodeRepresentation(instruction.Node);
-                    Destroy(nodeRep); // Fix other indexes????
+                    nodeRepresentations.Remove(nodeRep);
+                    Destroy(nodeRep.gameObject); // Fix other indexes????
                 }
                 break;
 
@@ -346,7 +347,7 @@ public class ListVisual : MonoBehaviour {
                 else
                 {
                     NodeRepresentation nodeRep = FindNodeRepresentation(instruction.Node);
-                    Destroy(nodeRep); // Fix other indexes????
+                    Destroy(nodeRep.gameObject); // Fix other indexes????
                 }
                 break;
 
@@ -355,10 +356,33 @@ public class ListVisual : MonoBehaviour {
                     RemoveCurrentNode();
                 else
                 {
-                    if (listType == Util.PRIORITY_LIST)
-                        PriorityAdd(instruction.Node, instruction.Index); // TODO: insert node/index in instruction
-                    else
-                        AddListObject(instruction.Node);
+                    currentNode.CurrentColor = Color.white;
+                    switch (listType)
+                    {
+                        case Util.QUEUE:
+                            nodeRepresentations.Insert(0, currentNode);
+                            if (nodeRepresentations.Count == 1)
+                                currentNode.MoveNodeRepresentation(spawnPointList.position);
+                            else
+                            {
+                                graphMain.WaitForSupportToComplete++;
+                                StartCoroutine(UpdateValueAndPositionOf(currentNode.Node, 0));
+                            }
+                            break;
+
+                        case Util.STACK:
+                            nodeRepresentations.Add(currentNode);
+                            graphMain.WaitForSupportToComplete++;
+                            StartCoroutine(UpdateValueAndPositionOf(currentNode.Node, nodeRepresentations.Count - 1));
+                            break;
+
+                        case Util.PRIORITY_LIST:
+                            nodeRepresentations.Insert(instruction.Index, currentNode);
+                            graphMain.WaitForSupportToComplete++;
+                            StartCoroutine(UpdateValueAndPositionOf(currentNode.Node, instruction.Index));
+                            break;
+                    }
+  
                 }
                 break;
 
@@ -366,14 +390,17 @@ public class ListVisual : MonoBehaviour {
                 if (increment)
                     DestroyCurrentNode();
                 else
-                    Instantiate(listObjPrefab, currentNodePoint.position, Quaternion.identity);
+                {
+                    currentNode = CreateNodeRepresentation(instruction.Node, currentNodePoint.position, instruction.Index);
+                    currentNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                }
                 break;
 
             case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
                 if (increment)
                     StartCoroutine(UpdateValueAndPositionOf(instruction.Node, 0));
                 else
-                    StartCoroutine(UpdateValueAndPositionOf(instruction.Node, 0));
+                    StartCoroutine(UpdateValueAndPositionOf(instruction.Node, UtilGraph.INF));
                 break;
 
             case UtilGraph.HAS_NODE_REPRESENTATION:

@@ -15,6 +15,9 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected WaitForSeconds demoStepDuration;
     protected bool pseudoCodeInitilized = false, isTaskCompleted = false, includeLineNr = false;
     protected PseudoCodeViewer pseudoCodeViewer;
+    
+    // Instruction variables
+    protected int prevHighlightedLineOfCode;
     protected Color useHighlightColor = Util.HIGHLIGHT_COLOR;
 
     // Demo variables

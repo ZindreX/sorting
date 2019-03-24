@@ -20,9 +20,6 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
     // Shortest path shared variables
     protected bool shortestPathOnToAll;
 
-    // Instruction variables
-    protected int prevHighlightedLineOfCode;
-
     public void InitGraphAlgorithm(GraphMain graphMain, string graphStructure, float algorithmSpeed, bool shortestPathOnToAll)
     {
         InitTeachingAlgorithm(algorithmSpeed);

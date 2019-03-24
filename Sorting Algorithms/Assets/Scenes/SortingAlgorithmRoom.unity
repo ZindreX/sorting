@@ -2923,7 +2923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltips: {fileID: 721067195}
   useDebuggingSettings: 1
-  teachingModeEditor: 2
+  teachingModeEditor: 0
   algorithmSpeedEditor: 0
   difficultyEditor: 0
   allowDuplicates: 0
