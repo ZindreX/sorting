@@ -4,7 +4,10 @@ public class ShortestPathInstruction : InstructionBase {
 
     private Node currentNode, connectedNode;
     private Edge currentEdge, prevEdge;
-    private int index, connectedNodeNewDist;
+
+    private Edge oldPrevEdge;
+    private int connectedNodeOldDist, connectedNodeNewDist;
+    private int index;
 
     public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode, Edge currentEdge) : base(instruction, instructionNr)
     {
@@ -12,6 +15,7 @@ public class ShortestPathInstruction : InstructionBase {
         this.connectedNode = connectedNode;
         this.currentEdge = currentEdge;
 
+        connectedNodeOldDist = connectedNode.Dist;
         connectedNodeNewDist = CurrentNode.Dist + currentEdge.Cost;
     }
 
@@ -24,6 +28,10 @@ public class ShortestPathInstruction : InstructionBase {
     public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, Edge prevEdge) : base(instruction, instructionNr)
     {
         this.connectedNode = connectedNode;
+
+        if (connectedNode.PrevEdge != null)
+            oldPrevEdge = connectedNode.PrevEdge;
+
         this.prevEdge = prevEdge;
     }
 
@@ -51,6 +59,16 @@ public class ShortestPathInstruction : InstructionBase {
     public Edge PrevEdge
     {
         get { return prevEdge; }
+    }
+
+    public Edge OldPrevEdge
+    {
+        get { return oldPrevEdge; }
+    }
+
+    public int ConnectedNodeOldDist
+    {
+        get { return connectedNodeOldDist; }
     }
 
     public int ConnectedNodeNewDist

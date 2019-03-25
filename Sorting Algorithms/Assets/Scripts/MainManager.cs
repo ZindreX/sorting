@@ -74,8 +74,10 @@ public abstract class MainManager : MonoBehaviour {
             // Update based on the active teaching mode
             if (Settings.IsStepByStep())
                 StepByStepUpdate();
+
             else if (Settings.IsDemo())
                 DemoUpdate();
+
             else if (Settings.IsUserTest())
                     UserTestUpdate();
         }
@@ -89,8 +91,12 @@ public abstract class MainManager : MonoBehaviour {
     // Called when user click a stop button in game
     public void SafeStop()
     {
-        if (Settings.TeachingMode != Util.DEMO)
-            UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in step/user test
+        //if (Settings.TeachingMode == Util.DEMO && algorithmName == Util.DIJKSTRA)
+        //    Debug.Log("Waiting for old demo...");
+        //UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in step/user test
+        //else
+        UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in new demo/step/user test
+            
 
         userStoppedTask = true;
 
@@ -165,7 +171,11 @@ public abstract class MainManager : MonoBehaviour {
     public bool UserPausedTask
     {
         get { return userPausedTask; }
-        set { userPausedTask = value; }
+        set { userPausedTask = value;
+            // If pause: reduce instruction number to avoid skip
+            if (value)
+                stepByStepManager.CurrentInstructionNr--;
+        }
     }
 
     // --------------------------------------- Demo Device ---------------------------------------
@@ -174,15 +184,15 @@ public abstract class MainManager : MonoBehaviour {
     {
         switch (itemID)
         {
-            case "Step back":
+            case Util.STEP_BACK:
                 if (!WaitingForSupportToFinish())
                     PlayerStepByStepInput(false);
                 else
                     Debug.Log("Can't perform step yet. Wait for support to finish");
                 break;
 
-            case "Pause":
-                userPausedTask = !userPausedTask;
+            case Util.PAUSE:
+                UserPausedTask = !userPausedTask;
 
                 if (userPausedTask)
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
@@ -190,7 +200,7 @@ public abstract class MainManager : MonoBehaviour {
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed); // Use demo speed
                 break;
 
-            case "Step forward":
+            case Util.STEP_FORWARD:
                 if (!WaitingForSupportToFinish())
                     PlayerStepByStepInput(true);
                 else

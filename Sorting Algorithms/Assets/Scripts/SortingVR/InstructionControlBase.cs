@@ -93,6 +93,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     public int CurrentInstructionNr
     {
         get { return currentInstructionNr; }
+        set { currentInstructionNr = value; } // Used by demo for pause correction
     }
 
     public virtual void ResetState()

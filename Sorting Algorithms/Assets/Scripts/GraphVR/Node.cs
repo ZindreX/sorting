@@ -75,7 +75,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         SetNodeTextID(true);
 
         this.algorithm = algorithm;
-        Dist = UtilGraph.INIT_NODE_VALUE;
+        Dist = UtilGraph.INIT_NODE_DIST;
     }
 
     private void Awake()
@@ -299,7 +299,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         traversed = false;
         visited = false;
         prevEdge = null;
-        Dist = UtilGraph.INIT_NODE_VALUE;
+        Dist = UtilGraph.INIT_NODE_DIST;
         CurrentColor = Util.STANDARD_COLOR;
 
         //isEndNode = false;

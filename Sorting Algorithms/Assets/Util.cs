@@ -16,6 +16,10 @@ public class Util : MonoBehaviour {
     public const string DEMO_SPEED = "Demo speed";
     public const string PLUS = "Plus", MINUS = "Minus", ON = "ON", OFF = "OFF", START = "Start", READY = "Ready", OPTIONAL = "Optional";
 
+    // Demo device
+    public const string DEMO_DEVICE = "Demo device", STEP_BACK = "Step back", STEP_FORWARD = "Step forward";
+    public const string PAUSE = "Pause";
+
 
     // ----------------------------------------- ... ----------------------------------------- 
 

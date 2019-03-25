@@ -31,10 +31,18 @@ public class ListVisual : MonoBehaviour {
 
     [SerializeField]
     private Transform spawnPointList, currentNodePoint;
+    private Vector3 oneListIndexUp = new Vector3(0f, 1f, 0f);
 
     private float seconds;
+    private WaitForSeconds smallDuration = new WaitForSeconds(0.5f);
+    private WaitForSeconds mediumDuration = new WaitForSeconds(1f);
+    private WaitForSeconds longDuration = new WaitForSeconds(2f);
+
     private NodeRepresentation currentNode;
     private List<NodeRepresentation> nodeRepresentations;
+
+    public TextMeshPro debugging;
+    private bool debugUpdate;
 
 
     public void InitListVisual(string listType, float algorithmSpeed)
@@ -48,56 +56,21 @@ public class ListVisual : MonoBehaviour {
         graphMain.AddToCheckList(UtilGraph.LIST_VISUAL, true);
     }
 
-    public void DestroyAndReset()
+    private void Update()
     {
-        // Destroy list objects
-        ClearList();
-
-        // Reset variables
-        nodeRepresentations = null;
-        currentNode = null;
-        seconds = 0f;
-    }
-
-    // Check whether a node has a visual representation of itself
-    public bool HasNodeRepresentation(Node node)
-    {
-        for (int i = 0; i < nodeRepresentations.Count; i++)
+        if (nodeRepresentations != null && debugUpdate)
         {
-            if (nodeRepresentations[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
-                return true;
+            debugging.text = "";
+            for (int i=nodeRepresentations.Count - 1; i >= 0; i--)
+            {
+                NodeRepresentation noderep = nodeRepresentations[i];
+                debugging.text += "Node: " + noderep.Node.NodeAlphaID + ", index: " + noderep.ListIndex + "\n"; // + " | name = " + noderep.name + "\n\n";
+            }
+            if (currentNode != null)
+                debugging.text += "Current node: " + currentNode.Node.NodeAlphaID + ", index: " + currentNode.ListIndex; // + " | name = " + currentNode.name;
+
+            debugUpdate = false;
         }
-        return false;
-    }
-
-    // Find the index of a node represenation
-    public int ListIndexOf(Node node)
-    {
-        for (int i = 0; i < nodeRepresentations.Count; i++)
-        {
-            if (nodeRepresentations[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
-                return i;
-        }
-        return -1;
-    }
-
-    // An invisible roof is is kept above the list to prevent it from getting buddy (jumping away etc.)
-    private void UpdateListRoofPosition()
-    {
-        if (nodeRepresentations != null)
-            listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, nodeRepresentations.Count + 2f, spawnPointList.transform.position.z);
-    }
-
-    // Creates a new node representation of a visited node
-    private NodeRepresentation CreateNodeRepresentation(Node node, Vector3 pos, int index)
-    {
-        // Instantiate element
-        GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
-        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, index);
-        listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID.ToString());
-        listObject.GetComponent<MoveObject>().SetDestination(pos);
-        listObject.transform.parent = nodeRepContainerObject.transform;
-        return listObject.GetComponent<NodeRepresentation>();
     }
 
     // Adding a visual representation of the node
@@ -107,7 +80,7 @@ public class ListVisual : MonoBehaviour {
         UpdateListRoofPosition();
 
         // Find position and index
-        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * nodeRepresentations.Count;
+        Vector3 pos = NextElementPositionOnTopOfList();
         int index = nodeRepresentations.Count;
 
         // Create object and add to list
@@ -126,12 +99,12 @@ public class ListVisual : MonoBehaviour {
             // Remove gravity to make it easier to move the objects
             nodeRepresentations[i].GetComponent<Rigidbody>().useGravity = false;
             // Find new position and move it
-            Vector3 newPos = nodeRepresentations[i].transform.position + new Vector3(0f, 1f, 0f);
+            Vector3 newPos = nodeRepresentations[i].transform.position + oneListIndexUp; // new Vector3(0f, 1f, 0f);
             nodeRepresentations[i].GetComponent<MoveObject>().SetDestination(newPos);
         }
 
         // Add new element into the open slot
-        Vector3 pos = spawnPointList.position + new Vector3(0f, 1f, 0f) * (nodeRepresentations.Count - index);
+        Vector3 pos = spawnPointList.position + oneListIndexUp * (nodeRepresentations.Count - index); // new Vector3(0f, 1f, 0f) <- oneListIndexUp
         NodeRepresentation newPrioNodeRep = CreateNodeRepresentation(node, pos, index);
         //newPrioNodeRep.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID, node.Dist);
         newPrioNodeRep.UpdateSurfaceText(UtilGraph.VISITED_COLOR);
@@ -180,6 +153,8 @@ public class ListVisual : MonoBehaviour {
     // Moves the removed element to the 'current node' spot
     private void MoveCurrentNode(NodeRepresentation currentNodeRep, bool moveOther)
     {
+        UpdateListIndexes();
+
         // Move object to current node location
         currentNodeRep.MoveNodeRepresentation(currentNodePoint.position);
         currentNodeRep.CurrentColor = UtilGraph.TRAVERSE_COLOR;
@@ -190,17 +165,38 @@ public class ListVisual : MonoBehaviour {
             // Move other elements in Queue/Priority list
             foreach (NodeRepresentation otherobj in nodeRepresentations)
             {
-                otherobj.MoveNodeRepresentation(otherobj.transform.position - new Vector3(0f, 1f, 0f));
+                otherobj.MoveNodeRepresentation(otherobj.transform.position - oneListIndexUp); //new Vector3(0f, 1f, 0f));
             }
         }
     }
 
-    // Enable/Disable gravity for multiple node representations
-    private void SetGravityForMultipleNodeReps(int from, int to, bool enable)
+    // Destroy the current node (which has been moved out of list)
+    public void DestroyCurrentNode()
     {
-        for (int i=from; i <= to; i++)
+        if (currentNode != null)
+            Destroy(currentNode.gameObject);
+    }
+
+    // Move other nodes up to make spot for <..>
+    private IEnumerator MoveOtherNodes(int start, int end, bool increment)
+    {
+        // Fix gravity outside this method
+
+        // Move all existing list elements up (from the point where we want to insert the new element) *** Copied - <--- Methods made
+        for (int i = start + 1; i <= end; i++) //for (int i=listObjects.Count-1; i >= index; i--)
         {
-            nodeRepresentations[i].SetGravity(enable);
+            NodeRepresentation involvedNodeRep = nodeRepresentations[i];
+
+            // Find new position and move it
+            Vector3 newPos = involvedNodeRep.transform.position + oneListIndexUp; // new Vector3(0f, 1f, 0f); <- oneListIndexUp
+            involvedNodeRep.MoveNodeRepresentation(newPos);
+
+            if (increment)
+            {
+                involvedNodeRep.ListIndex = i - 1;
+                nodeRepresentations[i - 1] = involvedNodeRep;
+            }
+            yield return involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
         }
     }
 
@@ -211,6 +207,7 @@ public class ListVisual : MonoBehaviour {
 
         Color prevColor = node.CurrentColor;
         node.CurrentColor = UtilGraph.DIST_UPDATE_COLOR;
+
         // Node representation we want to move
         NodeRepresentation mainNodeRep = FindNodeRepresentation(node);
 
@@ -230,27 +227,27 @@ public class ListVisual : MonoBehaviour {
             // Move node left and down
             Vector3 moveLeft = mainNodeRep.transform.position + new Vector3(-1f, 0f, 0f);
             mainNodeRep.MoveNodeRepresentation(moveLeft);
-            yield return new WaitForSeconds(0.5f);
+            yield return smallDuration;
 
             int moveDownYpos = mainNodeRepIndex - index;
             Vector3 moveDown = mainNodeRep.transform.position + new Vector3(-1f, moveDownYpos, 0f);
             mainNodeRep.MoveNodeRepresentation(moveDown);
-            yield return new WaitForSeconds(1f);
+            yield return mediumDuration;
 
             // Move all the other involved up
-            // Move all existing list elements up (from the point where we want to insert the new element) *** Copied - make new method?
-            for (int i = mainNodeRepIndex + 1; i <= index; i++) //for (int i=listObjects.Count-1; i >= index; i--)
-            {
-                NodeRepresentation involvedNodeRep = nodeRepresentations[i];
+            yield return MoveOtherNodes(mainNodeRepIndex, index, true);
+            // Move all existing list elements up (from the point where we want to insert the new element) *** Copied - make new method -- done
+            //for (int i = mainNodeRepIndex + 1; i <= index; i++) //for (int i=listObjects.Count-1; i >= index; i--)
+            //{
+            //    NodeRepresentation involvedNodeRep = nodeRepresentations[i];
 
-                // Find new position and move it
-                Vector3 newPos = involvedNodeRep.transform.position + new Vector3(0f, 1f, 0f);
-                involvedNodeRep.MoveNodeRepresentation(newPos);
-                involvedNodeRep.ListIndex = i - 1;
-                nodeRepresentations[i - 1] = involvedNodeRep;
-                //Debug.Log("Moving up node '" + nodeRepresentations[i].Node.NodeAlphaID + "' to index=" + (i - 1));
-                involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
-            }
+            //    // Find new position and move it
+            //    Vector3 newPos = involvedNodeRep.transform.position + oneListIndexUp; // new Vector3(0f, 1f, 0f); <- oneListIndexUp
+            //    involvedNodeRep.MoveNodeRepresentation(newPos);
+            //    involvedNodeRep.ListIndex = i - 1;
+            //    nodeRepresentations[i - 1] = involvedNodeRep;
+            //    yield return involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
+            //}
 
             // Move back into list
             //Debug.Log("Moving node '" + mainNodeRep.Node.NodeAlphaID + "' back into list index=" + index);
@@ -269,63 +266,41 @@ public class ListVisual : MonoBehaviour {
         graphMain.WaitForSupportToComplete--;
     }
 
-    public NodeRepresentation FindNodeRepresentation(Node node)
+    private IEnumerator ReverseRemoveCurrentNode(NodeRepresentation nodeRep, bool moveOther)
     {
-        for (int i=0; i < nodeRepresentations.Count; i++)
+        graphMain.UpdateCheckList(UtilGraph.LIST_VISUAL, false);
+
+        if (!moveOther)
         {
-            if (nodeRepresentations[i].Node.NodeAlphaID == node.NodeAlphaID)
-                return nodeRepresentations[i];
+            // Move element back into stack
+            Vector3 onTopOfStack = NextElementPositionOnTopOfList() - oneListIndexUp;
+            nodeRep.MoveNodeRepresentation(onTopOfStack);
+            nodeRep.SetGravity(false);
+            yield return mediumDuration;
+            nodeRep.SetGravity(true);
         }
-        return null;
-    }
-
-
-    public void DestroyCurrentNode()
-    {
-        if (currentNode != null)
-            Destroy(currentNode.gameObject);
-    }
-
-    public void ClearList()
-    {
-        foreach (NodeRepresentation nodeRep in nodeRepresentations)
+        else
         {
-            Destroy(nodeRep.gameObject);
+            // Disable gravity of swapping node reps
+            int lastNodeRep = nodeRepresentations.Count - 1;
+            SetGravityForMultipleNodeReps(0, lastNodeRep, false);
+
+            // First move all other node representations up
+            yield return MoveOtherNodes(0, lastNodeRep, false);
+
+            // Move element back into list
+            nodeRep.MoveNodeRepresentation(spawnPointList.position);
+            yield return smallDuration;
+
+            // Enable gravity of swapping node reps
+            SetGravityForMultipleNodeReps(0, lastNodeRep, true);
         }
 
-        if (currentNode != null)
-            Destroy(currentNode.gameObject);
-
-        nodeRepresentations = new List<NodeRepresentation>();
+        graphMain.UpdateCheckList(UtilGraph.LIST_VISUAL, true);
+        graphMain.WaitForSupportToComplete--;
     }
 
-
-    public void CreateBackTrackList(Node node)
-    {
-        ClearList();
-        listType = Util.QUEUE;
-
-        while (node != null)
-        {
-            AddListObject(node);
-
-            // Change color of edge leading to previous node
-            Edge backtrackEdge = node.PrevEdge;
-
-            if (backtrackEdge == null)
-                break;
-
-            // Set "next" node
-            if (backtrackEdge is DirectedEdge)
-                ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
-
-            node = backtrackEdge.OtherNodeConnected(node);
-
-            if (backtrackEdge is DirectedEdge)
-                ((DirectedEdge)backtrackEdge).PathBothWaysActive = false;
-        }
-    }
-
+    // Instructions from the New Demo/Step-by-step
     public void ExecuteInstruction(ListVisualInstruction instruction, bool increment)
     {
         switch (instruction.Instruction)
@@ -335,9 +310,13 @@ public class ListVisual : MonoBehaviour {
                     AddListObject(instruction.Node);
                 else
                 {
+                    // Reverse of adding: Find node, remove it from the list, and destroy it
                     NodeRepresentation nodeRep = FindNodeRepresentation(instruction.Node);
-                    nodeRepresentations.Remove(nodeRep);
-                    Destroy(nodeRep.gameObject); // Fix other indexes????
+                    if (nodeRep != null)
+                    {
+                        nodeRepresentations.Remove(nodeRep);
+                        Destroy(nodeRep.gameObject);
+                    }
                 }
                 break;
 
@@ -356,33 +335,31 @@ public class ListVisual : MonoBehaviour {
                     RemoveCurrentNode();
                 else
                 {
+                    // Reverse of removing current node: insert and move it back into the list
+                    Debug.Log("Current node: " + currentNode.Node.NodeAlphaID);
                     currentNode.CurrentColor = Color.white;
+                    graphMain.WaitForSupportToComplete++;
                     switch (listType)
                     {
                         case Util.QUEUE:
+                            Debug.Log("Inserting..." + currentNode.Node.NodeAlphaID);
                             nodeRepresentations.Insert(0, currentNode);
-                            if (nodeRepresentations.Count == 1)
-                                currentNode.MoveNodeRepresentation(spawnPointList.position);
-                            else
-                            {
-                                graphMain.WaitForSupportToComplete++;
-                                StartCoroutine(UpdateValueAndPositionOf(currentNode.Node, 0));
-                            }
+                            currentNode.ListIndex = 0;
+                            StartCoroutine(ReverseRemoveCurrentNode(currentNode, true));
                             break;
 
                         case Util.STACK:
                             nodeRepresentations.Add(currentNode);
-                            graphMain.WaitForSupportToComplete++;
-                            StartCoroutine(UpdateValueAndPositionOf(currentNode.Node, nodeRepresentations.Count - 1));
+                            currentNode.ListIndex = nodeRepresentations.Count - 1;
+                            StartCoroutine(ReverseRemoveCurrentNode(currentNode, false));
                             break;
 
                         case Util.PRIORITY_LIST:
-                            nodeRepresentations.Insert(instruction.Index, currentNode);
-                            graphMain.WaitForSupportToComplete++;
-                            StartCoroutine(UpdateValueAndPositionOf(currentNode.Node, instruction.Index));
+                            nodeRepresentations.Insert(0, currentNode);
+                            currentNode.ListIndex = instruction.Index;
+                            StartCoroutine(ReverseRemoveCurrentNode(currentNode, true));
                             break;
                     }
-  
                 }
                 break;
 
@@ -391,8 +368,9 @@ public class ListVisual : MonoBehaviour {
                     DestroyCurrentNode();
                 else
                 {
-                    currentNode = CreateNodeRepresentation(instruction.Node, currentNodePoint.position, instruction.Index);
-                    currentNode.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+                    // Reverse of destroying: Instantiate a new one and place it in the current node spot
+                    currentNode = CreateNodeRepresentation(instruction.Node, currentNodePoint.position, -1);
+                    currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
                 }
                 break;
 
@@ -439,8 +417,163 @@ public class ListVisual : MonoBehaviour {
 
             default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
         }
+        debugUpdate = true;
 
     }
+
+
+    // --------------------------------------- Help methods ---------------------------------------
+
+    // Creates a new node representation of a visited node
+    private NodeRepresentation CreateNodeRepresentation(Node node, Vector3 pos, int index)
+    {
+        // Instantiate element
+        GameObject listObject = Instantiate(listObjPrefab, pos, Quaternion.identity);
+        listObject.GetComponent<NodeRepresentation>().InitNodeRepresentation(node, index);
+        listObject.GetComponent<TextHolder>().SetSurfaceText(node.NodeAlphaID.ToString());
+        listObject.GetComponent<MoveObject>().SetDestination(pos);
+        listObject.transform.parent = nodeRepContainerObject.transform;
+        return listObject.GetComponent<NodeRepresentation>();
+    }
+
+    // Check whether a node has a visual representation of itself
+    public bool HasNodeRepresentation(Node node)
+    {
+        for (int i = 0; i < nodeRepresentations.Count; i++)
+        {
+            if (nodeRepresentations[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
+                return true;
+        }
+        return false;
+    }
+
+    private void UpdateListIndexes()
+    {
+        for (int i = 0; i < nodeRepresentations.Count; i++)
+        {
+            nodeRepresentations[i].ListIndex = i;
+        }
+    }
+
+    // Find the index of a node represenation
+    public int ListIndexOf(Node node)
+    {
+        for (int i = 0; i < nodeRepresentations.Count; i++)
+        {
+            if (nodeRepresentations[i].GetComponent<NodeRepresentation>().Node.NodeAlphaID == node.NodeAlphaID)
+                return i;
+        }
+        return -1;
+    }
+
+    public NodeRepresentation FindNodeRepresentation(Node node)
+    {
+        for (int i = 0; i < nodeRepresentations.Count; i++)
+        {
+            if (nodeRepresentations[i].Node.NodeAlphaID == node.NodeAlphaID)
+                return nodeRepresentations[i];
+        }
+        return null;
+    }
+
+    // Enable/Disable gravity for multiple node representations
+    private void SetGravityForMultipleNodeReps(int from, int to, bool enable)
+    {
+        for (int i = from; i <= to; i++)
+        {
+            nodeRepresentations[i].SetGravity(enable);
+        }
+    }
+
+    private Vector3 NextElementPositionOnTopOfList()
+    {
+        return spawnPointList.position + oneListIndexUp * nodeRepresentations.Count;
+    }
+
+    // An invisible roof is is kept above the list to prevent it from getting buddy (jumping away etc.)
+    private void UpdateListRoofPosition()
+    {
+        if (nodeRepresentations != null)
+            listRoof.transform.position = new Vector3(spawnPointList.transform.position.x, nodeRepresentations.Count + 2f, spawnPointList.transform.position.z);
+    }
+
+    // --------------------------------------- Backtracking ---------------------------------------
+
+    public void CreateBackTrackList(Node node)
+    {
+        ClearList();
+        listType = Util.QUEUE;
+
+        while (node != null)
+        {
+            AddListObject(node);
+
+            // Change color of edge leading to previous node
+            Edge backtrackEdge = node.PrevEdge;
+
+            if (backtrackEdge == null)
+                break;
+
+            // Set "next" node
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
+
+            node = backtrackEdge.OtherNodeConnected(node);
+
+            if (backtrackEdge is DirectedEdge)
+                ((DirectedEdge)backtrackEdge).PathBothWaysActive = false;
+        }
+    }
+
+    public void ClearList()
+    {
+        foreach (NodeRepresentation nodeRep in nodeRepresentations)
+        {
+            Destroy(nodeRep.gameObject);
+        }
+
+        if (currentNode != null)
+            Destroy(currentNode.gameObject);
+
+        nodeRepresentations = new List<NodeRepresentation>();
+    }
+
+    // --------------------------------------- Reset / Destroy ---------------------------------------
+
+    public void DestroyAndReset()
+    {
+        // Destroy list objects
+        ClearList();
+
+        // Reset variables
+        nodeRepresentations = null;
+        currentNode = null;
+        seconds = 0f;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // *** Debugging ***

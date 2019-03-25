@@ -20,6 +20,8 @@ public class UtilGraph : Util {
     public const string TRAVERSE_SUB_SECTION = "Traverse sub section", SHORTEST_PATH_SUB_SECTION = "Shortest path sub section";
     public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_BUILD_MODE = "Edge mode";
     public const string SELECT_NODE = "Select node";
+    
+    // -----
 
 
     // Rules
@@ -40,7 +42,7 @@ public class UtilGraph : Util {
     public static string NODE_TAG = "Node", EDGE_TAG = "Edge";
 
     // 
-    public static int INF = int.MaxValue, NO_COST = -1, INIT_NODE_VALUE = -2;
+    public static int INF = int.MaxValue, NO_COST = -1, INIT_NODE_DIST = -2;
 
     // Pseudo code stuff
     public static readonly string START_NODE = "Start node", LENGTH_OF_LIST = "Length of list", NODE = "vertice", NEIGHBOR = "neighbor";
@@ -93,7 +95,7 @@ public class UtilGraph : Util {
     {
         if (value == INF)
             return "Inf";
-        else if (value == INIT_NODE_VALUE)
+        else if (value == INIT_NODE_DIST)
             return "";
         return value.ToString();
     }

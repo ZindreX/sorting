@@ -280,7 +280,7 @@ public abstract class GraphManager : MonoBehaviour {
 
     // ------------------ Shortest path ------------------ 
 
-    public abstract void SetAllNodesToInf();
+    public abstract void SetAllNodesDist(int value);
 
     // Backtracks from all nodes in the given graph
     public abstract IEnumerator BacktrackShortestPathsAll(WaitForSeconds demoStepDuration);

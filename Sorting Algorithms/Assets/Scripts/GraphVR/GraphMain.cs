@@ -124,8 +124,6 @@ public class GraphMain : MainManager {
                 break;
 
             case WAIT_FOR_SUPPORT:
-
-
                 break;
 
             case SHUT_DOWN_CHECK:
@@ -338,7 +336,7 @@ public class GraphMain : MainManager {
 
         Debug.Log("Performing " + algorithmName + " " + graphSettings.GraphTask + " demo.");
 
-        if (algorithmName == Util.BFS)
+        if (true)
         {
             // Getting instructions for this sample of sorting elements
             Dictionary<int, InstructionBase> instructions = null;
@@ -404,6 +402,9 @@ public class GraphMain : MainManager {
 
     private void PerformInstruction(InstructionBase instruction, bool increment)
     {
+        if (instruction.Status == Util.EXECUTED_INST && increment)
+            return;
+
         if (instruction is ListVisualInstruction)
         {
             ListVisualInstruction lvInstruction = (ListVisualInstruction)instruction;
@@ -414,6 +415,11 @@ public class GraphMain : MainManager {
             waitForSupportToComplete++;
             StartCoroutine(graphAlgorithm.ExecuteDemoInstruction(instruction, increment));
         }
+
+        if (increment)
+            instruction.Status = Util.EXECUTED_INST;
+        else
+            instruction.Status = Util.NOT_EXECUTED;
     }
 
 
@@ -718,7 +724,7 @@ public class GraphMain : MainManager {
             // InstructionBase extra
             switch (inst)
             {
-                case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesToInf(); break;
+                case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesDist(UtilGraph.INF); break;
                 case UtilGraph.SET_START_NODE_DIST_TO_ZERO: graphManager.StartNode.Dist = 0; break;
                 case UtilGraph.MARK_END_NODE:
                     Node endNode = graphManager.EndNode;

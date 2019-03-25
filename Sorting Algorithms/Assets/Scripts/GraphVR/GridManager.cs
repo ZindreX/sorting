@@ -351,7 +351,7 @@ public class GridManager : GraphManager {
         base.DeleteGraph();
     }
 
-    public override void SetAllNodesToInf()
+    public override void SetAllNodesDist(int value)
     {
         for (int i=0; i < rows; i++)
         {
@@ -359,7 +359,7 @@ public class GridManager : GraphManager {
             {
                 GridNode gridNode = gridNodes[i, j];
                 if (gridNode != null)
-                    gridNode.Dist = UtilGraph.INF;
+                    gridNode.Dist = value;
             }
         }
     }

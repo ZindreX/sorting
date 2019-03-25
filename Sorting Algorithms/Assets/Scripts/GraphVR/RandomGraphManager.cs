@@ -183,11 +183,11 @@ public class RandomGraphManager : GraphManager {
         base.DeleteGraph();
     }
 
-    public override void SetAllNodesToInf()
+    public override void SetAllNodesDist(int value)
     {
         for (int i = 0; i < nodes.Count; i++)
         {
-            nodes[i].Dist = UtilGraph.INF;
+            nodes[i].Dist = value;
         }
     }
 

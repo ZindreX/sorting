@@ -185,11 +185,11 @@ public class TreeManager : GraphManager {
         base.DeleteGraph();
     }
 
-    public override void SetAllNodesToInf()
+    public override void SetAllNodesDist(int value)
     {
         for (int i = 0; i < tree.Count; i++)
         {
-            tree[i].Dist = UtilGraph.INF;
+            tree[i].Dist = value;
         }
     }
 

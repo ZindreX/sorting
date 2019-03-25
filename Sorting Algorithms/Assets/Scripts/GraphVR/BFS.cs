@@ -261,11 +261,14 @@ public class BFS : GraphAlgorithm, ITraverse {
     }
     #endregion
 
-    #region BFS User Test instructions
+    #region BFS Traverse instructions
     public Dictionary<int, InstructionBase> TraverseUserTestInstructions(Node startNode)
     {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instNr = 0;
+
+        // Line 0: Update start node
+        instructions.Add(instNr++, new TraverseInstruction(Util.FIRST_INSTRUCTION, instNr, startNode, false, false));
 
         // Line 1: Create emtpy list (queue)
         Queue<Node> queue = new Queue<Node>();
@@ -277,9 +280,6 @@ public class BFS : GraphAlgorithm, ITraverse {
         instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, startNode, true, false));
         instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
 
-        // Line 3: Mark node as visited
-        //instructions.Add(instNr++, new TraverseInstruction(UtilGraph.MARK_VISITED_INST, instNr, 0, startNode, true));
-
         while (queue.Count > 0)
         {
             // Line 4: While loop
@@ -289,12 +289,12 @@ public class BFS : GraphAlgorithm, ITraverse {
             Node currentNode = queue.Dequeue();
             currentNode.Traversed = true;
 
-            if (currentNode.PrevEdge != null)
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, currentNode.PrevEdge, false, true));
-            else
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, false, true));
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, currentNode.PrevEdge, false, true));
+            //if (currentNode.PrevEdge != null)
+            //else
+            //    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, false, true));
 
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0));
 
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
@@ -307,6 +307,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
                 // Line 7: check neighbor
                 instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, edge, false, false)); // check if correct ***
+                
                 // Check if node has already been traversed or already is marked
                 if (!connectedNode.Visited)
                 {
@@ -358,7 +359,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 lineOfCode = 0;
                 if (increment)
                 {
-                    SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
+                    SetNodePseudoCode(currentNode, 0);
                 }
                 else
                 {
@@ -469,15 +470,12 @@ public class BFS : GraphAlgorithm, ITraverse {
 
             case UtilGraph.END_FOR_LOOP_INST:
                 lineOfCode = 9;
-                if (increment)
-                    currentNode.Traversed = true;
-                else
-                    currentNode.Traversed = false;
+                currentNode.Traversed = increment;
                 break;
 
             case UtilGraph.END_WHILE_INST:
                 lineOfCode = 10;
-                IsTaskCompleted = true;
+                IsTaskCompleted = increment;
                 break;
         }
         prevHighlightedLineOfCode = lineOfCode;
