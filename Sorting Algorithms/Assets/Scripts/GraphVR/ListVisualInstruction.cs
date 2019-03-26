@@ -5,12 +5,12 @@ public class ListVisualInstruction : InstructionBase {
     private Node node;
     private int index = Util.NO_INDEX_VALUE;
     private string case1, case2;
+    private bool hasNodeRepresentation;
 
     public ListVisualInstruction(string instruction, int instructionNr) : base(instruction, instructionNr)
     {
 
     }
-
 
     public ListVisualInstruction(string instruction, int instructionNr, Node node) : base(instruction, instructionNr)
     {
@@ -39,6 +39,12 @@ public class ListVisualInstruction : InstructionBase {
     public int Index
     {
         get { return index; }
+    }
+
+    public bool HasNodeRepresentation
+    {
+        get { return hasNodeRepresentation; }
+        set { hasNodeRepresentation = value; } // For backtracking pseudocode/list visual
     }
 
     public string GetCase(bool hasNodeRepresentation)

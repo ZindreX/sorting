@@ -22,9 +22,6 @@ public class UserTestManager : InstructionControlBase {
     */
     private int readyForNext, userActionToProceed, userActionInstructions;
 
-    [SerializeField]
-    private ProgressTracker progressTracker;
-
     private Dictionary<string, int> errorLog;
 
     // Score
@@ -44,7 +41,7 @@ public class UserTestManager : InstructionControlBase {
     */
     public void InitUserTest(Dictionary<int, InstructionBase> instructions, int userActionToProceed, int userActionInstructions)
     {
-        base.Init(instructions);
+        base.Init(instructions, userActionInstructions);
         this.userActionToProceed = userActionToProceed;
         this.userActionInstructions = userActionInstructions;
         readyForNext = userActionToProceed;
@@ -52,9 +49,6 @@ public class UserTestManager : InstructionControlBase {
         totalErrorCount = 0;
         errorLog = new Dictionary<string, int>();
         scoreUpdateDuration = new WaitForSeconds(SCORE_UPDATE);
-
-        // Progress tracker (just visualization of progress)
-        progressTracker.InitProgressTracker(userActionInstructions, instructions.Count);
     }
 
     // -------------------------------------------- Getters/Setters --------------------------------------------

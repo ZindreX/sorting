@@ -78,6 +78,11 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         }
     }
 
+    public Node CurrentNode
+    {
+        get { return currentNode; }
+    }
+
     protected void SetEdge(Edge edge)
     {
         this.edge = edge;

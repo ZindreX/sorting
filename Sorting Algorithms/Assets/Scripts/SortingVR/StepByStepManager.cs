@@ -11,11 +11,9 @@ public class StepByStepManager : InstructionControlBase {
 
     private bool playerMove = false, playerIncremented = false, isValidStep = false, firstInstruction = false, finalInstruction = false;
 
-    public void InitDemo(Dictionary<int, InstructionBase> instructions)
+    public void InitDemo(Dictionary<int, InstructionBase> instructions)//, int userActionInstructions)
     {
-        base.Init(instructions);
-
-
+        base.Init(instructions, instructions.Count);
     }
 
     //  -------------------------------------------- Demo --------------------------------------------
@@ -58,9 +56,15 @@ public class StepByStepManager : InstructionControlBase {
         if (playerIncremented)
         {
             if (IncrementToNextInstruction())
+            {
                 playerMove = true;
+                progressTracker.Increment();
+            }
             else
+            {
                 isValidStep = false;
+                progressTracker.Decrement();
+            }
 
         }
         else

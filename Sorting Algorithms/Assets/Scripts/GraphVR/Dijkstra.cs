@@ -308,7 +308,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                         if (!graphMain.CheckListVisual(UtilGraph.HAS_NODE_REPRESENTATION, connectedNode)) // listVisual.HasNodeRepresentation(connectedNode))
                             graphMain.UpdateListVisual(UtilGraph.PRIORITY_ADD_NODE, connectedNode, index); // listVisual.PriorityAdd(connectedNode, index); // Node representation
                         else
-                            yield return graphMain.ListVisual.UpdateValueAndPositionOf(connectedNode, index); // Create method/action code ???
+                            yield return graphMain.ListVisual.UpdateValueAndPositionOf(connectedNode, index, true); // Create method/action code ???
                     }
 
                     #region Stop demo
@@ -462,13 +462,11 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         list.Add(startNode);
         startNode.Visited = true;
         startNode.Dist = 0;
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ADD_NODE, instNr, startNode, true, false));
-        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, startNode, 0));
+        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, startNode, 0);
+        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ADD_NODE, instNr, startNode, true, false, addStartNode));
 
         // Line 4: Set total cost (Dist) of start node to 0
         instructions.Add(instNr++, new InstructionBase(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr));
-        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr, startNode, 0));
-
         
         while (list.Count > 0 && !objectiveFound)
         {
@@ -480,8 +478,9 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             list.RemoveAt(list.Count - 1);
 
             // Line 6: Remove element with lowest distance
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr, currentNode, false, true));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr));
+            ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode);
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr, currentNode, false, true, removeCurrentNode));
+            //instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
 
             // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
             if (!shortestPathOnToAll && currentNode == endNode)
@@ -549,17 +548,16 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     // List visual
                     int index = list.IndexOf(connectedNode);
 
+                    // Line 12: Add to list
                     instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.HAS_NODE_REPRESENTATION, instNr, connectedNode, index, UtilGraph.PRIORITY_ADD_NODE, UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION));
 
-                    // Line 12: Add to list
-                    instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
+                    //instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
                 }
                 // Line 13: End if
                 instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
             }
             // Line 14: End for-loop
-            instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
+            instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr)); // <--- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
 
             currentNode.Traversed = true;
         }
@@ -582,19 +580,30 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         // Gather information from instruction
         if (instruction is TraverseInstruction)
         {
+            TraverseInstruction travInst = (TraverseInstruction)instruction;
             if (instruction.Instruction == UtilGraph.ADD_NODE || instruction.Instruction == UtilGraph.PRIORITY_REMOVE_NODE || instruction.Instruction == UtilGraph.FOR_ALL_NEIGHBORS_INST)
-                currentNode = ((TraverseInstruction)instruction).Node;
+                currentNode = travInst.Node;
             else
-                connectedNode = ((TraverseInstruction)instruction).Node;
+                connectedNode = travInst.Node;
 
-            currentEdge = ((TraverseInstruction)instruction).PrevEdge;
+            currentEdge = travInst.PrevEdge;
+
+            // Do list visual instruction if there is one
+            if (travInst.ListVisualInstruction != null)
+                graphMain.ListVisual.ExecuteInstruction(travInst.ListVisualInstruction, increment);
         }
         else if (instruction is ShortestPathInstruction)
         {
-            currentNode = ((ShortestPathInstruction)instruction).CurrentNode;
-            connectedNode = ((ShortestPathInstruction)instruction).ConnectedNode;
-            currentEdge = ((ShortestPathInstruction)instruction).CurrentEdge;
-            prevEdge = ((ShortestPathInstruction)instruction).PrevEdge;
+            ShortestPathInstruction spInst = (ShortestPathInstruction)instruction;
+            currentNode = spInst.CurrentNode;
+            connectedNode = spInst.ConnectedNode;
+            currentEdge = spInst.CurrentEdge;
+            prevEdge = spInst.PrevEdge;
+
+
+            // Do list visual instruction if there is one
+            if (spInst.ListVisualInstruction != null)
+                graphMain.ListVisual.ExecuteInstruction(spInst.ListVisualInstruction, increment);
         }
         else if (instruction is InstructionLoop)
         {
@@ -646,6 +655,10 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     startNode.Dist = 0;
                 else
                     startNode.Dist = UtilGraph.INF;
+
+                // Update list visual
+                ListVisualInstruction setStartNodeToZero = new ListVisualInstruction(UtilGraph.SET_START_NODE_DIST_TO_ZERO, 0, startNode, 0);
+                graphMain.ListVisual.ExecuteInstruction(setStartNodeToZero, increment);
                 break;
 
             case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
@@ -692,7 +705,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 {
                     connectedNode.Visited = ((TraverseInstruction)instruction).VisitInst;
                     if (currentEdge != null)
-                        currentEdge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                        currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
                 }
                 else
                 {
@@ -728,32 +741,29 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
             case UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE:
                 lineOfCode = 11;
+                if (increment)
+                    connectedNode.PrevEdge = prevEdge;
+                else
+                    connectedNode.PrevEdge = ((ShortestPathInstruction)instruction).OldPrevEdge;
                 break;
 
-            case UtilGraph.PRIORITY_ADD_NODE:
+            case UtilGraph.HAS_NODE_REPRESENTATION: // update/add
                 lineOfCode = 12;
+                ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
+                graphMain.ListVisual.ExecuteInstruction(listVisualInst, increment);
                 break;
 
             case UtilGraph.END_IF_INST:
                 lineOfCode = 13;
-                if (increment)
-                {
-                    this.connectedNode.PrevEdge = prevEdge;
-                    if (prevEdge != null)
-                        prevEdge.CurrentColor = UtilGraph.VISITED_COLOR;
-                }
-                else
-                {
-                    this.connectedNode.PrevEdge = ((ShortestPathInstruction)instruction).OldPrevEdge;
-                    if (connectedNode.PrevEdge != null)
-                        this.connectedNode.PrevEdge.CurrentColor = Util.STANDARD_COLOR;
-                }
                 break;
 
             case UtilGraph.END_FOR_LOOP_INST:
                 lineOfCode = 14;
                 if (this.currentNode != null)
                     this.currentNode.Traversed = increment;
+
+                // Destroy current node in list visual
+                graphMain.ListVisual.ExecuteInstruction(new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, Util.NO_INSTRUCTION_NR, this.currentNode), increment);
                 break;
 
             case UtilGraph.END_WHILE_INST:
@@ -867,16 +877,14 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
-                //connectedNode.Dist = ((ShortestPathInstruction)instruction).NodeDistAndEdgeCostTotal();
                 lineOfCode = 10;
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE:
-                //connectedNode.PrevEdge = prevEdge;
                 lineOfCode = 11;
                 break;
 
-            case UtilGraph.PRIORITY_ADD_NODE:
+            case UtilGraph.HAS_NODE_REPRESENTATION:
                 lineOfCode = 12;
                 break;
 

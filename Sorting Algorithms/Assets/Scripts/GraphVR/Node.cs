@@ -18,7 +18,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     protected string algorithm;
     protected bool isStartNode, isEndNode;
 
-    protected Color currentColor;
+    protected Color currentColor, prevColor;
     protected TextMeshPro textNodeID, textNodeDist;
     protected Animator animator;
 
@@ -235,7 +235,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     public Color CurrentColor
     {
         get { return currentColor; }
-        set { currentColor = value; ChangeApperance(value); }
+        set { prevColor = currentColor; currentColor = value; ChangeApperance(value); }
+    }
+
+    public Color PrevColor
+    {
+        get { return prevColor; }
     }
 
     private void ChangeApperance(Color color)

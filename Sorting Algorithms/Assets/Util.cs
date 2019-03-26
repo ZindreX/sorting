@@ -53,7 +53,7 @@ public class Util : MonoBehaviour {
 
 
     // Instruction values (todo: update Utilsort)
-    public static readonly int NO_VALUE = -3, NO_INDEX_VALUE = -4;
+    public static readonly int NO_VALUE = -3, NO_INDEX_VALUE = -4, NO_INSTRUCTION_NR = -5;
 
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction";
     public const string INIT_INSTRUCTION = "Init instruction", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";

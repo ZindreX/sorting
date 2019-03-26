@@ -18,7 +18,7 @@ public abstract class Edge : MonoBehaviour {
     protected string graphStructure;
     protected bool displayCost;
 
-    protected Color currentColor;
+    protected Color currentColor, prevColor;
 
     protected TextMeshPro costText;
 
@@ -109,7 +109,12 @@ public abstract class Edge : MonoBehaviour {
     public virtual Color CurrentColor
     {
         get { return currentColor; }
-        set { currentColor = value; ChangeApperance(value); }
+        set { prevColor = currentColor; currentColor = value; ChangeApperance(value); }
+    }
+
+    public Color PrevColor
+    {
+        get { return prevColor; }
     }
 
     private void ChangeApperance(Color color)

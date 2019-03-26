@@ -6,11 +6,21 @@ public class TraverseInstruction : InstructionBase {
     private Edge prevEdge;
     private bool visitInst, traverseInst;
 
+    private ListVisualInstruction listVisualInstruction;
+
     public TraverseInstruction(string instruction, int instructionNr, Node node, bool visitInst, bool traverseInst) : base(instruction, instructionNr)
     {
         this.node = node;
         this.visitInst = visitInst;
         this.traverseInst = traverseInst;
+    }
+
+    public TraverseInstruction(string instruction, int instructionNr, Node node, bool visitInst, bool traverseInst, ListVisualInstruction listVisualInstruction) : base(instruction, instructionNr)
+    {
+        this.node = node;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
+        this.listVisualInstruction = listVisualInstruction;
     }
 
     public TraverseInstruction(string instruction, int instructionNr, Node node, Edge prevEdge, bool visitInst, bool traverseInst) : base(instruction, instructionNr)
@@ -19,6 +29,15 @@ public class TraverseInstruction : InstructionBase {
         this.prevEdge = prevEdge;
         this.visitInst = visitInst;
         this.traverseInst = traverseInst;
+    }
+
+    public TraverseInstruction(string instruction, int instructionNr, Node node, Edge prevEdge, bool visitInst, bool traverseInst, ListVisualInstruction listVisualInstruction) : base(instruction, instructionNr)
+    {
+        this.node = node;
+        this.prevEdge = prevEdge;
+        this.visitInst = visitInst;
+        this.traverseInst = traverseInst;
+        this.listVisualInstruction = listVisualInstruction;
     }
 
     public Node Node
@@ -39,6 +58,11 @@ public class TraverseInstruction : InstructionBase {
     public Edge PrevEdge
     {
         get { return prevEdge; }
+    }
+
+    public ListVisualInstruction ListVisualInstruction
+    {
+        get { return listVisualInstruction; }
     }
 
     public override string DebugInfo()

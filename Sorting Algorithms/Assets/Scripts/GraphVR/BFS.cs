@@ -277,8 +277,8 @@ public class BFS : GraphAlgorithm, ITraverse {
         // Line 2: Enqueue first node
         queue.Enqueue(startNode);
         startNode.Visited = true;
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, startNode, true, false));
-        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode));
+        ListVisualInstruction addStartNode =  new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
+        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, startNode, true, false, addStartNode));
 
         while (queue.Count > 0)
         {
@@ -289,21 +289,23 @@ public class BFS : GraphAlgorithm, ITraverse {
             Node currentNode = queue.Dequeue();
             currentNode.Traversed = true;
 
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, currentNode.PrevEdge, false, true));
-            //if (currentNode.PrevEdge != null)
-            //else
-            //    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, false, true));
+            ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0);
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
 
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0));
-
+            // Line 6: For-loop update
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false)); //new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode.Edges.Count, Util.NO_INDEX_VALUE));
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
-                // Line 6: For-loop update
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false)); //new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode.Edges.Count, Util.NO_INDEX_VALUE));
-
                 Edge edge = currentNode.Edges[i];
                 Node connectedNode = edge.OtherNodeConnected(currentNode);
-                connectedNode.PrevEdge = edge;
+
+                // Optimizing check
+                //if (connectedNode.Visited || connectedNode.Traversed)
+                //    continue;
+
+                // Fix prev edge
+                if (!connectedNode.Visited)
+                    connectedNode.PrevEdge = edge;
 
                 // Line 7: check neighbor
                 instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, edge, false, false)); // check if correct ***
@@ -314,13 +316,12 @@ public class BFS : GraphAlgorithm, ITraverse {
                     // Line 8: Enqueue node
                     queue.Enqueue(connectedNode);
                     connectedNode.Visited = true;
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, connectedNode, edge, true, false));
-                    instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode));
+                    ListVisualInstruction addConnectedNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode);
+                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, connectedNode, edge, true, false, addConnectedNode));
                 }
-                instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));
             }
-            instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr));
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
         return instructions;
@@ -330,15 +331,22 @@ public class BFS : GraphAlgorithm, ITraverse {
     #region New Demo version (Demo/Step-by-step)
     public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
+        Node currentNode = null, connectedNode = null;
+
         // Gather information from instruction
         if (instruction is TraverseInstruction)
         {
-            if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
-                connectedNode = ((TraverseInstruction)instruction).Node;
+            TraverseInstruction travInst = (TraverseInstruction)instruction;
+            if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.END_IF_INST || instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
+                connectedNode = travInst.Node;
             else
-                currentNode = ((TraverseInstruction)instruction).Node;
+                currentNode = travInst.Node;
 
-            edge = ((TraverseInstruction)instruction).PrevEdge;
+            edge = travInst.PrevEdge;
+
+            // Do list visual instruction if there is one
+            if (travInst.ListVisualInstruction != null)
+                graphMain.ListVisual.ExecuteInstruction(travInst.ListVisualInstruction, increment);
         }
         else if (instruction is InstructionLoop)
         {
@@ -383,6 +391,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                     }
                     else
                     {
+                        SetNodePseudoCode(connectedNode, 2);
                         lineOfCode = 7;
                         connectedNode.Visited = ((TraverseInstruction)instruction).VisitInst;
                         if (edge != null)
@@ -398,6 +407,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                     }
                     else
                     {
+                        SetNodePseudoCode(connectedNode, 2);
                         lineOfCode = 7;
                         connectedNode.Visited = !((TraverseInstruction)instruction).VisitInst;
                         if (edge != null)
@@ -443,34 +453,46 @@ public class BFS : GraphAlgorithm, ITraverse {
 
                 if (increment)
                 {
-                    connectedNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
                     if (edge != null)
+                    {
+                        connectedNode.PrevEdge = edge;
                         edge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                    }
+                    connectedNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
                 }
                 else
                 {
-                    if (!connectedNode.Visited)
-                    {
-                        connectedNode.CurrentColor = Util.STANDARD_COLOR;
-                        if (edge != null)
-                            edge.CurrentColor = Util.STANDARD_COLOR;
-                    }
-                    else
-                    {
-                        connectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
-                        if (edge != null)
-                            edge.CurrentColor = Util.STANDARD_COLOR;
-                    }
+                    connectedNode.CurrentColor = connectedNode.PrevColor;
+                    if (edge != null)
+                        edge.CurrentColor = edge.PrevColor;
                 }
                 break;
 
             case UtilGraph.END_IF_INST:
                 lineOfCode = 8;
+                if (increment)
+                {
+                    if (connectedNode.CurrentColor == UtilGraph.TRAVERSE_COLOR)
+                    {
+                        connectedNode.CurrentColor = connectedNode.PrevColor;
+                        if (edge != null)
+                            edge.CurrentColor = edge.PrevColor;
+                    }
+                }
+                else
+                {
+                    connectedNode.CurrentColor = connectedNode.PrevColor;
+                    if (edge != null)
+                        edge.CurrentColor = edge.PrevColor;
+                }
                 break;
 
             case UtilGraph.END_FOR_LOOP_INST:
                 lineOfCode = 9;
                 currentNode.Traversed = increment;
+
+                // Destroy current node in list visual
+                graphMain.ListVisual.ExecuteInstruction(new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, Util.NO_INSTRUCTION_NR, currentNode), increment);
                 break;
 
             case UtilGraph.END_WHILE_INST:

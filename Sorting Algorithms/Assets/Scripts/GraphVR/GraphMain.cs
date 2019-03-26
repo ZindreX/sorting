@@ -58,6 +58,9 @@ public class GraphMain : MainManager {
     // Used by Pointer when selecting start-/end node(s)
     private int chosenNodes, numberOfNodesToChoose;
 
+    // Update list visual after user has performed correct action
+    private ListVisualInstruction updateListVisualInstruction;
+
     [Header("Debugging")]
     [SerializeField]
     private bool autoCalculation;
@@ -353,7 +356,7 @@ public class GraphMain : MainManager {
 
             Debug.Log("Number of instructions: " + instructions.Count);
 
-            stepByStepManager.Init(instructions);
+            stepByStepManager.InitDemo(instructions);
 
             graphManager.ResetGraph();
 
@@ -382,10 +385,9 @@ public class GraphMain : MainManager {
                 Debug.Log(">>> " + stepInstruction.DebugInfo());
 
                 bool increment = stepByStepManager.PlayerIncremented;
-
-                PerformInstruction(stepInstruction, increment);
+                PerformInstruction(stepInstruction, increment);                
             }
-            else if (!userPausedTask) // Demo mode
+            else if (!userPausedTask && stepByStepManager.HasInstructions()) // Demo mode
             {
                 // First check if user test setup is complete
                 if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
@@ -405,16 +407,9 @@ public class GraphMain : MainManager {
         if (instruction.Status == Util.EXECUTED_INST && increment)
             return;
 
-        if (instruction is ListVisualInstruction)
-        {
-            ListVisualInstruction lvInstruction = (ListVisualInstruction)instruction;
-            listVisual.ExecuteInstruction(lvInstruction, increment);
-        }
-        else
-        {
-            waitForSupportToComplete++;
-            StartCoroutine(graphAlgorithm.ExecuteDemoInstruction(instruction, increment));
-        }
+        waitForSupportToComplete++;
+        StartCoroutine(graphAlgorithm.ExecuteDemoInstruction(instruction, increment));
+
 
         if (increment)
             instruction.Status = Util.EXECUTED_INST;
@@ -525,6 +520,12 @@ public class GraphMain : MainManager {
             // Continue when user has finished sub task, or else whenever ready
             if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
             {
+                if (graphSettings.Difficulty < UtilGraph.LIST_VISUAL_MAX_DIFFICULTY && updateListVisualInstruction != null)
+                {
+                    listVisual.ExecuteInstruction(updateListVisualInstruction, true);
+                    updateListVisualInstruction = null;
+                }
+
                 // Reset counter
                 userTestManager.ReadyForNext = 0;
 
@@ -564,52 +565,10 @@ public class GraphMain : MainManager {
             if (graphSettings.Difficulty > UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
                 return 1;
 
-            WaitForSupportToComplete++;
-
             ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
+            listVisual.ExecuteInstruction(listVisualInst, true);
+
             Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
-
-            switch (inst)
-            {
-                case UtilGraph.ADD_NODE: listVisual.AddListObject(listVisualInst.Node); break;
-                case UtilGraph.PRIORITY_ADD_NODE: listVisual.PriorityAdd(listVisualInst.Node, listVisualInst.Index); break;
-                case UtilGraph.REMOVE_CURRENT_NODE: listVisual.RemoveCurrentNode(); break;
-                case UtilGraph.DESTROY_CURRENT_NODE: listVisual.DestroyCurrentNode(); break;
-                case UtilGraph.SET_START_NODE_DIST_TO_ZERO: StartCoroutine(listVisual.UpdateValueAndPositionOf(listVisualInst.Node, 0)); break;
-                case UtilGraph.HAS_NODE_REPRESENTATION:
-                    /* This case has two outcomes:
-                     * 1) If the node doesn't have any node representations in the current list, then create and add a new one
-                     * 2) There is currently a node representation, so update this one
-                    */
-
-                    Node node = listVisualInst.Node;
-                    int index = listVisualInst.Index;
-                    bool hasNodeRep = listVisual.HasNodeRepresentation(node);
-
-                    if (!hasNodeRep) // Case 1
-                        listVisual.PriorityAdd(node, index);
-                    else // Case 2
-                        StartCoroutine(listVisual.UpdateValueAndPositionOf(node, index));
-                    break;
-
-                case UtilGraph.END_NODE_FOUND:
-                    // Stat backtracking
-                    pseudoCodeViewer.DestroyPseudoCode();
-                    break;
-
-                case UtilGraph.PREPARE_BACKTRACKING:
-                    listVisual.CreateBackTrackList(graphManager.EndNode);
-                    break;
-
-                default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
-            }
-
-            // Check if list visual is ready (if coroutine is started -> false)
-            if (CheckList(UtilGraph.LIST_VISUAL))
-                WaitForSupportToComplete--;
-
-            return 1;
-
         }
         else
         {
@@ -637,20 +596,28 @@ public class GraphMain : MainManager {
                     // Traverse instruction extra
                     switch (inst)
                     {
+                        // Highlight the node we are currently going to work at
+                        case UtilGraph.DEQUEUE_NODE_INST:
+                        case UtilGraph.POP_INST:
                         case UtilGraph.PRIORITY_REMOVE_NODE:
-                            // Highlight the node we currently work at
                             if (GraphSettings.Difficulty < Util.ADVANCED)
                                 node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
 
                             // Hide all edge cost to make it easier to see node distances
-                            graphManager.MakeEdgeCostVisible(false);
+                            if (graphSettings.GraphTask == UtilGraph.SHORTEST_PATH)
+                                graphManager.MakeEdgeCostVisible(false);
                             break;
 
                         case UtilGraph.FOR_ALL_NEIGHBORS_INST:
                             // Make edge cost visible again
-                            graphManager.MakeEdgeCostVisible(true);
+                            if (graphSettings.GraphTask == UtilGraph.SHORTEST_PATH)
+                                graphManager.MakeEdgeCostVisible(true);
                             break;
                     }
+
+                    if (traverseInstruction.ListVisualInstruction != null)
+                        updateListVisualInstruction = traverseInstruction.ListVisualInstruction;
+
                 }
                 else if (instruction is ShortestPathInstruction)
                 {
@@ -706,39 +673,50 @@ public class GraphMain : MainManager {
 
                             break;
                     }
+
+                    if (spInst.ListVisualInstruction != null)
+                        updateListVisualInstruction = spInst.ListVisualInstruction;
                 }
             }
             else if (instruction is InstructionLoop)
                 Debug.Log("Loop instruction: " + ((InstructionLoop)instruction).DebugInfo());
             else
                 Debug.Log("Instruction base: " + instruction.DebugInfo());
-
-
-            // Display help on blackboard
-            if (graphSettings.Difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
-            {
-                WaitForSupportToComplete++;
-                StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode));// && !noDestination));
-            }
-
-            // InstructionBase extra
-            switch (inst)
-            {
-                case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesDist(UtilGraph.INF); break;
-                case UtilGraph.SET_START_NODE_DIST_TO_ZERO: graphManager.StartNode.Dist = 0; break;
-                case UtilGraph.MARK_END_NODE:
-                    Node endNode = graphManager.EndNode;
-                    endNode.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
-                    endNode.PrevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
-                    break;
-            }
-
-            Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
-            if (gotNode && !noDestination)
-                return 0;
-            Debug.Log("Nothing to do for player, get another instruction");
-            return 1;
         }
+
+
+        // Display help on blackboard
+        if (graphSettings.Difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
+        {
+            WaitForSupportToComplete++;
+            StartCoroutine(graphAlgorithm.UserTestHighlightPseudoCode(instruction, gotNode));// && !noDestination));
+        }
+
+        // InstructionBase extra
+        switch (inst)
+        {
+            case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesDist(UtilGraph.INF); break;
+            case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
+                Node startNode = graphManager.StartNode;
+                startNode.Dist = 0;
+                listVisual.FindNodeRepresentation(startNode).UpdateSurfaceText(UtilGraph.DIST_UPDATE_COLOR);
+                break;
+            case UtilGraph.MARK_END_NODE:
+                Node endNode = graphManager.EndNode;
+                endNode.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                endNode.PrevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                break;
+            case UtilGraph.END_FOR_LOOP_INST:
+                if (graphSettings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+                    listVisual.DestroyCurrentNode();
+                break;
+        }
+
+        Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
+        if (gotNode && !noDestination)
+            return 0;
+        Debug.Log("Nothing to do for player, get another instruction");
+        return 1;
     }
 
     // Check whether the current instruction requires an action performed by the player
@@ -817,21 +795,21 @@ public class GraphMain : MainManager {
         switch (graphStructure)
         {
             case UtilGraph.GRID_GRAPH:
-                GetComponent<GridManager>().enabled = true;
-                GetComponent<TreeManager>().enabled = false;
-                GetComponent<RandomGraphManager>().enabled = false;
+                //GetComponent<GridManager>().enabled = true;
+                //GetComponent<TreeManager>().enabled = false;
+                //GetComponent<RandomGraphManager>().enabled = false;
                 return GetComponent<GridManager>();
 
             case UtilGraph.TREE_GRAPH:
-                GetComponent<TreeManager>().enabled = true;
-                GetComponent<GridManager>().enabled = false;
-                GetComponent<RandomGraphManager>().enabled = false;
+                //GetComponent<TreeManager>().enabled = true;
+                //GetComponent<GridManager>().enabled = false;
+                //GetComponent<RandomGraphManager>().enabled = false;
                 return GetComponent<TreeManager>();
 
             case UtilGraph.RANDOM_GRAPH:
-                GetComponent<RandomGraphManager>().enabled = true;
-                GetComponent<TreeManager>().enabled = false;
-                GetComponent<GridManager>().enabled = false;
+                //GetComponent<RandomGraphManager>().enabled = true;
+                //GetComponent<TreeManager>().enabled = false;
+                //GetComponent<GridManager>().enabled = false;
                 return GetComponent<RandomGraphManager>();
 
             default: Debug.Log("Graph structure '" + graphStructure + "' not found."); break;
@@ -843,25 +821,9 @@ public class GraphMain : MainManager {
     {
         switch (algorithmName)
         {
-            case Util.BFS:
-                //graphAlgorithmObj.GetComponent<BFS>().enabled = true;
-                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
-                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
-                return graphAlgorithmObj.GetComponent<BFS>();
-
-            case Util.DFS:
-            case Util.DFS_RECURSIVE:
-                //graphAlgorithmObj.GetComponent<DFS>().enabled = true;
-                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
-                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = false;
-                return graphAlgorithmObj.GetComponent<DFS>();
-
-            case Util.DIJKSTRA:
-                //graphAlgorithmObj.GetComponent<Dijkstra>().enabled = true;
-                //graphAlgorithmObj.GetComponent<BFS>().enabled = false;
-                //graphAlgorithmObj.GetComponent<DFS>().enabled = false;
-                return graphAlgorithmObj.GetComponent<Dijkstra>();
-
+            case Util.BFS: return graphAlgorithmObj.GetComponent<BFS>();
+            case Util.DFS: case Util.DFS_RECURSIVE: return graphAlgorithmObj.GetComponent<DFS>();
+            case Util.DIJKSTRA: return graphAlgorithmObj.GetComponent<Dijkstra>();
             default: return null;
         }
     }

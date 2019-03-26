@@ -16,16 +16,22 @@ public abstract class InstructionControlBase : MonoBehaviour {
 
     protected AudioManager audioManager;
 
+    protected ProgressTracker progressTracker;
+
     private void Awake()
     {
+        progressTracker = FindObjectOfType<ProgressTracker>();
         audioManager = FindObjectOfType<AudioManager>();
     }
 
-    public virtual void Init(Dictionary<int, InstructionBase> instructions)
+    public virtual void Init(Dictionary<int, InstructionBase> instructions, int userActionInstructions)
     {
         this.instructions = instructions;
         currentInstructionNr = -1; // ?
         mainManager = GetComponent<MainManager>();
+
+        // Progress tracker (just visualization of progress)
+        progressTracker.InitProgressTracker(userActionInstructions, userActionInstructions);
     }
 
     // Returns false if there are no instructions or all instructions have been dealt out, otherwise true
@@ -66,6 +72,8 @@ public abstract class InstructionControlBase : MonoBehaviour {
         if (currentInstructionNr < instructions.Count - 1)
         {
             currentInstructionNr++;
+            if (mainManager.Settings.TeachingMode == Util.DEMO)
+                progressTracker.Increment();
             return true;
         }
         else
@@ -81,6 +89,8 @@ public abstract class InstructionControlBase : MonoBehaviour {
         if (currentInstructionNr >= 0) // ***
         {
             currentInstructionNr--;
+            if (mainManager.Settings.TeachingMode == Util.DEMO)
+                progressTracker.Decrement();
             return true;
         }
         else

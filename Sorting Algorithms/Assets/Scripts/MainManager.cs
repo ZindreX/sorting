@@ -193,6 +193,7 @@ public abstract class MainManager : MonoBehaviour {
 
             case Util.PAUSE:
                 UserPausedTask = !userPausedTask;
+                Debug.Log("Pause: " + userPausedTask);
 
                 if (userPausedTask)
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)

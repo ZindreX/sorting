@@ -177,7 +177,7 @@ public class ListVisual : MonoBehaviour {
             Destroy(currentNode.gameObject);
     }
 
-    // Move other nodes up to make spot for <..>
+    // Move other nodes up/down to make spot for <..>, changing their list index and position
     private IEnumerator MoveOtherNodes(int start, int end, bool increment)
     {
         // Fix gravity outside this method
@@ -196,12 +196,22 @@ public class ListVisual : MonoBehaviour {
                 involvedNodeRep.ListIndex = i - 1;
                 nodeRepresentations[i - 1] = involvedNodeRep;
             }
+            else
+            {
+                if (i + 1 > nodeRepresentations.Count - 1)
+                {
+                    Debug.Log("Stop!..");
+                    continue;
+                }
+                involvedNodeRep.ListIndex = i + 1;
+                nodeRepresentations[i + 1] = involvedNodeRep;
+            }
             yield return involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
         }
     }
 
     // Updates value and position of one node representation and other involved node reps.
-    public IEnumerator UpdateValueAndPositionOf(Node node, int index)
+    public IEnumerator UpdateValueAndPositionOf(Node node, int index, bool increment)
     {
         graphMain.UpdateCheckList(UtilGraph.LIST_VISUAL, false);
 
@@ -229,28 +239,30 @@ public class ListVisual : MonoBehaviour {
             mainNodeRep.MoveNodeRepresentation(moveLeft);
             yield return smallDuration;
 
-            int moveDownYpos = mainNodeRepIndex - index;
-            Vector3 moveDown = mainNodeRep.transform.position + new Vector3(-1f, moveDownYpos, 0f);
-            mainNodeRep.MoveNodeRepresentation(moveDown);
-            yield return mediumDuration;
+            if (increment)
+            {
+                int moveDownYpos = mainNodeRepIndex - index;
+                Vector3 moveDown = mainNodeRep.transform.position + new Vector3(-1f, moveDownYpos, 0f);
+                mainNodeRep.MoveNodeRepresentation(moveDown);
+                yield return mediumDuration;
 
-            // Move all the other involved up
-            yield return MoveOtherNodes(mainNodeRepIndex, index, true);
-            // Move all existing list elements up (from the point where we want to insert the new element) *** Copied - make new method -- done
-            //for (int i = mainNodeRepIndex + 1; i <= index; i++) //for (int i=listObjects.Count-1; i >= index; i--)
-            //{
-            //    NodeRepresentation involvedNodeRep = nodeRepresentations[i];
+                // Move all the other involved up
+                yield return MoveOtherNodes(mainNodeRepIndex, index, true);
+            }
+            else
+            {
+                // Backward step (Move node representation up)
+                int moveUpYpos = index - mainNodeRepIndex;
+                Vector3 moveUp = mainNodeRep.transform.position + new Vector3(-1f, moveUpYpos, 0f);
+                mainNodeRep.MoveNodeRepresentation(moveUp);
+                yield return mediumDuration;
 
-            //    // Find new position and move it
-            //    Vector3 newPos = involvedNodeRep.transform.position + oneListIndexUp; // new Vector3(0f, 1f, 0f); <- oneListIndexUp
-            //    involvedNodeRep.MoveNodeRepresentation(newPos);
-            //    involvedNodeRep.ListIndex = i - 1;
-            //    nodeRepresentations[i - 1] = involvedNodeRep;
-            //    yield return involvedNodeRep.HighlightNodeRepresentation(UtilGraph.DIST_UPDATE_COLOR, seconds); // 1f);
-            //}
+                // Move all the other involved down
+                yield return MoveOtherNodes(mainNodeRepIndex, index, false);
+            }
+
 
             // Move back into list
-            //Debug.Log("Moving node '" + mainNodeRep.Node.NodeAlphaID + "' back into list index=" + index);
             Vector3 backInTheList = new Vector3(spawnPointList.position.x, mainNodeRep.transform.position.y, mainNodeRep.transform.position.z);
             mainNodeRep.MoveNodeRepresentation(backInTheList); //nodeRep.UpdateIndexPosition(index);
             mainNodeRep.ListIndex = index;
@@ -326,6 +338,7 @@ public class ListVisual : MonoBehaviour {
                 else
                 {
                     NodeRepresentation nodeRep = FindNodeRepresentation(instruction.Node);
+                    nodeRepresentations.Remove(nodeRep);
                     Destroy(nodeRep.gameObject); // Fix other indexes????
                 }
                 break;
@@ -375,10 +388,10 @@ public class ListVisual : MonoBehaviour {
                 break;
 
             case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
-                if (increment)
-                    StartCoroutine(UpdateValueAndPositionOf(instruction.Node, 0));
-                else
-                    StartCoroutine(UpdateValueAndPositionOf(instruction.Node, UtilGraph.INF));
+                if (!increment)
+                    instruction.Node.Dist = UtilGraph.INF;
+
+                FindNodeRepresentation(instruction.Node).UpdateSurfaceText(UtilGraph.DIST_UPDATE_COLOR);
                 break;
 
             case UtilGraph.HAS_NODE_REPRESENTATION:
@@ -389,9 +402,11 @@ public class ListVisual : MonoBehaviour {
 
                 Node node = instruction.Node;
                 int index = instruction.Index;
-                bool hasNodeRep = HasNodeRepresentation(node);
 
-                if (!hasNodeRep) // Case 1
+                if (increment)
+                    instruction.HasNodeRepresentation = HasNodeRepresentation(node);
+
+                if (!instruction.HasNodeRepresentation) // Case 1
                 {
                     if (increment)
                         PriorityAdd(node, index);
@@ -400,8 +415,11 @@ public class ListVisual : MonoBehaviour {
                 }
                 else // Case 2
                 {
-                    graphMain.WaitForSupportToComplete++;
-                    StartCoroutine(UpdateValueAndPositionOf(node, index));
+                    if (increment)
+                    {
+                        graphMain.WaitForSupportToComplete++;
+                        StartCoroutine(UpdateValueAndPositionOf(node, index, increment));
+                    }
                 }
                 break;
 

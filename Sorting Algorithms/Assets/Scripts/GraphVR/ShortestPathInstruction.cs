@@ -9,6 +9,8 @@ public class ShortestPathInstruction : InstructionBase {
     private int connectedNodeOldDist, connectedNodeNewDist;
     private int index;
 
+    private ListVisualInstruction listVisualInstruction;
+
     public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode, Edge currentEdge) : base(instruction, instructionNr)
     {
         this.currentNode = currentNode;
@@ -19,11 +21,16 @@ public class ShortestPathInstruction : InstructionBase {
         connectedNodeNewDist = CurrentNode.Dist + currentEdge.Cost;
     }
 
-    //public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode) : base(instruction, instructionNr)
-    //{
-    //    this.currentNode = currentNode;
-    //    this.connectedNode = connectedNode;
-    //}
+    public ShortestPathInstruction(string instruction, int instructionNr, Node currentNode, Node connectedNode, Edge currentEdge, ListVisualInstruction listVisualInstruction) : base(instruction, instructionNr)
+    {
+        this.currentNode = currentNode;
+        this.connectedNode = connectedNode;
+        this.currentEdge = currentEdge;
+
+        connectedNodeOldDist = connectedNode.Dist;
+        connectedNodeNewDist = CurrentNode.Dist + currentEdge.Cost;
+        this.listVisualInstruction = listVisualInstruction;
+    }
 
     public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, Edge prevEdge) : base(instruction, instructionNr)
     {
@@ -35,11 +42,29 @@ public class ShortestPathInstruction : InstructionBase {
         this.prevEdge = prevEdge;
     }
 
-    public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, int index) : base(instruction, instructionNr)
+    public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, Edge prevEdge, ListVisualInstruction listVisualInstruction) : base(instruction, instructionNr)
     {
         this.connectedNode = connectedNode;
-        this.index = index;
+
+        if (connectedNode.PrevEdge != null)
+            oldPrevEdge = connectedNode.PrevEdge;
+
+        this.prevEdge = prevEdge;
+        this.listVisualInstruction = listVisualInstruction;
     }
+
+    //public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, int index) : base(instruction, instructionNr)
+    //{
+    //    this.connectedNode = connectedNode;
+    //    this.index = index;
+    //}
+
+    //public ShortestPathInstruction(string instruction, int instructionNr, Node connectedNode, int index, ListVisualInstruction listVisualInstruction) : base(instruction, instructionNr)
+    //{
+    //    this.connectedNode = connectedNode;
+    //    this.index = index;
+    //    this.listVisualInstruction = listVisualInstruction;
+    //}
 
     public Node CurrentNode
     {
@@ -79,6 +104,11 @@ public class ShortestPathInstruction : InstructionBase {
     public override bool HasBeenExecuted()
     {
         return base.HasBeenExecuted();
+    }
+
+    public ListVisualInstruction ListVisualInstruction
+    {
+        get { return listVisualInstruction; }
     }
 
     public override string DebugInfo()

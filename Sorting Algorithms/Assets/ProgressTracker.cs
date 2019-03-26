@@ -39,6 +39,18 @@ public class ProgressTracker : MonoBehaviour {
         instructionsText.text = currentProgress + "/" + userActionCount;
     }
 
+    public void Decrement()
+    {
+        currentProgress--;
+
+        // Percent
+        progressbar.transform.localScale -= increaseProgressSize;
+        progressbar.transform.position -= moveProgressBar;
+
+        // Instructions
+        instructionsText.text = currentProgress + "/" + userActionCount;
+    }
+
     //private void Update()
     //{
     //    if (Input.GetKeyDown(KeyCode.E))

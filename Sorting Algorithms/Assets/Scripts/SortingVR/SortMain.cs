@@ -291,7 +291,7 @@ public class SortMain : MainManager {
 
         // Getting instructions for this sample of sorting elements
         elementManager.InteractionWithSortingElements(false);
-        stepByStepManager.Init(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
+        stepByStepManager.InitDemo(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
     }
 
     protected override void StepByStepUpdate()
