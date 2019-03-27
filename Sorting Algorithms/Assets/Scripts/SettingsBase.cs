@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
-public abstract class SettingsBase : MonoBehaviour {
+public abstract class SettingsBase : MonoBehaviour, ISectionManager {
 
     protected float algorithmSpeed;
     protected string algorithm, teachingMode;
@@ -42,6 +42,7 @@ public abstract class SettingsBase : MonoBehaviour {
         foreach (Section section in sectionComponents)
         {
             string sectionID = section.SectionID;
+            section.SectionManager = this;
             if (!settingsSections.ContainsKey(sectionID))
                 settingsSections[sectionID] = section;
             else
@@ -68,7 +69,7 @@ public abstract class SettingsBase : MonoBehaviour {
     protected abstract void InitButtons();
 
     // All input from interactable settings menu goes through here
-    public virtual void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
+    public virtual void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
         switch (sectionID)
         {
@@ -78,7 +79,6 @@ public abstract class SettingsBase : MonoBehaviour {
             case Util.DEMO_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
             case Util.READY: InstantiateTask(); break;
             case Util.START: StartStopTask(); break;
-            case Util.DEMO_DEVICE: MainManager.DemoDevice(itemID); break;
         }
     }
 
@@ -116,7 +116,6 @@ public abstract class SettingsBase : MonoBehaviour {
         set { difficulty = value; }
     }
 
-    // OLD
     public float AlgorithmSpeed
     {
         get { return algorithmSpeed; }
@@ -128,6 +127,7 @@ public abstract class SettingsBase : MonoBehaviour {
         set
         {
             algSpeed = value;
+            InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, value);
             switch (value)
             {
                 case 0: algorithmSpeed = 2f; break;
@@ -156,7 +156,19 @@ public abstract class SettingsBase : MonoBehaviour {
     // Start task from in game
     private void StartTask()
     {
+        switch (teachingMode)
+        {
+            case Util.DEMO: case Util.STEP_BY_STEP: break;
+            case Util.USER_TEST:
+                if (difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
+                    AlgorithmSpeedLevel = 1;
+                else
+                    AlgorithmSpeedLevel = 3;
+                break;
+        }
+
         MainManager.StartAlgorithm();
+
     }
 
     // Stop task from in game

@@ -292,6 +292,7 @@ public class BFS : GraphAlgorithm, ITraverse {
             ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0);
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
 
+            // Go through each edge connected to current node
             // Line 6: For-loop update
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false)); //new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode.Edges.Count, Util.NO_INDEX_VALUE));
             for (int i = 0; i < currentNode.Edges.Count; i++)
@@ -351,8 +352,6 @@ public class BFS : GraphAlgorithm, ITraverse {
         else if (instruction is InstructionLoop)
         {
             i = ((InstructionLoop)instruction).I;
-            //j = ((InstructionLoop)instruction).J;
-            //k = ((InstructionLoop)instruction).K;
         }
 
         // Remove highlight from previous instruction
@@ -380,7 +379,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 break;
 
             case UtilGraph.ENQUEUE_NODE_INST:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                //useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 if (increment)
                 {
                     if (!startNodeAdded)
@@ -424,9 +423,9 @@ public class BFS : GraphAlgorithm, ITraverse {
                 break;
 
             case UtilGraph.DEQUEUE_NODE_INST:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
-                lineOfCode = 4;
+                //useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 SetNodePseudoCode(currentNode, 1);
+                lineOfCode = 4;
 
                 if (increment)
                 {
@@ -491,7 +490,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 lineOfCode = 9;
                 currentNode.Traversed = increment;
 
-                // Destroy current node in list visual
+                // Destroy current node in list visual / Recreate it
                 graphMain.ListVisual.ExecuteInstruction(new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, Util.NO_INSTRUCTION_NR, currentNode), increment);
                 break;
 

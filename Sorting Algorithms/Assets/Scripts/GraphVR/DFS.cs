@@ -343,11 +343,10 @@ public class DFS : GraphAlgorithm, ITraverse {
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.POP_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
 
             // Go through each edge connected to current node
+            // Line 6: Update for-loop
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
-                // Line 6: Update for-loop
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
-
                 Edge edge = currentNode.Edges[i];               
                 Node connectedNode = edge.OtherNodeConnected(currentNode);
 
@@ -371,10 +370,10 @@ public class DFS : GraphAlgorithm, ITraverse {
                     instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, edge, true, false, addConnectedNode));
                 }
                 // Line 10: End if statement
-                instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));
             }
             // Line 11: End for-loop
-            instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
         // Line 12: End while-loop
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
@@ -391,7 +390,7 @@ public class DFS : GraphAlgorithm, ITraverse {
         if (instruction is TraverseInstruction)
         {
             TraverseInstruction travInst = (TraverseInstruction)instruction;
-            if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.PUSH_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
+            if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.END_IF_INST || instruction.Instruction == UtilGraph.PUSH_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
                 connectedNode = travInst.Node;
             else
                 currentNode = travInst.Node;
@@ -405,8 +404,6 @@ public class DFS : GraphAlgorithm, ITraverse {
         else if (instruction is InstructionLoop)
         {
             i = ((InstructionLoop)instruction).I;
-            //j = ((InstructionLoop)instruction).J;
-            //k = ((InstructionLoop)instruction).K;
         }
 
         // Remove highlight from previous instruction
@@ -434,7 +431,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 break;
 
             case UtilGraph.PUSH_INST:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                //useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 if (increment)
                 {
                     if (!startNodeAdded)
@@ -445,6 +442,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                     }
                     else
                     {
+                        SetNodePseudoCode(connectedNode, 2);
                         lineOfCode = 7;
                         connectedNode.Visited = ((TraverseInstruction)instruction).VisitInst;
                         if (edge != null)
@@ -460,6 +458,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                     }
                     else
                     {
+                        SetNodePseudoCode(connectedNode, 2);
                         lineOfCode = 7;
                         connectedNode.Visited = !((TraverseInstruction)instruction).VisitInst;
                         if (edge != null)
@@ -476,7 +475,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 break;
 
             case UtilGraph.POP_INST:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                //useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 SetNodePseudoCode(currentNode, 1);
                 lineOfCode = 4;
 
@@ -505,36 +504,45 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                 if (increment)
                 {
-                    connectedNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
                     if (edge != null)
+                    {
+                        connectedNode.PrevEdge = edge;
                         edge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                    }
+                    connectedNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
                 }
                 else
                 {
-                    if (!connectedNode.Visited)
-                    {
-                        connectedNode.CurrentColor = Util.STANDARD_COLOR;
-                        if (edge != null)
-                            edge.CurrentColor = Util.STANDARD_COLOR;
-                    }
-                    else
-                    {
-                        connectedNode.CurrentColor = UtilGraph.VISITED_COLOR;
-                        if (edge != null)
-                            edge.CurrentColor = Util.STANDARD_COLOR;
-                    }
+                    connectedNode.CurrentColor = connectedNode.PrevColor;
+                    if (edge != null)
+                        edge.CurrentColor = edge.PrevColor;
                 }
                 break;
 
             case UtilGraph.END_IF_INST:
                 lineOfCode = 8;
+                if (increment)
+                {
+                    if (connectedNode.CurrentColor == UtilGraph.TRAVERSE_COLOR)
+                    {
+                        connectedNode.CurrentColor = connectedNode.PrevColor;
+                        if (edge != null)
+                            edge.CurrentColor = edge.PrevColor;
+                    }
+                }
+                else
+                {
+                    connectedNode.CurrentColor = connectedNode.PrevColor;
+                    if (edge != null)
+                        edge.CurrentColor = edge.PrevColor;
+                }
                 break;
 
             case UtilGraph.END_FOR_LOOP_INST:
                 lineOfCode = 9;
-                this.currentNode.Traversed = increment;
+                currentNode.Traversed = increment;
 
-                // Destroy current node in list visual
+                // Destroy current node in list visual / Recreate it
                 graphMain.ListVisual.ExecuteInstruction(new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, Util.NO_INSTRUCTION_NR, this.currentNode), increment);
                 break;
 

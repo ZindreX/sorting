@@ -22,7 +22,7 @@ public class Pointer : MonoBehaviour {
     private PositionManager positionManager;
 
     [SerializeField]
-    private Transform pointerEnd, hand;
+    private Transform leftHand, rightHand;
 
     [SerializeField]
     private Material laserMaterial;
@@ -66,10 +66,6 @@ public class Pointer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // Set position & rotation to hand
-        transform.position = hand.position;// + new Vector3(0f, 0.05f, 0f);
-        transform.rotation = hand.rotation;
-
         // Debugging without VR
         //if (Input.GetKeyDown(KeyCode.G))
         //{
@@ -95,18 +91,30 @@ public class Pointer : MonoBehaviour {
 
         if (currentTask != "")
         {
-            if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.RightHand))
+            if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.Any))
             {
+                // Set position & rotation to hand
+                if (SteamVR_Input.__actions_default_in_ToggleStart.GetLastState(SteamVR_Input_Sources.LeftHand))
+                {
+                    transform.position = leftHand.position;
+                    transform.rotation = leftHand.rotation;
+                }
+                else if (SteamVR_Input.__actions_default_in_ToggleStart.GetLastState(SteamVR_Input_Sources.RightHand))
+                {
+                    transform.position = rightHand.position;
+                    transform.rotation = rightHand.rotation;
+                }
+
                 laserBeam.enabled = true;
 
                 // Declare a raycast hit to store information about what our raycast hit
                 RaycastHit hit;
 
                 // Set the start position of our visual effect for our laser to the position of the pointerEnd
-                laserBeam.SetPosition(0, pointerEnd.position);
+                laserBeam.SetPosition(0, transform.position);
 
                 // Check if our raycast has hit anything
-                if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
                     //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
                 {
                     // Set the end position for our laser line

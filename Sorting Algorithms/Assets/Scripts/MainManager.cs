@@ -35,13 +35,16 @@ public abstract class MainManager : MonoBehaviour {
     protected string activeChecklist;
     protected Dictionary<string, bool> safeStopChecklist;
 
-    // Audio
-    protected AudioManager audioManager;
-
     protected WaitForSeconds loading = new WaitForSeconds(1f);
+
+    [SerializeField]
+    protected DemoDevice demoDevice;
 
     protected StepByStepManager stepByStepManager;
     protected UserTestManager userTestManager;
+
+    // Audio
+    protected AudioManager audioManager;
 
     protected virtual void Awake()
     {
@@ -171,41 +174,64 @@ public abstract class MainManager : MonoBehaviour {
     public bool UserPausedTask
     {
         get { return userPausedTask; }
-        set { userPausedTask = value;
-            // If pause: reduce instruction number to avoid skip
-            if (value)
-                stepByStepManager.CurrentInstructionNr--;
-        }
+        set { userPausedTask = value; }
     }
 
     // --------------------------------------- Demo Device ---------------------------------------
 
-    public void DemoDevice(string itemID)
+    public void PerformDemoDeviceAction(string itemID)
     {
         switch (itemID)
         {
-            case Util.STEP_BACK:
+            case DemoDevice.STEP_BACK:
                 if (!WaitingForSupportToFinish())
                     PlayerStepByStepInput(false);
                 else
                     Debug.Log("Can't perform step yet. Wait for support to finish");
                 break;
 
-            case Util.PAUSE:
+            case DemoDevice.PAUSE:
                 UserPausedTask = !userPausedTask;
                 Debug.Log("Pause: " + userPausedTask);
 
                 if (userPausedTask)
+                {
+                    stepByStepManager.CurrentInstructionNr--;
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
+                }
                 else
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed); // Use demo speed
                 break;
 
-            case Util.STEP_FORWARD:
+            case DemoDevice.STEP_FORWARD:
                 if (!WaitingForSupportToFinish())
                     PlayerStepByStepInput(true);
                 else
                     Debug.Log("Can't perform step yet. Wait for support to finish");
+                break;
+
+            case DemoDevice.REDUCE_SPEED:
+                if (Settings.AlgorithmSpeedLevel > 0)
+                {
+                    Settings.AlgorithmSpeedLevel--;
+                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed);
+                    Debug.Log("Speed changed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]);
+
+                }
+                else
+                    Debug.Log("Can't reduce speed more!");
+                break;
+
+            case DemoDevice.INCREASE_SPEED:
+                if (Settings.AlgorithmSpeedLevel < 3)
+                {
+                    Settings.AlgorithmSpeedLevel++;
+                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed);
+                    Debug.Log("Speed changed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]);
+
+                }
+                else
+                    Debug.Log("Can't increase speed more!");
                 break;
         }
     }
@@ -230,7 +256,7 @@ public abstract class MainManager : MonoBehaviour {
         // Start algorithm
         switch (teachingMode)
         {
-            case Util.DEMO: PerformAlgorithmDemo(); break;
+            case Util.DEMO: demoDevice.SpawnDeviceInfrontOfPlayer(); PerformAlgorithmDemo(); break;
             case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
@@ -304,6 +330,17 @@ public abstract class MainManager : MonoBehaviour {
         userStoppedTask = false;
 
         WaitForSupportToComplete = 0;
+
+        demoDevice.ResetDevicePosition();
+
+        switch (Settings.TeachingMode)
+        {
+            case Util.DEMO:
+            case Util.STEP_BY_STEP:
+                stepByStepManager.ResetState();
+                break;
+            case Util.USER_TEST: userTestManager.ResetState(); break;
+        }
     }
 
 

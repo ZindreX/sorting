@@ -10,6 +10,8 @@ public abstract class InstructionControlBase : MonoBehaviour {
     */
 
     protected int currentInstructionNr = 0;
+    protected bool autoProgress;
+
     protected Dictionary<int, InstructionBase> instructions;
 
     protected MainManager mainManager;
@@ -24,10 +26,12 @@ public abstract class InstructionControlBase : MonoBehaviour {
         audioManager = FindObjectOfType<AudioManager>();
     }
 
-    public virtual void Init(Dictionary<int, InstructionBase> instructions, int userActionInstructions)
+    public virtual void Init(Dictionary<int, InstructionBase> instructions, int userActionInstructions, bool autoProgress)
     {
         this.instructions = instructions;
         currentInstructionNr = -1; // ?
+        this.autoProgress = autoProgress;
+
         mainManager = GetComponent<MainManager>();
 
         // Progress tracker (just visualization of progress)
@@ -72,7 +76,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         if (currentInstructionNr < instructions.Count - 1)
         {
             currentInstructionNr++;
-            if (mainManager.Settings.TeachingMode == Util.DEMO)
+            if (autoProgress)
                 progressTracker.Increment();
             return true;
         }
@@ -89,7 +93,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         if (currentInstructionNr >= 0) // ***
         {
             currentInstructionNr--;
-            if (mainManager.Settings.TeachingMode == Util.DEMO)
+            if (autoProgress)
                 progressTracker.Decrement();
             return true;
         }
@@ -112,6 +116,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         currentInstructionNr = -1;
 
         mainManager = null;
+        progressTracker.ResetProgress();
     }
 
     public abstract string FillInBlackboard();

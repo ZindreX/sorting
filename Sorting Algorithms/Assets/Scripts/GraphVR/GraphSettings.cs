@@ -200,7 +200,7 @@ public class GraphSettings : SettingsBase {
         VisitLeftFirst = visitLeftFirst;
     }
 
-    public override void UpdateValueFromSettingsMenu(string sectionID, string itemID, string itemDescription)
+    public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
         // Fill information on the "display" on the settings menu about the button just clicked
         FillTooltips(itemDescription);
@@ -251,7 +251,7 @@ public class GraphSettings : SettingsBase {
                     default: Debug.LogError("No optional choice case for '" + itemID + "'."); break;
                 }
                 break;
-            default: base.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription); break;
+            default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
         }
 
     }

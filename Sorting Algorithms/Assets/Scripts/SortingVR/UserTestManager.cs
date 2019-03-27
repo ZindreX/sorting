@@ -41,7 +41,7 @@ public class UserTestManager : InstructionControlBase {
     */
     public void InitUserTest(Dictionary<int, InstructionBase> instructions, int userActionToProceed, int userActionInstructions)
     {
-        base.Init(instructions, userActionInstructions);
+        base.Init(instructions, userActionInstructions, false);
         this.userActionToProceed = userActionToProceed;
         this.userActionInstructions = userActionInstructions;
         readyForNext = userActionToProceed;
@@ -218,15 +218,10 @@ public class UserTestManager : InstructionControlBase {
 
     }
 
-    public override string FillInBlackboard()
-    {
-        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + UtilSort.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
-    }
-
-
     public override void ResetState()
     {
         base.ResetState();
+
         totalCorrect = 0;
         totalErrorCount = 0;
         errorLog = new Dictionary<string, int>();
@@ -239,13 +234,13 @@ public class UserTestManager : InstructionControlBase {
         currentStreak = 0;
         longestStreak = 0;
         scoreUpdateDuration = null;
-
-        progressTracker.ResetProgress();
     }
 
 
-
-
+    public override string FillInBlackboard()
+    {
+        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + UtilSort.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
+    }
 
 
 

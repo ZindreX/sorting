@@ -457,8 +457,9 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 case UtilGraph.NODE_TRAVERSED:
                     traverseStatus = true;
 
-                    // Display the edge cost of each edge connected to this node
-                    DisplayEdgeCost(true);
+                    // Display the edge cost of each edge connected to this node (Shortest path)
+                    if (algorithm == Util.DIJKSTRA)
+                        DisplayEdgeCost(true);
 
                     // Mark as traversed, and change color of visited node & edge leading to this node
                     Traversed = true;
@@ -469,8 +470,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     break;
 
                 case UtilGraph.NODE_BACKTRACKED:
-                    if (prevEdge != null)
-                        prevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+                    //if (prevEdge != null)
+                    //    prevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
 
                     traverseStatus = true;
                     CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;

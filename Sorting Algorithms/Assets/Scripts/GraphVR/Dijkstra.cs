@@ -96,7 +96,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.FOR_ALL_NEIGHBORS_INST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.SET_START_NODE_DIST_TO_ZERO);
         
-        //skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_DIST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE);
 
@@ -104,6 +104,8 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.PRIORITY_ADD_NODE); // ?
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION); // ?
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.END_NODE_FOUND);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.PREPARE_BACKTRACKING);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.BACKTRACK_REMOVE_CURRENT_NODE);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.MARK_END_NODE);
 
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.SET_ALL_NODES_TO_INFINITY);
@@ -720,15 +722,8 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 9;
 
-                if (increment)
-                {
-                    edgeCost = currentEdge.Cost;
-                    ifStatementContent = CreateIfStatementContent(this.currentNode.Dist, edgeCost, connectedNode.Dist);
-                }
-                else
-                {
-                    ifStatementContent = "";
-                }
+                edgeCost = currentEdge.Cost;
+                ifStatementContent = CreateIfStatementContent(currentNode.Dist, edgeCost, connectedNode.Dist);
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
@@ -907,12 +902,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
     private string CreateIfStatementContent(int currentNodeDist, int edgeCost, int connectedNodeDist)
     {
-        string result = currentNodeDist + " + " + edgeCost;
+        // Change color of if statement
         if (currentNodeDist + edgeCost < connectedNodeDist)
-            result += " < " + UtilGraph.ConvertDist(connectedNode.Dist);
+            useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
         else
-            result += " > " + UtilGraph.ConvertDist(connectedNode.Dist);
-        return result;
+            useHighlightColor = Color.red;
+
+        return currentNodeDist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(connectedNode.Dist);
     }
 
 

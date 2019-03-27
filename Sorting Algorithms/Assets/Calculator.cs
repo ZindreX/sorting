@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using Valve.VR.InteractionSystem;
 
-public class Calculator : MonoBehaviour {
+public class Calculator : InteractionDeviceBase {
 
     public static readonly char NO_OP_CHOSEN = ' ';
     public static readonly Color STANDARD_BACKGROUND_COLOR = Color.black, CORRECT_INPUT_ANSWER_COLOR = Color.green, INCORRECT_INPUT_ANSWER_COLOR = Color.red;
@@ -42,31 +42,13 @@ public class Calculator : MonoBehaviour {
     private int value3;
     private string newValueLessThanCurrent;
 
-
-
-    [SerializeField]
-    private Transform leftHand;
-    private Camera playerCamera;
-    private Rigidbody rb;
-
-    private bool playerHoldingCalculator;
-
-
-    private Vector3 startPos;
     private WaitForSeconds feedbackDuration = new WaitForSeconds(3f);
 
-    private void Awake()
+    protected override void Awake()
     {
-        startPos = transform.position;
-        playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
-        rb = GetComponent<Rigidbody>();
-        audioSource = GetComponentInParent<AudioSource>();
-    }
+        base.Awake();
 
-    private void Update()
-    {
-        if (throwAble && transform.position.y < 0.1f)
-            PlaceCalculator();
+        audioSource = GetComponentInParent<AudioSource>();
     }
 
     // Prepare for a new calculation
@@ -101,24 +83,22 @@ public class Calculator : MonoBehaviour {
 
     // ------------------------------------- Getters/Setters -------------------------------------
 
-    private bool throwAble;
-    public void PlayerHoldingCalculator(bool holding)
-    {
-        playerHoldingCalculator = holding;
+    //private bool throwAble;
+    //public void PlayerHoldingCalculator(bool holding) // REMOVE
+    //{
+    //    playerHoldingCalculator = holding;
 
-        if (holding)
-        {
-            rb.useGravity = true;
-            rb.constraints = RigidbodyConstraints.None;
-        }
-        else
-        {
-            if (!throwAble)
-                rb.constraints = RigidbodyConstraints.FreezeAll;
-        }
-
-
-    }
+    //    if (holding)
+    //    {
+    //        rb.useGravity = true;
+    //        rb.constraints = RigidbodyConstraints.None;
+    //    }
+    //    else
+    //    {
+    //        if (!throwAble)
+    //            rb.constraints = RigidbodyConstraints.FreezeAll;
+    //    }
+    //}
 
     public int Value1
     {
@@ -371,17 +351,17 @@ public class Calculator : MonoBehaviour {
         set { feedbackReceived = value; }
     }
 
-    public void PlaceCalculator()
-    {
-        rb.useGravity = false;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+    //public void PlaceCalculator() // REMOVE
+    //{
+    //    rb.useGravity = false;
+    //    rb.constraints = RigidbodyConstraints.FreezeAll;
 
-        // Place infront of player
-        transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.4f;
+    //    // Place infront of player
+    //    transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.4f;
         
-        // Rotate towards the player
-        transform.LookAt(2 * transform.position - playerCamera.transform.position);
-    }
+    //    // Rotate towards the player
+    //    transform.LookAt(2 * transform.position - playerCamera.transform.position);
+    //}
 
     // Checks whether the input is correct
     public bool ControlUserInput(int correctNode1Dist, int correctEdgeCost, int correctNode2Dist)
@@ -452,12 +432,4 @@ public class Calculator : MonoBehaviour {
         else
             InitCalculation(GRAPH_TASK);
     }
-
-    public void ResetCalculator()
-    {
-        rb.useGravity = true;
-        transform.position = startPos;
-    }
-
-
 }

@@ -11,6 +11,11 @@ public class StartPillar : MonoBehaviour {
     [SerializeField]
     private ToggleButton startButton;
 
+    private void Awake()
+    {
+        Section startPillarSection = GetComponentInChildren<Section>();
+        startPillarSection.SectionManager = FindObjectOfType<SettingsBase>();
+    }
 
     public void InitStartPillar(bool selectNodes, bool endNode)
     {

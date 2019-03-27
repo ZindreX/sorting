@@ -64,6 +64,9 @@ public class ProgressTracker : MonoBehaviour {
         progressbar.transform.localScale -= increaseProgressSize * currentProgress;
         progressbar.transform.position -= moveProgressBar * currentProgress;
         currentProgress = 0;
+
+        instructionsText.text = "";
+        percentText.text = "";
     }
 
 }

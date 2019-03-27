@@ -318,7 +318,7 @@ public class GraphMain : MainManager {
 
         StartCoroutine(ActivateTaskObjects(false));
 
-        calculator.ResetCalculator();
+        calculator.ResetDevicePosition();
 
 
         switch (graphSettings.TeachingMode)
@@ -569,6 +569,7 @@ public class GraphMain : MainManager {
             listVisual.ExecuteInstruction(listVisualInst, true);
 
             Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
+            
         }
         else
         {
@@ -589,6 +590,10 @@ public class GraphMain : MainManager {
 
                     // Set goal
                     posManager.CurrentGoal = node;
+
+                    // Reset if pointer must be used on the same node twice
+                    if (traverseInstruction.VisitInst && pointer.prevNodeShot == node)
+                        pointer.prevNodeShot = null;
 
                     // Give this sorting element permission to give feedback to progress to next intstruction
                     node.NextMove = NextIsUserMove(inst);
@@ -615,6 +620,7 @@ public class GraphMain : MainManager {
                             break;
                     }
 
+                    // Perform list visual instruction in next step (when current instruction has been correctly performed)
                     if (traverseInstruction.ListVisualInstruction != null)
                         updateListVisualInstruction = traverseInstruction.ListVisualInstruction;
 
@@ -657,7 +663,7 @@ public class GraphMain : MainManager {
                             {
                                 usingCalculator = true;
                                 calculator.InitCalculation(Calculator.GRAPH_TASK);
-                                calculator.PlaceCalculator();
+                                calculator.SpawnDeviceInfrontOfPlayer();
 
                                 if (graphSettings.Difficulty == Util.BEGINNER)
                                 {
@@ -666,14 +672,11 @@ public class GraphMain : MainManager {
                                     pseudoCodeViewer.SetCodeLine(((Dijkstra)graphAlgorithm).CollectLine(9), Util.HIGHLIGHT_COLOR);
                                     return 0; // to avoid pseudocode update below
                                 }
-
                             }
-                            //else
-                            //    return 1;
-
                             break;
                     }
 
+                    // Perform list visual instruction in next step (when current instruction has been correctly performed)
                     if (spInst.ListVisualInstruction != null)
                         updateListVisualInstruction = spInst.ListVisualInstruction;
                 }
@@ -695,17 +698,23 @@ public class GraphMain : MainManager {
         // InstructionBase extra
         switch (inst)
         {
-            case UtilGraph.SET_ALL_NODES_TO_INFINITY: graphManager.SetAllNodesDist(UtilGraph.INF); break;
+            case UtilGraph.SET_ALL_NODES_TO_INFINITY:
+                graphManager.SetAllNodesDist(UtilGraph.INF);
+                break;
+
             case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
                 Node startNode = graphManager.StartNode;
                 startNode.Dist = 0;
-                listVisual.FindNodeRepresentation(startNode).UpdateSurfaceText(UtilGraph.DIST_UPDATE_COLOR);
+                if (GraphSettings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+                    listVisual.FindNodeRepresentation(startNode).UpdateSurfaceText(UtilGraph.DIST_UPDATE_COLOR);
                 break;
+
             case UtilGraph.MARK_END_NODE:
                 Node endNode = graphManager.EndNode;
                 endNode.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
                 endNode.PrevEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
                 break;
+
             case UtilGraph.END_FOR_LOOP_INST:
                 if (graphSettings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
                     listVisual.DestroyCurrentNode();

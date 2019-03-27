@@ -3,6 +3,7 @@
 public class ListVisualInstruction : InstructionBase {
 
     private Node node;
+    private Edge backtrackEdge;
     private int index = Util.NO_INDEX_VALUE;
     private string case1, case2;
     private bool hasNodeRepresentation;
@@ -23,6 +24,12 @@ public class ListVisualInstruction : InstructionBase {
         this.index = index;
     }
 
+    public ListVisualInstruction(string instruction, int instructionNr, Node node, Edge backtrackEdge) : base(instruction, instructionNr)
+    {
+        this.node = node;
+        this.backtrackEdge = backtrackEdge;
+    }
+
     public ListVisualInstruction(string instruction, int instructionNr, Node node, int index, string case1, string case2) : base(instruction, instructionNr)
     {
         this.node = node;
@@ -34,6 +41,11 @@ public class ListVisualInstruction : InstructionBase {
     public Node Node
     {
         get { return node; }
+    }
+
+    public Edge BacktrackEdge
+    {
+        get { return backtrackEdge; }
     }
 
     public int Index

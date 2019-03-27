@@ -116,6 +116,8 @@ public abstract class GraphManager : MonoBehaviour {
         edge.transform.parent = edgeContainerObject.transform;
         edges.Add(edge);
 
+
+        // Just for testing
         if (testIsland)
         {
             int[] cell = ((GridNode)node1).Cell;
@@ -186,13 +188,10 @@ public abstract class GraphManager : MonoBehaviour {
         instructions.Add(instNr++, new InstructionBase(UtilGraph.MARK_END_NODE, instNr));
 
         // Fix list visual
-        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PREPARE_BACKTRACKING, instNr));
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PREPARE_BACKTRACKING, instNr, node)); // Prepares backtracking list + moving current (end) node out of list
 
         while (node != null)
         {
-            // Drag current node out
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, node));
-
             // Change color of edge leading to previous node
             Edge backtrackEdge = node.PrevEdge;
 
@@ -204,13 +203,15 @@ public abstract class GraphManager : MonoBehaviour {
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
 
             node = backtrackEdge.OtherNodeConnected(node);
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.BACKTRACK, instNr, node, false, true));
+
+            ListVisualInstruction removeCurrentNodeRep = new ListVisualInstruction(UtilGraph.BACKTRACK_REMOVE_CURRENT_NODE, instNr, node, backtrackEdge);
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.BACKTRACK, instNr, node, false, true, removeCurrentNodeRep));
 
             if (backtrackEdge is DirectedEdge)
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = false; // incase using same graph again at some point
 
-            // Destroy node rep
-            instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
+            //// Destroy node rep
+            //instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
         }
         instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
     }
@@ -241,8 +242,6 @@ public abstract class GraphManager : MonoBehaviour {
                 if (node1.Traversed || node2.Traversed)
                     edge.DisplayCost(true);
             }
-
-            
         }
     }
 

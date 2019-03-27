@@ -13,7 +13,7 @@ public class StepByStepManager : InstructionControlBase {
 
     public void InitDemo(Dictionary<int, InstructionBase> instructions)//, int userActionInstructions)
     {
-        base.Init(instructions, instructions.Count);
+        base.Init(instructions, instructions.Count, true);
     }
 
     //  -------------------------------------------- Demo --------------------------------------------
@@ -58,12 +58,10 @@ public class StepByStepManager : InstructionControlBase {
             if (IncrementToNextInstruction())
             {
                 playerMove = true;
-                progressTracker.Increment();
             }
             else
             {
                 isValidStep = false;
-                progressTracker.Decrement();
             }
 
         }
@@ -81,6 +79,16 @@ public class StepByStepManager : InstructionControlBase {
         if (playerIncremented)
             return GetInstruction(currentInstructionNr);
         return GetInstruction(currentInstructionNr + 1);
+    }
+
+    public override void ResetState()
+    {
+        base.ResetState();
+        playerMove = false;
+        playerIncremented = false;
+        isValidStep = false;
+        firstInstruction = false;
+        finalInstruction = false;
     }
 
 

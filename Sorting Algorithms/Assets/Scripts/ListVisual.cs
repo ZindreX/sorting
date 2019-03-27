@@ -349,13 +349,11 @@ public class ListVisual : MonoBehaviour {
                 else
                 {
                     // Reverse of removing current node: insert and move it back into the list
-                    Debug.Log("Current node: " + currentNode.Node.NodeAlphaID);
                     currentNode.CurrentColor = Color.white;
                     graphMain.WaitForSupportToComplete++;
                     switch (listType)
                     {
                         case Util.QUEUE:
-                            Debug.Log("Inserting..." + currentNode.Node.NodeAlphaID);
                             nodeRepresentations.Insert(0, currentNode);
                             currentNode.ListIndex = 0;
                             StartCoroutine(ReverseRemoveCurrentNode(currentNode, true));
@@ -423,15 +421,52 @@ public class ListVisual : MonoBehaviour {
                 }
                 break;
 
-            // ????? move these out?
-            //case UtilGraph.END_NODE_FOUND:
-            //    // Stat backtracking
-            //    pseudoCodeViewer.DestroyPseudoCode();
-            //    break;
+            case UtilGraph.END_NODE_FOUND:
+                // Start backtracking
+                if (increment)
+                    graphMain.GetTeachingAlgorithm().PseudoCodeViewer.DestroyPseudoCode();
+                else
+                    graphMain.GetTeachingAlgorithm().PseudoCodeViewer.PseudoCodeSetup();
+                break;
 
-            //case UtilGraph.PREPARE_BACKTRACKING:
-            //    listVisual.CreateBackTrackList(graphManager.EndNode);
-            //    break;
+            case UtilGraph.PREPARE_BACKTRACKING:
+                if (increment)
+                {
+                    CreateBackTrackList(instruction.Node);
+                    RemoveCurrentNode();
+                }
+                else
+                {
+                    Debug.Log("Nein....");
+                }
+                break;
+
+            case UtilGraph.BACKTRACK_REMOVE_CURRENT_NODE:
+                if (increment)
+                {
+                    DestroyCurrentNode();
+                    RemoveCurrentNode();
+
+                    if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                    {
+                        instruction.Node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                        if (instruction.BacktrackEdge != null)
+                            instruction.BacktrackEdge.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
+
+                    }
+                }
+                else
+                {
+                    instruction.Node.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+
+                    if (instruction.BacktrackEdge != null)
+                        instruction.BacktrackEdge.CurrentColor = UtilGraph.VISITED_COLOR;
+
+                    ExecuteInstruction(new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, Util.NO_INSTRUCTION_NR), false);
+                }
+
+                break;
 
             default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
         }
@@ -517,6 +552,7 @@ public class ListVisual : MonoBehaviour {
 
     // --------------------------------------- Backtracking ---------------------------------------
 
+    // Creates a queue of node representations for backtracking
     public void CreateBackTrackList(Node node)
     {
         ClearList();

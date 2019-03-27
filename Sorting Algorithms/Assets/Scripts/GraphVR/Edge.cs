@@ -30,15 +30,18 @@ public abstract class Edge : MonoBehaviour {
 
     private Camera playerCamera;
 
+    private WaitForSeconds focusDuration = new WaitForSeconds(1f);
+
     protected void InitEdge(Node node1, Node node2, int cost, string graphStructure)
     {
         edgeID = EDGE_ID++;
         name = EdgeType + edgeID + " [" + node1.NodeAlphaID + ", " + node2.NodeAlphaID + "]";
         this.node1 = node1;
         this.node2 = node2;
+        this.cost = cost;
 
-        if (cost != UtilGraph.NO_COST)
-            Cost = cost;
+        if (cost == UtilGraph.NO_COST)
+            DisplayCost(false);
 
         this.graphStructure = graphStructure; // need???
 
@@ -58,7 +61,7 @@ public abstract class Edge : MonoBehaviour {
     private void Update()
     {
         // Rotate text (cost) according to player position, making it readable
-        if (playerCamera != null)
+        if (displayCost && playerCamera != null)
             costText.transform.LookAt(2 * costText.transform.position -  playerCamera.transform.position);
     }
 
@@ -92,10 +95,6 @@ public abstract class Edge : MonoBehaviour {
 
     public void SetAngle(float angle)
     {
-        // Avoid overlap of crossing edges
-        //if (angle == -45f || angle == -135f)
-        //    GetComponentInChildren<TextMesh>().transform.position += new Vector3(0f, 1f, 0f);
-
         this.angle = angle;
         transform.Rotate(0f, angle, 0f);
         //transform.Rotate(0, angle, 0, Space.Self);
@@ -121,17 +120,19 @@ public abstract class Edge : MonoBehaviour {
     {
         GetComponentInChildren<Renderer>().material.color = color;
 
-        // Demo
-        if (color == UtilGraph.TRAVERSE_COLOR)
-        {
-            costText.color = color;
-            costText.transform.position += UtilGraph.increaseHeightOfText;
-        }
-        else
-        {
-            costText.color = UtilGraph.STANDARD_COST_TEXT_COLOR;
-            costText.transform.position -= UtilGraph.increaseHeightOfText;
-        }
+        // Focus on edge cost
+        if (cost != UtilGraph.NO_COST)
+            StartCoroutine(FocusCostText(color));
+    }
+
+    // Highlights the cost of this edge + lifting it up, then reset to original color/pos
+    private IEnumerator FocusCostText(Color color)
+    {
+        costText.color = color;
+        costText.transform.position += UtilGraph.increaseHeightOfText;
+        yield return focusDuration;
+        costText.color = UtilGraph.STANDARD_COST_TEXT_COLOR;
+        costText.transform.position -= UtilGraph.increaseHeightOfText;
     }
 
     // *** Object settings end ***

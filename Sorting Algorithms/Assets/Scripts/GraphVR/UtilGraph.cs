@@ -80,7 +80,7 @@ public class UtilGraph : Util {
     public const string LIST_VISUAL = "List visual";
     public const string ADD_NODE = "Add node", PRIORITY_ADD_NODE = "Priority add node", REMOVE_CURRENT_NODE = "Remove current node";
     public const string DESTROY_CURRENT_NODE = "Destroy current node", HAS_NODE_REPRESENTATION = "Has node representation";
-    public const string PREPARE_BACKTRACKING = "Prepare backtracking";
+    public const string PREPARE_BACKTRACKING = "Prepare backtracking", BACKTRACK_REMOVE_CURRENT_NODE = "Backtrack remove current node";
 
 
     // Spacing

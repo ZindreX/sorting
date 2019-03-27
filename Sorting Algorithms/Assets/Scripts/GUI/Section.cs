@@ -18,8 +18,7 @@ public class Section : MonoBehaviour {
     private bool isOneActiveOnlySection, onHideMakeInactive;
     private bool isHidden;
 
-    [SerializeField]
-    private SettingsBase settings;
+    private ISectionManager sectionManager;
 
     private Dictionary<string, SettingsMenuItem> sectionButtons;
 
@@ -47,6 +46,13 @@ public class Section : MonoBehaviour {
         }
     }
 
+    // SettingsBase / DemoDevice
+    public ISectionManager SectionManager
+    {
+        get { return sectionManager; }
+        set { sectionManager = value; }
+    }
+
     // Section identification such as Algorithm, Teaching Mode, etc...
     public string SectionID
     {
@@ -68,7 +74,7 @@ public class Section : MonoBehaviour {
     // A item (button) clicked reports their ID and description which then is sent to the class SettingsBase (GraphSettings/Sortsettings)
     public void ReportItemClicked(string sectionID, string itemID, string itemDescription)
     {
-        settings.UpdateValueFromSettingsMenu(sectionID, itemID, itemDescription);
+        sectionManager.UpdateInteraction(sectionID, itemID, itemDescription);
     }
 
     // ----------------------- Init item methods ----------------------- 
