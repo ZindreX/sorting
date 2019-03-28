@@ -25,6 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d10a3b6936417a47a1e3b1d2b53414e, type: 2}
   - {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
   - {fileID: 11400000, guid: 9e0212866ac059244a73445652c912f5, type: 2}
+  - {fileID: 11400000, guid: a4e062dcccb60e744bcc42da3779fb89, type: 2}
   InteractUI: {fileID: 11400000, guid: c7ec8b6c137b6a14494fb09be87638ad, type: 2}
   Teleport: {fileID: 11400000, guid: ae959400fd7fbc842908a4737109a8a0, type: 2}
   GrabPinch: {fileID: 11400000, guid: 73eb16e40c48c73429deb38a5bfad58f, type: 2}
@@ -36,3 +37,4 @@ MonoBehaviour:
   Increment: {fileID: 11400000, guid: 0d10a3b6936417a47a1e3b1d2b53414e, type: 2}
   Decrement: {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}
   ToggleStart: {fileID: 11400000, guid: 9e0212866ac059244a73445652c912f5, type: 2}
+  PointerShoot: {fileID: 11400000, guid: a4e062dcccb60e744bcc42da3779fb89, type: 2}

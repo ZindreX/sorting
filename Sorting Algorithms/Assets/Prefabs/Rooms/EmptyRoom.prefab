@@ -2784,7 +2784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneBuildIndex: 2
-  portalTitle: {fileID: 102826331944082148}
+  portalTitle: {fileID: 0}
 --- !u!114 &114326033762307474
 MonoBehaviour:
   m_ObjectHideFlags: 1

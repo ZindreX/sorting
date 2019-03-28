@@ -130,7 +130,5 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
 
     public abstract string GetListType();
 
-    public abstract IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment);
-
 
 }

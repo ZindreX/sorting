@@ -589,6 +589,7 @@ public class ListVisual : MonoBehaviour {
         if (currentNode != null)
             Destroy(currentNode.gameObject);
 
+        listType = "";
         nodeRepresentations = new List<NodeRepresentation>();
     }
 

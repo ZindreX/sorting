@@ -9,6 +9,7 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
     protected float algorithmSpeed;
     protected string algorithm, teachingMode;
     protected int difficulty, algSpeed;
+    protected bool stepBack;
 
     [Header("Settings base")]
 
@@ -107,6 +108,12 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
     public bool IsUserTest()
     {
         return teachingMode == Util.USER_TEST;
+    }
+
+    public bool StepBack
+    {
+        get { return stepBack; }
+        set { stepBack = value; }
     }
 
     // Beginner, Intermediate, or Examination

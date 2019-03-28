@@ -12,7 +12,7 @@ public class AlgorithmUserController : MonoBehaviour {
     */
 
     [SerializeField]
-    private SortMain sortMain;
+    private MainManager mainManager;
 
     [SerializeField]
     private UnityEngine.UI.Text warningMessage;
@@ -26,16 +26,22 @@ public class AlgorithmUserController : MonoBehaviour {
     [SteamVR_DefaultAction("ToggleStart")]
     public SteamVR_Action_Boolean toggleStartAction;
 
+
+    private void Awake()
+    {
+        mainManager = FindObjectOfType<MainManager>();
+    }
+
     // Update is called once per frame
     void Update()
     {
         // Used to start / stop sorting task
         //if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any))
         //{
-        //    if (!sortMain.ControllerReady)
-        //        sortMain.InstantiateSetup();
+        //    if (!mainManager.ControllerReady)
+        //        mainManager.InstantiateSetup();
         //    else
-        //        sortMain.DestroyAndReset();
+        //        mainManager.DestroyAndReset();
         //}
 
         // ************* DEBUGGING *************
@@ -43,72 +49,64 @@ public class AlgorithmUserController : MonoBehaviour {
         {
             if (Input.GetKey(KeyCode.E))
             {
-                sortMain.PlayerStepByStepInput(true);
+                mainManager.PlayerStepByStepInput(true);
                 StartCoroutine(DebugWait());
             }
             else if (Input.GetKey(KeyCode.Q))
             {
-                sortMain.PlayerStepByStepInput(false);
+                mainManager.PlayerStepByStepInput(false);
                 StartCoroutine(DebugWait());
             }
             else if (Input.GetKey(KeyCode.I))
             {
-                sortMain.InstantiateSetup();
+                mainManager.InstantiateSetup();
                 StartCoroutine(DebugWait());
             }
             else if (Input.GetKey(KeyCode.U))
             {
-                sortMain.StartAlgorithm();
+                mainManager.StartAlgorithm();
             }
             else if (Input.GetKey(KeyCode.O))
             {
-                sortMain.DestroyAndReset();
+                mainManager.DestroyAndReset();
             }
         }
         // *************
 
         // Do actions according to what teaching mode the player has activated
-        if (sortMain.AlgorithmInitialized)
+        if (mainManager.AlgorithmInitialized)
         {
-            switch (sortMain.SortSettings.TeachingMode)
+            switch (mainManager.Settings.TeachingMode)
             {
                 case Util.DEMO:
-                    if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                    {
-                        Debug.Log("Incrementing button clicked - no action implemented for Tutorial");
-                    }
-                    else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                    {
-                        Debug.Log("Decrementing button clicked - no action implemented for Tutorial");
-                    }
-                    break;
-
                 case Util.STEP_BY_STEP:
+                    if (!mainManager.UserPausedTask)
+                        return;
+
                     // Progress to the next instruction
                     if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                        sortMain.PlayerStepByStepInput(true);
+                        mainManager.PlayerStepByStepInput(true);
 
                     // Backwards to the previous instruction
-                    else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                        sortMain.PlayerStepByStepInput(false);
-
+                    else if (mainManager.Settings.StepBack && SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                        mainManager.PlayerStepByStepInput(false);
                     break;
 
                 case Util.USER_TEST:
-                    switch (sortMain.GetTeachingAlgorithm().AlgorithmName)
+                    switch (mainManager.GetTeachingAlgorithm().AlgorithmName)
                     {
                         case Util.INSERTION_SORT:
                             // Moves the pivot holder
                             if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                                ((SortAlgorithm)sortMain.GetTeachingAlgorithm()).Specials(UtilSort.INCREMENT, UtilSort.NO_VALUE, true);
+                                ((SortAlgorithm)mainManager.GetTeachingAlgorithm()).Specials(UtilSort.INCREMENT, UtilSort.NO_VALUE, true);
 
                             else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                                ((SortAlgorithm)sortMain.GetTeachingAlgorithm()).Specials(UtilSort.DECREMENT, UtilSort.NO_VALUE, false);
+                                ((SortAlgorithm)mainManager.GetTeachingAlgorithm()).Specials(UtilSort.DECREMENT, UtilSort.NO_VALUE, false);
 
                             break;
                     }
                     break;
-                default: Debug.Log("No teaching mode with name " + sortMain.SortSettings.TeachingMode); break;
+                default: Debug.Log("No teaching mode with name " + mainManager.Settings.TeachingMode); break;
             }
         }
     }

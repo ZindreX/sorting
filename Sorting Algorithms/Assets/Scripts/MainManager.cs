@@ -28,7 +28,9 @@ public abstract class MainManager : MonoBehaviour {
     // Blocks the Update loop until the application is ready and initialized
     protected bool algorithmInitialized = false;
 
-    
+    protected bool newDemoImplemented;
+
+
     // Check list (startup, shutdown)
     public const string START_UP_CHECK = "Start up check", WAIT_FOR_SUPPORT = "Wait for support", SHUT_DOWN_CHECK = "Shut down check";
     protected bool checkListModeActive;
@@ -37,7 +39,6 @@ public abstract class MainManager : MonoBehaviour {
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
 
-    [SerializeField]
     protected DemoDevice demoDevice;
 
     protected StepByStepManager stepByStepManager;
@@ -48,6 +49,7 @@ public abstract class MainManager : MonoBehaviour {
 
     protected virtual void Awake()
     {
+        demoDevice = FindObjectOfType<DemoDevice>();
         audioManager = FindObjectOfType<AudioManager>();
     }
 
@@ -341,21 +343,68 @@ public abstract class MainManager : MonoBehaviour {
                 break;
             case Util.USER_TEST: userTestManager.ResetState(); break;
         }
+        newDemoImplemented = false;
     }
 
 
 
     // --------------------------------------- Teaching mode updates ---------------------------------------
-    protected abstract void DemoUpdate();
+
     protected abstract void StepByStepUpdate();
     protected abstract void UserTestUpdate();
     protected abstract void TaskCompletedFinishOff(); // Finish off visualization
+
+
 
     /* --------------------------------------- Demo ---------------------------------------
      * - Gives a visual presentation of <algorithm>
      * - Player dont need to do anything / Watch & learn
     */
     public abstract void PerformAlgorithmDemo();
+
+    protected virtual void DemoUpdate()
+    {
+        if (newDemoImplemented)
+        {
+            // Step by step activated by pausing, and step requested
+            if (userPausedTask && stepByStepManager.PlayerMove)
+            {
+                stepByStepManager.PlayerMove = false;
+                InstructionBase stepInstruction = stepByStepManager.GetStep();
+                Debug.Log(">>> " + stepInstruction.DebugInfo());
+
+                bool increment = stepByStepManager.PlayerIncremented;
+                PerformInstruction(stepInstruction, increment);
+            }
+            else if (!userPausedTask && stepByStepManager.HasInstructions()) // Demo mode
+            {
+                // First check if user test setup is complete
+                if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
+                {
+                    InstructionBase instruction = stepByStepManager.GetInstruction();
+                    Debug.Log(instruction.DebugInfo());
+
+                    PerformInstruction(instruction, true);
+                    stepByStepManager.IncrementToNextInstruction();
+                }
+            }
+        }
+    }
+
+    protected void PerformInstruction(InstructionBase instruction, bool increment)
+    {
+        if (instruction.Status == Util.EXECUTED_INST && increment)
+            return;
+
+        waitForSupportToComplete++;
+        StartCoroutine(GetTeachingAlgorithm().ExecuteDemoInstruction(instruction, increment));
+
+
+        if (increment)
+            instruction.Status = Util.EXECUTED_INST;
+        else
+            instruction.Status = Util.NOT_EXECUTED;
+    }
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
      * - Gives a visual presentation of <algorithm>

@@ -442,6 +442,211 @@ public class InsertionSort : SortAlgorithm {
     }
     #endregion
 
+
+    #region New Demo / Step-by-step
+    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
+    {
+        // Gather information from instruction
+        InsertionSortInstruction insertionInstruction = null;
+        InsertionSortElement sortingElement = null;
+
+        if (instruction is InsertionSortInstruction)
+        {
+            insertionInstruction = (InsertionSortInstruction)instruction;
+
+            // Change internal state of sorting element
+            sortingElement = sortMain.ElementManager.GetSortingElement(insertionInstruction.SortingElementID).GetComponent<InsertionSortElement>();
+        }
+
+        if (instruction is InstructionLoop)
+        {
+            i = ((InstructionLoop)instruction).I;
+            j = ((InstructionLoop)instruction).J;
+            //k = ((InstructionLoop)instruction).K;
+        }
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
+        }
+
+        // Gather part of code to highlight
+        List<int> lineOfCode = new List<int>();
+        switch (instruction.Instruction)
+        {
+            case UtilSort.SET_SORTED_INST:
+                if (increment)
+                {
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                    UtilSort.IndicateElement(sortingElement.gameObject);
+                }
+                else
+                {
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                    UtilSort.IndicateElement(sortingElement.gameObject);
+                }
+                break;
+
+            case UtilSort.FIRST_INSTRUCTION:
+                lineOfCode.Add(FirstInstructionCodeLine());
+                lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
+                break;
+
+            case UtilSort.FIRST_LOOP:
+                lineOfCode.Add(2);
+                break;
+
+            case UtilSort.SET_VAR_J:
+                lineOfCode.Add(3);
+                break;
+
+            case UtilSort.PIVOT_START_INST:
+                if (increment)
+                    sortingElement.IsPivot = insertionInstruction.IsPivot;
+                else
+                    sortingElement.IsPivot = !insertionInstruction.IsPivot;
+
+                PreparePseudocodeValue(sortingElement.Value, 1);
+                UtilSort.IndicateElement(sortingElement.gameObject);
+
+                lineOfCode.Add(4);
+                break;
+
+            case UtilSort.COMPARE_START_INST:
+                if (increment)
+                {
+                    sortingElement.IsCompare = insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsCompare = !insertionInstruction.IsCompare;
+                    if (insertionInstruction.HolderID == sortingElement.SortingElementID) // works for worst case, none might be buggy
+                        sortingElement.IsSorted = insertionInstruction.IsSorted;
+                    else
+                        sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                }
+
+                PreparePseudocodeValue(sortingElement.Value, 2);
+                UtilSort.IndicateElement(sortingElement.gameObject);
+
+                lineOfCode.Add(5);
+                break;
+
+            case UtilSort.SWITCH_INST:
+                if (increment)
+                {
+                    sortingElement.IsCompare = insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
+                else
+                    sortingElement.IsCompare = !insertionInstruction.IsCompare;
+
+                lineOfCode.Add(6);
+                break;
+
+            case UtilSort.UPDATE_VAR_J:
+                lineOfCode.Add(7);
+                break;
+
+            case UtilSort.COMPARE_END_INST:
+                if (increment)
+                {
+                    sortingElement.IsCompare = insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsCompare = !insertionInstruction.IsCompare;
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                }
+
+                UtilSort.IndicateElement(sortingElement.gameObject);
+                lineOfCode.Add(8);
+                break;
+
+            case UtilSort.PIVOT_END_INST:
+                if (increment)
+                {
+                    sortingElement.IsPivot = insertionInstruction.IsPivot;
+                    sortingElement.IsSorted = insertionInstruction.IsSorted;
+                }
+                else
+                {
+                    sortingElement.IsPivot = !insertionInstruction.IsPivot;
+                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
+                }
+
+                UtilSort.IndicateElement(sortingElement.gameObject);
+                lineOfCode.Add(9);
+                break;
+
+            case UtilSort.INCREMENT_VAR_I:
+                lineOfCode.Add(10);
+                break;
+
+            case UtilSort.FINAL_INSTRUCTION:
+                lineOfCode.Add(FinalInstructionCodeLine());
+                break;
+        }
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
+        }
+
+        // Move sorting element
+        if (instruction is InsertionSortInstruction)
+        {
+            switch (insertionInstruction.Instruction)
+            {
+                case UtilSort.COMPARE_START_INST: // testing
+                    if (increment)
+                    {
+                        // Positioning the pivot holder behind/slightly above comparing element
+                        pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
+                        // Postitioning the pivot element on top of the pivot holder
+                        pivotHolder.CurrentHolding.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
+                    }
+                    else
+                    {
+                        //sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
+
+                    }
+                    break;
+
+                case UtilSort.PIVOT_START_INST: // tesing (was combined with switch/pivot_end
+                    if (increment)
+                    {
+                        pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
+                        sortingElement.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
+                    }
+                    else
+                    {
+                        //
+                        sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                    }
+                    break;
+
+                //case Util.PIVOT_START_INST: // original working setup (non moving pivot holder)
+                case UtilSort.SWITCH_INST:
+                case UtilSort.PIVOT_END_INST:
+                    if (increment)
+                        sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                    else
+                        sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                    break;
+            }
+        }
+        yield return demoStepDuration;
+        sortMain.WaitForSupportToComplete--;
+    }
+    #endregion
+
+
     #region Execute order from user
     public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
     {

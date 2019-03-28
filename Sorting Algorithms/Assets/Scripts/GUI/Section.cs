@@ -19,11 +19,14 @@ public class Section : MonoBehaviour {
     private bool isHidden;
 
     private ISectionManager sectionManager;
+    private AudioManager audioManager;
 
     private Dictionary<string, SettingsMenuItem> sectionButtons;
 
     private void Awake()
     {
+        audioManager = FindObjectOfType<AudioManager>();
+
         // Set title
         GetComponentInChildren<TextMeshPro>().text = sectionID;
 
@@ -75,6 +78,7 @@ public class Section : MonoBehaviour {
     public void ReportItemClicked(string sectionID, string itemID, string itemDescription)
     {
         sectionManager.UpdateInteraction(sectionID, itemID, itemDescription);
+        audioManager.Play("ButtonClick");
     }
 
     // ----------------------- Init item methods ----------------------- 

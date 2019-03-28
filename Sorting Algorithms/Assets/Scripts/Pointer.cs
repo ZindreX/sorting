@@ -7,11 +7,14 @@ using TMPro;
 [RequireComponent(typeof(LineRenderer))]
 public class Pointer : MonoBehaviour {
 
+    [SteamVR_DefaultAction("PointerShoot")]
+    public SteamVR_Action_Boolean pointerShootAction;
+
     [SerializeField]
     private float laserRange = 50f;
     private int layerMask;
+    private bool allowShooting;
 
-    // 
     private string currentTask;
     private int numberOfNodesToChoose;
 
@@ -43,6 +46,7 @@ public class Pointer : MonoBehaviour {
         numberOfNodesToChoose = 0;
         hitObject = null;
         prevNodeShot = null;
+        allowShooting = false;
     }
 
     private void Awake()
@@ -66,40 +70,27 @@ public class Pointer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // Debugging without VR
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    if (currentTask == "Start nodes")
-        //    {
-        //        // Check if player wants to select start/end nodes
-        //        if (graphMain.ChosenNodes < numberOfNodesToChoose)
-        //        {
-        //            // Currently choosing start node
-        //            if (graphMain.ChosenNodes == 0)
-        //            {
-        //                graphMain.GraphManager.StartNode = prevNodeShot;
-        //                graphMain.ChosenNodes++;
-        //            }
-        //            else if (prevNodeShot != graphMain.GraphManager.StartNode)
-        //            {
-        //                graphMain.GraphManager.EndNode = prevNodeShot;
-        //                graphMain.ChosenNodes++;
-        //            }
-        //        }
-        //    }
-        //}
-
-        if (currentTask != "")
+        if (!allowShooting)
         {
-            if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.Any))
+            laserBeam.enabled = false;
+            return;
+        }
+
+        if (currentTask != UtilGraph.NO_TASK)
+        {
+            if (currentTask == Util.DEMO || currentTask == Util.STEP_BY_STEP)
+                return;
+
+            //if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.Any))
+            if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.Any))
             {
                 // Set position & rotation to hand
-                if (SteamVR_Input.__actions_default_in_ToggleStart.GetLastState(SteamVR_Input_Sources.LeftHand))
+                if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.LeftHand))
                 {
                     transform.position = leftHand.position;
                     transform.rotation = leftHand.rotation;
                 }
-                else if (SteamVR_Input.__actions_default_in_ToggleStart.GetLastState(SteamVR_Input_Sources.RightHand))
+                else if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.RightHand))
                 {
                     transform.position = rightHand.position;
                     transform.rotation = rightHand.rotation;
@@ -139,11 +130,14 @@ public class Pointer : MonoBehaviour {
                                 {
                                     graphMain.GraphManager.StartNode = node;
                                     graphMain.ChosenNodes++;
+                                    if (graphMain.ChosenNodes == graphMain.NumberOfNodesToChoose)
+                                        currentTask = UtilGraph.NO_TASK;
                                 }
                                 else if (node != graphMain.GraphManager.StartNode)
                                 {
                                     graphMain.GraphManager.EndNode = node;
                                     graphMain.ChosenNodes++;
+                                    currentTask = UtilGraph.NO_TASK;
                                 }
                                 prevNodeShot = null;
                             }
@@ -168,10 +162,10 @@ public class Pointer : MonoBehaviour {
                 }
             }
             else
-            {
                 laserBeam.enabled = false;
-            }
         }
+        else
+            laserBeam.enabled = false;
     }
 
     public string CurrentTask
@@ -180,4 +174,35 @@ public class Pointer : MonoBehaviour {
         set { currentTask = value; }
     }
 
+    public bool AllowShooting
+    {
+        get { return allowShooting; }
+        set { allowShooting = value; }
+    }
+
+
+
+
+    // Debugging without VR
+    //if (Input.GetKeyDown(KeyCode.G))
+    //{
+    //    if (currentTask == "Start nodes")
+    //    {
+    //        // Check if player wants to select start/end nodes
+    //        if (graphMain.ChosenNodes < numberOfNodesToChoose)
+    //        {
+    //            // Currently choosing start node
+    //            if (graphMain.ChosenNodes == 0)
+    //            {
+    //                graphMain.GraphManager.StartNode = prevNodeShot;
+    //                graphMain.ChosenNodes++;
+    //            }
+    //            else if (prevNodeShot != graphMain.GraphManager.StartNode)
+    //            {
+    //                graphMain.GraphManager.EndNode = prevNodeShot;
+    //                graphMain.ChosenNodes++;
+    //            }
+    //        }
+    //    }
+    //}
 }

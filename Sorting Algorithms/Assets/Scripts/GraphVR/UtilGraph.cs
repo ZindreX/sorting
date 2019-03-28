@@ -19,7 +19,10 @@ public class UtilGraph : Util {
     public const string GRAPH_TASK = "Graph task", TRAVERSE = "Traverse", SHORTEST_PATH = "Shortest path";
     public const string TRAVERSE_SUB_SECTION = "Traverse sub section", SHORTEST_PATH_SUB_SECTION = "Shortest path sub section";
     public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_BUILD_MODE = "Edge mode";
-    public const string SELECT_NODE = "Select node";
+    public const string GRID_SUB = "Grid sub", ROWS = "Rows", COLUMNS = "Columns";
+    public const string TREE_SUB = "Tree sub", TREE_DEPTH = "Tree depth", N_TREE = "N tree";
+
+    public const string SELECT_NODE = "Select node", NO_TASK = "No task";
     
     // -----
 
@@ -68,7 +71,7 @@ public class UtilGraph : Util {
     // Dijkstra
     public const string SET_ALL_NODES_TO_INFINITY = "Set all nodes to infinity", SET_START_NODE_DIST_TO_ZERO = "Set start node dist to zero", PRIORITY_REMOVE_NODE = "Priority remove node", VISIT_CONNECTED_NODE = "Visit connected node";
     public const string IF_DIST_PLUS_EDGE_COST_LESS_THAN = "If dist plus edge cost less than", UPDATE_CONNECTED_NODE_DIST = "Update connected node dist", UPDATE_CONNECTED_NODE_PREV_EDGE = "Update connected node prev edge";
-    public const string UPDATE_LIST_VISUAL_VALUE_AND_POSITION = "Update list visual value and position", END_NODE_FOUND = "End node found";
+    public const string UPDATE_LIST_VISUAL_VALUE_AND_POSITION = "Update list visual value and position", END_NODE_FOUND = "End node found", NO_PATH_FOUND = "No path found";
 
     // Backtracking
     public const string MARK_END_NODE = "Mark end node", BACKTRACK = "Backtrack";

@@ -83,23 +83,6 @@ public class Calculator : InteractionDeviceBase {
 
     // ------------------------------------- Getters/Setters -------------------------------------
 
-    //private bool throwAble;
-    //public void PlayerHoldingCalculator(bool holding) // REMOVE
-    //{
-    //    playerHoldingCalculator = holding;
-
-    //    if (holding)
-    //    {
-    //        rb.useGravity = true;
-    //        rb.constraints = RigidbodyConstraints.None;
-    //    }
-    //    else
-    //    {
-    //        if (!throwAble)
-    //            rb.constraints = RigidbodyConstraints.FreezeAll;
-    //    }
-    //}
-
     public int Value1
     {
         get { return value1; }
@@ -338,7 +321,6 @@ public class Calculator : InteractionDeviceBase {
         undoActions.Push(LESS_GREATER_ACTION);
 
         UpdateDisplay(false);
-
     }
 
 
@@ -351,24 +333,18 @@ public class Calculator : InteractionDeviceBase {
         set { feedbackReceived = value; }
     }
 
-    //public void PlaceCalculator() // REMOVE
-    //{
-    //    rb.useGravity = false;
-    //    rb.constraints = RigidbodyConstraints.FreezeAll;
-
-    //    // Place infront of player
-    //    transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.4f;
-        
-    //    // Rotate towards the player
-    //    transform.LookAt(2 * transform.position - playerCamera.transform.position);
-    //}
+    public string IfStatementContent()
+    {
+        return UtilGraph.ConvertDist(value1) + " + " + UtilGraph.ConvertDist(value2) + " < " + UtilGraph.ConvertDist(value3);
+    }
 
     // Checks whether the input is correct
     public bool ControlUserInput(int correctNode1Dist, int correctEdgeCost, int correctNode2Dist)
     {
         string feedback = "";
 
-        if (correctNode1Dist == value1 && correctEdgeCost == value2)
+        // First check if the the current node distance (user standing on) and edge cost is correct || order doesnt matter anymore
+        if (correctNode1Dist == value1 && correctEdgeCost == value2 || correctNode1Dist == value2 && correctEdgeCost == value1)
         {
             int newDist = correctNode1Dist + correctEdgeCost;
 

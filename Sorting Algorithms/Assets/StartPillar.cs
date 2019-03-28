@@ -11,14 +11,21 @@ public class StartPillar : MonoBehaviour {
     [SerializeField]
     private ToggleButton startButton;
 
+    private string teachingMode;
+
+    private Pointer pointer;
+
     private void Awake()
     {
         Section startPillarSection = GetComponentInChildren<Section>();
         startPillarSection.SectionManager = FindObjectOfType<SettingsBase>();
+        pointer = FindObjectOfType<Pointer>();
     }
 
-    public void InitStartPillar(bool selectNodes, bool endNode)
+    public void InitStartPillar(string teachingMode, bool selectNodes, bool endNode)
     {
+        this.teachingMode = teachingMode;
+
         if (selectNodes)
         {
             if (endNode)
@@ -43,12 +50,16 @@ public class StartPillar : MonoBehaviour {
     public void SetButtonActive(bool active)
     {
         startButton.gameObject.SetActive(active);
+        Debug.Log("Start button: " + active);
     }
 
     public void ButtonClicked()
     {
         if (startButton.State)
+        {
             SetDisplayText("Click stop to return to settings menu.");
+            pointer.CurrentTask = teachingMode;
+        }
         else
             SetDisplayText("Click start to play");
     }

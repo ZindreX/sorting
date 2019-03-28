@@ -350,13 +350,13 @@ public class DFS : GraphAlgorithm, ITraverse {
                 Edge edge = currentNode.Edges[i];               
                 Node connectedNode = edge.OtherNodeConnected(currentNode);
 
+                // No need to check the edge we came from
+                if (edge == currentNode.PrevEdge)
+                    continue;
+
                 // Optimizing check
                 //if (connectedNode.Visited || connectedNode.Traversed)
                 //    continue;
-
-                // Fix prev edge
-                if (!connectedNode.Visited)
-                    connectedNode.PrevEdge = edge;
 
                 // Line 7: If statement (condition)
                 instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, edge, false, false));
@@ -368,6 +368,9 @@ public class DFS : GraphAlgorithm, ITraverse {
                     connectedNode.Visited = true;
                     ListVisualInstruction addConnectedNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode);
                     instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, edge, true, false, addConnectedNode));
+
+                    // Set prev edge
+                    connectedNode.PrevEdge = edge;
                 }
                 // Line 10: End if statement
                 instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));

@@ -96,7 +96,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.FOR_ALL_NEIGHBORS_INST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.SET_START_NODE_DIST_TO_ZERO);
         
-        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
+        //skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_DIST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE);
 
@@ -495,15 +495,10 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             // Check all nodes connected with current node
             List<Edge> edges = currentNode.Edges;
 
-            // Line 7: Update for-loop (if no nodes connected)
-            if (edges.Count == 0)
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
-
+            // Line 7: Update for-loop
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
             for (int i = 0; i < edges.Count; i++)
             {
-                // Line 7: Update for-loop
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
-
                 // Checking edge
                 Edge currentEdge = edges[i];
 
@@ -566,8 +561,12 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         // Line 15: End while-loop
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
 
+        if (objectiveFound)
+            graphMain.GraphManager.ShortestPatBacktrackingInstructions(instructions, instNr);
+        else
+            instructions.Add(instNr++, new InstructionBase(UtilGraph.NO_PATH_FOUND, instNr));
+
         // Gather instruction for backtracking
-        graphMain.GraphManager.ShortestPatBacktrackingInstructions(instructions, instNr);     
         return instructions;
     }
     #endregion
@@ -869,6 +868,9 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 9;
                 edgeCost = currentEdge.Cost;
+
+                // Fix the pseudocode for simple thought process
+                IfStatementContent = currentNode.NodeAlphaID + ".Dist + edge(" + currentNode.NodeAlphaID + ", " + connectedNode.NodeAlphaID + ").Cost" + " <? " + connectedNode.NodeAlphaID + ".Dist)";
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_DIST:

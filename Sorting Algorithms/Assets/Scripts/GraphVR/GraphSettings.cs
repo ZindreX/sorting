@@ -251,6 +251,49 @@ public class GraphSettings : SettingsBase {
                     default: Debug.LogError("No optional choice case for '" + itemID + "'."); break;
                 }
                 break;
+
+            case UtilGraph.GRID_SUB:
+                switch (itemID)
+                {
+                    case UtilGraph.ROWS:
+                        switch (itemDescription)
+                        {
+                            case Util.PLUS: ChangeGridRows(true); break;
+                            case Util.MINUS: ChangeGridRows(false); break;
+                        }
+                        break;
+
+                    case UtilGraph.COLUMNS:
+                        switch (itemDescription)
+                        {
+                            case Util.PLUS: ChangeGridColumns(true); break;
+                            case Util.MINUS: ChangeGridColumns(false); break;
+                        }
+                        break;
+                }
+                break;
+
+            case UtilGraph.TREE_SUB:
+                switch (itemID)
+                {
+                    case UtilGraph.TREE_DEPTH:
+                        switch (itemDescription)
+                        {
+                            case Util.PLUS: ChangeTreeDepth(true); break;
+                            case Util.MINUS: ChangeTreeDepth(false); break;
+                        }
+                        break;
+
+                    case UtilGraph.N_TREE:
+                        switch (itemDescription)
+                        {
+                            case Util.PLUS: ChangeNTree(true); break;
+                            case Util.MINUS: ChangeNTree(false); break;
+                        }
+                        break;
+                }
+                break;
+
             default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
         }
 

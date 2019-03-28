@@ -230,55 +230,27 @@ public class SortMain : MainManager {
     public override void PerformAlgorithmDemo()
     {
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn");
+        elementManager.InteractionWithSortingElements(false);
 
-        if (algorithmName == Util.MERGE_SORT)
+        if (true)
         {
-            Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements));
+            // Getting instructions for this sample of sorting elements
+            InstructionBase[] firstState = algorithmManagerBase.CopyFirstState(elementManager.SortingElements);
+            Dictionary<int, InstructionBase> instructions = sortAlgorithm.UserTestInstructions(firstState);
+
+            if (instructions == null)
+                return;
+
+            Debug.Log("Number of instructions: " + instructions.Count);
+
             stepByStepManager.InitDemo(instructions);
+
+            newDemoImplemented = true;
         }
         else
-        {
-            elementManager.InteractionWithSortingElements(false);
             StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
-        }
-
     }
 
-    protected override void DemoUpdate()
-    {
-        if (algorithmName == Util.MERGE_SORT)
-        {
-            // Step by step activated by pausing, and step requested
-            if (userPausedTask && stepByStepManager.PlayerMove)
-            {
-                stepByStepManager.PlayerMove = false;
-                InstructionBase stepInstruction = stepByStepManager.GetStep();
-                bool increment = stepByStepManager.PlayerIncremented;
-
-                //Debug.Log(">>> " + instruction.Instruction);
-                //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
-                //Debug.Log(tutorialStep.CurrentInstructionNr);
-                //((MergeSort)sortAlgorithm).NewDemo(instructio)
-            }
-            else if (!userPausedTask) // Demo mode
-            {
-                // First check if user test setup is complete
-                if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
-                {
-                    InstructionBase instruction = stepByStepManager.GetInstruction();
-
-                    Debug.Log(instruction.DebugInfo());
-                    WaitForSupportToComplete++;
-                    StartCoroutine(((MergeSort)sortAlgorithm).NewDemo(instruction, true));
-                    stepByStepManager.IncrementToNextInstruction();
-
-                }
-            }
-            else
-                Debug.Log("Demo paused");
-        }
-
-    }
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
      * - Gives a visual presentation of <sorting algorithm>
@@ -306,7 +278,7 @@ public class SortMain : MainManager {
             //Debug.Log(tutorialStep.CurrentInstructionNr);
 
 
-            bool gotSortingElement = !sortAlgorithm.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+            bool gotSortingElement = !sortAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
             sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, stepByStepManager.PlayerIncremented);
         }
     }

@@ -241,10 +241,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d815c2826c069439239cea3ae31554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointerShootAction: {fileID: 11400000, guid: a4e062dcccb60e744bcc42da3779fb89, type: 2}
   laserRange: 50
-  pointerEnd: {fileID: 4871539399493566}
-  hand: {fileID: 0}
+  graphMain: {fileID: 0}
+  positionManager: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
   laserMaterial: {fileID: 2100000, guid: e4cefd1e99e775f4ca7259db738c6b90, type: 2}
+  hitObject: {fileID: 0}
+  prevNodeShot: {fileID: 0}
 --- !u!120 &120940704561691272
 LineRenderer:
   m_ObjectHideFlags: 1

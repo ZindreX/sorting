@@ -122,6 +122,7 @@ public class GraphMain : MainManager {
                 if (chosenNodes == numberOfNodesToChoose)
                 {
                     startPillar.SetButtonActive(true);
+                    startPillar.SetDisplayText("Click start to play");
                     checkListModeActive = false;
                 }
                 break;
@@ -160,6 +161,7 @@ public class GraphMain : MainManager {
         base.InstantiateSetup();
 
         // >>> Grab variable data from settings
+        string teachingMode = graphSettings.TeachingMode;
         int difficulty = graphSettings.Difficulty;
         float algorithmSpeed = graphSettings.AlgorithmSpeed;
 
@@ -231,7 +233,7 @@ public class GraphMain : MainManager {
 
         // Init start pillar
         bool selectNodes = graphSettings.SelectStartEndNodes;
-        startPillar.InitStartPillar(selectNodes, isShortestPath);
+        startPillar.InitStartPillar(teachingMode, selectNodes, isShortestPath);
 
         // If user want to select nodes, then start button will become inactive until node(s) have been chosen
         if (selectNodes)
@@ -282,10 +284,13 @@ public class GraphMain : MainManager {
         // Settings menu
         graphSettings.SetSettingsActive(!active);
 
-        Util.HideObject(startPillarObj, active, true);
+        Util.HideObject(startPillarObj, active);
 
         yield return loading;
         graphSettings.FillTooltips("");
+
+
+        pointer.AllowShooting = active;
     }
 
     //  --------------------------------------- Reset methods ---------------------------------------
@@ -303,6 +308,7 @@ public class GraphMain : MainManager {
 
         // Delete list visual
         listVisual.DestroyAndReset();
+        updateListVisualInstruction = null;
 
         // Delete graph
         graphManager.DeleteGraph();
@@ -335,10 +341,7 @@ public class GraphMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
-        newDemoImplemented = false;
-
         Debug.Log("Performing " + algorithmName + " " + graphSettings.GraphTask + " demo.");
-
         if (true)
         {
             // Getting instructions for this sample of sorting elements
@@ -371,52 +374,6 @@ public class GraphMain : MainManager {
             }
         }
     }
-
-    private bool newDemoImplemented;
-    protected override void DemoUpdate()
-    {
-        if (newDemoImplemented)
-        {
-            // Step by step activated by pausing, and step requested
-            if (userPausedTask && stepByStepManager.PlayerMove)
-            {
-                stepByStepManager.PlayerMove = false;
-                InstructionBase stepInstruction = stepByStepManager.GetStep();
-                Debug.Log(">>> " + stepInstruction.DebugInfo());
-
-                bool increment = stepByStepManager.PlayerIncremented;
-                PerformInstruction(stepInstruction, increment);                
-            }
-            else if (!userPausedTask && stepByStepManager.HasInstructions()) // Demo mode
-            {
-                // First check if user test setup is complete
-                if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
-                {
-                    InstructionBase instruction = stepByStepManager.GetInstruction();
-                    Debug.Log(instruction.DebugInfo());
-
-                    PerformInstruction(instruction, true);
-                    stepByStepManager.IncrementToNextInstruction();
-                }
-            }
-        }
-    }
-
-    private void PerformInstruction(InstructionBase instruction, bool increment)
-    {
-        if (instruction.Status == Util.EXECUTED_INST && increment)
-            return;
-
-        waitForSupportToComplete++;
-        StartCoroutine(graphAlgorithm.ExecuteDemoInstruction(instruction, increment));
-
-
-        if (increment)
-            instruction.Status = Util.EXECUTED_INST;
-        else
-            instruction.Status = Util.NOT_EXECUTED;
-    }
-
 
     /* --------------------------------------- Step-By-Step ---------------------------------------
      * - Not implemented yet
@@ -459,9 +416,6 @@ public class GraphMain : MainManager {
         userTestManager.SetStartTime();
 
         graphManager.ResetGraph();
-
-        // Give pointer new task
-        pointer.CurrentTask = Util.USER_TEST;
     }
 
     protected override void UserTestUpdate()
@@ -500,7 +454,8 @@ public class GraphMain : MainManager {
                     {
                         userTestManager.IncrementTotalCorrect();
                         userTestManager.ReadyForNext += 1;
-                        ((Dijkstra)graphAlgorithm).IfStatementContent = calculator.DisplayText;
+                        
+                        ((Dijkstra)graphAlgorithm).IfStatementContent = calculator.IfStatementContent();
                         pseudoCodeViewer.SetCodeLine(((Dijkstra)graphAlgorithm).CollectLine(9), Util.BLACKBOARD_TEXT_COLOR);
                         calculator.FeedbackReceived = true;
                     }
@@ -514,13 +469,14 @@ public class GraphMain : MainManager {
                 {
                     // Feedback is given on the calculator, so when calculationInProcess = false (calculation completed), we continue
                     usingCalculator = false;
+                    pointer.AllowShooting = true;
                 }
             }
 
             // Continue when user has finished sub task, or else whenever ready
             if (userTestManager.ReadyForNext == userTestManager.UserActionToProceed)
             {
-                if (graphSettings.Difficulty < UtilGraph.LIST_VISUAL_MAX_DIFFICULTY && updateListVisualInstruction != null)
+                if (graphSettings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY && updateListVisualInstruction != null)
                 {
                     listVisual.ExecuteInstruction(updateListVisualInstruction, true);
                     updateListVisualInstruction = null;
@@ -569,7 +525,6 @@ public class GraphMain : MainManager {
             listVisual.ExecuteInstruction(listVisualInst, true);
 
             Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
-            
         }
         else
         {
@@ -662,16 +617,9 @@ public class GraphMain : MainManager {
                             if (!autoCalculation)
                             {
                                 usingCalculator = true;
+                                pointer.AllowShooting = false;
                                 calculator.InitCalculation(Calculator.GRAPH_TASK);
                                 calculator.SpawnDeviceInfrontOfPlayer();
-
-                                if (graphSettings.Difficulty == Util.BEGINNER)
-                                {
-                                    // Fix the pseudocode for simple thought process
-                                    ((Dijkstra)graphAlgorithm).IfStatementContent = spInst.CurrentNode.NodeAlphaID + ".Dist + edge(" + spInst.CurrentNode.NodeAlphaID + ", " + spInst.ConnectedNode.NodeAlphaID + ").Cost" + " <? " + spInst.ConnectedNode.NodeAlphaID + ".Dist)";
-                                    pseudoCodeViewer.SetCodeLine(((Dijkstra)graphAlgorithm).CollectLine(9), Util.HIGHLIGHT_COLOR);
-                                    return 0; // to avoid pseudocode update below
-                                }
                             }
                             break;
                     }
@@ -718,6 +666,11 @@ public class GraphMain : MainManager {
             case UtilGraph.END_FOR_LOOP_INST:
                 if (graphSettings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
                     listVisual.DestroyCurrentNode();
+                break;
+
+            case UtilGraph.NO_PATH_FOUND:
+                // No path found
+                Debug.Log("Completed! - No path found");
                 break;
         }
 

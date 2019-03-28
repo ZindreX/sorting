@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a778e93635beb3542b003255d44b08e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  algorithmManagerObj: {fileID: 0}
+  mainManager: {fileID: 0}
   warningMessage: {fileID: 114759312469600584}
   incrementAction: {fileID: 11400000, guid: b01ee22b2add7664c8a8b19317eb813e, type: 2}
   decrementAction: {fileID: 11400000, guid: 8eb561b605b66464f8aca2a58ae8d6a7, type: 2}

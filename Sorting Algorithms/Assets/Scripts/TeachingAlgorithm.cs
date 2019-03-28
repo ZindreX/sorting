@@ -168,6 +168,8 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public abstract int FinalInstructionCodeLine();
 
 
+    public abstract IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment);
+
     /* Almost the same method as for the Step by step teaching method
      * - Only does the visualization of the pseudocode
     */

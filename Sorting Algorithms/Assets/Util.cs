@@ -159,6 +159,16 @@ public class Util : MonoBehaviour {
     //}
 
     public static Vector3 moveUnderGround = new Vector3(0f, 10f, 0f);
+
+    public static void HideObject(GameObject obj, bool visible)
+    {
+        Vector3 pos = obj.transform.position;
+        if (visible && obj.transform.position.y < 0)
+            obj.transform.position += moveUnderGround;
+        else if (obj.transform.position.y > 0)
+            obj.transform.position -= moveUnderGround;
+    }
+
     public static void HideObject(GameObject obj, bool visible, bool moveDown)
     {
         if (moveDown)

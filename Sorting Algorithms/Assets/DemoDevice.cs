@@ -25,7 +25,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
         throwAble = false;
 
-        mainManager = FindObjectOfType<MainManager>();
+
         section = GetComponentInChildren<Section>();
         section.SectionManager = this;
 
@@ -44,12 +44,20 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
         pauseButton = (ToggleButton)buttons[PAUSE];
 
-        if (!enableStepBack)
-            Destroy(buttons[STEP_BACK].gameObject);
-
         // Hide speed at start
         buttons[REDUCE_SPEED].gameObject.SetActive(false);
         buttons[INCREASE_SPEED].gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        mainManager = FindObjectOfType<MainManager>();
+
+
+        mainManager.Settings.StepBack = enableStepBack;
+        if (!enableStepBack)
+            Destroy(buttons[STEP_BACK].gameObject);
+
     }
 
     private void Update()

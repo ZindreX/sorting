@@ -583,7 +583,7 @@ public class MergeSort : SortAlgorithm {
     }
     #endregion
 
-    public IEnumerator NewDemo(InstructionBase instruction, bool increment)
+    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
         // Gather information from instruction
         MergeSortInstruction mergeSortInstruction = null;

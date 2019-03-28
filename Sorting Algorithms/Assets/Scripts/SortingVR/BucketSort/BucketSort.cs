@@ -439,6 +439,191 @@ public class BucketSort : SortAlgorithm {
     #endregion
 
 
+    #region New Demo / Step-by-step
+    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
+    {
+        // Gather information from instruction
+        BucketSortInstruction bucketInstruction = null;
+        BucketSortElement sortingElement = null;
+
+        if (instruction is BucketSortInstruction)
+        {
+            bucketInstruction = (BucketSortInstruction)instruction;
+
+            // Change internal state of sorting element
+            sortingElement = sortMain.ElementManager.GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
+        }
+
+        if (instruction is InstructionLoop)
+        {
+            i = ((InstructionLoop)instruction).I;
+            j = ((InstructionLoop)instruction).J;
+            k = ((InstructionLoop)instruction).K;
+        }
+
+        // Remove highlight from previous instruction
+        for (int x = 0; x < prevHighlight.Count; x++)
+        {
+            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
+        }
+
+        // Gather part of code to highlight
+        List<int> lineOfCode = new List<int>();
+        switch (instruction.Instruction)
+        {
+            case UtilSort.FIRST_INSTRUCTION:
+                lineOfCode.Add(FirstInstructionCodeLine());
+                break;
+
+            case UtilSort.CREATE_BUCKETS_INST:
+                lineOfCode.Add(1);
+                break;
+
+            case UtilSort.FIRST_LOOP:
+                lineOfCode.Add(2);
+                break;
+
+            case UtilSort.BUCKET_INDEX_INST:
+                lineOfCode.Add(3);
+                value1 = sortingElement.Value;
+                bucketIndex = bucketInstruction.BucketID;
+
+                if (increment)
+                    sortingElement.IsCompare = bucketInstruction.IsCompare;
+                else
+                    sortingElement.IsCompare = !bucketInstruction.IsCompare;
+
+                UtilSort.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case UtilSort.MOVE_TO_BUCKET_INST:
+                lineOfCode.Add(4);
+                value1 = sortingElement.Value;
+                bucketIndex = bucketInstruction.BucketID;
+
+                if (increment)
+                    sortingElement.IsCompare = bucketInstruction.IsCompare;
+                else
+                    sortingElement.IsCompare = !bucketInstruction.IsCompare;
+                UtilSort.IndicateElement(sortingElement.gameObject);
+                break;
+
+            case UtilSort.END_LOOP_INST:
+                if (j < 0)
+                {
+                    switch (j)
+                    {
+                        case UtilSort.OUTER_LOOP: lineOfCode.Add(5); break;
+                        case UtilSort.INNER_LOOP: lineOfCode.Add(12); break;
+                        default: Debug.LogError(UtilSort.END_LOOP_INST + ": '" + j + "' loop not found"); break;
+                    }
+                }
+                break;
+
+            case UtilSort.PHASING_INST:
+                lineOfCode.Add(6);
+                //lineOfCode.Add(7);
+                //lineOfCode.Add(8);
+                i = 0;
+                j = (bucketSortManager.NumberOfBuckets - 1);
+                bucketIndex = j;
+                bucketManager.AutoSortBuckets();
+                break;
+
+            case UtilSort.DISPLAY_ELEMENT:
+                bucketManager.PutElementsForDisplay(i);
+                break;
+
+            case UtilSort.SET_VAR_J:
+                lineOfCode.Add(7);
+                break;
+
+            case UtilSort.UPDATE_LOOP_INST:
+                if (j == UtilSort.NO_VALUE)
+                {
+                    j = 0;
+                    lineOfCode.Add(8);
+                }
+                else
+                    lineOfCode.Add(9);
+
+                loopRange = j;
+                break;
+
+            case UtilSort.MOVE_BACK_INST:
+                lineOfCode.Add(10);
+                value1 = sortingElement.Value;
+                k = bucketInstruction.NextHolderID;
+                if (increment)
+                    sortingElement.IsSorted = bucketInstruction.IsSorted;
+                else
+                    sortingElement.IsSorted = !bucketInstruction.IsSorted;
+
+                break;
+
+            case UtilSort.UPDATE_VAR_J:
+                lineOfCode.Add(11);
+                break;
+
+            case UtilSort.FINAL_INSTRUCTION:
+                lineOfCode.Add(FinalInstructionCodeLine());
+                break;
+        }
+        prevHighlight = lineOfCode;
+
+        // Highlight part of code in pseudocode
+        for (int x = 0; x < lineOfCode.Count; x++)
+        {
+            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
+        }
+
+        // Move sorting element
+        if (instruction is BucketSortInstruction)
+        {
+            switch (bucketInstruction.Instruction)
+            {
+                case UtilSort.MOVE_TO_BUCKET_INST:
+                    if (increment)
+                    {
+                        sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
+                    }
+                    else
+                    {
+                        sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        sortingElement.gameObject.SetActive(true);
+                    }
+                    break;
+
+                case UtilSort.DISPLAY_ELEMENT:
+                    if (increment)
+                    {
+                        sortingElement.CanEnterBucket = false;
+                        sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
+                        sortingElement.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        sortingElement.CanEnterBucket = true;
+                        sortingElement.gameObject.SetActive(false);
+                    }
+
+                    break;
+
+                case UtilSort.MOVE_BACK_INST:
+                    if (increment)
+                        sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                    else
+                        sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
+                    break;
+            }
+        }
+        yield return demoStepDuration;
+        sortMain.WaitForSupportToComplete--;
+    }
+    #endregion
+
+
+
     #region Execute order from user
     public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
     {

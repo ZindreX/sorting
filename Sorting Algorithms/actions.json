@@ -48,6 +48,10 @@
       "type": "boolean"
     },
     {
+      "name": "/actions/default/in/PointerShoot",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     },
