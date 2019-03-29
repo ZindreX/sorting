@@ -141,6 +141,8 @@ public class UserTestManager : InstructionControlBase {
         if (currentStreak > longestStreak)
             longestStreak = currentStreak;
 
+        totalErrorCount++;
+
         // Reset streak counter
         currentStreak = 0;
     }
@@ -241,10 +243,6 @@ public class UserTestManager : InstructionControlBase {
     {
         return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + UtilSort.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
     }
-
-
-
-
 
     // Show of at the end of the user test
     public IEnumerator VisualizeScore()

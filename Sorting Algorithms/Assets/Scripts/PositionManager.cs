@@ -79,6 +79,7 @@ public class PositionManager : MonoBehaviour {
     public Node ReportedNode
     {
         get { return reportedNode; }
+        set { reportedNode = value; }
     }
 
     public Node PreviousNode

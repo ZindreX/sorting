@@ -20,6 +20,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     protected Color currentColor, prevColor;
     protected TextMeshPro textNodeID, textNodeDist;
+
     protected Animator animator;
 
     private WaitForSeconds selectedDuration = new WaitForSeconds(0.5f);
@@ -76,6 +77,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
         this.algorithm = algorithm;
         Dist = UtilGraph.INIT_NODE_DIST;
+        Instruction = new InstructionBase(Util.INIT_INSTRUCTION, Util.NO_INSTRUCTION_NR);
     }
 
     private void Awake()
@@ -87,8 +89,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         // Name shown in the editor
         name = NodeType + nodeID + "(" + nodeAlphaID + ")";
 
-        // Not used
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
 
         // Get textmesh pros
         Component[] textHolders = GetComponentsInChildren(typeof(TextMeshPro));
@@ -326,6 +327,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 nodeInstruction = (TraverseInstruction)value;
             else if (value is ShortestPathInstruction)
                 nodeInstruction = (ShortestPathInstruction)value;
+            else
+                nodeInstruction = value;
                 
             UpdateNodeState();
         }
@@ -340,27 +343,29 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
             // Debugging
             instruction = nodeInstruction.Instruction;
-            switch (instruction)
-            {
-                case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-                case UtilGraph.ENQUEUE_NODE_INST: // BFS
-                case UtilGraph.PUSH_INST: // DFS
-                case UtilGraph.ADD_NODE: // Dijkstra
-                case UtilGraph.VISIT_CONNECTED_NODE: // Dijkstra <- // PRIORITY_ADD_NODE ?
-                    status = "Shot node";
-                    break;
+            status = nodeInstruction.Status;
 
-                case UtilGraph.DEQUEUE_NODE_INST: // BFS
-                case UtilGraph.POP_INST: // DFS
-                case UtilGraph.PRIORITY_REMOVE_NODE: // Dijkstra
-                    status = "Move to node";
-                    break;
+            //switch (instruction)
+            //{
+            //    case Util.INIT_INSTRUCTION: status = "Init pos"; break;
+            //    case UtilGraph.ENQUEUE_NODE_INST: // BFS
+            //    case UtilGraph.PUSH_INST: // DFS
+            //    case UtilGraph.ADD_NODE: // Dijkstra
+            //    case UtilGraph.VISIT_CONNECTED_NODE: // Dijkstra <- // PRIORITY_ADD_NODE ?
+            //        status = "Shot node";
+            //        break;
 
-                case UtilGraph.BACKTRACK: status = "Backtracking moving from end to start node"; break;
+            //    case UtilGraph.DEQUEUE_NODE_INST: // BFS
+            //    case UtilGraph.POP_INST: // DFS
+            //    case UtilGraph.PRIORITY_REMOVE_NODE: // Dijkstra
+            //        status = "Move to node";
+            //        break;
 
-                case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
-                default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
-            }
+            //    case UtilGraph.BACKTRACK: status = "Backtracking moving from end to start node"; break;
+
+            //    case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
+            //    default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
+            //}
 
             // This node is the next to be visited (shot at)
             if (nodeInstruction is TraverseInstruction)
@@ -369,11 +374,17 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                 // If visit (shoot at node)
                 if (travInst.VisitInst)
+                {
                     visitNextMove = true;
+                    animator.SetBool("NodeVisit", true);
+                }
 
                 // This node is the next to be traversed (player move to node)
                 if (travInst.TraverseInst)
+                {
                     traverseNextMove = true;
+                    animator.SetBool("NodeTraverse", true);
+                }
 
                 // Set the edge between the node we traversed from to reach this node
                 if (travInst.PrevEdge != null)
@@ -479,9 +490,13 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                 case Util.INIT_ERROR:
                 case UtilGraph.NODE_ERROR:
+                    if (traversed)
+                        return;
+
                     shootStatus = false;
                     traverseStatus = false;
                     graphMain.GetComponent<UserTestManager>().Mistake();
+                    animator.Play("NodeError");
                     break;
 
                 default: Debug.Log("'Add '" + validation + "' case, or ignore"); break;
@@ -505,6 +520,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 NextMove = false;
                 visitNextMove = false;
                 traverseNextMove = false;
+                animator.SetBool("NodeVisit", false);
+                animator.SetBool("NodeTraverse", false);
             }
         }
         validatedUserMove++;
@@ -518,7 +535,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             switch (nodeInstruction.Instruction)
             {
                 case Util.INIT_INSTRUCTION:
-                    return (!visitNextMove && !traverseNextMove) ? Util.INIT_OK : Util.INIT_ERROR;
+                    return UtilGraph.NODE_ERROR;
 
                 case UtilGraph.ENQUEUE_NODE_INST:
                 case UtilGraph.PUSH_INST:
@@ -540,7 +557,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
             switch (nodeInstruction.Instruction)
             {
                 case Util.INIT_INSTRUCTION:
-                    return (!visitNextMove && !traverseNextMove) ? Util.INIT_OK : Util.INIT_ERROR;
+                    return UtilGraph.NODE_ERROR;
 
                 case UtilGraph.DEQUEUE_NODE_INST:
                 case UtilGraph.POP_INST:

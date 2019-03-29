@@ -106,7 +106,7 @@ public class Pointer : MonoBehaviour {
 
                 // Check if our raycast has hit anything
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-                    //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
+                //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
                 {
                     // Set the end position for our laser line
                     laserBeam.SetPosition(1, hit.point);
@@ -157,15 +157,16 @@ public class Pointer : MonoBehaviour {
                 else
                 {
                     // If we didn't hit anything, set the end of the line to a position directly in front of the camera at the distance of laserRange
-                    //laserBeam.SetPosition(1, pointerEnd.transform.position * laserRange);
-                    //laserBeam.SetPosition(1, rayOrigin + (vrCamera.transform.position * laserRange));
+                    //laserBeam.SetPosition(1, transform.position * laserRange);
+                    //laserBeam.SetPosition(1, transform.position * laserRange);
                 }
             }
             else
-                laserBeam.enabled = false;
+                ResetLaserBeam();
         }
         else
-            laserBeam.enabled = false;
+            ResetLaserBeam();
+
     }
 
     public string CurrentTask
@@ -178,6 +179,12 @@ public class Pointer : MonoBehaviour {
     {
         get { return allowShooting; }
         set { allowShooting = value; }
+    }
+
+    private void ResetLaserBeam()
+    {
+        laserBeam.enabled = false;
+        laserBeam.SetPosition(1, transform.position * 0f);
     }
 
 

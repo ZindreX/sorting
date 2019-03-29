@@ -50,6 +50,9 @@ public class GraphMain : MainManager {
     private PseudoCodeViewer pseudoCodeViewer;
 
     [SerializeField]
+    private Blackboard blackboard;
+
+    [SerializeField]
     private ListVisual listVisual;
 
     // Backtracking shortest path, userTestGoalActive: move to node, usingCalculator: calculation in process to progress
@@ -198,6 +201,8 @@ public class GraphMain : MainManager {
 
 
         // >>> Support
+        blackboard.ChangeText(0, algorithmName);
+
         // Prepare difficulty level related stuff for user test (copied from sort)
         if (graphSettings.TeachingMode == Util.USER_TEST)
         {
@@ -503,6 +508,7 @@ public class GraphMain : MainManager {
 
                 }
             }
+            blackboard.ChangeText(1, userTestManager.FillInBlackboard());
         }
     }
 
@@ -550,6 +556,10 @@ public class GraphMain : MainManager {
                     if (traverseInstruction.VisitInst && pointer.prevNodeShot == node)
                         pointer.prevNodeShot = null;
 
+                    // Reset position manager if the user already stands on top of the node
+                    if (traverseInstruction.TraverseInst && posManager.ReportedNode == node)
+                        posManager.ReportedNode = null;
+
                     // Give this sorting element permission to give feedback to progress to next intstruction
                     node.NextMove = NextIsUserMove(inst);
 
@@ -560,8 +570,8 @@ public class GraphMain : MainManager {
                         case UtilGraph.DEQUEUE_NODE_INST:
                         case UtilGraph.POP_INST:
                         case UtilGraph.PRIORITY_REMOVE_NODE:
-                            if (GraphSettings.Difficulty < Util.ADVANCED)
-                                node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+                            //if (GraphSettings.Difficulty < Util.ADVANCED)
+                            //    node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
 
                             // Hide all edge cost to make it easier to see node distances
                             if (graphSettings.GraphTask == UtilGraph.SHORTEST_PATH)
@@ -756,23 +766,9 @@ public class GraphMain : MainManager {
     {
         switch (graphStructure)
         {
-            case UtilGraph.GRID_GRAPH:
-                //GetComponent<GridManager>().enabled = true;
-                //GetComponent<TreeManager>().enabled = false;
-                //GetComponent<RandomGraphManager>().enabled = false;
-                return GetComponent<GridManager>();
-
-            case UtilGraph.TREE_GRAPH:
-                //GetComponent<TreeManager>().enabled = true;
-                //GetComponent<GridManager>().enabled = false;
-                //GetComponent<RandomGraphManager>().enabled = false;
-                return GetComponent<TreeManager>();
-
-            case UtilGraph.RANDOM_GRAPH:
-                //GetComponent<RandomGraphManager>().enabled = true;
-                //GetComponent<TreeManager>().enabled = false;
-                //GetComponent<GridManager>().enabled = false;
-                return GetComponent<RandomGraphManager>();
+            case UtilGraph.GRID_GRAPH: return GetComponent<GridManager>();
+            case UtilGraph.TREE_GRAPH: return GetComponent<TreeManager>();
+            case UtilGraph.RANDOM_GRAPH: return GetComponent<RandomGraphManager>();
 
             default: Debug.Log("Graph structure '" + graphStructure + "' not found."); break;
         }

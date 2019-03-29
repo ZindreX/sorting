@@ -362,6 +362,7 @@ public abstract class MainManager : MonoBehaviour {
     */
     public abstract void PerformAlgorithmDemo();
 
+    // Fetch instruction
     protected virtual void DemoUpdate()
     {
         if (newDemoImplemented)
@@ -391,6 +392,7 @@ public abstract class MainManager : MonoBehaviour {
         }
     }
 
+    // Decode and execute instruction
     protected void PerformInstruction(InstructionBase instruction, bool increment)
     {
         if (instruction.Status == Util.EXECUTED_INST && increment)
@@ -398,7 +400,6 @@ public abstract class MainManager : MonoBehaviour {
 
         waitForSupportToComplete++;
         StartCoroutine(GetTeachingAlgorithm().ExecuteDemoInstruction(instruction, increment));
-
 
         if (increment)
             instruction.Status = Util.EXECUTED_INST;

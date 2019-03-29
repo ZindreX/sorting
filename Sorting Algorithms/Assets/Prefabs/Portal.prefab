@@ -26,6 +26,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1089115290930254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4906870626072234}
+  m_Layer: 0
+  m_Name: TransportPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1252534974396810
 GameObject:
   m_ObjectHideFlags: 1
@@ -73,6 +88,7 @@ GameObject:
   - component: {fileID: 33709502747154758}
   - component: {fileID: 23400676341316514}
   - component: {fileID: 65342267073485624}
+  - component: {fileID: 95909814413999190}
   m_Layer: 0
   m_Name: PortalDoor
   m_TagString: Untagged
@@ -112,7 +128,7 @@ Transform:
   - {fileID: 4719969831621092}
   - {fileID: 224939987456523062}
   m_Father: {fileID: 4497051163190238}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4497051163190238
 Transform:
@@ -121,10 +137,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1319499141698788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.9, z: 0}
+  m_LocalPosition: {x: 0, y: 0.9, z: 2.8}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 4746046917891994}
+  - {fileID: 4906870626072234}
   - {fileID: 4386839057638632}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -154,6 +171,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4497051163190238}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4906870626072234
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1089115290930254}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4497051163190238}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23400676341316514
 MeshRenderer:
@@ -415,6 +445,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &95909814413999190
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1324391097952978}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a9438dd8ce4b7f547bc1d4700efa193a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114857202093164314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -427,6 +475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneBuildIndex: 3
+  transportPoint: {fileID: 4906870626072234}
   portalTitle: {fileID: 114867689537884074}
 --- !u!114 &114867689537884074
 MonoBehaviour:

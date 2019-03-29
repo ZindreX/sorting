@@ -242,8 +242,6 @@ public class GraphSettings : SettingsBase {
 
             case UtilGraph.EDGE_TYPE: EdgeType = itemID; break;
             case UtilGraph.EDGE_BUILD_MODE: EdgeBuildMode = itemID; break;
-            case UtilGraph.SHORTEST_PATH_ONE_TO_ALL: ShortestPathOneToAll = Util.ConvertStringToBool(itemDescription); break;
-            case UtilGraph.VISIT_LEFT_FIRST: VisitLeftFirst = Util.ConvertStringToBool(itemDescription); break;
             case Util.OPTIONAL:
                 switch (itemID)
                 {
@@ -294,6 +292,8 @@ public class GraphSettings : SettingsBase {
                 }
                 break;
 
+            //case UtilGraph.SHORTEST_PATH_ONE_TO_ALL: ShortestPathOneToAll = Util.ConvertStringToBool(itemDescription); break;
+            //case UtilGraph.VISIT_LEFT_FIRST: VisitLeftFirst = Util.ConvertStringToBool(itemDescription); break;
             default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
         }
 
@@ -309,9 +309,10 @@ public class GraphSettings : SettingsBase {
         InitButtonState(UtilGraph.GRAPH_STRUCTURE, graphStructure);
         InitButtonState(UtilGraph.EDGE_TYPE, edgeType);
         InitButtonState(UtilGraph.EDGE_BUILD_MODE, edgeBuildMode);
-        InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll);
-        InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst);
         InitButtonState(Util.OPTIONAL, UtilGraph.SELECT_NODE, selectStartEndNodes);
+
+        //InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll);
+        //InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst);
     }
 
     protected override MainManager MainManager

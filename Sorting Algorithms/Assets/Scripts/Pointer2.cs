@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
 
 public class Pointer2 : MonoBehaviour {
+
+    [SteamVR_DefaultAction("PointerShoot")]
+    public SteamVR_Action_Boolean pointerShootAction;
 
     [SerializeField]
     private GameObject laserbeam;
 
     [SerializeField]
-    private Transform pointerEnd;
+    private Transform rightHand;
 
     [SerializeField]
     private float maxRange = 1f;
-    private float prevDistance = 0f;
 
     private int layerMask;
 
@@ -29,16 +32,17 @@ public class Pointer2 : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        transform.position = rightHand.position;
+        transform.rotation = rightHand.rotation;
 
         RaycastHit hit;
-        if (true) //Input.GetKey(KeyCode.E))
+        if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.RightHand)) 
         {
-            if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit)) //, Mathf.Infinity, layerMask))
+            if (Physics.Raycast(rightHand.position, rightHand.TransformDirection(Vector3.forward), out hit)) //, Mathf.Infinity, layerMask))
             {
                 Vector3 collidePos = hit.collider.transform.position;
 
                 float distance = hit.distance;
-                Debug.Log(distance);
 
                 //if (distance > maxRange)
                 //    distance = maxRange;
@@ -52,32 +56,31 @@ public class Pointer2 : MonoBehaviour {
                 //else
                 //    laserbeam.transform.localScale -= new Vector3(0f, prevDistance - distance, 0f);
 
-                Vector3 temp = laserbeam.transform.localScale;
-                temp.y += distance;
+                //Vector3 temp = laserbeam.transform.localScale;
+                //temp.y += distance;
 
-                prevDistance = distance;
+                Vector3 center = transform.position - collidePos;
+                laserbeam.transform.localScale += new Vector3(0f, distance, 0f);
+                laserbeam.transform.position = center;
 
-                laserbeam.transform.localPosition = new Vector3(0f, 0f, distance);
-        
             }
-
             laserbeam.SetActive(true);
         }
         else
         {
             laserbeam.SetActive(false);
-            laserbeam.transform.position = transform.position;
+            laserbeam.transform.position = rightHand.position;
         }
 
         // Debug
-        if (Physics.Raycast(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-        {
-            Debug.DrawRay(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-        }
-        else
-        {
-            Debug.DrawRay(pointerEnd.position, pointerEnd.TransformDirection(Vector3.forward) * 1000, Color.red);
-        }
+        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+        //{
+        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+        //}
+        //else
+        //{
+        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.red);
+        //}
 
     }
 }

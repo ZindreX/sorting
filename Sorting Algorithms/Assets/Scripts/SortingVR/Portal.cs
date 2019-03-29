@@ -18,6 +18,9 @@ public class Portal : MonoBehaviour {
     [SerializeField]
     private int sceneBuildIndex;
 
+    [SerializeField]
+    private Transform transportPoint;
+
     // New feature
     private int countdown;
     private float withinWidth = 1f, withinDepth = 0.5f;
@@ -30,6 +33,7 @@ public class Portal : MonoBehaviour {
 
     private Rigidbody rb;
     private Player player;
+    private Animator animator;
 
     // Audio
     private AudioSource audioSource;
@@ -41,6 +45,7 @@ public class Portal : MonoBehaviour {
 
         player = FindObjectOfType<Player>();
         audioSource = GetComponent<AudioSource>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -48,8 +53,8 @@ public class Portal : MonoBehaviour {
         Vector3 playerPos = player.transform.position;
 
         // >>> Check if player is standing near this portal
-        float playerRelToNodeX = Mathf.Abs(playerPos.x - transform.position.x);
-        float playerRelToNodeZ = Mathf.Abs(playerPos.z - transform.position.z);
+        float playerRelToNodeX = Mathf.Abs(playerPos.x - transportPoint.position.x);
+        float playerRelToNodeZ = Mathf.Abs(playerPos.z - transportPoint.position.z);
 
         if (playerRelToNodeX < withinWidth && playerRelToNodeZ < withinDepth)
         {
@@ -59,11 +64,15 @@ public class Portal : MonoBehaviour {
                 return;
 
             if (!countdownStarted)
+            {
                 StartCoroutine(PortalStart());
+                animator.SetBool("EnterPortal", true);
+            }
         }
         else
         {
             playerStandingNearPortal = false;
+            animator.SetBool("EnterPortal", false);
         }
     }
 
