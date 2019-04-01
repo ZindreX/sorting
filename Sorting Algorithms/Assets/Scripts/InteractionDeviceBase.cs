@@ -56,7 +56,6 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
         }
     }
 
-
     public void ResetDevicePosition()
     {
         rb.useGravity = true;

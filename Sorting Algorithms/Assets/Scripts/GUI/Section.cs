@@ -28,7 +28,7 @@ public class Section : MonoBehaviour {
         audioManager = FindObjectOfType<AudioManager>();
 
         // Set title
-        GetComponentInChildren<TextMeshPro>().text = sectionID;
+        //GetComponentInChildren<TextMeshPro>().text = sectionID;
 
         // Get all buttons in this section and add them to a dictionary
         sectionButtons = new Dictionary<string, SettingsMenuItem>();

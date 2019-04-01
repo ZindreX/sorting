@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ProgressTracker : MonoBehaviour {
+public class ProgressTracker : MonoBehaviour, IMoveAble {
 
     [SerializeField]
     private GameObject progressbar;
@@ -15,6 +15,12 @@ public class ProgressTracker : MonoBehaviour {
 
     private Vector3 increaseProgressSize = new Vector3(0f, 0.01f, 0f);
     private Vector3 moveProgressBar = new Vector3(0.01f, 0f, 0f);
+    private Vector3 startPos;
+
+    private void Awake()
+    {
+        startPos = transform.position;
+    }
 
     public void InitProgressTracker(int userActionCount, int totaltInstructions)
     {
@@ -69,4 +75,13 @@ public class ProgressTracker : MonoBehaviour {
         percentText.text = "";
     }
 
+    public void MoveOut()
+    {
+        transform.position += new Vector3(4f, 0f, 0f);
+    }
+
+    public void MoveBack()
+    {
+        transform.position = startPos;
+    }
 }

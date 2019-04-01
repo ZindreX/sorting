@@ -54,7 +54,7 @@ public class Calculator : InteractionDeviceBase {
     // Prepare for a new calculation
     public void InitCalculation(string task)
     {
-        displayText.text = "Fill in the\n if-statement";
+        displayText.text = "Fill in the if-statement according to the algorithm\n*Except less/greater than";
         this.task = task;
 
         number1 = new List<int>();

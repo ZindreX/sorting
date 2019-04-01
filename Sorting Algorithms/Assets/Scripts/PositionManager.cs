@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Valve.VR.InteractionSystem;
 
-public class PositionManager : MonoBehaviour {
+public class PositionManager : MonoBehaviour, IMoveAble {
 
     [Header("Goal(s)")]
     [SerializeField]
@@ -12,11 +13,22 @@ public class PositionManager : MonoBehaviour {
     private bool showDistance, playerWithinGoalPosition;
     private TextMeshPro playerPositionText, nodeDistText;
 
+    private PseudoCodeViewer pseudoCodeViewer;
+
+    // For start area check
+    private Camera playerCamera;
+    private bool otherAreaPositionUpdated;
+
+    private Vector3 startPos;
+
     public void InitPositionManager(bool showDistance)
     {
         this.showDistance = showDistance;
-        playerPositionText.text = "Player position: start area";
+        SetPlayerPositionText("\nStart area");
         playerWithinGoalPosition = false;
+
+        if (!showDistance)
+            nodeDistText.text = "";
     }
 
     private void Awake()
@@ -24,6 +36,10 @@ public class PositionManager : MonoBehaviour {
         Component[] components = GetComponentsInChildren<TextMeshPro>();
         playerPositionText = components[0].GetComponent<TextMeshPro>();
         nodeDistText = components[1].GetComponent<TextMeshPro>();
+
+        pseudoCodeViewer = FindObjectOfType<PseudoCodeViewer>();
+        playerCamera = FindObjectOfType<Player>().GetComponentInChildren<Camera>();
+        startPos = transform.position;
     }
 	
 	// Update is called once per frame
@@ -45,6 +61,18 @@ public class PositionManager : MonoBehaviour {
                 previousNode.DisplayNodeInfo();
         }
 
+        if (!otherAreaPositionUpdated)
+        {
+            Vector3 playerPos = playerCamera.transform.position;
+            if (playerPos.z <= -2f)
+            {
+                SetPlayerPositionText("\nStart area");
+                pseudoCodeViewer.ChangeSizeOfPseudocode(playerPos);
+                otherAreaPositionUpdated = true;
+            }
+        }
+
+
     }
 
     public void ReportPlayerOnNode(Node node)
@@ -56,10 +84,14 @@ public class PositionManager : MonoBehaviour {
         // Set reported node
         reportedNode = node;
 
+        pseudoCodeViewer.ChangeSizeOfPseudocode(node.transform.position);
+
         // Display information about the node the player currently is standing on
-        playerPositionText.text = "Player position: " + node.NodeAlphaID;
+        SetPlayerPositionText(node.NodeAlphaID.ToString());
         if (showDistance)
             nodeDistText.text = "Node dist: " + UtilGraph.ConvertDist(node.Dist);
+
+        otherAreaPositionUpdated = false;
     }
 
     public Node CurrentGoal
@@ -94,4 +126,18 @@ public class PositionManager : MonoBehaviour {
         set { playerWithinGoalPosition = value; }
     }
 
+    private void SetPlayerPositionText(string position)
+    {
+        playerPositionText.text = "Player position: " + position;
+    }
+
+    public void MoveOut()
+    {
+        transform.position += new Vector3(4f, 0f, 0f);
+    }
+
+    public void MoveBack()
+    {
+        transform.position = startPos;
+    }
 }

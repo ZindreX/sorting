@@ -5,17 +5,21 @@ using TMPro;
 
 public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
-    //[SerializeField]
+    [SerializeField]
+    private Transform pseudocodeLinesObj;
+    private Vector3 objectStartPos, containerStartPos;
+
     private TextMeshPro[] codeLines;
 
-    [SerializeField]
-    private TextMeshPro startPosAndMat;
-
-    private float spaceBetweenLines;
     private WaitForSeconds demoStepDuration;
 
     private TeachingAlgorithm algorithm;
-    private Vector2 rtDelta;
+
+    private void Awake()
+    {
+        objectStartPos = transform.position;
+        containerStartPos = pseudocodeLinesObj.transform.position;
+    }
 
     public void InitPseudoCodeViewer(TeachingAlgorithm algorithm)
     {
@@ -23,8 +27,6 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         algorithm.PseudoCodeViewer = this;
 
         demoStepDuration = algorithm.DemoStepDuration;
-        spaceBetweenLines = algorithm.GetLineSpacing();
-        rtDelta = algorithm.GetLineRTDelta();
     }
 
     // Initializes the pseudocode (Instantiating each line of code and making them fit among each other/within the blackboard)
@@ -33,22 +35,26 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         int numberOfLines = algorithm.FinalInstructionCodeLine() + 1;
         codeLines = new TextMeshPro[numberOfLines];
 
+        float spaceBetweenLines = algorithm.LineSpacing;
+        float fontSize = algorithm.FontSize;
+        Vector2 rtDelta = algorithm.LineRTDelta;
+
         for (int x = 0; x < numberOfLines; x++)
         {
             // Create gameobject and add it to this gameobject
             GameObject codeLine = new GameObject("Line" + x);
-            codeLine.transform.parent = gameObject.transform;
+            codeLine.transform.parent = pseudocodeLinesObj.transform;
 
             // Change transformation position and scale
-            Vector3 pos = startPosAndMat.transform.position;
-            codeLine.transform.position = new Vector3(pos.x, pos.y - (x * spaceBetweenLines), pos.z);
-            codeLine.transform.eulerAngles = new Vector3(startPosAndMat.transform.eulerAngles.x, startPosAndMat.transform.eulerAngles.y, startPosAndMat.transform.eulerAngles.z);
-            codeLine.transform.localScale = startPosAndMat.transform.localScale;
+            Vector3 pos = pseudocodeLinesObj.position;
+            codeLine.transform.position = NextPseudoCodeLine(x, spaceBetweenLines); //new Vector3(pos.x, pos.y - (x * spaceBetweenLines), pos.z);
+            //codeLine.transform.eulerAngles = new Vector3(startPosAndMat.transform.eulerAngles.x, startPosAndMat.transform.eulerAngles.y, startPosAndMat.transform.eulerAngles.z);
+            //codeLine.transform.localScale = startPosAndMat.transform.localScale;
 
             // Change material and font
             codeLine.AddComponent<TextMeshPro>();
             TextMeshPro codelinePro = codeLine.GetComponent<TextMeshPro>();
-            codelinePro.fontSize = startPosAndMat.fontSize;
+            codelinePro.fontSize = fontSize; // startPosAndMat.fontSize;
             codelinePro.enableWordWrapping = false;
             
             // Rectangle shape
@@ -145,6 +151,79 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     //    }
     //}
 
+    public void ChangeSizeOfPseudocode(Vector3 playerPos)
+    {
+        if (codeLines != null)
+        {
+
+            float lengthFromPseudocode = transform.position.z - playerPos.z;
+            float lengthFromCenter = transform.position.x - playerPos.x;
+
+            float xOffset = playerPos.x;
+
+            float fontSize = 0f;
+            float spaceBetweenLines = algorithm.LineSpacing;
+
+            Debug.Log("Changing size of pseudocode::: Length = " + lengthFromPseudocode);
+            if (lengthFromPseudocode < 5f)
+            {
+                Debug.Log("length < 5");
+                fontSize = 1.5f;
+                spaceBetweenLines /= 4.5f;
+
+                if (xOffset < 0f)
+                    pseudocodeLinesObj.position = new Vector3(xOffset + 4f, containerStartPos.y - 3f, containerStartPos.z);
+                else
+                    pseudocodeLinesObj.position = new Vector3(xOffset + 4f, containerStartPos.y - 4f, containerStartPos.z);
+            }
+            else if (lengthFromPseudocode < 10f)
+            {
+                Debug.Log("length < 10");
+                fontSize = 3f;
+                pseudocodeLinesObj.position = new Vector3(xOffset + 2f, containerStartPos.y - 2f, containerStartPos.z);
+                spaceBetweenLines /= 3f;
+            }
+            else if (lengthFromPseudocode < 15f)
+            {
+                Debug.Log("length < 15");
+                fontSize = 4.5f;
+
+                if (xOffset < -4f)
+                    xOffset += 3f;
+                else if (xOffset > 2f)
+                    xOffset -= 2f;
+
+                pseudocodeLinesObj.position = new Vector3(xOffset, containerStartPos.y + 2f, containerStartPos.z);
+                spaceBetweenLines /= 1.5f;
+            }
+            else
+            {
+                Debug.Log("length >= 15");
+                fontSize = 6f;
+                pseudocodeLinesObj.position = new Vector3(0f, containerStartPos.y + 4f, containerStartPos.z);
+            }
+
+            // Update pseudocode lines
+            for (int i=0; i < codeLines.Length; i++)
+            {
+                codeLines[i].fontSize = fontSize;
+                codeLines[i].transform.position = NextPseudoCodeLine(i, spaceBetweenLines);
+            }
+
+            //float aboveFloorDiff = codeLines[codeLines.Length - 1].transform.position.y;
+            //if (aboveFloorDiff < 0f)
+            //{
+            //    pseudocodeLinesObj.transform.position += new Vector3(0f, aboveFloorDiff, 0f);
+            //}
+        }
+    }
+
+
+    private Vector3 NextPseudoCodeLine(int i, float spaceBetweenLines)
+    {
+        return new Vector3(pseudocodeLinesObj.transform.position.x, pseudocodeLinesObj.transform.position.y - (i * spaceBetweenLines), pseudocodeLinesObj.transform.position.z);
+    }
+
     public void EmptyContent()
     {
         if (codeLines != null)
@@ -177,5 +256,9 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
                     Destroy(codeLines[x].gameObject);
             }
         }
+
+        // Reset positions
+        transform.position = objectStartPos;
+        pseudocodeLinesObj.position = containerStartPos;
     }
 }

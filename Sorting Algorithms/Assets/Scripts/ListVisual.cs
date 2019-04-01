@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ListVisual : MonoBehaviour {
+public class ListVisual : MonoBehaviour, IMoveAble {
 
     /* -------------------------------------------- List representation ----------------------------------------------------
      * > Gives a visual representation of the nodes in the algorithms
@@ -32,6 +32,7 @@ public class ListVisual : MonoBehaviour {
     [SerializeField]
     private Transform spawnPointList, currentNodePoint;
     private Vector3 oneListIndexUp = new Vector3(0f, 1f, 0f);
+    private Vector3 startPos;
 
     private float seconds;
     private WaitForSeconds smallDuration = new WaitForSeconds(0.5f);
@@ -43,6 +44,11 @@ public class ListVisual : MonoBehaviour {
 
     public TextMeshPro debugging;
     private bool debugUpdate;
+
+    private void Awake()
+    {
+        startPos = transform.position;
+    }
 
 
     public void InitListVisual(string listType, float algorithmSpeed)
@@ -433,7 +439,7 @@ public class ListVisual : MonoBehaviour {
                 if (increment)
                 {
                     CreateBackTrackList(instruction.Node);
-                    RemoveCurrentNode();
+                    //RemoveCurrentNode();
                 }
                 else
                 {
@@ -664,5 +670,13 @@ public class ListVisual : MonoBehaviour {
         Debug.Log("Done switching");
     }
 
+    public void MoveOut()
+    {
+        transform.position -= new Vector3(6f, 0f, 0f);
+    }
 
+    public void MoveBack()
+    {
+        transform.position = startPos;
+    }
 }

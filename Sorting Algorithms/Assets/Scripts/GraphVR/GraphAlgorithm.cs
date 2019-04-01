@@ -90,14 +90,19 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         edgeCost = edge.Cost;
     }
 
-    public override float GetLineSpacing()
+    public override float LineSpacing
     {
-        return UtilGraph.SPACE_BETWEEN_CODE_LINES;
+        get { return UtilGraph.SPACE_BETWEEN_CODE_LINES; }
     }
 
-    public override Vector2 GetLineRTDelta()
+    public override float FontSize
     {
-        return new Vector2(10, 2);
+        get { return 6f; }
+    }
+
+    public override Vector2 LineRTDelta
+    {
+        get { return new Vector2(10, 2); }
     }
 
     public override void ResetSetup()

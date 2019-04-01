@@ -376,14 +376,18 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 if (travInst.VisitInst)
                 {
                     visitNextMove = true;
-                    animator.SetBool("NodeVisit", true);
+
+                    if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                        animator.SetBool("NodeVisit", true);
                 }
 
                 // This node is the next to be traversed (player move to node)
                 if (travInst.TraverseInst)
                 {
                     traverseNextMove = true;
-                    animator.SetBool("NodeTraverse", true);
+
+                    if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                        animator.SetBool("NodeTraverse", true);
                 }
 
                 // Set the edge between the node we traversed from to reach this node
@@ -520,8 +524,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 NextMove = false;
                 visitNextMove = false;
                 traverseNextMove = false;
-                animator.SetBool("NodeVisit", false);
-                animator.SetBool("NodeTraverse", false);
+
+                if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                {
+                    animator.SetBool("NodeVisit", false);
+                    animator.SetBool("NodeTraverse", false);
+                }
             }
         }
         validatedUserMove++;

@@ -50,7 +50,6 @@ public class StartPillar : MonoBehaviour {
     public void SetButtonActive(bool active)
     {
         startButton.gameObject.SetActive(active);
-        Debug.Log("Start button: " + active);
     }
 
     public void ButtonClicked()

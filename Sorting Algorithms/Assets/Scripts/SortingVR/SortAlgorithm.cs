@@ -28,14 +28,19 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_VAR_J);
     }
 
-    public override float GetLineSpacing()
+    public override float LineSpacing
     {
-        return UtilSort.SPACE_BETWEEN_CODE_LINES;
+        get { return UtilSort.SPACE_BETWEEN_CODE_LINES; }
     }
 
-    public override Vector2 GetLineRTDelta() // ????
+    public override float FontSize
     {
-        return new Vector2(1f, 0.2f);
+        get { return 4f; }
+    }
+
+    public override Vector2 LineRTDelta
+    {
+        get { return new Vector2(1f, 0.2f); }
     }
 
     public override MainManager MainManager

@@ -468,4 +468,9 @@ public class SortMain : MainManager {
             default: Debug.LogError("'" + algorithmName + "' not valid"); return null;
         }
     }
+
+    public override void ToggleVisibleStuff()
+    {
+        Debug.Log("Toggle");
+    }
 }

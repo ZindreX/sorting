@@ -190,11 +190,15 @@ public abstract class GraphManager : MonoBehaviour {
         // Fix list visual
         instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.PREPARE_BACKTRACKING, instNr, node)); // Prepares backtracking list + moving current (end) node out of list
 
+        // Set current node (remove from list)
+        instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.BACKTRACK_REMOVE_CURRENT_NODE, instNr, node));
+
         while (node != null)
         {
-            // Change color of edge leading to previous node
+            // Backtrack by using each node's prevEdge
             Edge backtrackEdge = node.PrevEdge;
 
+            // Stop when we reach the start node
             if (backtrackEdge == null)
                 break;
 
@@ -202,8 +206,10 @@ public abstract class GraphManager : MonoBehaviour {
             if (backtrackEdge is DirectedEdge)
                 ((DirectedEdge)backtrackEdge).PathBothWaysActive = true;
 
+            // Set the next node via the prevEdge
             node = backtrackEdge.OtherNodeConnected(node);
 
+            // Add instruction for traversing + list visual
             ListVisualInstruction removeCurrentNodeRep = new ListVisualInstruction(UtilGraph.BACKTRACK_REMOVE_CURRENT_NODE, instNr, node, backtrackEdge);
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.BACKTRACK, instNr, node, false, true, removeCurrentNodeRep));
 

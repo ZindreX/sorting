@@ -70,9 +70,12 @@ public class Pointer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        transform.position = rightHand.position;
+        transform.rotation = rightHand.rotation;
+
         if (!allowShooting)
         {
-            laserBeam.enabled = false;
+            ResetLaserBeam();
             return;
         }
 
@@ -82,21 +85,19 @@ public class Pointer : MonoBehaviour {
                 return;
 
             //if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.Any))
-            if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.Any))
+            if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.RightHand))
             {
                 // Set position & rotation to hand
-                if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.LeftHand))
-                {
-                    transform.position = leftHand.position;
-                    transform.rotation = leftHand.rotation;
-                }
-                else if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.RightHand))
-                {
-                    transform.position = rightHand.position;
-                    transform.rotation = rightHand.rotation;
-                }
-
-                laserBeam.enabled = true;
+                //if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.LeftHand))
+                //{
+                //    transform.position = leftHand.position;
+                //    transform.rotation = leftHand.rotation;
+                //}
+                //else if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.RightHand))
+                //{
+                //    transform.position = rightHand.position;
+                //    transform.rotation = rightHand.rotation;
+                //}
 
                 // Declare a raycast hit to store information about what our raycast hit
                 RaycastHit hit;
@@ -105,11 +106,12 @@ public class Pointer : MonoBehaviour {
                 laserBeam.SetPosition(0, transform.position);
 
                 // Check if our raycast has hit anything
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, laserRange)) // Mathf.Infinity, layerMask))
                 //Physics.Raycast(rayOrigin, vrCamera.transform.forward, out hit, laserRange))
                 {
                     // Set the end position for our laser line
                     laserBeam.SetPosition(1, hit.point);
+                    laserBeam.enabled = true;
 
                     //Debug.Log("Gameobject: " + hit.collider.gameObject);
                     hitObject = hit.collider.gameObject;
@@ -152,13 +154,11 @@ public class Pointer : MonoBehaviour {
                             }
                         }
                     }
-
                 }
                 else
                 {
                     // If we didn't hit anything, set the end of the line to a position directly in front of the camera at the distance of laserRange
-                    //laserBeam.SetPosition(1, transform.position * laserRange);
-                    //laserBeam.SetPosition(1, transform.position * laserRange);
+                    laserBeam.SetPosition(1, transform.position + (laserRange * transform.TransformDirection(Vector3.forward)));
                 }
             }
             else
@@ -166,8 +166,8 @@ public class Pointer : MonoBehaviour {
         }
         else
             ResetLaserBeam();
-
     }
+
 
     public string CurrentTask
     {
@@ -183,12 +183,26 @@ public class Pointer : MonoBehaviour {
 
     private void ResetLaserBeam()
     {
+        laserBeam.SetPosition(1, transform.position);
         laserBeam.enabled = false;
-        laserBeam.SetPosition(1, transform.position * 0f);
     }
 
 
 
+    private void ShootLaserFromTargetPosition(Vector3 targetPosition, Vector3 direction, float length)
+    {
+        Ray ray = new Ray(targetPosition, direction);
+        RaycastHit raycastHit;
+        Vector3 endPosition = targetPosition + (length * direction);
+
+        if (Physics.Raycast(ray, out raycastHit, length))
+        {
+            endPosition = raycastHit.point;
+        }
+
+        laserBeam.SetPosition(0, targetPosition);
+        laserBeam.SetPosition(1, endPosition);
+    }
 
     // Debugging without VR
     //if (Input.GetKeyDown(KeyCode.G))

@@ -149,9 +149,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public abstract MainManager MainManager { get; }
 
     // Space between lines of code
-    public abstract float GetLineSpacing();
+    public abstract float LineSpacing { get; }
 
-    public abstract Vector2 GetLineRTDelta();
+    public abstract float FontSize { get; }
+
+    public abstract Vector2 LineRTDelta { get; }
 
     /* Collects one line of code at a time and rewrites it into pseudocode
      * - Sort: old system in use (todo: fix)

@@ -429,6 +429,9 @@ public abstract class MainManager : MonoBehaviour {
     //protected abstract int PrepareNextInstruction(InstructionBase instruction);
 
 
+
+    public abstract void ToggleVisibleStuff();
+
     // --------------------------------------- Debugging ---------------------------------------
 
     private void DebugCheckInstructions(Dictionary<int, InstructionBase> dict)

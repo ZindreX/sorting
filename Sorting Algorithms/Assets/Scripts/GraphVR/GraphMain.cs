@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [RequireComponent(typeof(GraphManager))]
 [RequireComponent(typeof(UserTestManager))]
@@ -42,6 +43,8 @@ public class GraphMain : MainManager {
     private GraphManager graphManager;
     private PositionManager posManager;
 
+    // Moveable objects (blocking pseudocode)
+    private List<IMoveAble> moveAbleObjects;
 
     [Space(5)]
     [Header("Support")]
@@ -79,6 +82,14 @@ public class GraphMain : MainManager {
         posManager = FindObjectOfType<PositionManager>();
 
         startPillar = startPillarObj.GetComponent<StartPillar>();
+
+        // Moveable
+        moveAbleObjects = new List<IMoveAble>();
+        var components = FindObjectsOfType<MonoBehaviour>().OfType<IMoveAble>();
+        foreach (IMoveAble obj in components)
+        {
+            moveAbleObjects.Add(obj);
+        }
     }
 
     //  --------------------------------------- Getters ---------------------------------------
@@ -512,6 +523,7 @@ public class GraphMain : MainManager {
         }
     }
 
+    // User test
     public int PrepareNextInstruction(InstructionBase instruction)
     {
         string inst = instruction.Instruction;
@@ -786,7 +798,18 @@ public class GraphMain : MainManager {
         }
     }
 
-
+    private bool moveOut = true;
+    public override void ToggleVisibleStuff()
+    {
+        foreach (IMoveAble moveAble in moveAbleObjects)
+        {
+            if (moveOut)
+                moveAble.MoveOut();
+            else
+                moveAble.MoveBack();
+        }
+        moveOut = !moveOut;
+    }
 
 
 

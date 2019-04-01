@@ -36,13 +36,11 @@ public class AlgorithmUserController : MonoBehaviour {
     void Update()
     {
         // Used to start / stop sorting task
-        //if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any))
-        //{
-        //    if (!mainManager.ControllerReady)
-        //        mainManager.InstantiateSetup();
-        //    else
-        //        mainManager.DestroyAndReset();
-        //}
+        if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any))
+        {
+            Debug.Log("Toggle");
+            mainManager.ToggleVisibleStuff();
+        }
 
         // ************* DEBUGGING *************
         if (debugNextReady)
