@@ -24,7 +24,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected int i, j, k;
     //protected string i_str = "i", j_str = "j", k_str = "k";
     protected string lengthOfList = "len(list)";
-    protected bool lineCalculation = true;
+    protected bool pseudoCodeLineInDetail = true;
 
     // User Test
     protected Dictionary<string, List<string>> skipDict;
@@ -92,17 +92,17 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
          * Step 2: i = 1 + 1
          * Step 3: i = 2
         */
-        if (lineCalculation)
+        if (pseudoCodeLineInDetail)
         {
             bool valuesNotInserted = true; // First show step 1
             for (int x=0; x < 2; x++)
             {
-                string calculation = PseudocodeLineIntoSteps(index, valuesNotInserted);
+                string pseudoCodeLineStep = PseudocodeLineIntoSteps(index, valuesNotInserted);
 
-                if (calculation == "X")
+                if (pseudoCodeLineStep == "X")
                     break;
 
-                pseudoCodeViewer.SetCodeLine(index, calculation, color);
+                pseudoCodeViewer.SetCodeLine(index, pseudoCodeLineStep, color);
                 yield return demoStepDuration;
 
                 valuesNotInserted = false; // Then show step 2
@@ -153,7 +153,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     public abstract float FontSize { get; }
 
-    public abstract Vector2 LineRTDelta { get; }
+    public abstract float AdjustYOffset { get; }
 
     /* Collects one line of code at a time and rewrites it into pseudocode
      * - Sort: old system in use (todo: fix)
@@ -170,6 +170,10 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     public abstract int FinalInstructionCodeLine();
 
 
+    /* Demo / Step-by-step
+     * 1) The user can watch a demonstration of the algorithm (Adjust speed and pause available) <-- Unpaused
+     * 2) The user can progress through the algorithm one step at the time                       <-- Paused
+    */
     public abstract IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment);
 
     /* Almost the same method as for the Step by step teaching method

@@ -100,9 +100,9 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         get { return 6f; }
     }
 
-    public override Vector2 LineRTDelta
+    public override float AdjustYOffset
     {
-        get { return new Vector2(10, 2); }
+        get { return 1f; }
     }
 
     public override void ResetSetup()

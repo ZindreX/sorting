@@ -32,7 +32,7 @@ public class ListVisual : MonoBehaviour, IMoveAble {
     [SerializeField]
     private Transform spawnPointList, currentNodePoint;
     private Vector3 oneListIndexUp = new Vector3(0f, 1f, 0f);
-    private Vector3 startPos;
+    private Vector3 startPos, moveOut = new Vector3(6f, 0f, 0f);
 
     private float seconds;
     private WaitForSeconds smallDuration = new WaitForSeconds(0.5f);
@@ -613,6 +613,50 @@ public class ListVisual : MonoBehaviour, IMoveAble {
     }
 
 
+    // --------------------------------------- MoveOut/In ---------------------------------------
+    /* Stuff that blocks the view of the pseudocode
+     * 
+    */
+
+    public void MoveOut()
+    {
+        transform.position -= moveOut;
+
+        if (nodeRepresentations != null)
+        {
+            foreach (NodeRepresentation nodeRep in nodeRepresentations)
+            {
+                nodeRep.AddVector3(-moveOut);
+            }
+        }
+
+        if (currentNode != null)
+            currentNode.AddVector3(-moveOut);
+    }
+
+    public void MoveBack()
+    {
+        transform.position = startPos;
+
+        if (nodeRepresentations != null)
+        {
+            foreach (NodeRepresentation nodeRep in nodeRepresentations)
+            {
+                nodeRep.AddVector3(moveOut);
+            }
+        }
+
+        if (currentNode != null)
+            currentNode.AddVector3(moveOut);
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -668,15 +712,5 @@ public class ListVisual : MonoBehaviour, IMoveAble {
         np2.MoveNodeRepresentation(np2MoveRight);
 
         Debug.Log("Done switching");
-    }
-
-    public void MoveOut()
-    {
-        transform.position -= new Vector3(6f, 0f, 0f);
-    }
-
-    public void MoveBack()
-    {
-        transform.position = startPos;
     }
 }

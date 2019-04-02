@@ -9,7 +9,5 @@ public interface IAlgorithm {
 
     IEnumerator Demo(GameObject[] list);
     Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] list);
-
-    void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment);
     IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement);
 }

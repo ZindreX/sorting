@@ -67,6 +67,11 @@ public class NodeRepresentation : MonoBehaviour {
         moveObject.SetDestination(pos);
     }
 
+    public void AddVector3(Vector3 pos)
+    {
+        moveObject.AddVector3(pos);
+    }
+
     public void UpdateIndexPosition(int newListIndex)
     {
         // Find new y-axis value

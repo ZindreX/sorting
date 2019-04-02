@@ -25,7 +25,6 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
         throwAble = false;
 
-
         section = GetComponentInChildren<Section>();
         section.SectionManager = this;
 
@@ -57,7 +56,6 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
         mainManager.Settings.StepBack = enableStepBack;
         if (!enableStepBack)
             Destroy(buttons[STEP_BACK].gameObject);
-
     }
 
     private void Update()
@@ -76,6 +74,11 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
             currentState = pauseButtonState;
         }
+    }
+
+    public void SetDemoDeviceTitle(string title)
+    {
+        section.SetSectionTitle(title);
     }
 
 

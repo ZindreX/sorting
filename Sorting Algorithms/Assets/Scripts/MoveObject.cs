@@ -43,4 +43,9 @@ public class MoveObject : MonoBehaviour {
         destination = value;
     }
 
+    public void AddVector3(Vector3 pos)
+    {
+        destination += pos;
+    }
+
 }

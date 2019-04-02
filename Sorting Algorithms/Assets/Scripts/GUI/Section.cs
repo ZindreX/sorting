@@ -62,6 +62,11 @@ public class Section : MonoBehaviour {
         get { return sectionID; }
     }
 
+    public void SetSectionTitle(string title)
+    {
+        GetComponentInChildren<TextMeshPro>().text = title;
+    }
+
     // A section of 2 or more buttons which requires only 1 active at a time
     public bool IsOneActiveOnlySection
     {

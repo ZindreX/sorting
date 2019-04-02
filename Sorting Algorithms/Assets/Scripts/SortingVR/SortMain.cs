@@ -177,7 +177,7 @@ public class SortMain : MainManager {
         }
 
         // Pseudocode initialized
-        sortAlgorithm.PseudoCodeInitilized = true;
+        sortAlgorithm.PseudoCodeInitilized = true; // Sort only
 
         
         // Hide menu and display sorting table
@@ -251,37 +251,6 @@ public class SortMain : MainManager {
             StartCoroutine(sortAlgorithm.Demo(elementManager.SortingElements));
     }
 
-
-    /* --------------------------------------- Step-By-Step ---------------------------------------
-     * - Gives a visual presentation of <sorting algorithm>
-     * - Player can't directly interact with sorting elements, but can use controllers to progress
-     *   one step of a time / or back
-    */
-    public override void PerformAlgorithmStepByStep()
-    {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use grip buttons\n to progress");
-
-        // Getting instructions for this sample of sorting elements
-        elementManager.InteractionWithSortingElements(false);
-        stepByStepManager.InitDemo(sortAlgorithm.UserTestInstructions(algorithmManagerBase.CopyFirstState(elementManager.SortingElements)));
-    }
-
-    protected override void StepByStepUpdate()
-    {
-        if (stepByStepManager.PlayerMove && stepByStepManager.IsValidStep)
-        {
-            stepByStepManager.PlayerMove = false;
-            InstructionBase instruction = stepByStepManager.GetStep();
-            
-            //Debug.Log(">>> " + instruction.Instruction);
-            //Debug.Log("InstructionNr.: " + instruction.INSTRUCION_NR);
-            //Debug.Log(tutorialStep.CurrentInstructionNr);
-
-
-            bool gotSortingElement = !sortAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-            sortAlgorithm.ExecuteStepByStepOrder(instruction, gotSortingElement, stepByStepManager.PlayerIncremented);
-        }
-    }
 
     /* --------------------------------------- User Test ---------------------------------------
      * - Gives a visual presentation of elements used in <sorting algorithm>

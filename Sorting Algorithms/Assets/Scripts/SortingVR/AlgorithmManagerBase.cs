@@ -26,7 +26,6 @@ public abstract class AlgorithmManagerBase : MonoBehaviour {
     // Returns the holder (might change, since insertion sort is the only with some modifications) ***
     public virtual HolderBase GetCorrectHolder(int index)
     {
-        Debug.Log("Nani");
         return sortMain.HolderManager.GetHolder(index);
     }
 

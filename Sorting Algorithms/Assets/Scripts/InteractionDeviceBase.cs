@@ -7,7 +7,10 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(Interactable))]
 public abstract class InteractionDeviceBase : MonoBehaviour {
 
-    protected bool playerHoldingCalculator, throwAble;
+    [SerializeField]
+    protected bool moveAble;
+
+    protected bool playerHoldingDevice, throwAble;
 
     protected Vector3 startPos;
 
@@ -24,12 +27,18 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
 
     private void Update()
     {
+        if (!moveAble)
+            return;
+
         if (throwAble && transform.position.y < 0.1f)
             SpawnDeviceInfrontOfPlayer();
     }
 
     public void SpawnDeviceInfrontOfPlayer()
     {
+        if (!moveAble)
+            return;
+
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
 
@@ -42,7 +51,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
 
     public void PlayerHoldingDevice(bool holding)
     {
-        playerHoldingCalculator = holding;
+        playerHoldingDevice = holding;
 
         if (holding)
         {

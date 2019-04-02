@@ -35,12 +35,12 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     public override float FontSize
     {
-        get { return 4f; }
+        get { return 2f; }
     }
 
-    public override Vector2 LineRTDelta
+    public override float AdjustYOffset
     {
-        get { return new Vector2(1f, 0.2f); }
+        get { return 0.25f; }
     }
 
     public override MainManager MainManager
@@ -85,7 +85,7 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     /* Step by step execution of the chosen sorting algorithm
      * - The user can progress through the algorithm one step at the time
     */
-    public abstract void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment);
+    //public abstract void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment);
 
     /* Creates a instruction dictionary
      * - Used in: User test, Step by Step

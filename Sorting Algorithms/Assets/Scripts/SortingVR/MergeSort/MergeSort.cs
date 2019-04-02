@@ -437,12 +437,6 @@ public class MergeSort : SortAlgorithm {
         return mergeSortHolder;
     }
 
-
-    public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotElement, bool increment)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
         throw new System.NotImplementedException();

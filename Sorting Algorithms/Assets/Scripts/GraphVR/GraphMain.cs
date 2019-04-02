@@ -244,6 +244,9 @@ public class GraphMain : MainManager {
             listVisual.InitListVisual(graphAlgorithm.GetListType(), algorithmSpeed);
         }
 
+        // Fix pseudocode
+        pseudoCodeViewer.ChangeSizeOfPseudocode(new Vector3(0f, 0f, 0f));
+
         // Hide menu
         StartCoroutine(ActivateTaskObjects(true));
 
@@ -341,7 +344,7 @@ public class GraphMain : MainManager {
         StartCoroutine(ActivateTaskObjects(false));
 
         calculator.ResetDevicePosition();
-
+        demoDevice.ResetDevicePosition();
 
         switch (graphSettings.TeachingMode)
         {
@@ -389,19 +392,6 @@ public class GraphMain : MainManager {
                 case UtilGraph.SHORTEST_PATH: StartCoroutine(((IShortestPath)graphAlgorithm).ShortestPathDemo(graphManager.StartNode, graphManager.EndNode)); break;
             }
         }
-    }
-
-    /* --------------------------------------- Step-By-Step ---------------------------------------
-     * - Not implemented yet
-    */
-    public override void PerformAlgorithmStepByStep()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    protected override void StepByStepUpdate()
-    {
-
     }
 
     /* --------------------------------------- User Test ---------------------------------------

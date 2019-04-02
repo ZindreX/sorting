@@ -77,10 +77,7 @@ public abstract class MainManager : MonoBehaviour {
         else
         {
             // Update based on the active teaching mode
-            if (Settings.IsStepByStep())
-                StepByStepUpdate();
-
-            else if (Settings.IsDemo())
+            if (Settings.IsDemo())
                 DemoUpdate();
 
             else if (Settings.IsUserTest())
@@ -199,10 +196,14 @@ public abstract class MainManager : MonoBehaviour {
                 if (userPausedTask)
                 {
                     stepByStepManager.CurrentInstructionNr--;
-                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
+                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0.5f); // If pause -> Step by step (player choose pace themself)
+                    demoDevice.SetDemoDeviceTitle(Util.STEP_BY_STEP);
                 }
                 else
+                {
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed); // Use demo speed
+                    demoDevice.SetDemoDeviceTitle(Util.DEMO);
+                }
                 break;
 
             case DemoDevice.STEP_FORWARD:
@@ -259,7 +260,6 @@ public abstract class MainManager : MonoBehaviour {
         switch (teachingMode)
         {
             case Util.DEMO: demoDevice.SpawnDeviceInfrontOfPlayer(); PerformAlgorithmDemo(); break;
-            case Util.STEP_BY_STEP: PerformAlgorithmStepByStep(); break;
             case Util.USER_TEST: PerformAlgorithmUserTest(); break;
         }
 
@@ -333,8 +333,6 @@ public abstract class MainManager : MonoBehaviour {
 
         WaitForSupportToComplete = 0;
 
-        demoDevice.ResetDevicePosition();
-
         switch (Settings.TeachingMode)
         {
             case Util.DEMO:
@@ -347,18 +345,15 @@ public abstract class MainManager : MonoBehaviour {
     }
 
 
-
-    // --------------------------------------- Teaching mode updates ---------------------------------------
-
-    protected abstract void StepByStepUpdate();
-    protected abstract void UserTestUpdate();
-    protected abstract void TaskCompletedFinishOff(); // Finish off visualization
-
-
-
-    /* --------------------------------------- Demo ---------------------------------------
+    /* --------------------------------------- Demo & Step-By-Step ---------------------------------------
+     * >>> Demo
      * - Gives a visual presentation of <algorithm>
      * - Player dont need to do anything / Watch & learn
+     * 
+     * >>> Step-by-step
+     * - Gives a visual presentation of <algorithm>
+     * - Player can't directly interact with <algorithm objects>, but can use buttons in scene or 
+     *   controllers to progress one step of a time / or back
     */
     public abstract void PerformAlgorithmDemo();
 
@@ -407,18 +402,14 @@ public abstract class MainManager : MonoBehaviour {
             instruction.Status = Util.NOT_EXECUTED;
     }
 
-    /* --------------------------------------- Step-By-Step ---------------------------------------
-     * - Gives a visual presentation of <algorithm>
-     * - Player can't directly interact with <algorithm objects>, but can use controllers to progress
-     *   one step of a time / or back
-    */
-    public abstract void PerformAlgorithmStepByStep();
+
 
     /* --------------------------------------- User Test ---------------------------------------
      * - Gives a visual presentation of elements used in <algorithm>
      * - Player needs to interact with the <algorithm objects> to progress through the algorithm
     */
     public abstract void PerformAlgorithmUserTest();
+    protected abstract void UserTestUpdate();
 
 
     /* Prepares the next instruction based on the algorithm being runned
@@ -430,7 +421,14 @@ public abstract class MainManager : MonoBehaviour {
 
 
 
+
+
+    // --------------------------------------- Other ---------------------------------------
+
+    protected abstract void TaskCompletedFinishOff(); // Finish off visualization
+
     public abstract void ToggleVisibleStuff();
+
 
     // --------------------------------------- Debugging ---------------------------------------
 
