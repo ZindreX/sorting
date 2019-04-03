@@ -64,6 +64,10 @@ public class Util : MonoBehaviour {
     public static readonly int ROLL_MIN = 0, ROLL_MAX = 10;
 
 
+    // ----- Area stuff -----
+    public const string INIT_AREA = "Init area", LOAD_SCENE = "Load scene", HEAD_COLLIDER = "HeadCollider";
+
+
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 
     */
@@ -196,5 +200,13 @@ public class Util : MonoBehaviour {
         //{
         //    part.SetActive(active);
         //}
+    }
+
+    public static bool ObjectWithinBounderies(Vector3 objectPos, Vector3 bounderiesObject, float within)
+    {
+        float objectRelativeToBounderiesObjectX = Mathf.Abs(objectPos.x - bounderiesObject.x);
+        float objectRelativeToBounderiesObjectZ = Mathf.Abs(objectPos.z - bounderiesObject.z);
+
+        return objectRelativeToBounderiesObjectX < within && objectRelativeToBounderiesObjectZ < within;
     }
 }

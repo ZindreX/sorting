@@ -22,7 +22,7 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
     protected bool useDebuggingSettings;
     [SerializeField]
     protected TeachingModeEditor teachingModeEditor;
-    protected enum TeachingModeEditor { Demo, StepByStep, UserTest }
+    protected enum TeachingModeEditor { Demo, UserTest }
 
     [SerializeField]
     protected AlgorithmSpeedEditor algorithmSpeedEditor;
@@ -59,8 +59,7 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
         switch ((int)teachingModeEditor)
         {
             case 0: TeachingMode = Util.DEMO; break;
-            case 1: TeachingMode = Util.STEP_BY_STEP; break;
-            case 2: TeachingMode = Util.USER_TEST; break;
+            case 1: TeachingMode = Util.USER_TEST; break;
         }
 
         AlgorithmSpeedLevel = (int)algorithmSpeedEditor;
@@ -168,9 +167,9 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
             case Util.DEMO: case Util.STEP_BY_STEP: break;
             case Util.USER_TEST:
                 if (difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
-                    AlgorithmSpeedLevel = 1;
+                    AlgorithmSpeedLevel = 1; // Normal speed
                 else
-                    AlgorithmSpeedLevel = 3;
+                    AlgorithmSpeedLevel = 3; // 0 Sec per step -- no "lag"
                 break;
         }
 

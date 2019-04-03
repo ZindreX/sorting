@@ -49,11 +49,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     [SerializeField]
     protected List<Edge> edges;
 
-    // Position handling
-    private Camera playerCamera;
-    private Vector3 nodePosition;
-    private float withinNode = 0.6f;
-
     private PositionManager positionManager;
     private GraphMain graphMain;
     private AudioManager audioManager;
@@ -98,48 +93,37 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
 
         // Find player object and its camera
-        playerCamera = FindObjectOfType<Player>().gameObject.GetComponentInChildren<Camera>();
         positionManager = FindObjectOfType<PositionManager>();
         graphMain = FindObjectOfType<GraphMain>();
         audioManager = FindObjectOfType<AudioManager>();
-
-        // Node position
-        nodePosition = transform.position;
 
         // "Set"
         edges = new List<Edge>();
         ResetNode();
     }
 
-    private void Update()
+    // >>> Rotate text (ID & dist) according to player position, making it readable
+    public void RotateTowardsPoint(Vector3 pos)
     {
-        if (playerCamera != null && positionManager.ReportedNode != this)
+        textNodeID.transform.LookAt(2 * textNodeID.transform.position - pos);
+        textNodeDist.transform.LookAt(2 * textNodeDist.transform.position - pos);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "HeadCollider" && positionManager.ReportedNode != this)
         {
-            Vector3 playerPos = playerCamera.transform.position;
+            // Hide text
+            textNodeDist.text = "";
+            textNodeID.text = "";
 
-            // >>> Rotate text (ID & dist) according to player position, making it readable
-            textNodeID.transform.LookAt(2 * textNodeID.transform.position - playerPos);
-            textNodeDist.transform.LookAt(2 * textNodeDist.transform.position - playerPos);
-
-            // >>> Check if player is standing on this node
-            float playerRelToNodeX = Mathf.Abs(playerPos.x - nodePosition.x);
-            float playerRelToNodeZ = Mathf.Abs(playerPos.z - nodePosition.z);
-
-            // If so report it
-            if (playerRelToNodeX < withinNode && playerRelToNodeZ < withinNode)
+            // Perform user move first
+            if (positionManager.ReportedNode != this)
             {
-                // Hide text
-                textNodeDist.text = "";
-                textNodeID.text = "";
-
-                // Perform user move first
-                if (positionManager.ReportedNode != this)
-                {
-                    // Report 
-                    positionManager.ReportPlayerOnNode(this);
-                    // Perform user move (traverse)
-                    PerformUserMove(UtilGraph.NODE_TRAVERSED);
-                }
+                // Report 
+                positionManager.ReportPlayerOnNode(this);
+                // Perform user move (traverse)
+                PerformUserMove(UtilGraph.NODE_TRAVERSED);
             }
         }
     }

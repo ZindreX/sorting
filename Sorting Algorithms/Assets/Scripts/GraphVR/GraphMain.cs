@@ -196,11 +196,8 @@ public class GraphMain : MainManager {
 
         graphAlgorithm.VisitLeftFirst = visitLeftFirst; // needed? remove? fix under tree settings?
 
-        // >>> Init position manager
-        bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
-        posManager.InitPositionManager(isShortestPath);
-
         // >>> Init Graph manager
+        bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
         graphManager = ActivateDeactivateGraphComponents(graphSettings.GraphStructure);
         graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict(), listVisual);
 
@@ -210,6 +207,8 @@ public class GraphMain : MainManager {
         // Create graph based on init variables
         graphManager.CreateGraph(edgeBuildMode);
 
+        // >>> Init position manager
+        posManager.InitPositionManager(isShortestPath);
 
         // >>> Support
         blackboard.ChangeText(0, algorithmName);

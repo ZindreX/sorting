@@ -196,7 +196,7 @@ public abstract class MainManager : MonoBehaviour {
                 if (userPausedTask)
                 {
                     stepByStepManager.CurrentInstructionNr--;
-                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0.5f); // If pause -> Step by step (player choose pace themself)
+                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
                     demoDevice.SetDemoDeviceTitle(Util.STEP_BY_STEP);
                 }
                 else
@@ -218,6 +218,13 @@ public abstract class MainManager : MonoBehaviour {
                 {
                     Settings.AlgorithmSpeedLevel--;
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed);
+
+                    switch (Settings.AlgorithmSpeedLevel)
+                    {
+                        case 0: demoDevice.ButtonActive(DemoDevice.REDUCE_SPEED, false); break;
+                        case 2: demoDevice.ButtonActive(DemoDevice.INCREASE_SPEED, true); break;
+                    }
+
                     Debug.Log("Speed changed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]);
 
                 }
@@ -230,6 +237,14 @@ public abstract class MainManager : MonoBehaviour {
                 {
                     Settings.AlgorithmSpeedLevel++;
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed);
+
+                    switch (Settings.AlgorithmSpeedLevel)
+                    {
+                        case 1: demoDevice.ButtonActive(DemoDevice.REDUCE_SPEED, true); break;
+                        case 3: demoDevice.ButtonActive(DemoDevice.INCREASE_SPEED, false); break;
+                    }
+                    
+
                     Debug.Log("Speed changed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]);
 
                 }
@@ -259,8 +274,15 @@ public abstract class MainManager : MonoBehaviour {
         // Start algorithm
         switch (teachingMode)
         {
-            case Util.DEMO: demoDevice.SpawnDeviceInfrontOfPlayer(); PerformAlgorithmDemo(); break;
-            case Util.USER_TEST: PerformAlgorithmUserTest(); break;
+            case Util.DEMO:
+                demoDevice.InitDemoDevice();
+                demoDevice.SpawnDeviceInfrontOfPlayer();
+                PerformAlgorithmDemo();
+                break;
+
+            case Util.USER_TEST:
+                PerformAlgorithmUserTest();
+                break;
         }
 
         userStoppedTask = false;
@@ -312,7 +334,7 @@ public abstract class MainManager : MonoBehaviour {
         // Used for shut down process
         safeStopChecklist = new Dictionary<string, bool>();
         algorithmName = Settings.Algorithm;
-
+        userPausedTask = true;
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -335,10 +357,7 @@ public abstract class MainManager : MonoBehaviour {
 
         switch (Settings.TeachingMode)
         {
-            case Util.DEMO:
-            case Util.STEP_BY_STEP:
-                stepByStepManager.ResetState();
-                break;
+            case Util.DEMO: stepByStepManager.ResetState(); break;
             case Util.USER_TEST: userTestManager.ResetState(); break;
         }
         newDemoImplemented = false;

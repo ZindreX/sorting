@@ -19,16 +19,23 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
     private MainManager mainManager;
 
+    public void InitDemoDevice()
+    {
+        //
+        section.InitItem(PAUSE, false);
+
+        // Hide speed at start
+        buttons[REDUCE_SPEED].gameObject.SetActive(false);
+        buttons[INCREASE_SPEED].gameObject.SetActive(false);
+    }
+
     protected override void Awake()
     {
         base.Awake();
 
-        throwAble = false;
-
+        // Find section and set this (demo device) as its section manager
         section = GetComponentInChildren<Section>();
         section.SectionManager = this;
-
-        section.InitItem(PAUSE, true);
 
         // Gather settings menu items
         Component[] components = GetComponentsInChildren<SettingsMenuItem>();
@@ -41,18 +48,16 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
             buttons.Add(item.ItemID, item);
         }
 
+        // Find the pause button
         pauseButton = (ToggleButton)buttons[PAUSE];
-
-        // Hide speed at start
-        buttons[REDUCE_SPEED].gameObject.SetActive(false);
-        buttons[INCREASE_SPEED].gameObject.SetActive(false);
     }
 
     private void Start()
     {
+        // Find main manager
         mainManager = FindObjectOfType<MainManager>();
 
-
+        // Destroy backward step (not finished)
         mainManager.Settings.StepBack = enableStepBack;
         if (!enableStepBack)
             Destroy(buttons[STEP_BACK].gameObject);
@@ -81,10 +86,15 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
         section.SetSectionTitle(title);
     }
 
-
     public void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
         mainManager.PerformDemoDeviceAction(itemID);
+    }
+
+    public void ButtonActive(string buttonID, bool active)
+    {
+        if (buttons.ContainsKey(buttonID))
+            buttons[buttonID].gameObject.SetActive(active);
     }
 
 }

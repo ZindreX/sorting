@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4382387314442566}
   - component: {fileID: 136379429111341874}
+  - component: {fileID: 114290648561442540}
   m_Layer: 0
   m_Name: Node
   m_TagString: Node
@@ -826,6 +827,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 0.8
   m_Text: 
+--- !u!114 &114290648561442540
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1155645530711212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3be917a80086a48b97933694257f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114299458112361534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1119,7 +1131,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.47625
+  m_Radius: 0.6
   m_Center: {x: 0, y: 0.48375, z: 0}
 --- !u!136 &136379429111341874
 CapsuleCollider:
@@ -1128,12 +1140,12 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1155645530711212}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!222 &222360812670354120
 CanvasRenderer:
   m_ObjectHideFlags: 1

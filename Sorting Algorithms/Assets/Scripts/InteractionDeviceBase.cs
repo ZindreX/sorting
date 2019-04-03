@@ -8,7 +8,7 @@ using Valve.VR.InteractionSystem;
 public abstract class InteractionDeviceBase : MonoBehaviour {
 
     [SerializeField]
-    protected bool moveAble;
+    protected bool integratedInOtherObject;
 
     protected bool playerHoldingDevice, throwAble;
 
@@ -23,11 +23,12 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
         playerCamera = FindObjectOfType<Player>().GetComponentInChildren<Camera>();
         rb = GetComponent<Rigidbody>();
         startPos = transform.position;
+        throwAble = false;
     }
 
     private void Update()
     {
-        if (!moveAble)
+        if (integratedInOtherObject)
             return;
 
         if (throwAble && transform.position.y < 0.1f)
@@ -36,7 +37,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
 
     public void SpawnDeviceInfrontOfPlayer()
     {
-        if (!moveAble)
+        if (integratedInOtherObject)
             return;
 
         rb.useGravity = false;

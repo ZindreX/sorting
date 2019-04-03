@@ -228,7 +228,7 @@ public class InsertionSort : SortAlgorithm {
     }
     #endregion
 
-    #region Insertion Sort: All Moves Demo (Visuals)
+    #region Insertion Sort: All Moves Demo (Visuals, OLD)
     public override IEnumerator Demo(GameObject[] list)
     {
         Vector3 temp = new Vector3();
@@ -1009,8 +1009,8 @@ public class InsertionSort : SortAlgorithm {
                 instructions.Add(instructionNr++, new InsertionSortInstruction(UtilSort.SWITCH_INST, instructionNr, i, j, UtilSort.NO_VALUE, compareElement.SortingElementID, compareElement.Value, false, true, false, compareElement.HolderID, temp1)); // new InsertionSortInstruction(compareElement.SortingElementID, compareElement.HolderID, temp1, i, j, Util.SWITCH_INST, instructionNr, compareElement.Value, false, false, true));
 
                 // Line 7
-                j -= 1;
                 instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_VAR_J, instructionNr, i, j, UtilSort.NO_VALUE)); // new InstructionBase(Util.UPDATE_VAR_J, instructionNr, i, j, false, false));
+                j -= 1;
 
                 // temp2 is open spot, temp1 will be given to next compare element or place pivot there
                 temp1 = temp2;

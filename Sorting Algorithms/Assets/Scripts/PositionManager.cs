@@ -9,6 +9,11 @@ public class PositionManager : MonoBehaviour, IMoveAble {
     [Header("Goal(s)")]
     [SerializeField]
     private Node currentGoal, reportedNode, previousNode;
+    private Node[] allNodes;
+
+    [Header("Other areas")]
+    [SerializeField]
+    private BoxCollider[] otherAreas;
 
     private bool showDistance, playerWithinGoalPosition;
     private TextMeshPro playerPositionText, nodeDistText;
@@ -29,10 +34,14 @@ public class PositionManager : MonoBehaviour, IMoveAble {
 
         if (!showDistance)
             nodeDistText.text = "";
+
+        allNodes = FindObjectsOfType<Node>();
     }
 
     private void Awake()
     {
+        otherAreaPositionUpdated = true;
+
         Component[] components = GetComponentsInChildren<TextMeshPro>();
         playerPositionText = components[0].GetComponent<TextMeshPro>();
         nodeDistText = components[1].GetComponent<TextMeshPro>();
@@ -61,6 +70,7 @@ public class PositionManager : MonoBehaviour, IMoveAble {
                 previousNode.DisplayNodeInfo();
         }
 
+        // start area
         if (!otherAreaPositionUpdated)
         {
             Vector3 playerPos = playerCamera.transform.position;
@@ -68,11 +78,12 @@ public class PositionManager : MonoBehaviour, IMoveAble {
             {
                 SetPlayerPositionText("\nStart area");
                 pseudoCodeViewer.ChangeSizeOfPseudocode(playerPos);
+
+                RotateNodesTowards(playerPos);
+
                 otherAreaPositionUpdated = true;
             }
         }
-
-
     }
 
     public void ReportPlayerOnNode(Node node)
@@ -84,7 +95,11 @@ public class PositionManager : MonoBehaviour, IMoveAble {
         // Set reported node
         reportedNode = node;
 
+        // Fix pseudocode size
         pseudoCodeViewer.ChangeSizeOfPseudocode(node.transform.position);
+
+        // Rotate all node text toward player
+        RotateNodesTowards(node.transform.position);
 
         // Display information about the node the player currently is standing on
         SetPlayerPositionText(node.NodeAlphaID.ToString());
@@ -130,6 +145,19 @@ public class PositionManager : MonoBehaviour, IMoveAble {
     {
         playerPositionText.text = "Player position: " + position;
     }
+
+    public void RotateNodesTowards(Vector3 pos)
+    {
+        foreach (Node node in allNodes)
+        {
+            node.RotateTowardsPoint(pos);
+        }
+    }
+
+
+
+
+
 
     public void MoveOut()
     {
