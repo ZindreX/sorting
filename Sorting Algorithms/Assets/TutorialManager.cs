@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 public class TutorialManager : MonoBehaviour {
 
@@ -12,19 +13,33 @@ public class TutorialManager : MonoBehaviour {
     private void Awake()
     {
         PlayerInArea(startArea);
-        CurrentAreaCleared();
+        MoveArrow();
+    }
+
+    private void Update()
+    {
+        if (currentArea != null)
+        {
+            switch (currentArea.AreaName)
+            {
+                case "Graph":
+                    break;
+
+            }
+
+        }
     }
 
     public void PlayerInArea(TutorialArea area)
     {
         currentArea = area;
-        CurrentAreaCleared();
+        MoveArrow();
     }
 
-    public void CurrentAreaCleared()
+    public void MoveArrow()
     {
         TutorialArea nextArea = currentArea.NextArea;
-        if (nextArea != null)
+        if (nextArea != null && !currentArea.Cleared)
         {
             transform.position = currentArea.NextArea.transform.position;
         }

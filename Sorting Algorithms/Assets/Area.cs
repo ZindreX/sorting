@@ -13,12 +13,20 @@ public class Area : MonoBehaviour {
 
     [SerializeField]
     private AreaCode areaCode;
-    private enum AreaCode { InitArea, LoadScene }
+    private enum AreaCode { InitArea, OpenPath, LoadScene }
 
     [SerializeField]
     private int loadScene;
 
+    protected Door door;
+
     private bool playerWithinArea;
+
+
+    protected virtual void Awake()
+    {
+        door = GetComponentInChildren<Door>();
+    }
 
 
     public string AreaName
@@ -35,20 +43,28 @@ public class Area : MonoBehaviour {
     {
         switch ((int)areaCode)
         {
-            case 0: DoAreaStuff(); break;
-            case 1: SceneManager.LoadScene(loadScene); break;
+            case 0: InitArea(); break;
+            case 1: OpenPath(); break;
+            case 2: SceneManager.LoadScene(loadScene); break;
         }
     }
 
-    public void DoAreaStuff()
+    public virtual void InitArea()
     {
-        Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>> area: " + areaName);
+
+    }
+
+    public void OpenPath()
+    {
+        if (door != null)
+            door.OpenDoor();
     }
 
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.name == Util.HEAD_COLLIDER)
         {
+            Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>> area: " + areaName);
             PerformAreaCode();
             playerWithinArea = true;
         }
