@@ -39,14 +39,14 @@ public class TutorialPointer : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        transform.position = rightHand.position;
-        transform.rotation = rightHand.rotation;
-
         if (!allowShooting)
         {
             ResetLaserBeam();
             return;
         }
+
+        transform.position = rightHand.position;
+        transform.rotation = rightHand.rotation;
 
         //if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.Any))
         if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.RightHand))
@@ -70,9 +70,40 @@ public class TutorialPointer : MonoBehaviour {
                 // If there was a node script attached
                 if (node != null)
                 {
-                    if (!node.Visited)
-                        node.Visited = true;
-                    
+                    // Get edge leading from the node we just shot back to the current node
+                    List<TutorialEdge> edges = node.Edges;
+
+                    TutorialEdge edgeLeadingToNode = null;
+                    foreach (TutorialEdge edge in edges)
+                    {
+                        TutorialNode otherNode = edge.OtherNode(node);
+                        if (otherNode.CurrentTraversing)
+                        {
+                            edgeLeadingToNode = edge;
+                            break;
+                        }
+                    }
+
+                    bool isDirectedEdge = edgeLeadingToNode.IsDirectedEdge;
+
+                    if (isDirectedEdge)
+                    {
+                        bool correctDirection = edgeLeadingToNode.OtherNode(node) != null;
+
+                        if (correctDirection && !node.Visited)
+                        {
+                            node.PrevEdge = edgeLeadingToNode;
+                            node.Visited = true;
+                        }
+                    }
+                    else
+                    {
+                        if (!node.Visited)
+                        {
+                            node.PrevEdge = edgeLeadingToNode;
+                            node.Visited = true;
+                        }
+                    }
                 }
             }
             else
@@ -83,6 +114,11 @@ public class TutorialPointer : MonoBehaviour {
         }
         else
             ResetLaserBeam();
+    }
+
+    public bool AllowShooting
+    {
+        set { allowShooting = value; }
     }
 
 

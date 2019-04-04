@@ -43,6 +43,8 @@ public class TutorialManager : MonoBehaviour {
         {
             transform.position = currentArea.NextArea.transform.position;
         }
+        //else if (nextArea == null)
+        //    Destroy(gameObject);
     }
 
 

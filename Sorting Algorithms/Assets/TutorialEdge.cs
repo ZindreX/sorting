@@ -12,8 +12,13 @@ public class TutorialEdge : MonoBehaviour {
 
     private void Awake()
     {
-        node1.Edge = this;
-        node2.Edge = this;
+        node1.AddEdge(this);
+        node2.AddEdge(this);
+    }
+
+    public bool IsDirectedEdge
+    {
+        get { return isDirectedEdge; }
     }
 
     public TutorialNode OtherNode(TutorialNode node)
@@ -21,6 +26,11 @@ public class TutorialEdge : MonoBehaviour {
         if (!isDirectedEdge)
             return (node1 == node) ? node2 : node1;
         return (node1 == node) ? node2 : null;
+    }
+
+    public void ChangeAppearance(Color color)
+    {
+        GetComponentInChildren<Renderer>().material.color = color;
     }
 
 }

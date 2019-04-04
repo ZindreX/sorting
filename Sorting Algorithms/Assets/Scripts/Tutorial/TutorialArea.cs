@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TutorialArea : Area {
 
@@ -46,6 +47,16 @@ public class TutorialArea : Area {
         switch (AreaName)
         {
             case "Graph":
+                //TutorialNode[] tutorialNodes = GetComponentsInChildren<TutorialNode>();
+                //foreach (TutorialNode node in tutorialNodes)
+                //{
+                //    if (node.GetComponentInChildren<TextMeshPro>().text == "A")
+                //    {
+                //        node.Visited = true;
+                //    }
+                //}
+
+                GetComponentInChildren<TutorialPointer>().AllowShooting = true;
 
                 break;
         }
