@@ -47,4 +47,9 @@ public class MultiStateButton : SettingsMenuButton {
     {
         return Util.MULTI_STATE_BUTTON;
     }
+
+    public int State
+    {
+        get { return state; }
+    }
 }

@@ -12,8 +12,10 @@ public class TutorialArea : Area {
     private TutorialManager tutorialManager;
     private AudioManager audioManager;
 
-    private int achievedTasks, numberOfTasks;
-    private bool cleared;
+    private Dictionary<TutorialTask, bool> subTasks;
+
+    private int subtasksCompleted, numberOfSubtasks;
+    private bool isAreaCleared;
 
     protected override void Awake()
     {
@@ -22,12 +24,17 @@ public class TutorialArea : Area {
         tutorialManager = FindObjectOfType<TutorialManager>();
         audioManager = FindObjectOfType<AudioManager>();
 
-        PathObstacle[] obstacles = GetComponentsInChildren<PathObstacle>();
-        if (obstacles != null)
+
+        // Find tasks and sum the number of sub tasks
+        TutorialTask[] tasks = GetComponentsInChildren<TutorialTask>();
+        Debug.Log(">>> Init:: Area: " + AreaName + ": " + tasks.Length);
+        if (tasks != null)
         {
-            foreach (PathObstacle po in obstacles)
+            subTasks = new Dictionary<TutorialTask, bool>();
+            foreach (TutorialTask subTask in tasks)
             {
-                numberOfTasks += po.NumberOfTasks;
+                numberOfSubtasks++;
+                subTasks[subTask] = false;
             }
         }
     }
@@ -37,53 +44,54 @@ public class TutorialArea : Area {
         get { return nextArea; }
     }
 
-    public bool Cleared
+    public bool IsAreaCleared
     {
-        get { return cleared; }
+        get { return isAreaCleared; }
     }
 
-    public override void InitArea()
+    // Initializes the tasks
+    public override void InitTask()
     {
-        switch (AreaName)
+        if (subTasks != null)
         {
-            case "Graph":
-                //TutorialNode[] tutorialNodes = GetComponentsInChildren<TutorialNode>();
-                //foreach (TutorialNode node in tutorialNodes)
-                //{
-                //    if (node.GetComponentInChildren<TextMeshPro>().text == "A")
-                //    {
-                //        node.Visited = true;
-                //    }
-                //}
-
-                GetComponentInChildren<TutorialPointer>().AllowShooting = true;
-
-                break;
+            foreach (KeyValuePair<TutorialTask, bool> entry in subTasks)
+            {
+                entry.Key.InitTask();
+            }
         }
     }
 
-    public void SubTaskCleared(bool cleared)
+    // Gets report from the task
+    public void ReportForwardProgress(TutorialTask tutorialTask)
     {
-        if (cleared)
+        if (subTasks.ContainsKey(tutorialTask))
         {
-            achievedTasks++;
+            subTasks[tutorialTask] = true;
+            subtasksCompleted++;
 
-            if (achievedTasks == numberOfTasks)
+            if (subtasksCompleted >= numberOfSubtasks)
             {
-                cleared = true;
+                isAreaCleared = true;
                 AreaCleared(true);
             }
         }
-        else
+    }
+
+    public void ReportBackwardProgress(TutorialTask tutorialTask)
+    {
+        if (subTasks.ContainsKey(tutorialTask))
         {
-            achievedTasks--;
-            cleared = false;
+            subTasks[tutorialTask] = false;
+            subtasksCompleted--;
+
+            isAreaCleared = false;
             AreaCleared(false);
         }
     }
 
     private void AreaCleared(bool cleared)
     {
+        Debug.Log("Area: " + AreaName + ",  cleared: " + cleared);
         if (cleared)
         {
             OpenPath();
@@ -94,23 +102,28 @@ public class TutorialArea : Area {
     }
 
 
-
-
-
-
-
-
-
-
+    // Detecting when a player enters the area
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-        tutorialManager.PlayerInArea(this);
+
+        if (other.name == Util.HEAD_COLLIDER)
+        {
+            tutorialManager.PlayerInArea(this);
+        }
     }
 
     protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
+        
+        if (subTasks != null)
+        {
+            foreach (KeyValuePair<TutorialTask, bool> entry in subTasks)
+            {
+                entry.Key.StopTask();
+            }
+        }
     }
 
 

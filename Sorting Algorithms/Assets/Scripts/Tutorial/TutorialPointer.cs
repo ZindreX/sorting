@@ -17,16 +17,19 @@ public class TutorialPointer : MonoBehaviour {
     private Transform leftHand, rightHand;
 
     [SerializeField]
-    private Material laserMaterial;
+    private Material[] laserMaterials;
     private LineRenderer laserBeam;
+
 
     public TutorialNode prevNodeShot;
 
     // Use this for initialization
     void Start()
     {
+        prevNodeShot = null;
+
         laserBeam = GetComponent<LineRenderer>();
-        laserBeam.material = laserMaterial;
+        laserBeam.material = laserMaterials[0];
 
         // Bit shift the index of the layer (8) to get a bit mask
         layerMask = 1 << 8;
@@ -68,42 +71,40 @@ public class TutorialPointer : MonoBehaviour {
                 TutorialNode node = hit.collider.GetComponent<TutorialNode>();
 
                 // If there was a node script attached
-                if (node != null)
+                if (node != null && prevNodeShot != node)
                 {
-                    // Get edge leading from the node we just shot back to the current node
-                    List<TutorialEdge> edges = node.Edges;
+                    node.PerformUserAction(UtilGraph.NODE_VISITED);
+                    prevNodeShot = node;
 
-                    TutorialEdge edgeLeadingToNode = null;
-                    foreach (TutorialEdge edge in edges)
-                    {
-                        TutorialNode otherNode = edge.OtherNode(node);
-                        if (otherNode.CurrentTraversing)
-                        {
-                            edgeLeadingToNode = edge;
-                            break;
-                        }
-                    }
+                    //// First check if it's the first node the player shot
+                    //if (edgeLeadingToNode == null)
+                    //{
+                    //    node.Visited = true;
+                    //}
+                    //else
+                    //{
+                    //    bool isDirectedEdge = edgeLeadingToNode.IsDirectedEdge;
 
-                    bool isDirectedEdge = edgeLeadingToNode.IsDirectedEdge;
+                    //    if (isDirectedEdge)
+                    //    {
+                    //        bool correctDirection = edgeLeadingToNode.OtherNode(node) != null;
 
-                    if (isDirectedEdge)
-                    {
-                        bool correctDirection = edgeLeadingToNode.OtherNode(node) != null;
+                    //        if (correctDirection && !node.Visited)
+                    //        {
+                    //            node.PrevEdge = edgeLeadingToNode;
+                    //            node.Visited = true;
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        if (!node.Visited)
+                    //        {
+                    //            node.PrevEdge = edgeLeadingToNode;
+                    //            node.Visited = true;
+                    //        }
+                    //    }
+                    //}
 
-                        if (correctDirection && !node.Visited)
-                        {
-                            node.PrevEdge = edgeLeadingToNode;
-                            node.Visited = true;
-                        }
-                    }
-                    else
-                    {
-                        if (!node.Visited)
-                        {
-                            node.PrevEdge = edgeLeadingToNode;
-                            node.Visited = true;
-                        }
-                    }
                 }
             }
             else
@@ -119,6 +120,11 @@ public class TutorialPointer : MonoBehaviour {
     public bool AllowShooting
     {
         set { allowShooting = value; }
+    }
+
+    public void SetLaserBeamMaterial(int material)
+    {
+        laserBeam.material = laserMaterials[material];
     }
 
 

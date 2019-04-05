@@ -10,7 +10,7 @@ public class TutorialEdge : MonoBehaviour {
     [SerializeField]
     private bool isDirectedEdge;
 
-    private void Awake()
+    private void Start()
     {
         node1.AddEdge(this);
         node2.AddEdge(this);
@@ -28,9 +28,19 @@ public class TutorialEdge : MonoBehaviour {
         return (node1 == node) ? node2 : null;
     }
 
+    public bool PlayerCurrentlyAtOtherNode(TutorialNode node)
+    {
+        return (node == node1) ? node2.CurrentTraversing : node1.CurrentTraversing;
+    }
+
     public void ChangeAppearance(Color color)
     {
         GetComponentInChildren<Renderer>().material.color = color;
+    }
+
+    public void ResetEdge()
+    {
+        ChangeAppearance(Util.STANDARD_COLOR);
     }
 
 }

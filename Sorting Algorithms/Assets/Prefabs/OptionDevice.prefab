@@ -461,7 +461,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4111266639077368}
-  - component: {fileID: 114937804082258166}
   m_Layer: 0
   m_Name: OptionDevice
   m_TagString: Untagged
@@ -3517,28 +3516,3 @@ MonoBehaviour:
   - {fileID: 2100000, guid: dd6241350ba47c54589f335be2d3680b, type: 2}
   - {fileID: 2100000, guid: e6352533efde3324eaac1f47c36b2cbf, type: 2}
   - {fileID: 2100000, guid: 0316fc14fe614df479412ddbf8064c0b, type: 2}
---- !u!114 &114937804082258166
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1448711850018770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9329839962057644dae56f3a5a04567d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topButtons:
-  - {fileID: 1643959827695758}
-  - {fileID: 1255700306181730}
-  - {fileID: 1430337223068020}
-  - {fileID: 1746278824929748}
-  alternativeButtons:
-  - {fileID: 1261999367814400}
-  - {fileID: 1161736371733120}
-  - {fileID: 1856732475681364}
-  - {fileID: 1400038566639512}
-  - {fileID: 1136823452378002}
-  - {fileID: 1095192470937364}
-  - {fileID: 1135788909507502}
-  - {fileID: 1233970744596224}

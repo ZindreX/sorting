@@ -13,7 +13,7 @@ public class Area : MonoBehaviour {
 
     [SerializeField]
     private AreaCode areaCode;
-    private enum AreaCode { InitArea, OpenPath, LoadScene }
+    private enum AreaCode { InitTask, OpenPath, LoadScene }
 
     [SerializeField]
     private int loadScene;
@@ -43,13 +43,13 @@ public class Area : MonoBehaviour {
     {
         switch ((int)areaCode)
         {
-            case 0: InitArea(); break;
+            case 0: InitTask(); break;
             case 1: OpenPath(); break;
             case 2: SceneManager.LoadScene(loadScene); break;
         }
     }
 
-    public virtual void InitArea()
+    public virtual void InitTask()
     {
 
     }

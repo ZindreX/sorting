@@ -49,6 +49,18 @@ public class Section : MonoBehaviour {
         }
     }
 
+    public SettingsMenuItem GetItem(string itemID)
+    {
+        foreach (KeyValuePair<string, SettingsMenuItem> entry in sectionButtons)
+        {
+            if (entry.Key == itemID)
+            {
+                return entry.Value;
+            }
+        }
+        return null;
+    }
+
     // SettingsBase / DemoDevice
     public ISectionManager SectionManager
     {

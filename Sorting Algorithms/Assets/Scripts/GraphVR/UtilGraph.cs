@@ -23,8 +23,10 @@ public class UtilGraph : Util {
     public const string TREE_SUB = "Tree sub", TREE_DEPTH = "Tree depth", N_TREE = "N tree";
 
     public const string SELECT_NODE = "Select node", NO_TASK = "No task";
-    
-    // -----
+
+    // ----------------------------------------- Animation -----------------------------------------
+
+    public static readonly string NODE_VISIT_ANIMATION = "NodeVisit", NODE_TRAVERSE_ANIMATION = "NodeTraverse", NODE_ERROR_ANIMATION = "NodeError";
 
 
     // Rules

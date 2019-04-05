@@ -13,12 +13,12 @@ public class TooltipsHolder : MonoBehaviour {
 
     private bool reported;
 
-    private PathObstacle pathObstacle;
+    private TutorialTask tutorialTask;
 
     private void Awake()
     {
         reported = false;
-        pathObstacle = GetComponentInParent<PathObstacle>();
+        tutorialTask = GetComponentInParent<TutorialTask>();
     }
 
 
@@ -30,9 +30,8 @@ public class TooltipsHolder : MonoBehaviour {
 
             if (!reported)
             {
-                Debug.Log("Reporting");
                 reported = true;
-                pathObstacle.ReportSubTaskCleared();
+                tutorialTask.Progress();
             }
         }
     }
