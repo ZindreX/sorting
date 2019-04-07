@@ -17,7 +17,7 @@ public class InsertionSortHolder : HolderBase
     public bool IsPivotHolder
     {
         get { return isPivotHolder; }
-        set { isPivotHolder = value; }
+        set { isPivotHolder = value; indexText.text = "Pivot"; }
     }
 
     public int PositionIndex

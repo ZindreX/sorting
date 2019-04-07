@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
@@ -11,6 +12,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
     public static int HOLDER_NR = 0;
     protected int holderID, prevElementID;
+    protected TextMeshPro indexText;
 
     protected Color currentColor, prevColor;
     protected bool errorNotified = false, hasPermission = true;
@@ -18,10 +20,12 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     protected SortMain parent;
     protected SortingElementBase currentHolding;
 
-    void Awake()
+    protected virtual void Awake()
     {
         holderID = HOLDER_NR++;
         name = MyRole();
+        indexText = GetComponentInChildren<TextMeshPro>();
+        indexText.text = holderID.ToString();
     }
 
     void Update()
@@ -85,6 +89,14 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     public bool HasPermission
     {
         set { hasPermission = value; }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        {
+            Debug.Log("Holder " + holderID + ":  Sorting element: " + other.GetComponent<SortingElementBase>().SortingElementID);
+        }
     }
 
     private void OnCollisionExit(Collision collision)

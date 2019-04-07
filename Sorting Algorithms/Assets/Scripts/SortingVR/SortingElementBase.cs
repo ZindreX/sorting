@@ -217,7 +217,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         if (collision.collider.tag == UtilSort.HOLDER_TAG)
         {
             if (CurrentStandingOn != null)
-                prevHolderID = CurrentStandingOn.HolderID; // tokidoki null ref exception
+                prevHolderID = CurrentStandingOn.HolderID;
             CurrentStandingOn = null;
             //standingInCorrectHolder = false; // todo
         }

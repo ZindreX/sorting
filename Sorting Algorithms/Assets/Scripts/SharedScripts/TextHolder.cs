@@ -5,8 +5,12 @@ using TMPro;
 
 public class TextHolder : MonoBehaviour {
 
-    [SerializeField]
     private TextMeshPro[] surfaceTexts;
+
+    private void Awake()
+    {
+        surfaceTexts = GetComponentsInChildren<TextMeshPro>();
+    }
 
     public void SetSurfaceText(string text)
     {

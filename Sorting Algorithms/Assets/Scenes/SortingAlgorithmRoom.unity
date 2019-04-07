@@ -2565,7 +2565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e31ed5cc672b1f418908a04def7dae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holderPrefab: {fileID: 1322738923561488, guid: 9cc9deae0773eeb428dc2d323a977516,
+  holderPrefab: {fileID: 1601995466007472, guid: 5ec167f42ce7b30439157d57bfcfafec,
     type: 2}
   sortingTableHoldersObj: {fileID: 663424555}
   firstHolderPosition: {fileID: 943207712}
@@ -7967,7 +7967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ffb33adbbc5254996442d44e628b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivotHolderPrefab: {fileID: 1322738923561488, guid: 9cc9deae0773eeb428dc2d323a977516,
+  pivotHolderPrefab: {fileID: 1601995466007472, guid: 5ec167f42ce7b30439157d57bfcfafec,
     type: 2}
   sortingTableHoldersObj: {fileID: 663424555}
   insertionSortManager: {fileID: 2121649986}
@@ -11462,7 +11462,7 @@ Prefab:
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
       propertyPath: sounds.Array.data[0].volume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
@@ -11472,7 +11472,7 @@ Prefab:
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
       propertyPath: sounds.Array.data[1].volume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
@@ -11482,7 +11482,7 @@ Prefab:
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
       propertyPath: sounds.Array.data[2].volume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
@@ -11497,12 +11497,12 @@ Prefab:
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
       propertyPath: sounds.Array.data[4].volume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
       propertyPath: sounds.Array.data[3].volume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
@@ -11537,7 +11537,7 @@ Prefab:
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
       propertyPath: sounds.Array.data[5].volume
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 114047422265236906, guid: 2a814e5d27a97d14d8429f4048f325d0,
         type: 2}
@@ -13746,7 +13746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98ce4a35f87a9804aaea9978644dd2c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveAble: 0
+  integratedInOtherObject: 0
   enableStepBack: 1
 --- !u!114 &1874531609
 MonoBehaviour:
