@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SortSettings : SettingsBase {
+public class SortSettings : TeachingSettings {
 
     /* -------------------------------------------- Algorithm settings ----------------------------------------------------
      * Takes all input from the settings walls in the VR environment and forwards it to the main unit

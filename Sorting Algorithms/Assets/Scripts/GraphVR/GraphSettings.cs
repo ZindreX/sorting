@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GraphSettings : SettingsBase {
+public class GraphSettings : TeachingSettings {
 
     [SerializeField]
     private GameObject graphAlgorithmObj;
@@ -66,10 +66,6 @@ public class GraphSettings : SettingsBase {
     [Range(1, 2)]
     private int levelDepthLength;
 
-    [SerializeField]
-    private bool visitLeftFirst;
-
-
     // *** Start-/End nodes ***
     [Space(2)]
     [Header("Start node")]
@@ -117,7 +113,6 @@ public class GraphSettings : SettingsBase {
             AlgorithmSpeedLevel = 0;
             Difficulty = 0;
             ShortestPathOneToAll = true;
-            VisitLeftFirst = true;
             SelectStartEndNodes = false;
 
             // Graph
@@ -197,7 +192,6 @@ public class GraphSettings : SettingsBase {
 
         // Extra
         ShortestPathOneToAll = shortestPathOneToAll;
-        VisitLeftFirst = visitLeftFirst;
     }
 
     public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
@@ -475,11 +469,6 @@ public class GraphSettings : SettingsBase {
     {
         get { return shortestPathOneToAll; }
         set { shortestPathOneToAll = value; }
-    }
-    public bool VisitLeftFirst
-    {
-        get { return visitLeftFirst; }
-        set { visitLeftFirst = value; }
     }
 
     public int[] GraphSetup()

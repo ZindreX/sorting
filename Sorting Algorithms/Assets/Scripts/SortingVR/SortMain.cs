@@ -54,7 +54,7 @@ public class SortMain : MainManager {
         get { return sortSettings; }
     }
 
-    public override SettingsBase Settings
+    public override TeachingSettings Settings
     {
         get { return sortSettings; }
     }
@@ -364,6 +364,7 @@ public class SortMain : MainManager {
 
         // Sorting table
         Util.HideObject(sortingTableObj, active, true);
+        demoDevice.gameObject.SetActive(false);
         //sortingTableObj.SetActive(active);
 
         yield return loading;

@@ -24,7 +24,6 @@ public class TutorialArea : Area {
         tutorialManager = FindObjectOfType<TutorialManager>();
         audioManager = FindObjectOfType<AudioManager>();
 
-
         // Find tasks and sum the number of sub tasks
         TutorialTask[] tasks = GetComponentsInChildren<TutorialTask>();
         Debug.Log(">>> Init:: Area: " + AreaName + ": " + tasks.Length);

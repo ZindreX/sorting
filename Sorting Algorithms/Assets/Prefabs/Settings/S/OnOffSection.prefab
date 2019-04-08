@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 114149083174242164}
   - component: {fileID: 114310598039146296}
   - component: {fileID: 114652993414331498}
-  - component: {fileID: 114452041725180056}
+  - component: {fileID: 114488851374864868}
   m_Layer: 0
   m_Name: SectionButton
   m_TagString: Untagged
@@ -586,7 +586,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114452041725180056
+--- !u!114 &114488851374864868
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -594,19 +594,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1312317805310922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6722dded6f1946c4da7a3073d28c85a9, type: 3}
+  m_Script: {fileID: 11500000, guid: cdb2d0bcd7cc3bb49afe3d970eaea24f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonID: 
+  itemID: 
+  interactionDescription: 
+  onMaterial: {fileID: 0}
+  offMaterial: {fileID: 0}
   onText: 
   offText: 
-  onMaterial: {fileID: 2100000, guid: aab2715fce5d96142958128b54911190, type: 2}
-  offMaterial: {fileID: 2100000, guid: 5e9224b46d0182a478901682dc993000, type: 2}
-  nonMaterial: {fileID: 2100000, guid: 11ed7178807427d4ab4bd82cabd68f43, type: 2}
-  isOnOffButton: 1
-  staticAppearance: 0
-  section: {fileID: 1528280703695286}
-  subSectionButtons: {fileID: 0}
 --- !u!114 &114652993414331498
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -620,7 +616,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHandClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114488851374864868}
+        m_MethodName: OnClickDo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!222 &222169653109944722

@@ -121,12 +121,6 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         startNodeAdded = false;
     }
 
-    public bool VisitLeftFirst
-    {
-        get { return visitLeftFirst; }
-        set { visitLeftFirst = value; }
-    }
-
     public bool ShortestPathOneToAll
     {
         get { return shortestPathOnToAll; }

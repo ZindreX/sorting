@@ -296,6 +296,9 @@ public class TutorialNode : MonoBehaviour {
         visitNextMove = false;
         traverseNextMove = false;
 
+        animator.SetBool(UtilGraph.NODE_VISIT_ANIMATION, false);
+        animator.SetBool(UtilGraph.NODE_TRAVERSE_ANIMATION, false);
+
         prevEdge = null;
     }
 }

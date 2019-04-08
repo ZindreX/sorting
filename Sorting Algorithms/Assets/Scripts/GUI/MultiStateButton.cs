@@ -52,4 +52,9 @@ public class MultiStateButton : SettingsMenuButton {
     {
         get { return state; }
     }
+
+    public Material Material
+    {
+        get { return materials[state]; }
+    }
 }

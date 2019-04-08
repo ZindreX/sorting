@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TutorialGraphTask : TutorialTask {
 
@@ -26,20 +27,29 @@ public class TutorialGraphTask : TutorialTask {
 
     public override void ResetTask()
     {
+        Debug.Log("Resetting graph task");
         base.ResetTask();
 
         undirectedGraphStarted = false;
         directedGraphStarted = false;
 
-        foreach (TutorialNode node in nodes)
+        try
         {
-            node.ResetNode();
+            foreach (TutorialNode node in nodes)
+            {
+                node.ResetNode();
+            }
+
+            foreach (TutorialEdge edge in edges)
+            {
+                edge.ResetEdge();
+            }
+        }
+        catch (InvalidOperationException e)
+        {
+            return;
         }
 
-        foreach (TutorialEdge edge in edges)
-        {
-            edge.ResetEdge();
-        }
     }
 
     public override void StopTask()

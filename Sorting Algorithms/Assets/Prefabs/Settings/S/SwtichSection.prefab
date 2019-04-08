@@ -56,12 +56,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224235764380364146}
-  - component: {fileID: 114529736644842504}
   - component: {fileID: 114188539814745064}
   - component: {fileID: 114690302702948080}
   - component: {fileID: 114177139577621046}
   - component: {fileID: 222453915533303124}
   - component: {fileID: 114011634690202448}
+  - component: {fileID: 114862566340836112}
   m_Layer: 0
   m_Name: SectionButton
   m_TagString: Untagged
@@ -110,7 +110,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1923765850359602}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1, y: 0, z: 0}
+  m_LocalPosition: {x: 0.3, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224603477152862560}
@@ -360,21 +360,6 @@ MonoBehaviour:
   handFollowTransformRotation: 1
   highlightOnHover: 1
   hideHighlight: []
---- !u!114 &114529736644842504
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1269694037662874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7fbe3215375b3445a4c57a2008b4ab9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  section: {fileID: 1923765850359602}
-  buttonText: {fileID: 114839940078591906}
-  states: []
-  subMenus: []
 --- !u!114 &114690302702948080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -389,12 +374,12 @@ MonoBehaviour:
   onHandClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 114862566340836112}
+        m_MethodName: OnClickDo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -628,6 +613,34 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
+--- !u!114 &114862566340836112
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1269694037662874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f370dbb05534194ebf11b19b8b536f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: 
+  interactionDescription: 
+  states:
+  - 
+  - 
+  - 
+  - 
+  materials:
+  - {fileID: 2100000, guid: 18e645b8000aab3459812706bfc85b15, type: 2}
+  - {fileID: 2100000, guid: e583ac74a60bd8d44a5b66eca0c65985, type: 2}
+  - {fileID: 2100000, guid: d54b497b8546a984e81d78c815062ed1, type: 2}
+  - {fileID: 2100000, guid: 67752009abe4d8348a4c5d3f7e4362f2, type: 2}
+  stateDescription:
+  - 
+  - 
+  - 
+  - 
 --- !u!222 &222334486491961526
 CanvasRenderer:
   m_ObjectHideFlags: 1

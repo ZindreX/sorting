@@ -48,4 +48,10 @@ public class MoveObject : MonoBehaviour {
         destination += pos;
     }
 
+    public float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
 }

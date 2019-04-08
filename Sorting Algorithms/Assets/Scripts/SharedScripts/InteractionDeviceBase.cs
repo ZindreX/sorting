@@ -8,7 +8,7 @@ using Valve.VR.InteractionSystem;
 public abstract class InteractionDeviceBase : MonoBehaviour {
 
     [SerializeField]
-    protected bool integratedInOtherObject;
+    protected bool integrated;
 
     protected bool playerHoldingDevice, throwAble;
 
@@ -28,7 +28,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
 
     private void Update()
     {
-        if (integratedInOtherObject)
+        if (integrated)
             return;
 
         if (throwAble && transform.position.y < 0.1f)
@@ -37,7 +37,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
 
     public void SpawnDeviceInfrontOfPlayer()
     {
-        if (integratedInOtherObject)
+        if (integrated)
             return;
 
         rb.useGravity = false;

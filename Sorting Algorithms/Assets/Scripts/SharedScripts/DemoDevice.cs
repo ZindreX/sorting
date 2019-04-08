@@ -58,7 +58,9 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
         mainManager = FindObjectOfType<MainManager>();
 
         // Destroy backward step (not finished)
-        mainManager.Settings.StepBack = enableStepBack;
+        if (mainManager != null)
+            mainManager.Settings.StepBack = enableStepBack;
+
         if (!enableStepBack)
             Destroy(buttons[STEP_BACK].gameObject);
     }

@@ -199,7 +199,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         {
             audioManager.Play("Collision");
 
-            HolderBase holder = collision.collider.GetComponent<HolderBase>();
+            HolderBase holder = collision.collider.GetComponentInParent<HolderBase>();
             if (parent.SortSettings.IsDemo())
             {
                 CurrentStandingOn = holder;

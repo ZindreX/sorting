@@ -158,8 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaName: Tutorial point
-  withinValue: 0.2
-  areaCode: 1
+  areaCode: 2
   loadScene: 1
 --- !u!65 &44487355
 BoxCollider:
@@ -447,8 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaName: Main menu point
-  withinValue: 0.2
-  areaCode: 1
+  areaCode: 2
   loadScene: 2
 --- !u!65 &224696125
 BoxCollider:

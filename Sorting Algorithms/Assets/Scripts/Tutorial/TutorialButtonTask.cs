@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TutorialButtonTask : TutorialTask {
 
@@ -27,17 +28,24 @@ public class TutorialButtonTask : TutorialTask {
 
     public override void InitTask()
     {
-        foreach (KeyValuePair<InteractButton, bool> entry in buttons)
+        try
         {
-            InteractButton button = entry.Key;
-            bool active = entry.Value;
-
-            if (active)
+            foreach (KeyValuePair<InteractButton, bool> entry in buttons)
             {
-                button.ButtonClicked();
-                buttons[button] = false;
-            }
+                InteractButton button = entry.Key;
+                bool active = entry.Value;
 
+                if (active)
+                {
+                    button.ButtonClicked();
+                    buttons[button] = false;
+                }
+
+            }
+        }
+        catch (InvalidOperationException e)
+        {
+            return;
         }
     }
 

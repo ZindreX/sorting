@@ -275,6 +275,7 @@ public abstract class MainManager : MonoBehaviour {
         switch (teachingMode)
         {
             case Util.DEMO:
+                demoDevice.gameObject.SetActive(true);
                 demoDevice.InitDemoDevice();
                 demoDevice.SpawnDeviceInfrontOfPlayer();
                 PerformAlgorithmDemo();
@@ -321,7 +322,7 @@ public abstract class MainManager : MonoBehaviour {
 
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
     protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
-    public abstract SettingsBase Settings { get; }
+    public abstract TeachingSettings Settings { get; }
 
     protected abstract IEnumerator ActivateTaskObjects(bool active);
 
@@ -361,6 +362,8 @@ public abstract class MainManager : MonoBehaviour {
             case Util.USER_TEST: userTestManager.ResetState(); break;
         }
         newDemoImplemented = false;
+
+        demoDevice.gameObject.SetActive(false);
     }
 
 

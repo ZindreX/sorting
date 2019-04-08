@@ -61,7 +61,6 @@ GameObject:
   - component: {fileID: 114755861026816128}
   - component: {fileID: 114591173888806566}
   - component: {fileID: 114302147662746634}
-  - component: {fileID: 114049309480207470}
   m_Layer: 0
   m_Name: SectionButton
   m_TagString: Untagged
@@ -178,27 +177,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114049309480207470
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1651753835909450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6722dded6f1946c4da7a3073d28c85a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonID: 
-  onText: 
-  offText: 
-  onMaterial: {fileID: 2100000, guid: aab2715fce5d96142958128b54911190, type: 2}
-  offMaterial: {fileID: 2100000, guid: 5e9224b46d0182a478901682dc993000, type: 2}
-  nonMaterial: {fileID: 2100000, guid: 11ed7178807427d4ab4bd82cabd68f43, type: 2}
-  isOnOffButton: 0
-  staticColor: 0
-  section: {fileID: 0}
-  sectionButtons: []
 --- !u!114 &114302147662746634
 MonoBehaviour:
   m_ObjectHideFlags: 1

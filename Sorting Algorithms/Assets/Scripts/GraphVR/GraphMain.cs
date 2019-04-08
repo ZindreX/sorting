@@ -109,7 +109,7 @@ public class GraphMain : MainManager {
         return graphAlgorithm;
     }
 
-    public override SettingsBase Settings
+    public override TeachingSettings Settings
     {
         get { return graphSettings; }
     }
@@ -188,13 +188,10 @@ public class GraphMain : MainManager {
 
         // Extra
         bool shortestPathOneToAll = graphSettings.ShortestPathOneToAll;
-        bool visitLeftFirst = graphSettings.VisitLeftFirst;
 
         // >>> Init Algorithm
         graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
         graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed, shortestPathOneToAll); // shortestPathOneToAll remove???
-
-        graphAlgorithm.VisitLeftFirst = visitLeftFirst; // needed? remove? fix under tree settings?
 
         // >>> Init Graph manager
         bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
