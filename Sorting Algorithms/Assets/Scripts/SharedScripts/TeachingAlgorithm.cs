@@ -62,6 +62,12 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         set { includeLineNr = value; }
     }
 
+    public bool PseudoCodeLineInDetail
+    {
+        get { return pseudoCodeLineInDetail; }
+        set { pseudoCodeLineInDetail = value; }
+    }
+
     public Dictionary<string, List<string>> SkipDict
     {
         get { return skipDict; }

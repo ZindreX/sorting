@@ -21,7 +21,6 @@ public class MultiStateButton : SettingsMenuButton {
 
         if (states.Length != materials.Length)
             Debug.LogError("States != materials");
-
     }
 
     public void InitMultiStateButton(int state)

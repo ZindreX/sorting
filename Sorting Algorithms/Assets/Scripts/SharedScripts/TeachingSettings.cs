@@ -14,6 +14,10 @@ public abstract class TeachingSettings : SettingsBase {
     [Header("Teaching settings")]
     [SerializeField]
     protected bool useDebuggingSettings;
+
+    [SerializeField]
+    protected bool pseudocodeLineNr, pseudocodeStep;
+
     [SerializeField]
     protected TeachingModeEditor teachingModeEditor;
     protected enum TeachingModeEditor { Demo, UserTest }
@@ -25,6 +29,20 @@ public abstract class TeachingSettings : SettingsBase {
     [SerializeField]
     protected DifficultyEditor difficultyEditor;
     protected enum DifficultyEditor { beginner, intermediate, advanced, examination }
+
+    protected virtual void Start()
+    {
+        // Debugging editor (fast edit settings)
+        if (useDebuggingSettings)
+            GetSettingsFromEditor();
+        else
+        {
+            // Init settings
+            TeachingMode = Util.DEMO;
+            AlgorithmSpeedLevel = 1;
+            Difficulty = 0;
+        }
+    }
 
 
     // Init settings menu from editor
@@ -40,6 +58,15 @@ public abstract class TeachingSettings : SettingsBase {
         Difficulty = (int)difficultyEditor;
     }
 
+    protected override void InitButtons()
+    {
+        InitButtonState(Util.TEACHING_MODE, teachingMode);
+        InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_STEP, pseudocodeStep);
+        InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_LINE_NR, pseudocodeLineNr);
+        InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
+        InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, algSpeed);
+    }
+
     // All input from interactable settings menu goes through here
     public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
@@ -49,6 +76,15 @@ public abstract class TeachingSettings : SettingsBase {
             case Util.TEACHING_MODE: TeachingMode = itemID; break;
             case Util.DIFFICULTY: Difficulty = Util.difficultyConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
             case Util.DEMO_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
+            case Util.OPTIONAL:
+                switch (itemID)
+                {
+                    case Util.PSEUDOCODE_STEP: PseudocodeStep = Util.ConvertStringToBool(itemDescription); break;
+                    case Util.PSEUDOCODE_LINE_NR: PseudocodeLineNr = Util.ConvertStringToBool(itemDescription); break;
+                    default: Debug.LogError("Couldn't update: section = " + sectionID + ", item = " + itemID + ", description = " + itemDescription); break;
+                }
+
+                break; // TODO
             case Util.READY: InstantiateTask(); break;
             case Util.START: StartStopTask(); break;
         }
@@ -114,6 +150,18 @@ public abstract class TeachingSettings : SettingsBase {
                 case 3: algorithmSpeed = 0f; break;
             }
         }
+    }
+
+    public bool PseudocodeLineNr
+    {
+        get { return pseudocodeLineNr; }
+        set { pseudocodeLineNr = value; }
+    }
+
+    public bool PseudocodeStep
+    {
+        get { return pseudocodeStep; }
+        set { pseudocodeStep = value; }
     }
 
 

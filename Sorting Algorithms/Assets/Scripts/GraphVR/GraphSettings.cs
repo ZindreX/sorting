@@ -99,7 +99,7 @@ public class GraphSettings : TeachingSettings {
 
     private string graphTask, graphStructure, edgeType, edgeBuildMode;
 
-    private void Start()
+    protected override void Start()
     {
         // Debugging editor (fast edit settings)
         if (useDebuggingSettings)
@@ -107,11 +107,10 @@ public class GraphSettings : TeachingSettings {
         else
         {
             // Init settings
+            base.Start();
+
             Algorithm = Util.BFS;
-            TeachingMode = Util.DEMO;
             GraphTask = UtilGraph.TRAVERSE;
-            AlgorithmSpeedLevel = 0;
-            Difficulty = 0;
             ShortestPathOneToAll = true;
             SelectStartEndNodes = false;
 
@@ -240,7 +239,7 @@ public class GraphSettings : TeachingSettings {
                 switch (itemID)
                 {
                     case UtilGraph.SELECT_NODE: SelectStartEndNodes = Util.ConvertStringToBool(itemDescription); break;
-                    default: Debug.LogError("No optional choice case for '" + itemID + "'."); break;
+                    default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
                 }
                 break;
 
@@ -285,9 +284,6 @@ public class GraphSettings : TeachingSettings {
                         break;
                 }
                 break;
-
-            //case UtilGraph.SHORTEST_PATH_ONE_TO_ALL: ShortestPathOneToAll = Util.ConvertStringToBool(itemDescription); break;
-            //case UtilGraph.VISIT_LEFT_FIRST: VisitLeftFirst = Util.ConvertStringToBool(itemDescription); break;
             default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
         }
 
@@ -295,18 +291,14 @@ public class GraphSettings : TeachingSettings {
 
     protected override void InitButtons()
     {
+        base.InitButtons();
+
         InitButtonState(Util.ALGORITHM, algorithm);
-        InitButtonState(Util.TEACHING_MODE, teachingMode);
-        InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
-        InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, algSpeed);
         InitButtonState(UtilGraph.GRAPH_TASK, graphTask);
         InitButtonState(UtilGraph.GRAPH_STRUCTURE, graphStructure);
         InitButtonState(UtilGraph.EDGE_TYPE, edgeType);
-        InitButtonState(UtilGraph.EDGE_BUILD_MODE, edgeBuildMode);
+        InitButtonState(UtilGraph.EDGE_BUILD_MODE, UtilGraph.EDGE_BUILD_MODE, (int)edgeModeEditor); // TODO fix variable
         InitButtonState(Util.OPTIONAL, UtilGraph.SELECT_NODE, selectStartEndNodes);
-
-        //InitButtonState(UtilGraph.SHORTEST_PATH_SUB_SECTION, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll);
-        //InitButtonState(UtilGraph.TRAVERSE_SUB_SECTION, UtilGraph.VISIT_LEFT_FIRST, visitLeftFirst);
     }
 
     protected override MainManager MainManager

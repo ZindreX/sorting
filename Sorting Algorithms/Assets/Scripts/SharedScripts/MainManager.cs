@@ -335,6 +335,8 @@ public abstract class MainManager : MonoBehaviour {
         // Used for shut down process
         safeStopChecklist = new Dictionary<string, bool>();
         algorithmName = Settings.Algorithm;
+        GetTeachingAlgorithm().PseudoCodeLineInDetail = Settings.PseudocodeStep;
+        GetTeachingAlgorithm().IncludeLineNr = Settings.PseudocodeLineNr;
         userPausedTask = true;
     }
 

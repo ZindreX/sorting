@@ -41,7 +41,7 @@ public class SortSettings : TeachingSettings {
     private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
 
-    private void Start()
+    protected override void Start()
     {
         // Debugging editor (fast edit settings)
         if (useDebuggingSettings)
@@ -49,13 +49,12 @@ public class SortSettings : TeachingSettings {
         else
         {
             // Init settings
+            base.Start();
+
             Algorithm = Util.BUBBLE_SORT;
-            TeachingMode = Util.DEMO;
             NumberOfElements = 8;
             SortingCase = UtilSort.NONE;
-            AlgorithmSpeedLevel = 1;
-            Difficulty = 1;
-            Duplicates = true; //SetDuplicates();
+            Duplicates = true;
         }
         tooltips.text = "";
 
