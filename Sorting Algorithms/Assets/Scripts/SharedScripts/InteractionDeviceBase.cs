@@ -13,6 +13,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
     protected bool playerHoldingDevice, throwAble;
 
     protected Vector3 startPos;
+    protected WaitForSeconds delay = new WaitForSeconds(0.2f);
 
     private Camera playerCamera;
     private Rigidbody rb;
@@ -66,7 +67,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
         }
     }
 
-    public void ResetDevicePosition()
+    public virtual void ResetDevice()
     {
         rb.useGravity = true;
         transform.position = startPos;

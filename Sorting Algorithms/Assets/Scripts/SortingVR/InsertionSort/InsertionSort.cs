@@ -78,7 +78,7 @@ public class InsertionSort : SortAlgorithm {
             case 0: lineOfCode +=  "InsertionSort(list)"; break;
             case 1: lineOfCode +=  "i = 1"; break;
             case 2: lineOfCode +=  "while ( " + i + " < " + lengthOfList + " )"; break;
-            case 3: lineOfCode +=  "   j = " + iMinus1; pseudoCodeLineInDetail = true; break;
+            case 3: lineOfCode +=  "   j = " + iMinus1; break;
             case 4: lineOfCode +=  "   pivot = " + element1Value; break;
             case 5: lineOfCode +=  "   while ( " + j + " >= 0 and pivot < " + element2Value + " )"; break;
             case 6: lineOfCode +=  "       move " + element2Value + " to list[" + jPlus1 + "]"; break; // (j_str + 1) 

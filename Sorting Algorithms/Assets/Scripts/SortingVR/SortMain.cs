@@ -139,7 +139,9 @@ public class SortMain : MainManager {
         algorithmManagerBase.InitSortingManager(this);
 
         // Init display unit manager
-        displayUnitManager.InitDisplayUnitManager(sortAlgorithm);
+        bool includeLineNr = Settings.PseudocodeLineNr;
+        bool inDetailStep = Settings.PseudocodeStep;
+        displayUnitManager.InitDisplayUnitManager(sortAlgorithm, includeLineNr, inDetailStep);
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, algorithmName, 0);
 
         // Init holder manager
@@ -364,8 +366,8 @@ public class SortMain : MainManager {
 
         // Sorting table
         Util.HideObject(sortingTableObj, active, true);
-        demoDevice.gameObject.SetActive(false);
-        //sortingTableObj.SetActive(active);
+        demoDevice.gameObject.SetActive(active && SortSettings.IsDemo());
+        Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Demo device active: " + (active && SortSettings.IsDemo()));
 
         yield return loading;
 

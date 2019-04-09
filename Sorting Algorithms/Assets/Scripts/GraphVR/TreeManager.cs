@@ -167,7 +167,8 @@ public class TreeManager : GraphManager {
     {
         for (int i=0; i < tree.Count; i++)
         {
-            tree[i].ResetNode();
+            if (tree[i] != null)
+                tree[i].ResetNode();
         }
 
         base.ResetGraph();
@@ -178,7 +179,8 @@ public class TreeManager : GraphManager {
         Node.NODE_ID = 0;
         for (int i=0; i < tree.Count; i++)
         {
-            Destroy(tree[i].gameObject);
+            if (tree[i] != null)
+                Destroy(tree[i].gameObject);
         }
 
         // Delete edges
@@ -189,7 +191,8 @@ public class TreeManager : GraphManager {
     {
         for (int i = 0; i < tree.Count; i++)
         {
-            tree[i].Dist = value;
+            if (tree[i] != null)
+                tree[i].Dist = value;
         }
     }
 
@@ -199,6 +202,9 @@ public class TreeManager : GraphManager {
         for (int i=tree.Count-1; i >= numberOfInternalNodes; i--)
         {
             Node node = tree[i];
+
+            if (node == null)
+                continue;
 
             // Start backtracking from end node back to start node
             while (true)

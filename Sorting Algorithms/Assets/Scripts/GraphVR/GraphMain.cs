@@ -210,13 +210,16 @@ public class GraphMain : MainManager {
         // >>> Support
         blackboard.ChangeText(0, algorithmName);
 
+        bool includeLineNr = Settings.PseudocodeLineNr;
+        bool inDetailStep = Settings.PseudocodeStep;
+
         // Prepare difficulty level related stuff for user test (copied from sort)
         if (graphSettings.TeachingMode == Util.USER_TEST)
         {
             if (difficulty <= Util.PSEUDO_CODE_MAX_DIFFICULTY)
             {
                 // Pseudocode
-                pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm);
+                pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
                 pseudoCodeViewer.PseudoCodeSetup();
 }
 
@@ -233,7 +236,7 @@ public class GraphMain : MainManager {
             // >>> Demo
 
             // Pseudocode
-            pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm);
+            pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
             pseudoCodeViewer.PseudoCodeSetup();
 
             // List visual
@@ -339,8 +342,8 @@ public class GraphMain : MainManager {
 
         StartCoroutine(ActivateTaskObjects(false));
 
-        calculator.ResetDevicePosition();
-        demoDevice.ResetDevicePosition();
+        calculator.ResetDevice();
+        demoDevice.ResetDevice();
 
         switch (graphSettings.TeachingMode)
         {

@@ -55,6 +55,12 @@ public abstract class MainManager : MonoBehaviour {
 
     void Update()
     {
+        if (WaitingForSupportToFinish())
+        {
+            //Debug.Log("Waiting for support to finish: #" + waitForSupportToComplete);
+            return;
+        }
+
         if (checkListModeActive)
             PerformCheckList(activeChecklist);
 
@@ -62,11 +68,6 @@ public abstract class MainManager : MonoBehaviour {
         if (!algorithmInitialized || userStoppedTask)
             return;
 
-        if (WaitingForSupportToFinish())
-        {
-            //Debug.Log("Waiting for support to finish: #" + waitForSupportToComplete);
-            return;
-        }
 
         if (GetTeachingAlgorithm().IsTaskCompleted)
         {
@@ -193,6 +194,8 @@ public abstract class MainManager : MonoBehaviour {
                 UserPausedTask = !userPausedTask;
                 Debug.Log("Pause: " + userPausedTask);
 
+                demoDevice.TransitionPause(userPausedTask);
+
                 if (userPausedTask)
                 {
                     stepByStepManager.CurrentInstructionNr--;
@@ -275,8 +278,7 @@ public abstract class MainManager : MonoBehaviour {
         switch (teachingMode)
         {
             case Util.DEMO:
-                demoDevice.gameObject.SetActive(true);
-                demoDevice.InitDemoDevice();
+                demoDevice.InitDemoDevice(userPausedTask);
                 demoDevice.SpawnDeviceInfrontOfPlayer();
                 PerformAlgorithmDemo();
                 break;
@@ -335,9 +337,6 @@ public abstract class MainManager : MonoBehaviour {
         // Used for shut down process
         safeStopChecklist = new Dictionary<string, bool>();
         algorithmName = Settings.Algorithm;
-        GetTeachingAlgorithm().PseudoCodeLineInDetail = Settings.PseudocodeStep;
-        GetTeachingAlgorithm().IncludeLineNr = Settings.PseudocodeLineNr;
-        userPausedTask = true;
     }
 
     /* --------------------------------------- Destroy & Restart ---------------------------------------
@@ -355,6 +354,7 @@ public abstract class MainManager : MonoBehaviour {
         algorithmInitialized = false;
         controllerReady = false;
         userStoppedTask = false;
+        userPausedTask = false;
 
         WaitForSupportToComplete = 0;
 
@@ -365,7 +365,7 @@ public abstract class MainManager : MonoBehaviour {
         }
         newDemoImplemented = false;
 
-        demoDevice.gameObject.SetActive(false);
+        // Reset demo device in <..>main
     }
 
 

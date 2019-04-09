@@ -107,11 +107,6 @@ public abstract class TeachingSettings : SettingsBase {
         return teachingMode == Util.DEMO;
     }
 
-    public bool IsStepByStep()
-    {
-        return teachingMode == Util.STEP_BY_STEP;
-    }
-
     public bool IsUserTest()
     {
         return teachingMode == Util.USER_TEST;

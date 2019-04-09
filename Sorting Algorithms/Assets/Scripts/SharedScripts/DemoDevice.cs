@@ -12,22 +12,11 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
     private Section section;
     private ToggleButton pauseButton;
-    private bool currentState;
 
     [SerializeField]
     private bool enableStepBack;
 
     private MainManager mainManager;
-
-    public void InitDemoDevice()
-    {
-        //
-        section.InitItem(PAUSE, false);
-
-        // Hide speed at start
-        buttons[REDUCE_SPEED].gameObject.SetActive(false);
-        buttons[INCREASE_SPEED].gameObject.SetActive(false);
-    }
 
     protected override void Awake()
     {
@@ -65,22 +54,46 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
             Destroy(buttons[STEP_BACK].gameObject);
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    // Hide buttons based on state (Pause: Step-by-step with (back-)/forward step, Unpaused: Demo with reduce-/increase speed
+    //    bool gamePaused = pauseButton.State;
+    //    if (currentState != gamePaused)
+    //    {
+    //        Debug.Log("State changed, paused: " + gamePaused);
+
+    //        buttons[REDUCE_SPEED].gameObject.SetActive(!gamePaused);
+    //        buttons[INCREASE_SPEED].gameObject.SetActive(!gamePaused);
+
+    //        if (enableStepBack)
+    //            buttons[STEP_BACK].gameObject.SetActive(gamePaused);
+
+    //        buttons[STEP_FORWARD].gameObject.SetActive(gamePaused);
+
+    //        currentState = gamePaused;
+    //    }
+    //}
+
+    public void InitDemoDevice(bool startPaused)
     {
-        // Hide buttons based on state (Pause: Step-by-step with (back-)/forward step, Unpaused: Demo with reduce-/increase speed
-        bool pauseButtonState = pauseButton.State;
-        if (currentState != pauseButtonState)
-        {
-            buttons[REDUCE_SPEED].gameObject.SetActive(pauseButtonState);
-            buttons[INCREASE_SPEED].gameObject.SetActive(pauseButtonState);
+        section.InitItem(PAUSE, startPaused);
+        TransitionPause(startPaused);
+    }
 
-            if (enableStepBack)
-                buttons[STEP_BACK].gameObject.SetActive(!pauseButtonState);
+    /* ----- Buttons ------
+     * > Play   : enable speed adjustment / disable step-by-step
+     * > Paused : enable step-by-step / disable speed
+    */
+    public void TransitionPause(bool paused)
+    {
+        Debug.Log("State changed, paused: " + paused);
+        buttons[REDUCE_SPEED].gameObject.SetActive(!paused);
+        buttons[INCREASE_SPEED].gameObject.SetActive(!paused);
 
-            buttons[STEP_FORWARD].gameObject.SetActive(!pauseButtonState);
+        if (enableStepBack)
+            buttons[STEP_BACK].gameObject.SetActive(paused);
 
-            currentState = pauseButtonState;
-        }
+        buttons[STEP_FORWARD].gameObject.SetActive(paused);
     }
 
     public void SetDemoDeviceTitle(string title)
@@ -96,7 +109,14 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     public void ButtonActive(string buttonID, bool active)
     {
         if (buttons.ContainsKey(buttonID))
-            buttons[buttonID].gameObject.SetActive(active);
+            buttons[buttonID].enabled = active; // + change color?
+    }
+
+    public override void ResetDevice()
+    {
+        section.InitItem(PAUSE, false);
+
+        base.ResetDevice();
     }
 
 }

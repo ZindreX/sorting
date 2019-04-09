@@ -17,9 +17,9 @@ public class DisplayUnitManager : MonoBehaviour {
 
     private SortAlgorithm algorithm;
 
-    public void InitDisplayUnitManager(SortAlgorithm algorithm)
+    public void InitDisplayUnitManager(SortAlgorithm algorithm, bool includeLineNr, bool inDetailStep)
     {
-        centerBlackboard.InitPseudoCodeViewer(algorithm);
+        centerBlackboard.InitPseudoCodeViewer(algorithm, includeLineNr, inDetailStep);
         leftInfoBoardText.text = "";
         sortingTableText.text = "";
         settingsMenuText.text = "";

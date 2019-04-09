@@ -9,6 +9,8 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     private Transform pseudocodeLinesObj;
     private Vector3 objectStartPos, containerStartPos;
 
+    private bool includeLineNr, inDetailStep;
+
     private TextMeshPro[] codeLines;
 
     private WaitForSeconds demoStepDuration;
@@ -21,10 +23,12 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         containerStartPos = pseudocodeLinesObj.transform.position;
     }
 
-    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm)
+    public void InitPseudoCodeViewer(TeachingAlgorithm algorithm, bool includeLineNr, bool inDetailStep)
     {
         this.algorithm = algorithm;
         algorithm.PseudoCodeViewer = this;
+        this.includeLineNr = includeLineNr;
+        this.inDetailStep = inDetailStep;
 
         demoStepDuration = algorithm.DemoStepDuration;
     }
@@ -63,7 +67,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             rt.transform.position = new Vector3(rt.position.x, rt.position.y, rt.position.z); // x + 1f
 
             // Get line of code from algorithm
-            if (algorithm.IncludeLineNr)
+            if (includeLineNr)
                 codeLine.GetComponent<TextMeshPro>().text = algorithm.CollectLine(x);
             else
                 codeLine.GetComponent<TextMeshPro>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1]; // Insertionsort / bucketsort: update pseudocode (as in bubble-/graph)
@@ -75,13 +79,25 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         AdjustPseudocodeAboveFloorLevel();
     }
 
+    public bool IncludeLineNr
+    {
+        get { return includeLineNr; }
+        set { includeLineNr = value; }
+    }
+
+    public bool InDetailStep
+    {
+        get { return inDetailStep; }
+        set { inDetailStep = value; }
+    }
+
     public void SetCodeLine(int lineNr, string text, Color color)
     {
         // Check if lineNr exists
         if (ValidIndex(lineNr))
         {
             // Change text (with or without lineNr)
-            if (algorithm.IncludeLineNr)
+            if (includeLineNr)
                 codeLines[lineNr].text = lineNr + text;
             else
                 codeLines[lineNr].text = text;
@@ -98,7 +114,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
         if (ValidIndex(index))
         {
-            if (algorithm.IncludeLineNr) // optimize?
+            if (includeLineNr) // optimize?
                 codeLines[index].text = text;
             else
                 codeLines[index].text = lineOfCodeSplit[1];

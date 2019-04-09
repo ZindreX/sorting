@@ -185,11 +185,11 @@ public class Util : MonoBehaviour {
                 obj.transform.position -= moveUnderGround;
         }
 
-        Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer part in visibleParts)
-        {
-            part.enabled = visible;
-        }
+        //Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
+        //foreach (MeshRenderer part in visibleParts)
+        //{
+        //    part.enabled = visible;
+        //}
     }
 
     // remove function?

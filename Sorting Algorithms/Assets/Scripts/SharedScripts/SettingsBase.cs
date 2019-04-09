@@ -12,7 +12,8 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
 
     protected void Awake()
     {
-        tooltips = GetComponentInChildren<TextMeshPro>();
+        Component[] textMeshes = GetComponentsInChildren<TextMeshPro>();
+        tooltips = (TextMeshPro)textMeshes[1];
 
         // Get all sections from the settings menu
         settingsSections = new Dictionary<string, Section>();

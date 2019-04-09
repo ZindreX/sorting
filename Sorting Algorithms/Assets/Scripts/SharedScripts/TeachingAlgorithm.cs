@@ -13,7 +13,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // Basis variables for all modes
     protected WaitForSeconds demoStepDuration;
-    protected bool pseudoCodeInitilized = false, isTaskCompleted = false, includeLineNr = false;
+    protected bool pseudoCodeInitilized = false, isTaskCompleted = false;
     protected PseudoCodeViewer pseudoCodeViewer;
     
     // Instruction variables
@@ -24,7 +24,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected int i, j, k;
     //protected string i_str = "i", j_str = "j", k_str = "k";
     protected string lengthOfList = "len(list)";
-    protected bool pseudoCodeLineInDetail = true;
 
     // User Test
     protected Dictionary<string, List<string>> skipDict;
@@ -54,18 +53,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     {
         get { return isTaskCompleted; }
         set { isTaskCompleted = value; }
-    }
-
-    public bool IncludeLineNr
-    {
-        get { return includeLineNr; }
-        set { includeLineNr = value; }
-    }
-
-    public bool PseudoCodeLineInDetail
-    {
-        get { return pseudoCodeLineInDetail; }
-        set { pseudoCodeLineInDetail = value; }
     }
 
     public Dictionary<string, List<string>> SkipDict
@@ -98,7 +85,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
          * Step 2: i = 1 + 1
          * Step 3: i = 2
         */
-        if (pseudoCodeLineInDetail)
+        if (pseudoCodeViewer.InDetailStep)
         {
             bool valuesNotInserted = true; // First show step 1
             for (int x=0; x < 2; x++)
