@@ -90,6 +90,8 @@ public class SortSettings : TeachingSettings {
 
     protected override void InitButtons()
     {
+        base.InitButtons();
+
         InitButtonState(Util.ALGORITHM, algorithm);
         InitButtonState(Util.TEACHING_MODE, teachingMode);
         InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);

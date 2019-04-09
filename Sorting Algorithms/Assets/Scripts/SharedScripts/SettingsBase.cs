@@ -21,8 +21,6 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
         foreach (Section section in sectionComponents)
         {
             string sectionID = section.SectionID;
-            Debug.Log("Section: " + sectionID);
-
             section.SectionManager = this;
             if (!settingsSections.ContainsKey(sectionID))
                 settingsSections[sectionID] = section;

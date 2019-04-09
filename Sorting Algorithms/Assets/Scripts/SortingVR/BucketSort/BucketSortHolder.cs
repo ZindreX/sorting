@@ -22,13 +22,13 @@ public class BucketSortHolder : InsertionSortHolder {
             CurrentColor = prevColor;
     }
 
-    protected override void OnCollisionEnter(Collision collision)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            BucketSortElement element = collision.collider.GetComponent<BucketSortElement>();
-            currentHolding = element;
+            BucketSortElement element = other.GetComponent<BucketSortElement>();
+            CurrentHolding = element;
 
             // Tutorial
             if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
@@ -46,5 +46,30 @@ public class BucketSortHolder : InsertionSortHolder {
             }
         }
     }
+
+    //protected override void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+    //    {
+    //        // Current holding the sorting element that collided
+    //        BucketSortElement element = collision.collider.GetComponent<BucketSortElement>();
+    //        currentHolding = element;
+
+    //        // Tutorial
+    //        if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
+    //        {
+    //            element.CanEnterBucket = true;
+
+    //            if (currentHolding.IsCompare)
+    //                CurrentColor = UtilSort.COMPARE_COLOR;
+    //            if (currentHolding.IsSorted)
+    //                CurrentColor = UtilSort.SORTED_COLOR;
+    //        }
+    //        else // User test
+    //        {
+
+    //        }
+    //    }
+    //}
 
 }

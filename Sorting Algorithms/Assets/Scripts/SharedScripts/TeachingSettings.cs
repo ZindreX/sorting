@@ -39,7 +39,7 @@ public abstract class TeachingSettings : SettingsBase {
         {
             // Init settings
             TeachingMode = Util.DEMO;
-            AlgorithmSpeedLevel = 1;
+            AlgorithmSpeedLevel = 0;
             Difficulty = 0;
         }
     }

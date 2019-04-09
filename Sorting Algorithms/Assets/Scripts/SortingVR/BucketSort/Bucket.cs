@@ -36,6 +36,13 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         displayElements = false;
     }
 
+    public void InitBucket()
+    {
+        // TODO: add isDemo/stuff....
+
+        displayElements = false;
+    }
+
     public SortMain SuperElement
     {
         get { return parent; }
@@ -84,10 +91,16 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     public void AddSortingElementToBucket(SortingElementBase sortingElement)
     {
         currentHolding.Add(sortingElement);
+
+        if (sortingElement is BucketSortElement)
+            ((BucketSortElement)sortingElement).CurrentInside = this;
+
         StartCoroutine(ChangeColor(UtilSort.SORTED_COLOR));
 
         // Make invisible
-        sortingElement.gameObject.SetActive(false);
+        sortingElement.transform.position = transform.position;
+        sortingElement.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        //Util.HideObject(sortingElement.gameObject, false); //.SetActive(false);
     }
 
     public SortingElementBase GetElementForDisplay(int index)
@@ -122,11 +135,49 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     }
 
     private int prevSortingElementID = -1;
-    private void OnCollisionEnter(Collision collision)
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+    //    {
+    //        BucketSortElement sortingElement = collision.collider.GetComponent<BucketSortElement>();
+
+    //        // Check for bug (same sorting element got added twice)
+    //        if (prevSortingElementID == sortingElement.SortingElementID)
+    //            return;
+
+    //        if (!sortingElement.CanEnterBucket)
+    //        {
+    //            Debug.Log(sortingElement.CanEnterBucket);
+    //            return;
+    //        }
+
+    //        if (parent.SortSettings.IsDemo())
+    //        {
+    //            if (!displayElements && ValidateSortingElement(sortingElement))
+    //            {
+    //                // Do animation (color -> green -> color)
+    //                AddSortingElementToBucket(sortingElement);
+    //                prevSortingElementID = sortingElement.SortingElementID;
+    //            }
+    //            else
+    //            {
+    //                // Can't be put into this bucket
+    //                ChangeColor(UtilSort.ERROR_COLOR);
+    //            }
+
+    //        }
+    //        else // User test
+    //        {
+
+    //        }
+    //    }
+    //}
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
-            BucketSortElement sortingElement = collision.collider.GetComponent<BucketSortElement>();
+            BucketSortElement sortingElement = other.GetComponent<BucketSortElement>();
 
             // Check for bug (same sorting element got added twice)
             if (prevSortingElementID == sortingElement.SortingElementID)
@@ -155,7 +206,26 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             }
             else // User test
             {
+                if (sortingElement.Instruction is BucketSortInstruction)
+                {
+                    BucketSortInstruction inst = (BucketSortInstruction)sortingElement.Instruction;
 
+                    if (inst.Instruction == UtilSort.MOVE_TO_BUCKET_INST && inst.BucketID == bucketID)
+                    {
+                        // Do animation (color -> green -> color)
+                        AddSortingElementToBucket(sortingElement);
+                        prevSortingElementID = sortingElement.SortingElementID;
+                        parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
+                        parent.GetComponent<UserTestManager>().ReadyForNext += 1;
+                    }
+                    else
+                    {
+                        // Can't be put into this bucket
+                        ChangeColor(UtilSort.ERROR_COLOR);
+                        parent.GetComponent<UserTestManager>().Mistake();
+                    }
+
+                }
             }
         }
     }

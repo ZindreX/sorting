@@ -73,6 +73,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     }
 
     // Used in Demo for highlighting pseudo code line for <seconds> then go back to normal color
+    private WaitForSeconds test = new WaitForSeconds(1f);
     protected IEnumerator HighlightPseudoCode(string text, Color color)
     {
         string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
@@ -96,7 +97,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
                     break;
 
                 pseudoCodeViewer.SetCodeLine(index, pseudoCodeLineStep, color);
-                yield return demoStepDuration;
+                yield return test;
 
                 valuesNotInserted = false; // Then show step 2
             }
@@ -106,9 +107,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         // At last show step 3 (result)
         pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, color);
         yield return demoStepDuration;
-        pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, Util.BLACKBOARD_TEXT_COLOR);
-
-
     }
 
 

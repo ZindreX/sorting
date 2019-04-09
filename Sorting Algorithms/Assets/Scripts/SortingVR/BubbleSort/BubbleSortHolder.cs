@@ -22,12 +22,12 @@ public class BubbleSortHolder : HolderBase {
             CurrentColor = prevColor;
     }
 
-    protected override void OnCollisionEnter(Collision collision)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            currentHolding = collision.collider.GetComponent<BubbleSortElement>();
+            currentHolding = other.GetComponent<BubbleSortElement>();
 
             // Tutorial
             if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
@@ -43,5 +43,27 @@ public class BubbleSortHolder : HolderBase {
             }
         }
     }
+
+    //protected override void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+    //    {
+    //        // Current holding the sorting element that collided
+    //        currentHolding = collision.collider.GetComponent<BubbleSortElement>();
+
+    //        // Tutorial
+    //        if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
+    //        {
+    //            if (currentHolding.IsCompare)
+    //                CurrentColor = UtilSort.COMPARE_COLOR;
+    //            if (currentHolding.IsSorted)
+    //                CurrentColor = UtilSort.SORTED_COLOR;
+    //        }
+    //        else // User test
+    //        {
+
+    //        }
+    //    }
+    //}
 
 }

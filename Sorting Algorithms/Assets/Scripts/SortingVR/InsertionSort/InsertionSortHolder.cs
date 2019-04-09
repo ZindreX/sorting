@@ -49,12 +49,13 @@ public class InsertionSortHolder : HolderBase
             CurrentColor = prevColor;
     }
 
-    protected override void OnCollisionEnter(Collision collision)
+    // New holder
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            currentHolding = collision.collider.GetComponent<InsertionSortElement>();
+            currentHolding = other.GetComponent<InsertionSortElement>();
 
             // Tutorial
             if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
@@ -72,4 +73,28 @@ public class InsertionSortHolder : HolderBase
             }
         }
     }
+
+    //protected override void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+    //    {
+    //        // Current holding the sorting element that collided
+    //        currentHolding = collision.collider.GetComponent<InsertionSortElement>();
+
+    //        // Tutorial
+    //        if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
+    //        {
+    //            if (((InsertionSortElement)currentHolding).IsPivot)
+    //                CurrentColor = UtilSort.PIVOT_COLOR;
+    //            else if (currentHolding.IsCompare)
+    //                CurrentColor = UtilSort.COMPARE_COLOR;
+    //            else if (currentHolding.IsSorted)
+    //                CurrentColor = UtilSort.SORTED_COLOR;
+    //        }
+    //        else // User test
+    //        {
+
+    //        }
+    //    }
+    //}
 }

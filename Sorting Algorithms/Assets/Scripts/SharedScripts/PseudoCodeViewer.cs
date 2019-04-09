@@ -98,7 +98,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         {
             // Change text (with or without lineNr)
             if (includeLineNr)
-                codeLines[lineNr].text = lineNr + text;
+                codeLines[lineNr].text = lineNr + ": " + text;
             else
                 codeLines[lineNr].text = text;
 
@@ -107,6 +107,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
+    // optimize?
     public void SetCodeLine(string text, Color color)
     {
         string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
@@ -114,7 +115,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
         if (ValidIndex(index))
         {
-            if (includeLineNr) // optimize?
+            if (includeLineNr) 
                 codeLines[index].text = text;
             else
                 codeLines[index].text = lineOfCodeSplit[1];

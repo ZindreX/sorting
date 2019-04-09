@@ -76,17 +76,17 @@ public class InsertionSort : SortAlgorithm {
         switch (lineNr)
         {
             case 0: lineOfCode +=  "InsertionSort(list)"; break;
-            case 1: lineOfCode +=  "i = 1"; break;
-            case 2: lineOfCode +=  "while ( " + i + " < " + lengthOfList + " )"; break;
-            case 3: lineOfCode +=  "   j = " + iMinus1; break;
-            case 4: lineOfCode +=  "   pivot = " + element1Value; break;
-            case 5: lineOfCode +=  "   while ( " + j + " >= 0 and pivot < " + element2Value + " )"; break;
-            case 6: lineOfCode +=  "       move " + element2Value + " to list[" + jPlus1 + "]"; break; // (j_str + 1) 
-            case 7: lineOfCode +=  "       j = " + jMinus1; break; // j_str = (j_str + 1) - 1
-            case 8: lineOfCode +=  "   end while"; break;
-            case 9: lineOfCode +=  "   list[" + jPlus1 + "] = pivot"; break; // (j_str + 1) 
-            case 10: lineOfCode += "   i = " + iPlus1; break; // i_str = (i_str - 1) + 1 
-            case 11: lineOfCode += "end while"; break;
+            case 1: lineOfCode +=  "    i = 1"; break;
+            case 2: lineOfCode +=  "    while ( " + i + " < " + lengthOfList + " )"; break;
+            case 3: lineOfCode +=  "        j = " + iMinus1; break;
+            case 4: lineOfCode +=  "        pivot = " + element1Value; break;
+            case 5: lineOfCode +=  "        while ( " + j + " >= 0 and pivot < " + element2Value + " )"; break;
+            case 6: lineOfCode +=  "            move " + element2Value + " to list[" + jPlus1 + "]"; break; // (j_str + 1) 
+            case 7: lineOfCode +=  "            j = " + jMinus1; break; // j_str = (j_str + 1) - 1
+            case 8: lineOfCode +=  "        end while"; break;
+            case 9: lineOfCode +=  "        list[" + jPlus1 + "] = pivot"; break; // (j_str + 1) 
+            case 10: lineOfCode += "        i = " + iPlus1; break; // i_str = (i_str - 1) + 1 
+            case 11: lineOfCode += "    end while"; break;
             default: return "X";
         }
         return lineOfCode;

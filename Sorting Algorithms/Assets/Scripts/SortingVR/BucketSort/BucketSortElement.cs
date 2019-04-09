@@ -9,10 +9,30 @@ public class BucketSortElement : SortingElementBase {
     private int nextBucketID;
     private Bucket currentInside;
 
+    private Rigidbody rb;
+    private Vector3 returnPos;
+
     protected override void Awake()
     {
         base.Awake();
         Instruction = new BucketSortInstruction(UtilSort.INIT_INSTRUCTION, 0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, sortingElementID, value, false, false, sortingElementID, UtilSort.NO_DESTINATION, UtilSort.NO_VALUE); // new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, false, false, false);
+
+        //returnPos = 
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.None;
+    }
+
+    private void Update()
+    {
+        if (parent.AlgorithmInitialized)
+        {
+            if (currentInside == null && transform.position.y < 0.1f)
+            {
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+                transform.position = FindObjectOfType<SortingTable>().ReturnPosition.position;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+        }
     }
 
     public override InstructionBase Instruction
@@ -67,6 +87,10 @@ public class BucketSortElement : SortingElementBase {
                     break;
 
                 case UtilSort.EXECUTED_INST: status = "Performed"; break;
+
+                case UtilSort.DISPLAY_ELEMENT:
+                    break;
+
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
@@ -92,6 +116,8 @@ public class BucketSortElement : SortingElementBase {
                     return (currentStandingOn.HolderID == sortingElementID) ? UtilSort.INIT_OK : UtilSort.INIT_ERROR;
 
                 case UtilSort.MOVE_TO_BUCKET_INST:
+                    return UtilSort.CORRECT_HOLDER;
+
                     if (!bucketSortInstruction.HasBeenExecuted())
                     {
                         if (IntermediateMove && currentInside.BucketID == bucketSortInstruction.BucketID)
@@ -107,7 +133,7 @@ public class BucketSortElement : SortingElementBase {
                     else
                     {
                         Debug.Log("TODO?");
-                        return null;
+                        return UtilSort.CANNOT_VALIDATE_ERROR;
                     }
 
                 case UtilSort.MOVE_BACK_INST:
@@ -125,8 +151,12 @@ public class BucketSortElement : SortingElementBase {
                     else
                     {
                         Debug.Log("TODO?");
-                        return null;
+                        return UtilSort.CANNOT_VALIDATE_ERROR;
                     }
+
+                case UtilSort.DISPLAY_ELEMENT:
+                    return UtilSort.WRONG_HOLDER;
+
                 default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }
         }

@@ -140,7 +140,7 @@ public class BucketSort : SortAlgorithm {
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.PHASING_INST);
 
 
-        //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.DISPLAY_ELEMENT);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilSort.DISPLAY_ELEMENT);
         //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.MOVE_TO_BUCKET_INST); ***
         //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.MOVE_BACK_INST); ***
     }

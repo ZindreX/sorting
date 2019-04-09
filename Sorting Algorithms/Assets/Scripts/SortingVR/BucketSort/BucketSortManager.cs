@@ -64,7 +64,8 @@ public class BucketSortManager : AlgorithmManagerBase {
             StartCoroutine(PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));
             Debug.Log("Testing: correct variable used???");
         }
-        else if (gotSortingElement)
+
+        if (gotSortingElement)
         {
             // Get the next instruction
             BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
@@ -76,7 +77,7 @@ public class BucketSortManager : AlgorithmManagerBase {
             sortingElement.Instruction = bucketSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilSort.MOVE_TO_BUCKET_INST || instruction.Instruction == UtilSort.MOVE_BACK_INST)//(instruction.Instruction == Util.PIVOT_START_INST || instruction.Instruction == Util.PIVOT_END_INST || instruction.Instruction == Util.SWITCH_INST)
+            if (instruction.Instruction == UtilSort.MOVE_TO_BUCKET_INST || instruction.Instruction == UtilSort.MOVE_BACK_INST)
                 sortingElement.NextMove = true;
         }
 
@@ -113,8 +114,13 @@ public class BucketSortManager : AlgorithmManagerBase {
             for (int y=0; y < numberOfElements; y++)
             {
                 SortingElementBase element = bucket.RemoveSoringElement();
-                element.transform.position = new Vector3(0f, 2f, 0f);
+                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR + (UtilSort.ABOVE_BUCKET_VR/4) * y; //Util.HideObject(element.gameObject, true); //.SetActive(true);
+                element.transform.rotation = Quaternion.identity;
+                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                
+                //element.transform.position = new Vector3(0f, 2f, 0f);
                 yield return bucketSort.DemoStepDuration;
+                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             }
         }
     }

@@ -30,17 +30,20 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
     void Update()
     {
-        if (parent.SortSettings.IsUserTest())
-        {
-            // Always checking the status of the sorting element this holder is holding, and changing color thereafter
-            if (isValidSortingElement(currentHolding))
-                UpdateColorOfHolder();
-        }
-        else if (parent.SortSettings.IsDemo() && currentHolding != null)
-        {
-            if (currentHolding.IsSorted)
-                UpdateColorOfHolder();
-        }       
+
+        // Always checking the status of the sorting element this holder is holding, and changing color thereafter
+        if (isValidSortingElement(currentHolding))
+            UpdateColorOfHolder();
+
+        //if (parent.SortSettings.IsUserTest())
+        //{
+                // old placement
+        //}
+        //else if (parent.SortSettings.IsDemo() && currentHolding != null)
+        //{
+        //    if (currentHolding.IsSorted)
+        //        UpdateColorOfHolder();
+        //}       
     }
 
     private bool isValidSortingElement(SortingElementBase element)
@@ -91,17 +94,28 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
         set { hasPermission = value; }
     }
 
-    private void OnTriggerEnter(Collider other)
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+    //    {
+    //        // Tutorial
+    //        if (parent.SortSettings.IsDemo())
+    //        {
+
+    //        }
+    //        else // User test
+    //        {
+    //            if (CurrentHolding != null)
+    //                prevElementID = currentHolding.SortingElementID; // null exception, how?
+    //        }
+    //        CurrentHolding = null;
+    //        CurrentColor = UtilSort.STANDARD_COLOR;
+    //    }
+    //}
+
+    private void OnTriggerExit(Collider other)
     {
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
-        {
-            Debug.Log("Holder " + holderID + ":  Sorting element: " + other.GetComponent<SortingElementBase>().SortingElementID);
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Tutorial
             if (parent.SortSettings.IsDemo())
@@ -126,6 +140,8 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     protected abstract void UpdateColorOfHolder();
 
     // Performed in subclasses due to different sorting elements
-    protected abstract void OnCollisionEnter(Collision collision);
+    //protected abstract void OnCollisionEnter(Collision collision);
+
+    protected abstract void OnTriggerEnter(Collider other);
 
 }

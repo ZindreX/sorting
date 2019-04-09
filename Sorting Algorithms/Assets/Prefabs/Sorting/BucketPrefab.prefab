@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: 4911889481883952}
   - component: {fileID: 114403928065101704}
   - component: {fileID: 54234323538201422}
+  - component: {fileID: 135064955881553934}
   m_Layer: 0
   m_Name: BucketPrefab
   m_TagString: Bucket
@@ -478,6 +479,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
+--- !u!135 &135064955881553934
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903361543444576}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!136 &136363339443696646
 CapsuleCollider:
   m_ObjectHideFlags: 1
