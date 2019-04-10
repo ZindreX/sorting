@@ -2,39 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SortingTable : MonoBehaviour, IMoveAble {
+public class SortingTable : StartExchangePosition {
 
     [SerializeField]
     private Transform returnPosition;
 
-    private Vector3 startPos, moveOutPos;
-
-    private void Awake()
+    protected override void Awake()
     {
-        startPos = transform.position;
-        moveOutPos = startPos + new Vector3(5f, 10f, 0f);
+        base.Awake();
 
         Section sortingTableSection = GetComponentInChildren<Section>();
         sortingTableSection.SectionManager = FindObjectOfType<SettingsBase>();
+
+        InScenePosition = new Vector3(0f, 0.3f, 0f);
     }
 
-    public void SetTableActive(bool active)
-    {
-        if (active)
-            MoveOut();
-        else
-            MoveBack();
-    }
 
-    public void MoveOut()
-    {
-        transform.position = moveOutPos;
-    }
-
-    public void MoveBack()
-    {
-        transform.position = startPos;
-    }
 
     public Transform ReturnPosition
     {

@@ -71,4 +71,22 @@ public class InsertionSortHolder : HolderBase
         }
     }
 
+    protected override void GiveHint()
+    {
+        if (registeredAboveHolder != null && registeredAboveHolder.Instruction != null)
+        {
+            InsertionSortInstruction insertInst = (InsertionSortInstruction)registeredAboveHolder.Instruction;
+            int registeredID = registeredAboveHolder.SortingElementID;
+            int nextHolder = insertInst.NextHolderID;
+
+            if (nextHolder == holderID)
+                parent.AudioManager.Play(parent.HINT_CORRECT_SOUND);
+            else if (insertInst.Instruction == Util.INIT_INSTRUCTION)
+            {
+
+            }
+            else
+                base.GiveHint();
+        }
+    }
 }

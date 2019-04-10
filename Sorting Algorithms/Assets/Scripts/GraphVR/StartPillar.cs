@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class StartPillar : MonoBehaviour {
+public class StartPillar : StartExchangePosition {
 
     [SerializeField]
     private TextMeshPro displayText;
@@ -15,8 +15,11 @@ public class StartPillar : MonoBehaviour {
 
     private Pointer pointer;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        inScenePosition = new Vector3(-0.65f, 0.5f, -2.1f);
+
         Section startPillarSection = GetComponentInChildren<Section>();
         startPillarSection.SectionManager = FindObjectOfType<SettingsBase>();
         pointer = FindObjectOfType<Pointer>();

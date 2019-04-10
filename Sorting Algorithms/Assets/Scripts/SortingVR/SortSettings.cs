@@ -48,9 +48,9 @@ public class SortSettings : TeachingSettings {
             GetSettingsFromEditor();
         else
         {
-            // Init settings
             base.Start();
 
+            // Init settings
             Algorithm = Util.BUBBLE_SORT;
             NumberOfElements = 8;
             SortingCase = UtilSort.NONE;
@@ -63,7 +63,7 @@ public class SortSettings : TeachingSettings {
 
     protected override void GetSettingsFromEditor()
     {
-        base.GetSettingsFromEditor();
+        base.GetSettingsFromEditor(); // remove?
 
         switch ((int)algorithmEditor)
         {

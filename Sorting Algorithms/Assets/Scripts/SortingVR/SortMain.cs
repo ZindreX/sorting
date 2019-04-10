@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class SortMain : MainManager {
 
+    // Audio
+    public readonly string SORTED_SOUND = "Sorted";
+
     // Base object instances
     [SerializeField]
     private SortSettings sortSettings;
     private SortAlgorithm sortAlgorithm;
+
+    private SortingTable sortingTable;
 
     // Managers
     private AlgorithmManagerBase algorithmManagerBase;
@@ -21,7 +26,7 @@ public class SortMain : MainManager {
     protected AlgorithmUserController algorithmUserController;
 
     [SerializeField]
-    private GameObject sortAlgorithmsObj, displayUnitManagerObj, sortingTableObj;
+    private GameObject sortAlgorithmsObj, displayUnitManagerObj;
 
     private Vector3[] holderPositions;
 
@@ -35,6 +40,8 @@ public class SortMain : MainManager {
         stepByStepManager = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
+
+        sortingTable = FindObjectOfType<SortingTable>();
     }
 
     // --------------------------------------- Getters / Setters --------------------------------------- 
@@ -364,10 +371,11 @@ public class SortMain : MainManager {
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading complete!", 1);
 
         // Settings menu
-        sortSettings.SetSettingsActive(!active);
+        sortSettings.ActiveInScene(!active);
 
         // Sorting table
-        sortingTableObj.GetComponent<SortingTable>().SetTableActive(active);
+        sortingTable.ActiveInScene(active);
+
 
         demoDevice.gameObject.SetActive(active && SortSettings.IsDemo());
         Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Demo device active: " + (active && SortSettings.IsDemo()));
@@ -389,41 +397,41 @@ public class SortMain : MainManager {
         switch (sortAlgorithm)
         {
             case Util.BUBBLE_SORT:
-                GetComponentInChildren<BubbleSortManager>().enabled = true; // needed to enable/disable?
-                GetComponentInChildren<InsertionSortManager>().enabled = false;
-                GetComponentInChildren<BucketSortManager>().enabled = false;
-                GetComponentInChildren<BucketManager>().enabled = false;
-                GetComponentInChildren<MergeSortManager>().enabled = false;
+                //GetComponentInChildren<BubbleSortManager>().enabled = true; // needed to enable/disable?
+                //GetComponentInChildren<InsertionSortManager>().enabled = false;
+                //GetComponentInChildren<BucketSortManager>().enabled = false;
+                //GetComponentInChildren<BucketManager>().enabled = false;
+                //GetComponentInChildren<MergeSortManager>().enabled = false;
                 return GetComponentInChildren<BubbleSortManager>();
 
             case Util.INSERTION_SORT:
-                GetComponentInChildren<BubbleSortManager>().enabled = false;
-                GetComponentInChildren<InsertionSortManager>().enabled = true;
-                GetComponentInChildren<BucketSortManager>().enabled = false;
-                GetComponentInChildren<BucketManager>().enabled = false;
-                GetComponentInChildren<MergeSortManager>().enabled = false;
+                //GetComponentInChildren<BubbleSortManager>().enabled = false;
+                //GetComponentInChildren<InsertionSortManager>().enabled = true;
+                //GetComponentInChildren<BucketSortManager>().enabled = false;
+                //GetComponentInChildren<BucketManager>().enabled = false;
+                //GetComponentInChildren<MergeSortManager>().enabled = false;
                 return GetComponentInChildren<InsertionSortManager>();
 
             case Util.BUCKET_SORT:
                 BucketSortManager bucketSortManager = GetComponentInChildren<BucketSortManager>();
                 bucketSortManager.enabled = true;
 
-                BucketManager bucketManager = GetComponentInChildren<BucketManager>();
+                BucketManager bucketManager = GetComponentInChildren<BucketManager>(); // Move to BucketSortManager
                 bucketManager.enabled = true;
                 bucketManager.InitManager();
 
-                GetComponentInChildren<BubbleSortManager>().enabled = false;
-                GetComponentInChildren<InsertionSortManager>().enabled = false;
-                GetComponentInChildren<MergeSortManager>().enabled = false;
+                //GetComponentInChildren<BubbleSortManager>().enabled = false;
+                //GetComponentInChildren<InsertionSortManager>().enabled = false;
+                //GetComponentInChildren<MergeSortManager>().enabled = false;
 
                 return bucketSortManager;
 
             case Util.MERGE_SORT:
-                GetComponentInChildren<BubbleSortManager>().enabled = false;
-                GetComponentInChildren<InsertionSortManager>().enabled = false;
-                GetComponentInChildren<BucketSortManager>().enabled = false;
-                GetComponentInChildren<BucketManager>().enabled = false;
-                GetComponentInChildren<MergeSortManager>().enabled = true;
+                //GetComponentInChildren<BubbleSortManager>().enabled = false;
+                //GetComponentInChildren<InsertionSortManager>().enabled = false;
+                //GetComponentInChildren<BucketSortManager>().enabled = false;
+                //GetComponentInChildren<BucketManager>().enabled = false;
+                //GetComponentInChildren<MergeSortManager>().enabled = true;
                 return GetComponentInChildren<MergeSortManager>();
 
             default: Debug.Log("Sorting algorithm '" + sortAlgorithm + "' not found."); break;

@@ -34,17 +34,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
         // Always checking the status of the sorting element this holder is holding, and changing color thereafter
         if (isValidSortingElement(currentHolding))
-            UpdateColorOfHolder();
-
-        //if (parent.SortSettings.IsUserTest())
-        //{
-                // old placement
-        //}
-        //else if (parent.SortSettings.IsDemo() && currentHolding != null)
-        //{
-        //    if (currentHolding.IsSorted)
-        //        UpdateColorOfHolder();
-        //}       
+            UpdateColorOfHolder();   
     }
 
     private bool isValidSortingElement(SortingElementBase element)
@@ -72,7 +62,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     {
         get { return GetComponentInChildren<Renderer>().material.color; }
         set {
-            if (parent.SortSettings.Difficulty < UtilSort.EXAMINATION || parent.GetTeachingAlgorithm().IsTaskCompleted)
+            if (parent.SortSettings.Difficulty < Util.EXAMINATION || parent.GetTeachingAlgorithm().IsTaskCompleted)
             {
                 prevColor = currentColor;
                 GetComponentInChildren<Renderer>().material.color = value;
@@ -98,46 +88,40 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     // Register elements above
     protected void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entering holder" + holderID + ": " + other.tag);
+        //Debug.Log("Entering holder" + holderID + ": " + other.tag);
 
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             registeredAboveHolder = other.GetComponent<SortingElementBase>();
 
-            if (parent.Settings.Difficulty == Util.BEGINNER)
-            {
-                // TODO: hint
-            }
+            //if (parent.Settings.Difficulty == Util.BEGINNER)
+            //    GiveHint();
         }
     }
 
+    // Remove element from this holder (if touched the holder)
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Exiting holder" + holderID + ": " + other.tag);
+        //Debug.Log("Exiting holder" + holderID + ": " + other.tag);
 
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
-            // If element moved outside trigger box
             registeredAboveHolder = null;
-        }
-    }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        Debug.Log("Removed from holder " + holderID + ": " + collision.collider.tag);
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-        {
+            // Remove from this holder
             if (CurrentHolding != null)
+            {
                 prevElementID = currentHolding.SortingElementID;
-
-            CurrentHolding = null;
+                CurrentHolding = null;
+            }
             CurrentColor = Util.STANDARD_COLOR;
         }
     }
 
+    // Set as current holding, and set element as current on top of this holder
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.collider.tag + " collided with holder " + holderID);
+        //Debug.Log(collision.collider.tag + " collided with holder " + holderID);
 
         if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
@@ -149,10 +133,21 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
         }
     }
 
+    protected virtual void GiveHint()
+    {
+        // First let <..>holder check
+        // Base (here) called means user is about to do a wrong move
+        parent.AudioManager.Play("HintMistake");
+    }
+
+
+
+
     // --------------------------------------- Implemented in subclass ---------------------------------------
 
     // Updates the color based on the state of the sorting element
     protected abstract void UpdateColorOfHolder();
+
 
 
 

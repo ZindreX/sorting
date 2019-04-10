@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public abstract class SettingsBase : MonoBehaviour, ISectionManager, IMoveAble {
+public abstract class SettingsBase : StartExchangePosition, ISectionManager {
 
     [Header("Settings base")]
     protected TextMeshPro tooltips;
 
-    protected Vector3 startPos, moveOutPos;
-
     protected Dictionary<string, Section> settingsSections;
 
-    protected void Awake()
+    protected override void Awake()
     {
-        startPos = transform.position;
-        moveOutPos = startPos + new Vector3(5f, -10f, 0f);
+        // Position in scene
+        base.Awake();
+        InScenePosition = new Vector3(0f, -5f, 5f);
+        SwapPositions();
 
+        //
         Component[] textMeshes = GetComponentsInChildren<TextMeshPro>();
         tooltips = (TextMeshPro)textMeshes[1];
 
@@ -85,21 +86,4 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager, IMoveAble {
             Debug.LogError("No section: " + sectionID);
     }
 
-    public void SetSettingsActive(bool active)
-    {
-        if (active)
-            MoveBack();
-        else
-            MoveOut();
-    }
-
-    public void MoveOut()
-    {
-        transform.position = moveOutPos;
-    }
-
-    public void MoveBack()
-    {
-        transform.position = startPos;
-    }
 }

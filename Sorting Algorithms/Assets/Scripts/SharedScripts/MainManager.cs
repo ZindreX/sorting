@@ -46,6 +46,8 @@ public abstract class MainManager : MonoBehaviour {
 
     // Audio
     protected AudioManager audioManager;
+    public readonly string BUTTON_CLICK_SOUND = "ButtonClick", COLLISION_SOUND = "Collision", CORRECT_SOUND = "Correct", MISTAKE_SOUND = "Mistake";
+    public readonly string HINT_CORRECT_SOUND = "HintCorrect", HINT_MISTAKE_SOUND = "HintMistake";
 
     protected virtual void Awake()
     {
@@ -177,6 +179,11 @@ public abstract class MainManager : MonoBehaviour {
     {
         get { return userPausedTask; }
         set { userPausedTask = value; }
+    }
+
+    public AudioManager AudioManager
+    {
+        get { return audioManager; }
     }
 
     // --------------------------------------- Demo Device ---------------------------------------

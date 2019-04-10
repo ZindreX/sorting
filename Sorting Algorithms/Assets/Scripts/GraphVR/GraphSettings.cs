@@ -106,9 +106,9 @@ public class GraphSettings : TeachingSettings {
             GetSettingsFromEditor();
         else
         {
-            // Init settings
             base.Start();
 
+            // Init settings
             Algorithm = Util.BFS;
             GraphTask = UtilGraph.TRAVERSE;
             ShortestPathOneToAll = true;

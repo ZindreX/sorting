@@ -24,8 +24,6 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected HolderBase currentStandingOn;
     protected Vector3 placementAboveHolder;
 
-    protected AudioManager audioManager;
-
     // Debugging
     #region Debugging variables:
     [SerializeField]
@@ -38,9 +36,6 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     {
         sortingElementID = SORTING_ELEMENT_NR++;
         name = MyRole();
-
-        // Audio
-        audioManager = FindObjectOfType<AudioManager>();
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -73,7 +68,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     private void ElementBecomeSorted(bool sorted)
     {
         if (!isSorted && sorted)
-            audioManager.Play("Sorted");
+            parent.AudioManager.Play("Sorted");
     }
 
     public bool IsCompare
@@ -197,7 +192,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     {
         if (collision.collider.tag == UtilSort.HOLDER_TAG)
         {
-            audioManager.Play("Collision");
+            parent.AudioManager.Play("Collision");
 
             //HolderBase holder = collision.collider.GetComponentInParent<HolderBase>();
             //if (parent.SortSettings.IsDemo())

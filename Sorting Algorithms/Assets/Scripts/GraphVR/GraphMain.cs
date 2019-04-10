@@ -22,8 +22,6 @@ public class GraphMain : MainManager {
     [Header("Environment objects")]
     [SerializeField]
     private GameObject settingsObj;
-    [SerializeField]
-    private GameObject startPillarObj;
 
     [Space(5)]
     [Header("Other objects")]
@@ -81,7 +79,7 @@ public class GraphMain : MainManager {
         stepByStepManager = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
         posManager = FindObjectOfType<PositionManager>();
 
-        startPillar = startPillarObj.GetComponent<StartPillar>();
+        startPillar = FindObjectOfType<StartPillar>();
 
         // Moveable
         moveAbleObjects = new List<IMoveAble>();
@@ -300,9 +298,9 @@ public class GraphMain : MainManager {
         yield return loading;
 
         // Settings menu
-        graphSettings.SetSettingsActive(!active);
+        graphSettings.ActiveInScene(!active);
 
-        Util.HideObject(startPillarObj, active);
+        startPillar.ActiveInScene(active);
 
         yield return loading;
         graphSettings.FillTooltips("");
