@@ -15,20 +15,12 @@ public class DisplayUnitManager : MonoBehaviour {
     [SerializeField]
     private TextMeshPro leftInfoBoardText, sortingTableText, settingsMenuText;
 
-    private SortAlgorithm algorithm;
 
-    public void InitDisplayUnitManager(SortAlgorithm algorithm, bool includeLineNr, bool inDetailStep)
+    public void InitDisplayUnitManager()
     {
-        centerBlackboard.InitPseudoCodeViewer(algorithm, includeLineNr, inDetailStep);
         leftInfoBoardText.text = "";
         sortingTableText.text = "";
         settingsMenuText.text = "";
-    }
-
-    public SortAlgorithm Algorithm
-    {
-        get { return algorithm; }
-        set { algorithm = value; }
     }
 
     // Algorithm will control this blackboard

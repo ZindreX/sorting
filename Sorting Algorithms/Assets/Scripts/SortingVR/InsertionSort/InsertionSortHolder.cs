@@ -31,8 +31,8 @@ public class InsertionSortHolder : HolderBase
         if (!currentHolding.StandingInCorrectHolder)
         {
             CurrentColor = UtilSort.ERROR_COLOR;
-            if (hasPermission)
-                parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
+            //if (hasPermission)
+            //    parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
             hasPermission = false;
         }
         else if (CurrentHolding.IntermediateMove)
@@ -49,16 +49,17 @@ public class InsertionSortHolder : HolderBase
             CurrentColor = prevColor;
     }
 
-    // New holder
-    protected override void OnTriggerEnter(Collider other)
+    protected override void OnCollisionEnter(Collision collision)
     {
-        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        base.OnCollisionEnter(collision);
+
+        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            currentHolding = other.GetComponent<InsertionSortElement>();
+            currentHolding = collision.collider.GetComponent<InsertionSortElement>();
 
             // Tutorial
-            if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
+            if (parent.SortSettings.IsDemo())
             {
                 if (((InsertionSortElement)currentHolding).IsPivot)
                     CurrentColor = UtilSort.PIVOT_COLOR;
@@ -67,34 +68,7 @@ public class InsertionSortHolder : HolderBase
                 else if (currentHolding.IsSorted)
                     CurrentColor = UtilSort.SORTED_COLOR;
             }
-            else // User test
-            {
-
-            }
         }
     }
 
-    //protected override void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-    //    {
-    //        // Current holding the sorting element that collided
-    //        currentHolding = collision.collider.GetComponent<InsertionSortElement>();
-
-    //        // Tutorial
-    //        if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
-    //        {
-    //            if (((InsertionSortElement)currentHolding).IsPivot)
-    //                CurrentColor = UtilSort.PIVOT_COLOR;
-    //            else if (currentHolding.IsCompare)
-    //                CurrentColor = UtilSort.COMPARE_COLOR;
-    //            else if (currentHolding.IsSorted)
-    //                CurrentColor = UtilSort.SORTED_COLOR;
-    //        }
-    //        else // User test
-    //        {
-
-    //        }
-    //    }
-    //}
 }

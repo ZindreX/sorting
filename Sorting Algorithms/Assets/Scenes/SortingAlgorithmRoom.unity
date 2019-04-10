@@ -3945,7 +3945,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 385220746}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -9.7, z: 0}
+  m_LocalPosition: {x: -5, y: -9.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1324047494}
@@ -5095,12 +5095,12 @@ MonoBehaviour:
   useDebuggingSettings: 1
   pseudocodeLineNr: 1
   pseudocodeStep: 1
-  teachingModeEditor: 0
-  algorithmSpeedEditor: 0
+  teachingModeEditor: 1
+  algorithmSpeedEditor: 2
   difficultyEditor: 0
-  allowDuplicates: 0
+  allowDuplicates: 1
   sortMain: {fileID: 236630474}
-  algorithmEditor: 0
+  algorithmEditor: 2
   numberOfElements: 4
   sortingCaseEditor: 2
 --- !u!1 &632223197
@@ -9567,7 +9567,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1257828966}
   m_Layer: 0
-  m_Name: BucketSortPointers
+  m_Name: BucketSortStuff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9586,6 +9586,7 @@ Transform:
   - {fileID: 246450342}
   - {fileID: 48005288}
   - {fileID: 1419573345}
+  - {fileID: 1821511294}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12142,6 +12143,11 @@ Prefab:
       propertyPath: m_LocalPosition.x
       value: -0.07
       objectReference: {fileID: 0}
+    - target: {fileID: 114865792681941826, guid: ad05c403532360c4b90bb9e07c438a40,
+        type: 2}
+      propertyPath: itemID
+      value: Pseudocode line nr
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad05c403532360c4b90bb9e07c438a40, type: 2}
   m_IsPrefabAsset: 0
@@ -13215,6 +13221,34 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1808044903}
   m_Mesh: {fileID: 4300002, guid: e61c6399d5478fc4bbfbdb7ccc35cca1, type: 3}
+--- !u!1 &1821511293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1821511294}
+  m_Layer: 0
+  m_Name: Buckets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1821511294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1821511293}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1257828966}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1836392046
 GameObject:
   m_ObjectHideFlags: 0
@@ -13316,7 +13350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1869195593}
   m_Layer: 0
-  m_Name: MergeSortPointers
+  m_Name: MergeSortStuff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15166,6 +15200,8 @@ MonoBehaviour:
   firstBucketPosition: {fileID: 246450342}
   firstRowUserTest: {fileID: 48005288}
   secondRowUserTest: {fileID: 1419573345}
+  bucketContainer: {fileID: 1821511293}
+  bucketSort: {fileID: 999074478}
 --- !u!114 &2121649985
 MonoBehaviour:
   m_ObjectHideFlags: 0

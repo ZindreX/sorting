@@ -5,7 +5,7 @@ using UnityEngine;
 public class BucketSortElement : SortingElementBase {
 
     private BucketSortInstruction bucketSortInstruction;
-    private bool isPivot, canEnterBucket = true;
+    private bool isPivot; // canEnterBucket = true;
     private int nextBucketID;
     private Bucket currentInside;
 
@@ -53,11 +53,11 @@ public class BucketSortElement : SortingElementBase {
         set { currentInside = value; }
     }
 
-    public bool CanEnterBucket
-    {
-        get { return canEnterBucket; }
-        set { canEnterBucket = value; }
-    }
+    //public bool CanEnterBucket
+    //{
+    //    get { return canEnterBucket; }
+    //    set { canEnterBucket = value; }
+    //}
 
     protected override void UpdateSortingElementState()
     {
@@ -79,7 +79,7 @@ public class BucketSortElement : SortingElementBase {
                 case UtilSort.MOVE_TO_BUCKET_INST:
                     status = "Move to bucket" + nextBucketID;
                     intermediateMove = true;
-                    canEnterBucket = true; // ***
+                    //canEnterBucket = true; // ***
                     break;
                 case UtilSort.MOVE_BACK_INST:
                     status = "Move to holder " + nextHolderID;
@@ -112,52 +112,45 @@ public class BucketSortElement : SortingElementBase {
         {
             switch (instruction)
             {
-                case UtilSort.INIT_INSTRUCTION:
-                    return (currentStandingOn.HolderID == sortingElementID) ? UtilSort.INIT_OK : UtilSort.INIT_ERROR;
+                case Util.INIT_INSTRUCTION:
+                    return (currentStandingOn.HolderID == sortingElementID) ? Util.INIT_OK : Util.INIT_ERROR;
 
                 case UtilSort.MOVE_TO_BUCKET_INST:
-                    return UtilSort.CORRECT_HOLDER;
-
                     if (!bucketSortInstruction.HasBeenExecuted())
                     {
-                        if (IntermediateMove && currentInside.BucketID == bucketSortInstruction.BucketID)
+                        if (currentStandingOn != null)
                         {
-                            intermediateMove = false;
-                            Debug.Log("Change to bucket?");
-                            return UtilSort.CORRECT_HOLDER;
+                            // Check if element is standing on holder (before any user action)
+                            if (IntermediateMove && currentStandingOn.HolderID == bucketSortInstruction.HolderID)
+                                return UtilSort.CORRECT_HOLDER;
+                            else if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.HolderID) // Mistake, going back to "start"
+                                return UtilSort.CORRECT_HOLDER;
+                            return UtilSort.WRONG_HOLDER;
                         }
-                        else if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.HolderID)
-                            return UtilSort.CORRECT_HOLDER;
-                        return UtilSort.WRONG_HOLDER;
                     }
-                    else
-                    {
-                        Debug.Log("TODO?");
-                        return UtilSort.CANNOT_VALIDATE_ERROR;
-                    }
+                    return (currentInside != null && currentInside.BucketID == bucketSortInstruction.BucketID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
 
                 case UtilSort.MOVE_BACK_INST:
                     if (!bucketSortInstruction.HasBeenExecuted())
                     {
-                        if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID)
+                        if (IntermediateMove && currentStandingOn != null && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID)
                         {
                             intermediateMove = false;
                             return UtilSort.CORRECT_HOLDER;
                         }
-                        else if (IntermediateMove && CurrentInside.BucketID == bucketSortInstruction.BucketID)
+                        else if (IntermediateMove && currentInside != null && CurrentInside.BucketID == bucketSortInstruction.BucketID)
                             return UtilSort.CORRECT_HOLDER;
                         return UtilSort.WRONG_HOLDER;
                     }
                     else
                     {
-                        Debug.Log("TODO?");
-                        return UtilSort.CANNOT_VALIDATE_ERROR;
+                        return (currentStandingOn != null & CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
                     }
 
                 case UtilSort.DISPLAY_ELEMENT:
                     return UtilSort.WRONG_HOLDER;
 
-                default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
+                default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }
         }
         return UtilSort.CANNOT_VALIDATE_ERROR;

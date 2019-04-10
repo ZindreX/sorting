@@ -30,6 +30,8 @@ public class BucketSort : SortAlgorithm {
         element1Value = "list[i]";
         element2Value = "buckets[i][j]";
 
+        numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
+
         base.InitTeachingAlgorithm(algorithmSpeed);
     }
 
@@ -62,7 +64,7 @@ public class BucketSort : SortAlgorithm {
             case 7: lineOfCode += "    k = 0"; break;
             case 8: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfBuckets); break;
             case 9: lineOfCode += string.Format("        for j={0} to {1}:", j, bucketSize); break;
-            case 10: lineOfCode += string.Format("            list[{0}] = " + element2Value, k); break; // 
+            case 10: lineOfCode += string.Format("            list[{0}] = {1}", k, element2Value); break; // 
             case 11: lineOfCode += "            k = " + kPlus1; break;
             case 12: lineOfCode += "        end for"; break;
             case 13: lineOfCode += "    end for"; break;
@@ -77,15 +79,13 @@ public class BucketSort : SortAlgorithm {
         bucketIndexStr = bucketIndex.ToString();
         bucketSize = loopRange.ToString();
         kPlus1 = (k + 1).ToString();
-
-        // Unchanged, move somewhere...
-        numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
     }
 
     protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
         switch (lineNr)
         {
+            //case 2: return init ? "    for i=0 to N:" : "    for i=" + i + " to " + numberOfBuckets + ":";
             case 3: return init ? "        bucket = list[" + i + "] * N / MAX_VALUE" : "        bucket = " + element1Value  + " * " + numberOfBuckets + " / " + UtilSort.MAX_VALUE;
             //case 4: return init ? "        buckets[bucket] <- list[i]" : "        buckets[" + bucketIndex + "] <- list[" + i + "]";
             case 10: return init ? "            list[k] = buckets[i][j]" : "            list[" + k + "] = buckets[" + i + "][" + j + "]";
@@ -125,24 +125,21 @@ public class BucketSort : SortAlgorithm {
         skipDict.Add(UtilSort.SKIP_NO_DESTINATION, new List<string>());
         skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.FIRST_INSTRUCTION);
         skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.FINAL_INSTRUCTION);
+
         // > No element
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_LOOP);
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.SET_VAR_J);
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.UPDATE_VAR_J);
+        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(Util.SET_VAR_K);
+        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(Util.UPDATE_VAR_K);
 
 
         // Bucket sort only
         // > No destination
         skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.BUCKET_INDEX_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilSort.DISPLAY_ELEMENT);
 
         // > No element
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.CREATE_BUCKETS_INST);
         skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.PHASING_INST);
-
-
-        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilSort.DISPLAY_ELEMENT);
-        //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.MOVE_TO_BUCKET_INST); ***
-        //skipDict[Util.SKIP_NO_ELEMENT].Add(Util.MOVE_BACK_INST); ***
     }
 
     public override void Specials(string method, int number, bool activate)
@@ -256,7 +253,7 @@ public class BucketSort : SortAlgorithm {
 
     #endregion
 
-    #region Bucket Sort: Demo (Visual)
+    #region Bucket Sort: Demo (Visual) -- NOT USED ANYMORE
     public override IEnumerator Demo(GameObject[] sortingElements)
     {
         i = 0;
@@ -332,7 +329,7 @@ public class BucketSort : SortAlgorithm {
             //pseudoCodeViewer.SetCodeLine(6, PseudoCode(6, x, Util.NO_VALUE, Util.NO_VALUE, true), Util.BLACKBOARD_TEXT_COLOR);
 
             Bucket bucket = buckets[x].GetComponent<Bucket>();
-            bucket.DisplayElements = true;
+            bucket.SetEnterTrigger(false);
 
             // Sort bucket *** TODO: go to insertion sort scene
             bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
@@ -438,7 +435,6 @@ public class BucketSort : SortAlgorithm {
     }
     #endregion
 
-
     #region New Demo / Step-by-step
     public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
@@ -462,29 +458,27 @@ public class BucketSort : SortAlgorithm {
         }
 
         // Remove highlight from previous instruction
-        for (int x = 0; x < prevHighlight.Count; x++)
-        {
-            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
-        }
+        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
+
 
         // Gather part of code to highlight
-        List<int> lineOfCode = new List<int>();
+        int lineOfCode = Util.NO_VALUE;
         switch (instruction.Instruction)
         {
-            case UtilSort.FIRST_INSTRUCTION:
-                lineOfCode.Add(FirstInstructionCodeLine());
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode = FirstInstructionCodeLine();
                 break;
 
             case UtilSort.CREATE_BUCKETS_INST:
-                lineOfCode.Add(1);
+                lineOfCode = 1;
                 break;
 
             case UtilSort.FIRST_LOOP:
-                lineOfCode.Add(2);
+                lineOfCode = 2;
                 break;
 
             case UtilSort.BUCKET_INDEX_INST:
-                lineOfCode.Add(3);
+                lineOfCode = 3;
                 PreparePseudocodeValue(sortingElement.Value, 1);
                 bucketIndex = bucketInstruction.BucketID;
 
@@ -497,7 +491,7 @@ public class BucketSort : SortAlgorithm {
                 break;
 
             case UtilSort.MOVE_TO_BUCKET_INST:
-                lineOfCode.Add(4);
+                lineOfCode = 4;
                 PreparePseudocodeValue(sortingElement.Value, 1);
                 bucketIndex = bucketInstruction.BucketID;
 
@@ -513,47 +507,49 @@ public class BucketSort : SortAlgorithm {
                 {
                     switch (j)
                     {
-                        case UtilSort.OUTER_LOOP: lineOfCode.Add(5); break;
-                        case UtilSort.INNER_LOOP: lineOfCode.Add(12); break;
+                        case UtilSort.OUTER_LOOP: lineOfCode = 5; break;
+                        case UtilSort.INNER_LOOP: lineOfCode = 12; break;
                         default: Debug.LogError(UtilSort.END_LOOP_INST + ": '" + j + "' loop not found"); break;
                     }
                 }
                 break;
 
             case UtilSort.PHASING_INST:
-                lineOfCode.Add(6);
-                //lineOfCode.Add(7);
-                //lineOfCode.Add(8);
-                i = 0;
+                lineOfCode = 6;
+
+                i = 0; // ????
                 j = (bucketSortManager.NumberOfBuckets - 1);
                 bucketIndex = j;
+
+                // Sort buckets
                 bucketManager.AutoSortBuckets();
                 break;
 
-            case UtilSort.DISPLAY_ELEMENT:
-                bucketManager.PutElementsForDisplay(i);
+            case UtilSort.DISPLAY_ELEMENT: // TODO: Fix
+                StartCoroutine(bucketManager.PutElementsForDisplay(bucketInstruction.BucketID));
                 break;
 
-            case UtilSort.SET_VAR_J:
-                lineOfCode.Add(7);
+            case Util.SET_VAR_K:
+                lineOfCode = 7;
                 break;
 
             case UtilSort.UPDATE_LOOP_INST:
-                if (j == UtilSort.NO_VALUE)
+                if (j == Util.NO_VALUE)
                 {
                     j = 0;
-                    lineOfCode.Add(8);
+                    lineOfCode = 8;
                 }
                 else
-                    lineOfCode.Add(9);
+                    lineOfCode = 9;
 
                 loopRange = j;
                 break;
 
             case UtilSort.MOVE_BACK_INST:
-                lineOfCode.Add(10);
-                value1 = sortingElement.Value;
-                k = bucketInstruction.NextHolderID;
+                lineOfCode = 10;
+                PreparePseudocodeValue(sortingElement.Value, 1);
+                k = bucketInstruction.NextHolderID; // ???
+
                 if (increment)
                     sortingElement.IsSorted = bucketInstruction.IsSorted;
                 else
@@ -561,21 +557,22 @@ public class BucketSort : SortAlgorithm {
 
                 break;
 
-            case UtilSort.UPDATE_VAR_J:
-                lineOfCode.Add(11);
+            case Util.UPDATE_VAR_K:
+                lineOfCode = 11;
                 break;
 
-            case UtilSort.FINAL_INSTRUCTION:
-                lineOfCode.Add(FinalInstructionCodeLine());
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode = FinalInstructionCodeLine();
                 break;
         }
-        prevHighlight = lineOfCode;
 
         // Highlight part of code in pseudocode
-        for (int x = 0; x < lineOfCode.Count; x++)
+        if (instruction.Instruction == UtilSort.DISPLAY_ELEMENT)
+            yield return null;
+        else
         {
-            //pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
-            yield return HighlightPseudoCode(CollectLine(lineOfCode[x]), useHighlightColor);
+            yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
+            prevHighlightedLineOfCode = lineOfCode;
         }
 
         // Move sorting element
@@ -598,13 +595,13 @@ public class BucketSort : SortAlgorithm {
                 case UtilSort.DISPLAY_ELEMENT:
                     if (increment)
                     {
-                        sortingElement.CanEnterBucket = false;
+                        //sortingElement.CanEnterBucket = false;
                         sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
                         sortingElement.gameObject.SetActive(true);
                     }
                     else
                     {
-                        sortingElement.CanEnterBucket = true;
+                        //sortingElement.CanEnterBucket = true;
                         sortingElement.gameObject.SetActive(false);
                     }
 
@@ -622,203 +619,16 @@ public class BucketSort : SortAlgorithm {
     }
     #endregion
 
-
-
-    #region Execute order from user :: Remove
-    //public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
-    //{
-    //    // Gather information from instruction
-    //    BucketSortInstruction bucketInstruction = null;
-    //    BucketSortElement sortingElement = null;
-    //    int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
-
-    //    if (gotSortingElement)
-    //    {
-    //        bucketInstruction = (BucketSortInstruction)instruction;
-    //        Debug.Log("Debug: " + bucketInstruction.DebugInfo() + "\n");
-
-    //        // Change internal state of sorting element
-    //        sortingElement = sortMain.ElementManager.GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
-    //    }
-
-    //    if (instruction is InstructionLoop)
-    //    {
-    //        i = ((InstructionLoop)instruction).I;
-    //        j = ((InstructionLoop)instruction).J;
-    //        k = ((InstructionLoop)instruction).K;
-    //    }
-
-    //    // Remove highlight from previous instruction
-    //    for (int x = 0; x < prevHighlight.Count; x++)
-    //    {
-    //        pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
-    //    }
-
-    //    // Gather part of code to highlight
-    //    List<int> lineOfCode = new List<int>();
-    //    switch (instruction.Instruction)
-    //    {
-    //        case UtilSort.FIRST_INSTRUCTION:
-    //            lineOfCode.Add(FirstInstructionCodeLine());
-    //            break;
-
-    //        case UtilSort.CREATE_BUCKETS_INST:
-    //            lineOfCode.Add(1);
-    //            break;
-
-    //        case UtilSort.FIRST_LOOP:
-    //            lineOfCode.Add(2);
-    //            break;
-
-    //        case UtilSort.BUCKET_INDEX_INST:
-    //            lineOfCode.Add(3);
-    //            value1 = sortingElement.Value;
-    //            bucketIndex = bucketInstruction.BucketID;
-
-    //            if (increment)
-    //                sortingElement.IsCompare = bucketInstruction.IsCompare;
-    //            else
-    //                sortingElement.IsCompare = !bucketInstruction.IsCompare;
-
-    //            UtilSort.IndicateElement(sortingElement.gameObject);
-    //            break;
-
-    //        case UtilSort.MOVE_TO_BUCKET_INST:
-    //            lineOfCode.Add(4);
-    //            value1 = sortingElement.Value;
-    //            bucketIndex = bucketInstruction.BucketID;
-
-    //            if (increment)
-    //                sortingElement.IsCompare = bucketInstruction.IsCompare;
-    //            else
-    //                sortingElement.IsCompare = !bucketInstruction.IsCompare;
-    //            UtilSort.IndicateElement(sortingElement.gameObject);
-    //            break;
-
-    //        case UtilSort.END_LOOP_INST:
-    //            if (j < 0)
-    //            {
-    //                switch (j)
-    //                {
-    //                    case UtilSort.OUTER_LOOP: lineOfCode.Add(5); break;
-    //                    case UtilSort.INNER_LOOP: lineOfCode.Add(12); break;
-    //                    default: Debug.LogError(UtilSort.END_LOOP_INST + ": '" + j + "' loop not found"); break;
-    //                }
-    //            }
-    //            break;
-
-    //        case UtilSort.PHASING_INST:
-    //            lineOfCode.Add(6);
-    //            //lineOfCode.Add(7);
-    //            //lineOfCode.Add(8);
-    //            i = 0;
-    //            j = (bucketSortManager.NumberOfBuckets - 1);
-    //            bucketIndex = j;
-    //            bucketManager.AutoSortBuckets();
-    //            break;
-
-    //        case UtilSort.DISPLAY_ELEMENT:
-    //            bucketManager.PutElementsForDisplay(i);
-    //            break;
-
-    //        case UtilSort.SET_VAR_J:
-    //            lineOfCode.Add(7);
-    //            break;
-
-    //        case UtilSort.UPDATE_LOOP_INST:
-    //            if (j == UtilSort.NO_VALUE)
-    //            {
-    //                j = 0;
-    //                lineOfCode.Add(8);
-    //            }
-    //            else
-    //                lineOfCode.Add(9);
-
-    //            loopRange = j;
-    //            break;
-
-    //        case UtilSort.MOVE_BACK_INST:
-    //            lineOfCode.Add(10);
-    //            value1 = sortingElement.Value;
-    //            k = bucketInstruction.NextHolderID;
-    //            if (increment)
-    //                sortingElement.IsSorted = bucketInstruction.IsSorted;
-    //            else
-    //                sortingElement.IsSorted = !bucketInstruction.IsSorted;
-
-    //            break;
-
-    //        case UtilSort.UPDATE_VAR_J:
-    //            lineOfCode.Add(11);
-    //            break;
-
-    //        case UtilSort.FINAL_INSTRUCTION:
-    //            lineOfCode.Add(FinalInstructionCodeLine());
-    //            break;
-    //    }
-    //    prevHighlight = lineOfCode;
-
-    //    // Highlight part of code in pseudocode
-    //    for (int x = 0; x < lineOfCode.Count; x++)
-    //    {
-    //        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
-    //    }
-
-    //    // Move sorting element
-    //    if (gotSortingElement)
-    //    {
-    //        switch (bucketInstruction.Instruction)
-    //        {
-    //            case UtilSort.MOVE_TO_BUCKET_INST:
-    //                if (increment)
-    //                {
-    //                    sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
-    //                }
-    //                else
-    //                {
-    //                    sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                    sortingElement.gameObject.SetActive(true);
-    //                }
-    //                break;
-
-    //            case UtilSort.DISPLAY_ELEMENT:
-    //                if (increment)
-    //                {
-    //                    sortingElement.CanEnterBucket = false;
-    //                    sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
-    //                    sortingElement.gameObject.SetActive(true);
-    //                }
-    //                else
-    //                {
-    //                    sortingElement.CanEnterBucket = true;
-    //                    sortingElement.gameObject.SetActive(false);
-    //                }
-
-    //                break;
-
-    //            case UtilSort.MOVE_BACK_INST:
-    //                if (increment)
-    //                    sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                else
-    //                    sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
-    //                break;
-    //        }
-    //    }
-    //}
-    #endregion
-
     #region User test display help
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
         // Gather information from instruction
         BucketSortInstruction bucketInstruction = null;
         BucketSortElement sortingElement = null;
-        //int i = UtilSort.NO_VALUE, j = UtilSort.NO_VALUE, k = UtilSort.NO_VALUE;
 
         if (gotSortingElement)
         {
             bucketInstruction = (BucketSortInstruction)instruction;
-            Debug.Log("Debug: " + bucketInstruction.DebugInfo() + "\n");
 
             // Change internal state of sorting element
             sortingElement = sortMain.ElementManager.GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
@@ -832,42 +642,39 @@ public class BucketSort : SortAlgorithm {
         }
 
         // Remove highlight from previous instruction
-        for (int x = 0; x < prevHighlight.Count; x++)
-        {
-            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], Util.BLACKBOARD_TEXT_COLOR);
-        }
+        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
 
         // Gather part of code to highlight
-        List<int> lineOfCode = new List<int>();
+        int lineOfCode = Util.NO_VALUE;
         switch (instruction.Instruction)
         {
             case UtilSort.FIRST_INSTRUCTION:
-                lineOfCode.Add(FirstInstructionCodeLine());
+                lineOfCode = FirstInstructionCodeLine();
                 break;
 
             case UtilSort.CREATE_BUCKETS_INST:
-                lineOfCode.Add(1);
+                lineOfCode = 1;
                 break;
 
             case UtilSort.FIRST_LOOP:
-                lineOfCode.Add(2);
+                lineOfCode = 2;
                 break;
 
             case UtilSort.BUCKET_INDEX_INST:
-                lineOfCode.Add(3);
-                value1 = sortingElement.Value;
+                lineOfCode = 3;
+                PreparePseudocodeValue(sortingElement.Value, 1);
+                bucketIndex = bucketInstruction.BucketID;
 
-                sortingElement.IsCompare = bucketInstruction.IsCompare;
+                //sortingElement.IsCompare = bucketInstruction.IsCompare;
                 UtilSort.IndicateElement(sortingElement.gameObject);
                 break;
 
             case UtilSort.MOVE_TO_BUCKET_INST:
-                lineOfCode.Add(4);
-                value1 = sortingElement.Value;
-                bucketIndex = bucketInstruction.BucketID;
-
-                sortingElement.IsCompare = bucketInstruction.IsCompare;
+                lineOfCode = 4;
+                PreparePseudocodeValue(sortingElement.Value, 1);
                 UtilSort.IndicateElement(sortingElement.gameObject);
+
+                //sortingElement.IsCompare = bucketInstruction.IsCompare;
                 break;
 
             case UtilSort.END_LOOP_INST:
@@ -875,55 +682,50 @@ public class BucketSort : SortAlgorithm {
                 {
                     switch (j)
                     {
-                        case UtilSort.OUTER_LOOP: lineOfCode.Add(5); break;
-                        case UtilSort.INNER_LOOP: lineOfCode.Add(14); break;
+                        case UtilSort.OUTER_LOOP: lineOfCode = 5; break;
+                        case UtilSort.INNER_LOOP: lineOfCode = 12; break;
                         default: Debug.LogError(UtilSort.END_LOOP_INST + ": '" + j + "' loop not found"); break;
                     }
                 }
                 break;
 
             case UtilSort.PHASING_INST:
-                lineOfCode.Add(6);
-                lineOfCode.Add(7);
-                lineOfCode.Add(8);
+                lineOfCode = 6;
                 break;
 
-            case UtilSort.DISPLAY_ELEMENT:
-                bucketSortManager.PutElementsForDisplay(i);
-                break;
-
-            case UtilSort.SET_VAR_J:
-                lineOfCode.Add(9);
+            case Util.SET_VAR_K:
+                lineOfCode = 7;
                 break;
 
             case UtilSort.UPDATE_LOOP_INST:
                 if (j == Util.NO_VALUE)
-                    lineOfCode.Add(10);
+                    lineOfCode = 8;
                 else
-                    lineOfCode.Add(11);
+                {
+                    lineOfCode = 9;
+                    bucketSize = i.ToString();
+                }
                 break;
 
             case UtilSort.MOVE_BACK_INST:
-                lineOfCode.Add(12);
+                lineOfCode = 10;
+                PreparePseudocodeValue(sortingElement.Value, 2);
                 break;
 
-            case UtilSort.UPDATE_VAR_J:
-                lineOfCode.Add(13);
+            case Util.UPDATE_VAR_K:
+                lineOfCode = 11;
                 break;
 
-            case UtilSort.FINAL_INSTRUCTION:
-                lineOfCode.Add(FinalInstructionCodeLine());
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode = FinalInstructionCodeLine();
                 break;
         }
-        prevHighlight = lineOfCode;
-
         // Highlight part of code in pseudocode
-        for (int x = 0; x < lineOfCode.Count; x++)
-        {
-            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), Util.HIGHLIGHT_COLOR);
-        }
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        
+        // Mark prev for next round
+        prevHighlightedLineOfCode = lineOfCode;
 
-        yield return demoStepDuration;
         sortMain.WaitForSupportToComplete--;
     }
     #endregion
@@ -936,7 +738,7 @@ public class BucketSort : SortAlgorithm {
         int instructionNr = 0;
 
         // Line 0 (set parameter)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.FIRST_INSTRUCTION, instructionNr)); // new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr));
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
@@ -944,30 +746,30 @@ public class BucketSort : SortAlgorithm {
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
         // Line 1 (Create buckets)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.CREATE_BUCKETS_INST, instructionNr)); // new InstructionBase(Util.CREATE_BUCKETS_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+        instructions.Add(instructionNr++, new InstructionBase(UtilSort.CREATE_BUCKETS_INST, instructionNr));
 
         // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
             // Line 2 (Update for-loop)
-            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.FIRST_LOOP, instructionNr, i, UtilSort.OUTER_LOOP, UtilSort.NO_VALUE)); // new InstructionBase(Util.FIRST_LOOP, instructionNr, i, Util.LOOP_ONE, false, false)); // create one unique instruction for each loop, or "cheat" using the parametre?
+            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.FIRST_LOOP, instructionNr, i, UtilSort.OUTER_LOOP, Util.NO_VALUE)); // TODO: create one unique instruction for each loop
 
             // Get element
             BucketSortInstruction element = (BucketSortInstruction)sortingElements[i];
             int bucketIndex = BucketIndex(element.Value, numberOfBuckets);
 
             // Line 3 (Display bucket index)
-            instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.BUCKET_INDEX_INST, instructionNr, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, element.SortingElementID, element.Value, true, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex)); // new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, i, Util.NO_VALUE, bucketIndex, Util.BUCKET_INDEX_INST, instructionNr, value, false, true, false));
+            instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.BUCKET_INDEX_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, true, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
 
             // Line 4 (Put element into bucket)
-            instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.MOVE_TO_BUCKET_INST, instructionNr, i, UtilSort.NO_VALUE, UtilSort.NO_VALUE, element.SortingElementID, element.Value, false, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex)); // new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, i, Util.NO_VALUE, bucketIndex, Util.MOVE_TO_BUCKET_INST, instructionNr, value, false, false, false));
+            instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.MOVE_TO_BUCKET_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, false, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
         }
 
         // Line 5 (end for-loop)
-        instructions.Add(instructionNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instructionNr, UtilSort.NO_VALUE, UtilSort.OUTER_LOOP, UtilSort.NO_VALUE)); // new InstructionBase(Util.END_LOOP_INST, instructionNr, Util.NO_VALUE, Util.LOOP_ONE, false, false));
+        instructions.Add(instructionNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instructionNr, Util.NO_VALUE, UtilSort.OUTER_LOOP, Util.NO_VALUE));
 
-        // Line 6, 7, 8 (make the buckets sort what they hold)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.PHASING_INST, instructionNr)); // new InstructionBase(Util.PHASING_INST, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+        // Line 6 (make the buckets sort what they hold)
+        instructions.Add(instructionNr++, new InstructionBase(UtilSort.PHASING_INST, instructionNr));
 
         // Sorting elements
         int[] values = new int[sortingElements.Length];
@@ -994,7 +796,7 @@ public class BucketSort : SortAlgorithm {
                 if (sorted[x] == t.Value)
                 {
                     int bucketIndex = BucketIndex(t.Value, bucketSortManager.NumberOfBuckets);
-                    BucketSortInstruction displayInstruction = new BucketSortInstruction(UtilSort.DISPLAY_ELEMENT, instructionNr, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, t.SortingElementID, t.Value, false, true, UtilSort.NO_VALUE, UtilSort.NO_DESTINATION, bucketIndex); //new BucketSortInstruction(t.SortingElementID, Util.NO_VALUE, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, bucketIndex, Util.DISPLAY_ELEMENT, instructionNr, t.Value, false, false, true);
+                    BucketSortInstruction displayInstruction = new BucketSortInstruction(UtilSort.DISPLAY_ELEMENT, instructionNr, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, t.SortingElementID, t.Value, false, true, Util.NO_VALUE, UtilSort.NO_DESTINATION, bucketIndex);
                     instructions.Add(instructionNr++, displayInstruction);
                     buckets[bucketIndex].Add(displayInstruction);
                     break;
@@ -1003,8 +805,8 @@ public class BucketSort : SortAlgorithm {
         }
 
         int k = 0;
-        // Line 9 (For-loop: Concatenate all buckets)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.SET_VAR_J, instructionNr)); // new InstructionBase(Util.SET_VAR_J, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+        // Line 7 (For-loop: Concatenate all buckets)
+        instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_K, instructionNr));
 
         // Holder positions (where the sorting elements initialized)
         Vector3[] holderPos = sortMain.HolderManager.GetHolderPositions();
@@ -1013,26 +815,26 @@ public class BucketSort : SortAlgorithm {
             List<BucketSortInstruction> bucket = buckets[i];
             int numberOfElementsInBucket = bucket.Count;
 
-            // Line 10 (For-loop: Concatenate all buckets)
-            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instructionNr, i, UtilSort.NO_VALUE, k)); // new InstructionBase(Util.UPDATE_LOOP_INST, instructionNr, i, Util.NO_VALUE, false, false));
+            // Line 8 (For-loop: Concatenate all buckets)
+            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE));
 
             for (int j = 0; j < numberOfElementsInBucket; j++)
             {
-                // Line 11 (2nd For-loop: Concatenate all buckets)
-                instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instructionNr, i, j, k)); // new InstructionBase(Util.UPDATE_LOOP_INST, instructionNr, i, j, false, false));
+                // Line 9 (2nd For-loop: Concatenate all buckets)
+                instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instructionNr, numberOfElementsInBucket, j, k));
 
-                // Line 12 (Put element back into list)
-                instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.MOVE_BACK_INST, instructionNr, i, j, k, bucket[j].SortingElementID, bucket[j].Value, false, true, UtilSort.NO_VALUE, k, bucket[j].BucketID)); // new BucketSortInstruction(bucket[j].SortingElementID, Util.NO_VALUE, k, i, j, bucket[j].BucketID, Util.MOVE_BACK_INST, instructionNr, bucket[j].Value, false, false, true));
+                // Line 10 (Put element back into list)
+                instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.MOVE_BACK_INST, instructionNr, i, j, k, bucket[j].SortingElementID, bucket[j].Value, false, true, Util.NO_VALUE, k, bucket[j].BucketID)); 
 
+                // Line 11 (Update k)
+                instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_VAR_K, instructionNr, Util.NO_VALUE, Util.NO_VALUE, k)); 
                 k++;
-                // Line 13 (Update k)
-                instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_VAR_J, instructionNr, UtilSort.NO_VALUE, UtilSort.NO_VALUE, k)); // new InstructionBase(Util.UPDATE_VAR_J, instructionNr, k, Util.NO_VALUE, false, false)); ******
             }
-            // Line 14 (2nd for-loop end)
-            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instructionNr, i, UtilSort.INNER_LOOP, UtilSort.NO_VALUE)); // new InstructionBase(Util.END_LOOP_INST, instructionNr, i, Util.LOOP_TWO, false, false)); **** i=?
+            // Line 12 (2nd for-loop end)
+            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instructionNr, i, UtilSort.INNER_LOOP, Util.NO_VALUE));
         }
-        // Line 15 (2nd for-loop end)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.FINAL_INSTRUCTION, instructionNr)); // new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr, Util.NO_VALUE, Util.NO_VALUE, false, false));
+        // Line 13 (2nd for-loop end)
+        instructions.Add(instructionNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr));
 
         //status = NONE;
         return instructions;

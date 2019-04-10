@@ -12,13 +12,14 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
     public static int HOLDER_NR = 0;
     protected int holderID, prevElementID;
+
     protected TextMeshPro indexText;
 
     protected Color currentColor, prevColor;
     protected bool errorNotified = false, hasPermission = true;
 
     protected SortMain parent;
-    protected SortingElementBase currentHolding;
+    protected SortingElementBase currentHolding, registeredAboveHolder;
 
     protected virtual void Awake()
     {
@@ -94,54 +95,65 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
         set { hasPermission = value; }
     }
 
-    //private void OnCollisionExit(Collision collision)
-    //{
-    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-    //    {
-    //        // Tutorial
-    //        if (parent.SortSettings.IsDemo())
-    //        {
-
-    //        }
-    //        else // User test
-    //        {
-    //            if (CurrentHolding != null)
-    //                prevElementID = currentHolding.SortingElementID; // null exception, how?
-    //        }
-    //        CurrentHolding = null;
-    //        CurrentColor = UtilSort.STANDARD_COLOR;
-    //    }
-    //}
-
-    private void OnTriggerExit(Collider other)
+    // Register elements above
+    protected void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Entering holder" + holderID + ": " + other.tag);
+
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
-            // Tutorial
-            if (parent.SortSettings.IsDemo())
-            {
+            registeredAboveHolder = other.GetComponent<SortingElementBase>();
 
-            }
-            else // User test
+            if (parent.Settings.Difficulty == Util.BEGINNER)
             {
-                if (CurrentHolding != null)
-                    prevElementID = currentHolding.SortingElementID; // null exception, how?
+                // TODO: hint
             }
-            CurrentHolding = null;
-            CurrentColor = UtilSort.STANDARD_COLOR;
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Exiting holder" + holderID + ": " + other.tag);
 
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        {
+            // If element moved outside trigger box
+            registeredAboveHolder = null;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Debug.Log("Removed from holder " + holderID + ": " + collision.collider.tag);
+        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        {
+            if (CurrentHolding != null)
+                prevElementID = currentHolding.SortingElementID;
+
+            CurrentHolding = null;
+            CurrentColor = Util.STANDARD_COLOR;
+        }
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.collider.tag + " collided with holder " + holderID);
+
+        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        {
+            SortingElementBase element = collision.collider.GetComponent<SortingElementBase>();
+            element.CurrentStandingOn = this;
+
+            if (parent.Settings.IsUserTest())
+                element.PerformUserMove(this);
+        }
+    }
 
     // --------------------------------------- Implemented in subclass ---------------------------------------
 
     // Updates the color based on the state of the sorting element
     protected abstract void UpdateColorOfHolder();
 
-    // Performed in subclasses due to different sorting elements
-    //protected abstract void OnCollisionEnter(Collision collision);
 
-    protected abstract void OnTriggerEnter(Collider other);
 
 }

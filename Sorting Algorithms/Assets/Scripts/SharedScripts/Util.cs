@@ -50,10 +50,22 @@ public class Util : MonoBehaviour {
 
     // Instruction values (todo: update Utilsort)
     public static readonly int NO_VALUE = -3, NO_INDEX_VALUE = -4, NO_INSTRUCTION_NR = -5;
+    public const string INIT_OK = "Init ok", INIT_ERROR = "Init error";
 
     public const string FIRST_INSTRUCTION = "First instruction", FINAL_INSTRUCTION = "Final instruction";
     public const string INIT_INSTRUCTION = "Init instruction", EXECUTED_INST = "Executed", NOT_EXECUTED = "Not executed";
-    public const string INIT_OK = "Init ok", INIT_ERROR = "Init error";
+
+    // Variables
+    public const string INCREMENT_VAR_I = "Increment variable i";
+    public const string SET_VAR_J = "Set variable j", UPDATE_VAR_J = "Update variable J";
+    public const string SET_VAR_K = "Set variable K", UPDATE_VAR_K = "Update variable K";
+
+    // Controllers
+    public const string INCREMENT = "Incremenet", DECREMENT = "Decrement";
+
+    //
+    public const string ALGORITHM_MANAGER = "Algorithm manager";
+
 
     public const string SPLIT_INST = "::";
     public static readonly char PSEUDO_SPLIT_LINE_ID = ':';
@@ -174,34 +186,24 @@ public class Util : MonoBehaviour {
             obj.transform.position -= moveUnderGround;
     }
 
-    public static void HideObject(GameObject obj, bool visible, bool moveDown)
-    {
-        if (moveDown)
-        {
-            Vector3 pos = obj.transform.position;
-            if (visible && obj.transform.position.y < 0)
-                obj.transform.position += moveUnderGround;
-            else if (obj.transform.position.y > 0)
-                obj.transform.position -= moveUnderGround;
-        }
+    //public static void HideObject(GameObject obj, bool visible, bool moveDown)
+    //{
+    //    if (moveDown)
+    //    {
+    //        Vector3 pos = obj.transform.position;
+    //        if (visible && obj.transform.position.y < 0)
+    //            obj.transform.position += moveUnderGround;
+    //        else if (obj.transform.position.y > 0)
+    //            obj.transform.position -= moveUnderGround;
+    //    }
 
-        //Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
-        //foreach (MeshRenderer part in visibleParts)
-        //{
-        //    part.enabled = visible;
-        //}
-    }
+    //    //Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
+    //    //foreach (MeshRenderer part in visibleParts)
+    //    //{
+    //    //    part.enabled = visible;
+    //    //}
+    //}
 
-    // remove function?
-    public static void MakeInactive(GameObject obj, bool active)
-    {
-        obj.SetActive(active);
-        //GameObject[] visibleParts = obj.GetComponentsInChildren<GameObject>();
-        //foreach (GameObject part in visibleParts)
-        //{
-        //    part.SetActive(active);
-        //}
-    }
 
     public static bool ObjectWithinBounderies(Vector3 objectPos, Vector3 bounderiesObject, float within)
     {

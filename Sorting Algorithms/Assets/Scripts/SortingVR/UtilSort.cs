@@ -21,23 +21,26 @@ public class UtilSort : Util {
     // Instructions
     public static readonly int NO_DESTINATION = -1, INIT_STATE = -2;
 
-    // Help out, might change later
-    public const int OUTER_LOOP = -1, INNER_LOOP = -2;
 
     // Instructions (strings)
     public const string PIVOT_START_INST = "Pivot start", PIVOT_END_INST = "Pivot end";
     public const string COMPARE_START_INST = "Compare start", COMPARE_END_INST = "Compare end", SWITCH_INST = "Switching";
-    public const string CREATE_BUCKETS_INST = "Create buckets", BUCKET_INDEX_INST = "Bucket index", MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back";
-    public const string UPDATE_LOOP_INST = "Update loop", DISPLAY_ELEMENT = "Display element";
-    public const string END_LOOP_INST = "End of loop", SET_SORTED_INST = "Set sorted";
-    public const string INCREMENT_VAR_I = "Increment variable i", SET_VAR_J = "Set variable j", UPDATE_VAR_J = "Update variable J", FIRST_LOOP = "First loop";
+
+    // Loops
+    public const string FIRST_LOOP = "First loop", END_LOOP_INST = "End of loop";
+    public const string UPDATE_LOOP_INST = "Update loop";
+    public const int OUTER_LOOP = -1, INNER_LOOP = -2; // Help out, might change later
 
     // Other instructions
-    public const string INCREMENT = "Incremenet", DECREMENT = "Decrement";
+    public const string SET_SORTED_INST = "Set sorted";
+
+    // Bucket sort
+    public const string CREATE_BUCKETS_INST = "Create buckets", BUCKET_INDEX_INST = "Bucket index", MOVE_TO_BUCKET_INST = "Move to bucket", PHASING_INST = "Phasing", MOVE_BACK_INST = "Move back", DISPLAY_ELEMENT = "Display element";
 
     // Checking instruction (strings)
     public const string MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
+
 
 
     // ******************************************** Collision/tags ********************************************
@@ -57,16 +60,13 @@ public class UtilSort : Util {
     public static float SPACE_BETWEEN_HOLDERS = 0.2f, SPACE_BETWEEN_BUCKETS = 0.5f, SPACE_BETWEEN_CODE_LINES = 0.2f;
 
     // Timing
-    public static float COLOR_CHANGE_TIMER = 0.25f;
+    public static float COLOR_CHANGE_TIMER = 1.05f;
 
 
     // ---------------------------------------------- Interface ----------------------------------------------
 
     // Buttons
     public const string NUMBER_OF_ELEMENTS = "Number of elements", SORTING_CASE = "Sorting case";
-
-
-
 
 
     // ******************************************** Outdated stuff? ********************************************

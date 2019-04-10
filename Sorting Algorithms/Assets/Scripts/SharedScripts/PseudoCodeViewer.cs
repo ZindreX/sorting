@@ -98,7 +98,16 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         {
             // Change text (with or without lineNr)
             if (includeLineNr)
-                codeLines[lineNr].text = lineNr + ": " + text;
+            {
+                if (lineNr < 10)
+                {
+                    codeLines[lineNr].text = " ";
+                    codeLines[lineNr].text += lineNr + ": " + text;
+                }
+                else
+                    codeLines[lineNr].text = lineNr + ": " + text;
+
+            }
             else
                 codeLines[lineNr].text = text;
 

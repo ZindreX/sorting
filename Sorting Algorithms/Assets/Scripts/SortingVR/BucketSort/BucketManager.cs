@@ -10,6 +10,12 @@ public class BucketManager : MonoBehaviour, IManager {
     [SerializeField]
     private Transform firstBucketPosition, firstRowUserTest, secondRowUserTest;
 
+    [SerializeField]
+    private GameObject bucketContainer;
+
+    [SerializeField]
+    private BucketSort bucketSort;
+
     private GameObject[] buckets;
     private bool containsBuckets = false;
 
@@ -42,7 +48,7 @@ public class BucketManager : MonoBehaviour, IManager {
 
         if (!superElement.SortSettings.IsUserTest())
         {
-            buckets = UtilSort.CreateObjects(bucketPrefab, numberOfElements, position, UtilSort.SPACE_BETWEEN_BUCKETS, superElement);
+            buckets = Util.CreateObjects(bucketPrefab, numberOfElements, position, UtilSort.SPACE_BETWEEN_BUCKETS, superElement);
         }
         else
         {
@@ -64,6 +70,7 @@ public class BucketManager : MonoBehaviour, IManager {
                     bucket.transform.Rotate(0f, 90f, 0f);
                     buckets[x] = bucket;
                 }
+                bucket.transform.parent = bucketContainer.transform;
             }
         }
 
@@ -91,7 +98,9 @@ public class BucketManager : MonoBehaviour, IManager {
 
     public Bucket GetBucket(int index)
     {
-        return buckets[index].GetComponent<Bucket>();
+        if (index >= 0 && index < buckets.Length)
+            return buckets[index].GetComponent<Bucket>();
+        return null;
     }
 
     public void AutoSortBuckets()
@@ -106,7 +115,7 @@ public class BucketManager : MonoBehaviour, IManager {
     public IEnumerator PutElementsForDisplay(int bucketID)
     {
         Bucket bucket = GetBucket(bucketID);
-        bucket.DisplayElements = true;
+        bucket.SetEnterTrigger(false);
 
         int numberOfElements = bucket.CurrenHolding.Count;
         if (numberOfElements > 0)
@@ -114,10 +123,10 @@ public class BucketManager : MonoBehaviour, IManager {
             for (int y = 0; y < numberOfElements; y++)
             {
                 BucketSortElement element = (BucketSortElement)bucket.RemoveSoringElement();
-                element.CanEnterBucket = false;
-                
+                //element.CanEnterBucket = false;
+
                 element.transform.position = new Vector3(0f, 2f, 0f);
-                yield return GetComponent<SortAlgorithm>().DemoStepDuration;
+                yield return bucketSort.DemoStepDuration;
             }
         }
     }

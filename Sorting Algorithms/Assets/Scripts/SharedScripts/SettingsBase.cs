@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public abstract class SettingsBase : MonoBehaviour, ISectionManager {
+public abstract class SettingsBase : MonoBehaviour, ISectionManager, IMoveAble {
 
     [Header("Settings base")]
     protected TextMeshPro tooltips;
+
+    protected Vector3 startPos, moveOutPos;
 
     protected Dictionary<string, Section> settingsSections;
 
     protected void Awake()
     {
+        startPos = transform.position;
+        moveOutPos = startPos + new Vector3(5f, -10f, 0f);
+
         Component[] textMeshes = GetComponentsInChildren<TextMeshPro>();
         tooltips = (TextMeshPro)textMeshes[1];
 
@@ -82,7 +87,19 @@ public abstract class SettingsBase : MonoBehaviour, ISectionManager {
 
     public void SetSettingsActive(bool active)
     {
-        Util.HideObject(gameObject, active, true);
+        if (active)
+            MoveBack();
+        else
+            MoveOut();
     }
 
+    public void MoveOut()
+    {
+        transform.position = moveOutPos;
+    }
+
+    public void MoveBack()
+    {
+        transform.position = startPos;
+    }
 }

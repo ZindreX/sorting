@@ -139,9 +139,7 @@ public class SortMain : MainManager {
         algorithmManagerBase.InitSortingManager(this);
 
         // Init display unit manager
-        bool includeLineNr = Settings.PseudocodeLineNr;
-        bool inDetailStep = Settings.PseudocodeStep;
-        displayUnitManager.InitDisplayUnitManager(sortAlgorithm, includeLineNr, inDetailStep);
+        displayUnitManager.InitDisplayUnitManager();
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, algorithmName, 0);
 
         // Init holder manager
@@ -156,11 +154,15 @@ public class SortMain : MainManager {
         // Only Insertion sort using this method so far, here: create pivot holder
         sortAlgorithm.Specials(UtilSort.INIT, Util.NO_VALUE, false);
 
+
         // Prepare difficulty level related stuff for user test
+        bool includeLineNr = Settings.PseudocodeLineNr;
+        bool inDetailStep = Settings.PseudocodeStep;
         if (sortSettings.TeachingMode == Util.USER_TEST)
         {
             if (sortSettings.Difficulty <= Util.PSEUDO_CODE_MAX_DIFFICULTY)
             {
+                displayUnitManager.PseudoCodeViewer.InitPseudoCodeViewer(sortAlgorithm, includeLineNr, inDetailStep);
                 displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
             }
             else if (sortSettings.Difficulty == Util.ADVANCED)
@@ -175,6 +177,7 @@ public class SortMain : MainManager {
         }
         else
         {
+            displayUnitManager.PseudoCodeViewer.InitPseudoCodeViewer(sortAlgorithm, includeLineNr, inDetailStep);
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
         }
 
@@ -361,11 +364,11 @@ public class SortMain : MainManager {
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading complete!", 1);
 
         // Settings menu
-        Util.HideObject(sortSettings.gameObject, !active, true);
-        //sortSettings.SetSettingsActive(!active);
+        sortSettings.SetSettingsActive(!active);
 
         // Sorting table
-        Util.HideObject(sortingTableObj, active, true);
+        sortingTableObj.GetComponent<SortingTable>().SetTableActive(active);
+
         demoDevice.gameObject.SetActive(active && SortSettings.IsDemo());
         Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Demo device active: " + (active && SortSettings.IsDemo()));
 
@@ -377,8 +380,8 @@ public class SortMain : MainManager {
         {
             sortSettings.FillTooltips("Loading complete!");
         }
-
     }
+
 
     // Keeps only one sorting algorithm manager active
     private AlgorithmManagerBase ActivateDeactivateSortingManagers(string sortAlgorithm)

@@ -15,6 +15,10 @@ public class BucketSortManager : AlgorithmManagerBase {
     [SerializeField]
     private BucketManager bucketManager;
 
+
+    private WaitForSeconds emptyBucketDuration = new WaitForSeconds(0.5f);
+
+
     public override string AlgorithmManager
     {
         get { return bucketSort.AlgorithmName + " Manager"; }
@@ -50,22 +54,27 @@ public class BucketSortManager : AlgorithmManagerBase {
 
     public override int PrepareNextInstruction(InstructionBase instruction)
     {
+        Debug.Log(instruction.DebugInfo());
+
         bool gotSortingElement = !bucketSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
         bool noDestination = bucketSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
-        if (instruction.Instruction == UtilSort.PHASING_INST)
+        switch (instruction.Instruction)
         {
-            // Phase into Insertion Sort?
-            AutoSortBuckets();
-        }
-        else if (instruction.Instruction == UtilSort.DISPLAY_ELEMENT)
-        {
-            // Display elements on top of bucket
-            StartCoroutine(PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));
-            Debug.Log("Testing: correct variable used???");
+            case UtilSort.PHASING_INST:
+                // Phase into Insertion Sort?
+                AutoSortBuckets();
+                break;
+
+            case UtilSort.DISPLAY_ELEMENT:
+                Debug.Log("Display elements");
+                // Display elements on top of bucket
+                sortMain.WaitForSupportToComplete++;
+                StartCoroutine(PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));
+                return 1; // Nothing to do for the player, nor any pseudocode
         }
 
-        if (gotSortingElement)
+        if (instruction is BucketSortInstruction)
         {
             // Get the next instruction
             BucketSortInstruction bucketSortInstruction = (BucketSortInstruction)instruction;
@@ -76,19 +85,27 @@ public class BucketSortManager : AlgorithmManagerBase {
             // Hands out the next instruction
             sortingElement.Instruction = bucketSortInstruction;
 
+            Bucket bucket = bucketManager.GetBucket(bucketSortInstruction.BucketID);
+            bucket.BucketSortInstruction = bucketSortInstruction;
+
             // Give this sorting element permission to give feedback to progress to next intstruction
             if (instruction.Instruction == UtilSort.MOVE_TO_BUCKET_INST || instruction.Instruction == UtilSort.MOVE_BACK_INST)
                 sortingElement.NextMove = true;
         }
 
         // Display help on blackboard
-        if (sortMain.SortSettings.Difficulty <= UtilSort.BEGINNER)
+        if (sortMain.SortSettings.Difficulty <= Util.BEGINNER)
         {
             sortMain.WaitForSupportToComplete++;
             StartCoroutine(sortMain.GetTeachingAlgorithm().UserTestHighlightPseudoCode(instruction, gotSortingElement));
         }
+
+
+        Debug.Log("Element: " + gotSortingElement + ", no destination: " + noDestination);
         if (gotSortingElement && !noDestination)
             return 0;
+
+        Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Nothing for player to do, continuing to next instruction");
         return 1;
     }
 
@@ -105,24 +122,33 @@ public class BucketSortManager : AlgorithmManagerBase {
     // copied **
     public IEnumerator PutElementsForDisplay(int bucketID)
     {
-        Bucket bucket = bucketManager.GetBucket(bucketID);
-        bucket.DisplayElements = true;
+        //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, false);
 
+        Bucket bucket = bucketManager.GetBucket(bucketID);
+        bucket.SetEnterTrigger(false);
         int numberOfElements = bucket.CurrenHolding.Count;
+
         if (numberOfElements > 0)
         {
+            StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 2));
+            yield return emptyBucketDuration;
+
             for (int y=0; y < numberOfElements; y++)
             {
-                SortingElementBase element = bucket.RemoveSoringElement();
-                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR + (UtilSort.ABOVE_BUCKET_VR/4) * y; //Util.HideObject(element.gameObject, true); //.SetActive(true);
+                SortingElementBase element = bucket.GetElementForDisplay(y);
+                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR + (UtilSort.ABOVE_BUCKET_VR/4) * y;
                 element.transform.rotation = Quaternion.identity;
                 element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 
                 //element.transform.position = new Vector3(0f, 2f, 0f);
-                yield return bucketSort.DemoStepDuration;
+                yield return emptyBucketDuration;
                 element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             }
+            bucket.Empty();
         }
+        //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, true);
+        sortMain.WaitForSupportToComplete--;
+
     }
 
 }

@@ -166,10 +166,11 @@ public class Section : MonoBehaviour {
                 return;
 
             isHidden = !visible;
-            Util.HideObject(gameObject, visible, true);
+
+            Util.HideObject(gameObject, visible);
         }
         else
-            Util.HideObject(gameObject, visible, false);
+            Util.HideObject(gameObject, visible);
     }
 
 }

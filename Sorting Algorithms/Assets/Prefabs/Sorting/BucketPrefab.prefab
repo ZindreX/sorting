@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33384985999972226}
   - component: {fileID: 23928421492859742}
   - component: {fileID: 136417174634915318}
+  - component: {fileID: 95539002958142856}
   m_Layer: 0
   m_Name: Inside
   m_TagString: Bucket
@@ -77,6 +78,7 @@ GameObject:
   - component: {fileID: 114403928065101704}
   - component: {fileID: 54234323538201422}
   - component: {fileID: 135064955881553934}
+  - component: {fileID: 136586205770014320}
   m_Layer: 0
   m_Name: BucketPrefab
   m_TagString: Bucket
@@ -353,6 +355,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &95539002958142856
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1060775387514500}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ef7b718a4ffa75d40a9232c210169d1c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114403928065101704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -365,7 +385,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   innerBucket: {fileID: 23928421492859742}
-  text: {fileID: 114871149990812916}
 --- !u!114 &114871149990812916
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -517,6 +536,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!136 &136586205770014320
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903361543444576}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1
+  m_Height: 10
+  m_Direction: 1
+  m_Center: {x: 0, y: 5, z: 0}
 --- !u!222 &222417254621436538
 CanvasRenderer:
   m_ObjectHideFlags: 1

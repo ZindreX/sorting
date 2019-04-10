@@ -130,6 +130,8 @@ public abstract class MainManager : MonoBehaviour {
         {
             safeStopChecklist[unit] = ready;
         }
+        else
+            Debug.Log(">>>>>>>>>>>>>>>>>> Not containing '" + unit + "'.");
     }
 
     // --------------------------------------- Getters / Setters ---------------------------------------

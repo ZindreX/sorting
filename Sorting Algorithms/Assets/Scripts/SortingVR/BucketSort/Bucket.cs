@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class Bucket : MonoBehaviour, ISortSubElement {
 
     /* ---------------------------------------- Bucket object ----------------------------------------
@@ -13,14 +15,20 @@ public class Bucket : MonoBehaviour, ISortSubElement {
 
     public static int BUCKET_NR = 0, BUCKET_SIZE = 10; // change size internal based on how many buckets exists? max - max/2 - max/3 etc.
 
+    // Animations
+    public const string ENTER = "Enter", ERROR = "Error", HIGHLIGHT = "Highlight";
+
     [SerializeField]
     private MeshRenderer innerBucket;
 
-    [SerializeField]
-    private TextMeshPro text;
+    private SphereCollider enterTrigger;
+    private CapsuleCollider onTopOfBucketTrigger;
+
+    private Animator animator;
 
     private int bucketID;
-    private bool displayElements = false;
+    private BucketSortInstruction instruction;
+
     private SortMain parent;
 
     private int[] bucketCapacity;
@@ -32,15 +40,13 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         bucketID = BUCKET_NR++;
         bucketCapacity = CreateBucketCapacity();
         currentHolding = new List<SortingElementBase>();
-        text.text = bucketID.ToString();
-        displayElements = false;
-    }
+        GetComponentInChildren<TextMeshPro>().text = bucketID.ToString();
 
-    public void InitBucket()
-    {
-        // TODO: add isDemo/stuff....
+        enterTrigger = GetComponent<SphereCollider>();
+        onTopOfBucketTrigger = GetComponent<CapsuleCollider>();
+        SetEnterTrigger(true);
 
-        displayElements = false;
+        animator = GetComponentInChildren<Animator>();
     }
 
     public SortMain SuperElement
@@ -59,15 +65,23 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         return UtilSort.BUCKET_TAG + BUCKET_NR;
     }
 
+    public BucketSortInstruction BucketSortInstruction
+    {
+        get { return instruction; }
+        set { instruction = value; }
+    }
+
     public List<SortingElementBase> CurrenHolding
     {
         get { return currentHolding; }
         set { currentHolding = value; }
     }
 
-    public bool DisplayElements
+    // Trigger for entering bucket / on top of check
+    public void SetEnterTrigger(bool active)
     {
-        set { displayElements = value; }
+        enterTrigger.enabled = active;
+        onTopOfBucketTrigger.enabled = !active;
     }
 
     public static int BucketSize(int numberOfBuckets, int maxValue)
@@ -95,7 +109,7 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         if (sortingElement is BucketSortElement)
             ((BucketSortElement)sortingElement).CurrentInside = this;
 
-        StartCoroutine(ChangeColor(UtilSort.SORTED_COLOR));
+        StartCoroutine(Animation(ENTER, 3));
 
         // Make invisible
         sortingElement.transform.position = transform.position;
@@ -105,13 +119,17 @@ public class Bucket : MonoBehaviour, ISortSubElement {
 
     public SortingElementBase GetElementForDisplay(int index)
     {
-        if (index < currentHolding.Count)
-        {
+        if (index >= 0 && index < currentHolding.Count)
             return currentHolding[index];
-        }
         return null;
     }
 
+    public void Empty()
+    {
+        currentHolding = new List<SortingElementBase>();
+    }
+
+    // Not used
     public SortingElementBase RemoveSoringElement()
     {
         if (currentHolding.Count > 0)
@@ -123,56 +141,18 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         return null;
     }
 
-    public IEnumerator ChangeColor(Color color)
+    public IEnumerator Animation(string animation, int times)
     {
-        Color prevColor = innerBucket.material.color;
-        for (int i=0; i < 3; i++)
+        for (int i=0; i < times; i++)
         {
-            innerBucket.material.color = color;
+            animator.SetBool(animation, true);
             yield return colorChangeDuration;
-            innerBucket.material.color = prevColor;
         }
+
+        animator.SetBool(animation, false);
     }
 
     private int prevSortingElementID = -1;
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-    //    {
-    //        BucketSortElement sortingElement = collision.collider.GetComponent<BucketSortElement>();
-
-    //        // Check for bug (same sorting element got added twice)
-    //        if (prevSortingElementID == sortingElement.SortingElementID)
-    //            return;
-
-    //        if (!sortingElement.CanEnterBucket)
-    //        {
-    //            Debug.Log(sortingElement.CanEnterBucket);
-    //            return;
-    //        }
-
-    //        if (parent.SortSettings.IsDemo())
-    //        {
-    //            if (!displayElements && ValidateSortingElement(sortingElement))
-    //            {
-    //                // Do animation (color -> green -> color)
-    //                AddSortingElementToBucket(sortingElement);
-    //                prevSortingElementID = sortingElement.SortingElementID;
-    //            }
-    //            else
-    //            {
-    //                // Can't be put into this bucket
-    //                ChangeColor(UtilSort.ERROR_COLOR);
-    //            }
-
-    //        }
-    //        else // User test
-    //        {
-
-    //        }
-    //    }
-    //}
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
@@ -180,53 +160,75 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             BucketSortElement sortingElement = other.GetComponent<BucketSortElement>();
 
             // Check for bug (same sorting element got added twice)
-            if (prevSortingElementID == sortingElement.SortingElementID)
-                return;
+            //if (prevSortingElementID == sortingElement.SortingElementID)
+            //    return;
 
-            if (!sortingElement.CanEnterBucket)
+            if (enterTrigger.enabled)
             {
-                Debug.Log(sortingElement.CanEnterBucket);
-                return;
-            }
+                Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> ENTER TRIGGER");
 
-            if (parent.SortSettings.IsDemo())
-            {
-                if (!displayElements && ValidateSortingElement(sortingElement))
+                if (parent.SortSettings.IsDemo())
                 {
-                    // Do animation (color -> green -> color)
-                    AddSortingElementToBucket(sortingElement);
-                    prevSortingElementID = sortingElement.SortingElementID;
-                }
-                else
-                {
-                    // Can't be put into this bucket
-                    ChangeColor(UtilSort.ERROR_COLOR);
-                }
-
-            }
-            else // User test
-            {
-                if (sortingElement.Instruction is BucketSortInstruction)
-                {
-                    BucketSortInstruction inst = (BucketSortInstruction)sortingElement.Instruction;
-
-                    if (inst.Instruction == UtilSort.MOVE_TO_BUCKET_INST && inst.BucketID == bucketID)
+                    if (ValidateSortingElement(sortingElement)) // !displayElements && 
                     {
                         // Do animation (color -> green -> color)
                         AddSortingElementToBucket(sortingElement);
                         prevSortingElementID = sortingElement.SortingElementID;
-                        parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
-                        parent.GetComponent<UserTestManager>().ReadyForNext += 1;
                     }
                     else
                     {
                         // Can't be put into this bucket
-                        ChangeColor(UtilSort.ERROR_COLOR);
-                        parent.GetComponent<UserTestManager>().Mistake();
+                        StartCoroutine(Animation(ERROR, 2));
+                    }
+
+                }
+                else // User test
+                {
+                    if (sortingElement.Instruction is BucketSortInstruction)
+                    {
+                        BucketSortInstruction inst = (BucketSortInstruction)sortingElement.Instruction;
+
+                        if (instruction == sortingElement.Instruction && instruction.Instruction == UtilSort.MOVE_TO_BUCKET_INST) // inst.Instruction == UtilSort.MOVE_TO_BUCKET_INST && inst.BucketID == bucketID
+                        {
+                            AddSortingElementToBucket(sortingElement);
+                            prevSortingElementID = sortingElement.SortingElementID;
+                            parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
+                            parent.GetComponent<UserTestManager>().ReadyForNext += 1;
+                        }
+                        else if (ValidateSortingElement(sortingElement))
+                        {
+
+                        }
+                        else
+                        {
+                            // Can't be put into this bucket
+                            StartCoroutine(Animation(ERROR, 2));
+                            parent.GetComponent<UserTestManager>().Mistake();
+                        }
                     }
 
                 }
             }
+            else if (onTopOfBucketTrigger.enabled)
+            {
+                Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> ON TOP TRIGGER");
+                sortingElement.CurrentInside = this;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        {
+            BucketSortElement sortingElement = other.GetComponent<BucketSortElement>();
+
+            if (onTopOfBucketTrigger.enabled)
+            {
+                sortingElement.CurrentInside = null;
+            }
+
+
         }
     }
 

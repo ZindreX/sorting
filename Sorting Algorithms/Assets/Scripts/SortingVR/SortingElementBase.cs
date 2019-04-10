@@ -139,7 +139,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         // Check if the user moved the element to a new holder,         TODO: in case of mistake -> avoid new error when fixing the mistake
         if (holder.HolderID != prevHolderID)
         {
-            CurrentStandingOn = holder;
+            //CurrentStandingOn = holder; // already set
             userMove++;
             holder.HasPermission = true;
 
@@ -154,10 +154,9 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
 
                     case UtilSort.CORRECT_HOLDER:
                         standingInCorrectHolder = true;
-                        parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
                         break;
 
-                    case UtilSort.INIT_ERROR: case UtilSort.WRONG_HOLDER:
+                    case Util.INIT_ERROR: case UtilSort.WRONG_HOLDER:
                         standingInCorrectHolder = false;
                         parent.GetComponent<UserTestManager>().Mistake();
                         break;
@@ -169,11 +168,12 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                 if (standingInCorrectHolder && !IntermediateMove)
                 {
                     //Instruction.Status = Util.EXECUTED_INST;
-                    status = UtilSort.EXECUTED_INST; // + "***"; // Debugging
+                    status = Util.EXECUTED_INST;
 
                     // Check if ready for next round
                     if (NextMove)
                     {
+                        parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
                         parent.GetComponent<UserTestManager>().ReadyForNext += 1;
                         NextMove = false;
                     }
@@ -199,28 +199,26 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         {
             audioManager.Play("Collision");
 
-            HolderBase holder = collision.collider.GetComponentInParent<HolderBase>();
-            if (parent.SortSettings.IsDemo())
-            {
-                CurrentStandingOn = holder;
-            }
-            else
-            {
-                // Update sorting element
-                PerformUserMove(holder);
-            }
+            //HolderBase holder = collision.collider.GetComponentInParent<HolderBase>();
+            //if (parent.SortSettings.IsDemo())
+            //    CurrentStandingOn = holder;
+            //else
+            //{
+            //    // Update sorting element
+            //    PerformUserMove(holder);
+            //}
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.collider.tag == UtilSort.HOLDER_TAG)
-        {
-            if (CurrentStandingOn != null)
-                prevHolderID = CurrentStandingOn.HolderID;
-            CurrentStandingOn = null;
-            //standingInCorrectHolder = false; // todo
-        }
+        //if (collision.collider.tag == UtilSort.HOLDER_TAG)
+        //{
+        //    if (CurrentStandingOn != null)
+        //        prevHolderID = CurrentStandingOn.HolderID;
+
+        //    CurrentStandingOn = null;
+        //}
     }
 
     // --------------------------------------- Implemented in subclass ---------------------------------------

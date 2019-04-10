@@ -57,12 +57,14 @@ public class MergeSortHolder : HolderBase {
             CurrentColor = prevColor;
     }
 
-    protected override void OnTriggerEnter(Collider other)
+    protected override void OnCollisionEnter(Collision collision)
     {
-        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        base.OnCollisionEnter(collision);
+
+        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            currentHolding = other.GetComponent<MergeSortElement>();
+            currentHolding = collision.collider.GetComponent<MergeSortElement>();
 
             // Tutorial
             if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
@@ -70,30 +72,6 @@ public class MergeSortHolder : HolderBase {
                 if (currentHolding.IsSorted)
                     CurrentColor = UtilSort.SORTED_COLOR;
             }
-            else // User test
-            {
-
-            }
         }
     }
-
-    //protected override void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-    //    {
-    //        // Current holding the sorting element that collided
-    //        currentHolding = collision.collider.GetComponent<MergeSortElement>();
-
-    //        // Tutorial
-    //        if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
-    //        {
-    //            if (currentHolding.IsSorted)
-    //                CurrentColor = UtilSort.SORTED_COLOR;
-    //        }
-    //        else // User test
-    //        {
-
-    //        }
-    //    }
-    //}
 }

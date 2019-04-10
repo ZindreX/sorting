@@ -8,8 +8,8 @@ public class BubbleSortHolder : HolderBase {
         if (!currentHolding.StandingInCorrectHolder)
         {
             CurrentColor = UtilSort.ERROR_COLOR;
-            if (hasPermission)
-                parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
+            //if (hasPermission)
+            //    parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
             hasPermission = false;
         }
         //else if (CurrentHolding.IntermediateMove)
@@ -22,48 +22,24 @@ public class BubbleSortHolder : HolderBase {
             CurrentColor = prevColor;
     }
 
-    protected override void OnTriggerEnter(Collider other)
+    protected override void OnCollisionEnter(Collision collision)
     {
-        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        base.OnCollisionEnter(collision);
+
+        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            currentHolding = other.GetComponent<BubbleSortElement>();
+            currentHolding = collision.collider.GetComponent<BubbleSortElement>();
 
             // Tutorial
-            if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
+            if (parent.SortSettings.IsDemo())
             {
                 if (currentHolding.IsCompare)
                     CurrentColor = UtilSort.COMPARE_COLOR;
                 if (currentHolding.IsSorted)
                     CurrentColor = UtilSort.SORTED_COLOR;
             }
-            else // User test
-            {
-
-            }
         }
+
     }
-
-    //protected override void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-    //    {
-    //        // Current holding the sorting element that collided
-    //        currentHolding = collision.collider.GetComponent<BubbleSortElement>();
-
-    //        // Tutorial
-    //        if (parent.GetComponent<SortMain>().SortSettings.IsDemo())
-    //        {
-    //            if (currentHolding.IsCompare)
-    //                CurrentColor = UtilSort.COMPARE_COLOR;
-    //            if (currentHolding.IsSorted)
-    //                CurrentColor = UtilSort.SORTED_COLOR;
-    //        }
-    //        else // User test
-    //        {
-
-    //        }
-    //    }
-    //}
-
 }

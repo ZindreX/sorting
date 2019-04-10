@@ -41,20 +41,25 @@ public class InsertionSortElement : SortingElementBase {
                     status = "Move to pivot holder";
                     intermediateMove = true;
                     break;
+
                 case UtilSort.PIVOT_END_INST:
                     status = "Move down from pivot holder";
                     intermediateMove = true;
                     break;
+
                 case UtilSort.COMPARE_START_INST: status = "Comparing with pivot"; break;
                 case UtilSort.COMPARE_END_INST: status = "Comparing stop"; break;
+
                 case UtilSort.SWITCH_INST:
                     status = "Move to " + nextHolderID;
                     intermediateMove = true;
                     break;
+
                 case UtilSort.SET_SORTED_INST:
                     IsSorted = true;
                     UtilSort.IndicateElement(gameObject);
                     break;
+
                 case UtilSort.EXECUTED_INST: status = UtilSort.EXECUTED_INST; break;
                 default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
@@ -93,7 +98,7 @@ public class InsertionSortElement : SortingElementBase {
                     case UtilSort.PIVOT_START_INST:
                         if (IntermediateMove && ((InsertionSortHolder)CurrentStandingOn).IsPivotHolder) // correct move
                         {
-                            Instruction.Status = UtilSort.EXECUTED_INST;
+                            Instruction.Status = Util.EXECUTED_INST;
                             intermediateMove = false;
                             return UtilSort.CORRECT_HOLDER;
                         }
@@ -113,7 +118,6 @@ public class InsertionSortElement : SortingElementBase {
                         return UtilSort.WRONG_HOLDER;
 
                     case UtilSort.COMPARE_START_INST:
-                        Debug.Log("What? compare start");
                         break;
 
                     case UtilSort.COMPARE_END_INST:

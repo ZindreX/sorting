@@ -210,9 +210,9 @@ public class UserTestManager : InstructionControlBase {
     // Error counting
     public void ReportError(int sortingElementID)
     {
-        string instructionID = instructions[currentInstructionNr].Instruction; //GetComponent<ElementManager>().GetSortingElement(sortingElementID).GetComponent<SortingElementBase>().Instruction.Instruction;
-        //Debug.LogError("What went wrong: " + Util.TranslateInstructionForExamination(instructionID));
-        totalErrorCount++;
+        string instructionID = instructions[currentInstructionNr].Instruction;      
+        
+        //totalErrorCount++;
         if (errorLog.ContainsKey(instructionID))
             errorLog[instructionID] += 1;
         else
