@@ -50,10 +50,10 @@ public class ElementManager : MonoBehaviour, IManager {
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + UtilSort.ABOVE_HOLDER_VR, Quaternion.identity);
             switch (superElement.GetTeachingAlgorithm().AlgorithmName)
             {
-                case UtilSort.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
-                case UtilSort.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
-                case UtilSort.BUCKET_SORT: sortingElements[x].AddComponent<BucketSortElement>(); break;
-                case UtilSort.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
+                case Util.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
+                case Util.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
+                case Util.BUCKET_SORT: sortingElements[x].AddComponent<BucketSortElement>(); break;
+                case Util.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = val++;//Random.Range(0, UtilSort.MAX_VALUE);
@@ -95,10 +95,10 @@ public class ElementManager : MonoBehaviour, IManager {
             sortingElements[x] = Instantiate(sortingElementPrefab, positions[x] + UtilSort.ABOVE_HOLDER_VR, Quaternion.identity);
             switch (superElement.GetTeachingAlgorithm().AlgorithmName)
             {
-                case UtilSort.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
-                case UtilSort.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
-                case UtilSort.BUCKET_SORT: sortingElements[x].AddComponent<BucketSortElement>(); break;
-                case UtilSort.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
+                case Util.BUBBLE_SORT: sortingElements[x].AddComponent<BubbleSortElement>(); break;
+                case Util.INSERTION_SORT: sortingElements[x].AddComponent<InsertionSortElement>(); break;
+                case Util.BUCKET_SORT: sortingElements[x].AddComponent<BucketSortElement>(); break;
+                case Util.MERGE_SORT: sortingElements[x].AddComponent<MergeSortElement>(); break;
                 default: Debug.LogError("Add subclass for sorting element!"); break;
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;

@@ -20,6 +20,7 @@ public class Portal : MonoBehaviour {
 
     [SerializeField]
     private Transform transportPoint;
+    private BoxCollider trigger;
 
     // New feature
     private int countdown;
@@ -46,35 +47,36 @@ public class Portal : MonoBehaviour {
         player = FindObjectOfType<Player>();
         audioSource = GetComponent<AudioSource>();
         animator = GetComponentInChildren<Animator>();
+        trigger = GetComponentInChildren<BoxCollider>();
     }
 
-    private void Update()
-    {
-        Vector3 playerPos = player.transform.position;
+    //private void Update()
+    //{
+    //    Vector3 playerPos = player.transform.position;
 
-        // >>> Check if player is standing near this portal
-        float playerRelToNodeX = Mathf.Abs(playerPos.x - transportPoint.position.x);
-        float playerRelToNodeZ = Mathf.Abs(playerPos.z - transportPoint.position.z);
+    //    // >>> Check if player is standing near this portal
+    //    float playerRelToNodeX = Mathf.Abs(playerPos.x - transportPoint.position.x);
+    //    float playerRelToNodeZ = Mathf.Abs(playerPos.z - transportPoint.position.z);
 
-        if (playerRelToNodeX < withinWidth && playerRelToNodeZ < withinDepth)
-        {
-            playerStandingNearPortal = true;
+    //    if (playerRelToNodeX < withinWidth && playerRelToNodeZ < withinDepth)
+    //    {
+    //        playerStandingNearPortal = true;
 
-            if (sceneBuildIndex > LARGEST_BUILD_INDEX)
-                return;
+    //        if (sceneBuildIndex > LARGEST_BUILD_INDEX)
+    //            return;
 
-            if (!countdownStarted)
-            {
-                StartCoroutine(PortalStart());
-                animator.SetBool("EnterPortal", true);
-            }
-        }
-        else
-        {
-            playerStandingNearPortal = false;
-            animator.SetBool("EnterPortal", false);
-        }
-    }
+    //        if (!countdownStarted)
+    //        {
+    //            StartCoroutine(PortalStart());
+    //            animator.SetBool("EnterPortal", true);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        playerStandingNearPortal = false;
+    //        animator.SetBool("EnterPortal", false);
+    //    }
+    //}
 
     private IEnumerator PortalStart()
     {
@@ -114,17 +116,29 @@ public class Portal : MonoBehaviour {
         }
     }
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Player player = collision.collider.GetComponent<Player>();
-
-        if (player != null)
+        if (other.name == Util.HEAD_COLLIDER)
         {
-            if (sceneBuildIndex <= LARGEST_BUILD_INDEX)
-                LoadLevel();
-            else
-                Debug.Log("Scene '" + sceneBuildIndex + "' not implemented, or not added yet.\nIf added, check LARGEST_BUILD_INDEX");
+            playerStandingNearPortal = true;
+
+            if (sceneBuildIndex > LARGEST_BUILD_INDEX)
+                return;
+
+            if (!countdownStarted)
+            {
+                StartCoroutine(PortalStart());
+                animator.SetBool("EnterPortal", true);
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name == Util.HEAD_COLLIDER)
+        {
+            playerStandingNearPortal = false;
+            animator.SetBool("EnterPortal", false);
         }
     }
 

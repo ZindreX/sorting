@@ -40,7 +40,7 @@ public class UtilSort : Util {
     // Checking instruction (strings)
     public const string MOVE_INTERMEDIATE = "Move intermediate";
     public const string CORRECT_HOLDER = "Correct holder", WRONG_HOLDER = "Wrong holder", CANNOT_VALIDATE_ERROR = "Cannot validate error";
-
+    public const string CORRECT_BUCKET = "Correct bucket", WRONG_BUCKET = "Wrong bucket";
 
 
     // ******************************************** Collision/tags ********************************************

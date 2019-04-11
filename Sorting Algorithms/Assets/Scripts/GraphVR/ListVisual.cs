@@ -50,7 +50,6 @@ public class ListVisual : MonoBehaviour, IMoveAble {
         startPos = transform.position;
     }
 
-
     public void InitListVisual(string listType, float algorithmSpeed)
     {
         this.listType = listType;
@@ -430,7 +429,7 @@ public class ListVisual : MonoBehaviour, IMoveAble {
             case UtilGraph.END_NODE_FOUND:
                 // Start backtracking
                 if (increment)
-                    graphMain.GetTeachingAlgorithm().PseudoCodeViewer.DestroyPseudoCode();
+                    graphMain.GetTeachingAlgorithm().PseudoCodeViewer.DestroyContent();
                 else
                     graphMain.GetTeachingAlgorithm().PseudoCodeViewer.PseudoCodeSetup();
                 break;
@@ -453,7 +452,7 @@ public class ListVisual : MonoBehaviour, IMoveAble {
                     DestroyCurrentNode();
                     RemoveCurrentNode();
 
-                    if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                    if (graphMain.Settings.Difficulty < Util.EXAMINATION)
                     {
                         instruction.Node.CurrentColor = UtilGraph.SHORTEST_PATH_COLOR;
 
@@ -587,16 +586,19 @@ public class ListVisual : MonoBehaviour, IMoveAble {
 
     public void ClearList()
     {
-        foreach (NodeRepresentation nodeRep in nodeRepresentations)
+        if (nodeRepresentations != null)
         {
-            Destroy(nodeRep.gameObject);
+            foreach (NodeRepresentation nodeRep in nodeRepresentations)
+            {
+                Destroy(nodeRep.gameObject);
+            }
+
+            if (currentNode != null)
+                Destroy(currentNode.gameObject);
+
+            listType = "";
+            nodeRepresentations = new List<NodeRepresentation>();
         }
-
-        if (currentNode != null)
-            Destroy(currentNode.gameObject);
-
-        listType = "";
-        nodeRepresentations = new List<NodeRepresentation>();
     }
 
     // --------------------------------------- Reset / Destroy ---------------------------------------

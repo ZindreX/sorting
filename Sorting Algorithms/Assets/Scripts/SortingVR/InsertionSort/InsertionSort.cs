@@ -97,14 +97,14 @@ public class InsertionSort : SortAlgorithm {
     {
         switch (lineNr)
         {
-            case 2: return init ? "while ( i < len(list) )" : "while ( " + i + " < " + lengthOfList + " )";
-            case 3: return init ? "   j = i - 1" :  "   j = " + i + " - 1";
-            case 4: return init ? "   pivot = list[i]" : "   pivot = list[" + i + "]";
-            case 5: return init ? "   while ( j >= 0 and pivot < list[j] )" : "   while ( " + j + " >= 0 and pivot < list[" + j + "] )";
-            case 6: return init ? "       move list[j] to list[j + 1]" : "       move list[" + j + "] to list[" + j + " + 1]";
-            case 7: return init ? "       j = j - 1" : "       j = " + j + " - 1";
-            case 9: return init ? "   list[j + 1] = pivot" : "   list[" + j + " + 1] = pivot";
-            case 10: return init ? "   i = i + 1" : "   i = " + i + " + 1";
+            case 2: return init ? "    while ( i < len(list) )" : "    while ( " + i + " < " + lengthOfList + " )";
+            case 3: return init ? "        j = i - 1" : "        j = " + i + " - 1";
+            case 4: return init ? "        pivot = list[i]" : "        pivot = list[" + i + "]";
+            case 5: return init ? "        while ( j >= 0 and pivot < list[j] )" : "        while ( " + j + " >= 0 and pivot < list[" + j + "] )";
+            case 6: return init ? "            move list[j] to list[j + 1]" : "            move list[" + j + "] to list[" + j + " + 1]";
+            case 7: return init ? "            j = j - 1" : "            j = " + j + " - 1";
+            case 9: return init ? "        list[j + 1] = pivot" : "        list[" + j + " + 1] = pivot";
+            case 10: return init ? "        i = i + 1" : "        i = " + i + " + 1";
             default: return "X";
         }
     }

@@ -111,8 +111,8 @@ public class GraphSettings : TeachingSettings {
             // Init settings
             Algorithm = Util.BFS;
             GraphTask = UtilGraph.TRAVERSE;
-            ShortestPathOneToAll = true;
-            SelectStartEndNodes = false;
+            ShortestPathOneToAll = shortestPathOneToAll;
+            SelectStartEndNodes = selectStartEndNodes;
 
             // Graph
             GraphStructure = UtilGraph.GRID_GRAPH;
@@ -190,6 +190,7 @@ public class GraphSettings : TeachingSettings {
         levelDepthLength *= 2;
 
         // Extra
+        SelectStartEndNodes = selectStartEndNodes;
         ShortestPathOneToAll = shortestPathOneToAll;
     }
 
@@ -238,7 +239,14 @@ public class GraphSettings : TeachingSettings {
             case Util.OPTIONAL:
                 switch (itemID)
                 {
-                    case UtilGraph.SELECT_NODE: SelectStartEndNodes = Util.ConvertStringToBool(itemDescription); break;
+                    case UtilGraph.SELECT_NODE:
+                        SelectStartEndNodes = Util.ConvertStringToBool(itemDescription);
+                        if (selectStartEndNodes)
+                            FillTooltips("Manually choose node(s).");
+                        else
+                            FillTooltips("Node(s) chosen by default settings. Not recommended.");
+                        break;
+
                     default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
                 }
                 break;

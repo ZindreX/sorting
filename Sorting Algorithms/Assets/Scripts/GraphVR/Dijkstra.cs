@@ -9,7 +9,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     [SerializeField]
     private GameObject infoPlate;
 
-
     private bool objectiveFound = false;
     private string ifStatementContent;
 
@@ -31,6 +30,17 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         set { ifStatementContent = value; }
     }
 
+    private string CreateIfStatementContent(int currentNodeDist, int edgeCost, int connectedNodeDist)
+    {
+        // Change color of if statement
+        if (currentNodeDist + edgeCost < connectedNodeDist)
+            useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+        else
+            useHighlightColor = Color.red;
+
+        return currentNodeDist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(connectedNode.Dist);
+    }
+
     public override GameObject InfoPlate
     {
         get { return infoPlate; }
@@ -38,7 +48,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
     public override string GetListType()
     {
-        return UtilGraph.PRIORITY_LIST;
+        return Util.PRIORITY_LIST;
     }
 
     public override string CollectLine(int lineNr)
@@ -120,7 +130,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     }
 
     // Dijkstra on Tree: must start at 0, or atleast have end node in the same subtree underneath start node
-    #region Dijkstra Demo
+    #region Dijkstra Demo (OLD: Not used anymore)
     public IEnumerator ShortestPathDemo(Node startNode, Node endNode)
     {
         // Line 0: Set graph/start node
@@ -302,7 +312,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     list.Sort();
 
                     // List visual
-                    if (graphMain.GraphSettings.Difficulty < Util.ADVANCED)
+                    if (graphMain.Settings.Difficulty < Util.ADVANCED)
                     {
                         int index = list.IndexOf(connectedNode); //(list.Count - 1 ) - list.IndexOf(connectedNode); // OBS: list is inverted (removes the last element instead of index 0)
                         //int currentNodeRepIndex = graphMain.ListVisual.ListIndexOf(connectedNode); // Create method/action code ???
@@ -366,7 +376,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     #endregion
 
     // Dijkstra on Tree: must start at 0, or atleast have end node in the same subtree underneath start node
-    #region Dijkstra Demo No pseudocode for fast runthrough
+    #region Dijkstra Demo No pseudocode for fast runthrough (OLD)
     public IEnumerator DemoNoPseudocode(Node startNode, Node endNode)
     {
         // Line 2: Create (priority) list
@@ -776,7 +786,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     #endregion
 
 
-
     #region User Test Highlight Pseudocode
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
     {
@@ -899,19 +908,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     }
     #endregion
 
-
-
-
-    private string CreateIfStatementContent(int currentNodeDist, int edgeCost, int connectedNodeDist)
-    {
-        // Change color of if statement
-        if (currentNodeDist + edgeCost < connectedNodeDist)
-            useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
-        else
-            useHighlightColor = Color.red;
-
-        return currentNodeDist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(connectedNode.Dist);
-    }
 
 
 

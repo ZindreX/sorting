@@ -25,7 +25,6 @@ public class HolderManager : MonoBehaviour, IManager {
         superElement = GetComponent<SortMain>();
     }
 
-
     public GameObject[] Holders
     {
         get { return holders; }

@@ -19,7 +19,8 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     protected bool errorNotified = false, hasPermission = true;
 
     protected SortMain parent;
-    protected SortingElementBase currentHolding, registeredAboveHolder;
+    protected SortingElementBase currentHolding;
+    protected List<SortingElementBase> registeredAboveHolder;
 
     protected virtual void Awake()
     {
@@ -27,14 +28,16 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
         name = MyRole();
         indexText = GetComponentInChildren<TextMeshPro>();
         indexText.text = holderID.ToString();
+        registeredAboveHolder = new List<SortingElementBase>();
     }
 
     void Update()
     {
-
         // Always checking the status of the sorting element this holder is holding, and changing color thereafter
         if (isValidSortingElement(currentHolding))
+        {
             UpdateColorOfHolder();   
+        }
     }
 
     private bool isValidSortingElement(SortingElementBase element)
@@ -86,13 +89,17 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     }
 
     // Register elements above
-    protected void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         //Debug.Log("Entering holder" + holderID + ": " + other.tag);
 
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
-            registeredAboveHolder = other.GetComponent<SortingElementBase>();
+            SortingElementBase element = other.GetComponent<SortingElementBase>();
+
+            if (!registeredAboveHolder.Contains(element))
+                registeredAboveHolder.Add(element);
+            
 
             //if (parent.Settings.Difficulty == Util.BEGINNER)
             //    GiveHint();
@@ -106,15 +113,22 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
 
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
-            registeredAboveHolder = null;
+            // Check if other element bumped into this trigger (to avoid removing correct element)
+            SortingElementBase otherElement = other.GetComponent<SortingElementBase>();
+
+            if (registeredAboveHolder.Contains(otherElement))
+                registeredAboveHolder.Remove(otherElement);
 
             // Remove from this holder
-            if (CurrentHolding != null)
+            if (CurrentHolding != null && CurrentHolding == otherElement)
             {
                 prevElementID = currentHolding.SortingElementID;
                 CurrentHolding = null;
+                CurrentColor = Util.STANDARD_COLOR;
+
+                if (registeredAboveHolder.Count > 0)
+                    UtilSort.IndicateElement(registeredAboveHolder[0].gameObject);
             }
-            CurrentColor = Util.STANDARD_COLOR;
         }
     }
 

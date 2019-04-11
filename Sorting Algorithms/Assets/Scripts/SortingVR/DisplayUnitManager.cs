@@ -37,13 +37,16 @@ public class DisplayUnitManager : MonoBehaviour {
     public void ResetDisplays()
     {
         leftInfoBoardText.text = "";
+        sortingTableText.text = "";
+        settingsMenuText.text = "";
         centerBlackboard.EmptyContent();
         rightBlackboard.EmptyContent();
     }
 
     public void DestroyDisplaysContent()
     {
-        centerBlackboard.DestroyPseudoCode();
+        rightBlackboard.DestroyContent();
+        centerBlackboard.DestroyContent();
     }
 
     public void SetTextWithIndex(string display, string text, int index)

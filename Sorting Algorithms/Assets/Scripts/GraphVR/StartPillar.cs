@@ -18,7 +18,7 @@ public class StartPillar : StartExchangePosition {
     protected override void Awake()
     {
         base.Awake();
-        inScenePosition = new Vector3(-0.65f, 0.5f, -2.1f);
+        inScenePosition = new Vector3(-0.65f, 0.5f, -2.3f);
 
         Section startPillarSection = GetComponentInChildren<Section>();
         startPillarSection.SectionManager = FindObjectOfType<SettingsBase>();

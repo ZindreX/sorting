@@ -12,10 +12,6 @@
  * 
  * 
  * *********************************** To do list **********************************************
- * >>> Clean up
- *  > Old unused stuff
- *      - remove
- *
  * > User Test
  *  - fix different levels of difficulty (how much help given, points etc)
  *  - remove UserActionToProceed and decrement ReadyForNext instead ? (down to 0)
@@ -33,8 +29,6 @@
  * > InstructionNr
  *  - remove it from UserTestManager++
  * 
- * > Settings menu
- *  - give feedback (change button color)
  * 
  * 
  * *********************************** Bugs to fix **********************************************
@@ -48,8 +42,10 @@
  *  
  *  
  * >>> BucketSort
- *  > Step-by-step: backwards needs more work
- *  > User test needs more work
+ *  > User test: ready?
+ *  > New Demo:
+ *      - Last for-loops buggy pseudocode
+ *      - Step-by-step: backwards needs more work
  * 
  * 
  * 
@@ -61,16 +57,8 @@
  * 
  * 
  * 
- * >>> Commented a lot of old methods, check if any bugs/null exceptions occours
- * 
- * 
- * 
- * 
- * 
  *  *********************************** Implementation ideas **********************************************
  * 
- * > Sensory Curiosity
- *  - add effects (sound, animation, etc.)
  *  
  * > Cognitive Curiosity
  * - give more information about runtime (n^2, log(n) etc.) + test?

@@ -148,10 +148,13 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                         break;
 
                     case UtilSort.CORRECT_HOLDER:
+                    case UtilSort.CORRECT_BUCKET:
                         standingInCorrectHolder = true;
                         break;
 
-                    case Util.INIT_ERROR: case UtilSort.WRONG_HOLDER:
+                    case Util.INIT_ERROR:
+                    case UtilSort.WRONG_HOLDER:
+                    case UtilSort.WRONG_BUCKET:
                         standingInCorrectHolder = false;
                         parent.GetComponent<UserTestManager>().Mistake();
                         break;
@@ -162,7 +165,8 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                 // Mark instruction as executed if correct
                 if (standingInCorrectHolder && !IntermediateMove)
                 {
-                    //Instruction.Status = Util.EXECUTED_INST;
+                    Instruction.Status = Util.EXECUTED_INST;
+                    Debug.Log("if any buggs: fix here");
                     status = Util.EXECUTED_INST;
 
                     // Check if ready for next round

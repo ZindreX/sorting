@@ -232,6 +232,7 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
+    // Make edge cost visible/invisible
     public void MakeEdgeCostVisible(bool visible)
     {
         foreach (GameObject edgeObj in edges)

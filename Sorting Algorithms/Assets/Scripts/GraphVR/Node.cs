@@ -361,7 +361,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 {
                     visitNextMove = true;
 
-                    if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                    if (graphMain.Settings.Difficulty < Util.EXAMINATION)
                         animator.SetBool("NodeVisit", true);
                 }
 
@@ -370,7 +370,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 {
                     traverseNextMove = true;
 
-                    if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                    if (graphMain.Settings.Difficulty < Util.EXAMINATION)
                         animator.SetBool("NodeTraverse", true);
                 }
 
@@ -509,7 +509,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 visitNextMove = false;
                 traverseNextMove = false;
 
-                if (graphMain.GraphSettings.Difficulty < Util.EXAMINATION)
+                if (graphMain.Settings.Difficulty < Util.EXAMINATION)
                 {
                     animator.SetBool("NodeVisit", false);
                     animator.SetBool("NodeTraverse", false);

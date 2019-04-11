@@ -216,14 +216,11 @@ public class SortMain : MainManager {
         sortAlgorithm.ResetSetup();
 
         // Reset displays
-        //displayUnitManager.ResetDisplays();
-        displayUnitManager.DestroyDisplaysContent(); //:::: 
+        displayUnitManager.DestroyDisplaysContent(); // pseudocode, blackboard, etc
 
         // Hide sorting table and bring back menu
         StartCoroutine(ActivateTaskObjects(false));
 
-        // Cleanup pseudocode
-        sortAlgorithm.PseudoCodeViewer.DestroyPseudoCode();
 
         // test stuff
         switch (sortSettings.TeachingMode)
@@ -321,7 +318,10 @@ public class SortMain : MainManager {
                     if (hasInstruction)
                         userTestManager.ReadyForNext += algorithmManagerBase.PrepareNextInstruction(userTestManager.GetInstruction());
                     else if (elementManager.AllSorted())
+                    {
+                        WaitForSupportToComplete++;
                         StartCoroutine(FinishUserTest());
+                    }
 
                 }
             }
@@ -334,7 +334,7 @@ public class SortMain : MainManager {
     {
         audioManager.Play("Finish");
 
-        yield return sortAlgorithm.DemoStepDuration;
+        yield return finishStepDuration;
         sortAlgorithm.IsTaskCompleted = true;
         displayUnitManager.PseudoCodeViewer.RemoveHightlight();
 
@@ -343,8 +343,9 @@ public class SortMain : MainManager {
         {
             UtilSort.IndicateElement(elementManager.GetSortingElement(x));
             elementManager.GetSortingElement(x).transform.rotation = Quaternion.identity;
-            yield return sortAlgorithm.DemoStepDuration; // 1/2
+            yield return finishStepDuration;
         }
+        WaitForSupportToComplete--;
     }
 
     // Finish off user test

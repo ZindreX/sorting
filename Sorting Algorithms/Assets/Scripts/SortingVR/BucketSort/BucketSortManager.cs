@@ -15,10 +15,6 @@ public class BucketSortManager : AlgorithmManagerBase {
     [SerializeField]
     private BucketManager bucketManager;
 
-
-    private WaitForSeconds emptyBucketDuration = new WaitForSeconds(0.5f);
-
-
     public override string AlgorithmManager
     {
         get { return bucketSort.AlgorithmName + " Manager"; }
@@ -63,14 +59,14 @@ public class BucketSortManager : AlgorithmManagerBase {
         {
             case UtilSort.PHASING_INST:
                 // Phase into Insertion Sort?
-                AutoSortBuckets();
+                bucketManager.AutoSortBuckets();
                 break;
 
             case UtilSort.DISPLAY_ELEMENT:
                 Debug.Log("Display elements");
                 // Display elements on top of bucket
                 sortMain.WaitForSupportToComplete++;
-                StartCoroutine(PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));
+                StartCoroutine(bucketManager.PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));
                 return 1; // Nothing to do for the player, nor any pseudocode
         }
 
@@ -107,48 +103,6 @@ public class BucketSortManager : AlgorithmManagerBase {
 
         Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Nothing for player to do, continuing to next instruction");
         return 1;
-    }
-
-    // copied to BucketManager
-    private void AutoSortBuckets()
-    {
-        for (int x=0; x < numberOfBuckets; x++)
-        {
-            Bucket bucket = bucketManager.GetBucket(x);
-            bucket.CurrenHolding = InsertionSort.InsertionSortStandard2(bucket.CurrenHolding);
-        }
-    }
-
-    // copied **
-    public IEnumerator PutElementsForDisplay(int bucketID)
-    {
-        //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, false);
-
-        Bucket bucket = bucketManager.GetBucket(bucketID);
-        bucket.SetEnterTrigger(false);
-        int numberOfElements = bucket.CurrenHolding.Count;
-
-        if (numberOfElements > 0)
-        {
-            StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 2));
-            yield return emptyBucketDuration;
-
-            for (int y=0; y < numberOfElements; y++)
-            {
-                SortingElementBase element = bucket.GetElementForDisplay(y);
-                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR + (UtilSort.ABOVE_BUCKET_VR/4) * y;
-                element.transform.rotation = Quaternion.identity;
-                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                
-                //element.transform.position = new Vector3(0f, 2f, 0f);
-                yield return emptyBucketDuration;
-                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            }
-            bucket.Empty();
-        }
-        //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, true);
-        sortMain.WaitForSupportToComplete--;
-
     }
 
 }

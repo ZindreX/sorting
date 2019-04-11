@@ -38,6 +38,7 @@ public abstract class MainManager : MonoBehaviour {
     protected Dictionary<string, bool> safeStopChecklist;
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
+    protected WaitForSeconds finishStepDuration = new WaitForSeconds(0.5f);
 
     protected DemoDevice demoDevice;
 

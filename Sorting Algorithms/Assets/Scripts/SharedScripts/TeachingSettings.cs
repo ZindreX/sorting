@@ -73,7 +73,20 @@ public abstract class TeachingSettings : SettingsBase {
         switch (sectionID)
         {
             case Util.ALGORITHM: Algorithm = itemID; break;
-            case Util.TEACHING_MODE: TeachingMode = itemID; break;
+            case Util.TEACHING_MODE:
+                TeachingMode = itemID;
+                if (TeachingMode == Util.DEMO && difficulty > 0)
+                {
+                    difficulty = 0;
+                    InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
+                }
+                else if (TeachingMode == Util.USER_TEST)
+                {
+                    AlgorithmSpeedLevel = Difficulty; // button fixed in method
+                }
+
+                break;
+
             case Util.DIFFICULTY: Difficulty = Util.difficultyConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
             case Util.DEMO_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
             case Util.OPTIONAL:

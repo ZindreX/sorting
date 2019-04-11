@@ -26,7 +26,10 @@ public class MultiStateButton : SettingsMenuButton {
     public void InitMultiStateButton(int state)
     {
         if (state >= 0 && state < states.Length)
+        {
+            this.state = state;
             ChangeAppearance(states[state], materials[state]);
+        }
         else
             Debug.LogError("Couldn't initalize state due to index out of range");
     }

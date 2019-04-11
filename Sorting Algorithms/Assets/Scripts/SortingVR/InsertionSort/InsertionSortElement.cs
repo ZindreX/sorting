@@ -109,7 +109,7 @@ public class InsertionSortElement : SortingElementBase {
                     case UtilSort.PIVOT_END_INST:
                         if (IntermediateMove && CurrentStandingOn.HolderID == insertionSortInstruction.NextHolderID) // correct move
                         {
-                            Instruction.Status = UtilSort.EXECUTED_INST;
+                            Instruction.Status = Util.EXECUTED_INST;
                             intermediateMove = false;
                             return UtilSort.CORRECT_HOLDER;
                         }

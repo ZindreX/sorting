@@ -75,16 +75,16 @@ public class MergeSortHolder : HolderBase {
         }
     }
 
-    protected override void GiveHint()
-    {
-        if (registeredAboveHolder != null && registeredAboveHolder.Instruction != null)
-        {
-            MergeSortInstruction insertInst = (MergeSortInstruction)registeredAboveHolder.Instruction;
-            int registeredID = registeredAboveHolder.SortingElementID;
-            int nextHolder = insertInst.NextHolderID;
+    //protected override void GiveHint()
+    //{
+    //    if (registeredAboveHolder != null && registeredAboveHolder.Instruction != null)
+    //    {
+    //        MergeSortInstruction insertInst = (MergeSortInstruction)registeredAboveHolder.Instruction;
+    //        int registeredID = registeredAboveHolder.SortingElementID;
+    //        int nextHolder = insertInst.NextHolderID;
 
-            if (nextHolder == holderID)
-                parent.AudioManager.Play("Hint");
-        }
-    }
+    //        if (nextHolder == holderID)
+    //            parent.AudioManager.Play("Hint");
+    //    }
+    //}
 }

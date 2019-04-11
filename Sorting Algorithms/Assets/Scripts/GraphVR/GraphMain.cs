@@ -92,11 +92,6 @@ public class GraphMain : MainManager {
 
     //  --------------------------------------- Getters ---------------------------------------
 
-    public GraphSettings GraphSettings
-    {
-        get { return graphSettings; }
-    }
-
     public GraphManager GraphManager
     {
         get { return graphManager; }
@@ -130,7 +125,7 @@ public class GraphMain : MainManager {
         switch (check)
         {
             case START_UP_CHECK:
-
+                // Check until all node(s) are chosen by the player (traverse: start node // shortest path: start + end nodes)
                 if (chosenNodes == numberOfNodesToChoose)
                 {
                     startPillar.SetButtonActive(true);
@@ -157,19 +152,21 @@ public class GraphMain : MainManager {
                     }
                 }
 
+                // If no background process, start resetting and destroying game objects
                 if (readyForDestroy)
                 {
                     checkListModeActive = false;
                     DestroyAndReset();
                 }
-
                 break;
+
             default: Debug.Log(">>>>>>>>> Unknown check '" + check + "'."); break;
         }
     }
 
     public override void InstantiateSetup()
     {
+        // First init common stuff
         base.InstantiateSetup();
 
         // >>> Grab variable data from settings
@@ -219,7 +216,9 @@ public class GraphMain : MainManager {
                 // Pseudocode
                 pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
                 pseudoCodeViewer.PseudoCodeSetup();
-}
+                // Fix pseudocode for graph
+                pseudoCodeViewer.ChangeSizeOfPseudocode(new Vector3(0f, 0f, 0f));
+            }
 
             if (difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
             {
@@ -237,12 +236,12 @@ public class GraphMain : MainManager {
             pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
             pseudoCodeViewer.PseudoCodeSetup();
 
+            // Fix pseudocode for graph
+            pseudoCodeViewer.ChangeSizeOfPseudocode(new Vector3(0f, 0f, 0f));
+
             // List visual
             listVisual.InitListVisual(graphAlgorithm.GetListType(), algorithmSpeed);
         }
-
-        // Fix pseudocode
-        pseudoCodeViewer.ChangeSizeOfPseudocode(new Vector3(0f, 0f, 0f));
 
         // Hide menu
         StartCoroutine(ActivateTaskObjects(true));
@@ -333,7 +332,7 @@ public class GraphMain : MainManager {
         graphAlgorithm.ResetSetup();
 
         // Pseudocode
-        pseudoCodeViewer.DestroyPseudoCode();
+        pseudoCodeViewer.DestroyContent();
 
         // Pointer
         pointer.ResetPointer();
@@ -662,7 +661,7 @@ public class GraphMain : MainManager {
             case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
                 Node startNode = graphManager.StartNode;
                 startNode.Dist = 0;
-                if (GraphSettings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
+                if (Settings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
                     listVisual.FindNodeRepresentation(startNode).UpdateSurfaceText(UtilGraph.DIST_UPDATE_COLOR);
                 break;
 

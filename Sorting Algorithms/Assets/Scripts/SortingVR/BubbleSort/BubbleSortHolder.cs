@@ -41,23 +41,4 @@ public class BubbleSortHolder : HolderBase {
             }
         }
     }
-
-    protected override void GiveHint()
-    {
-        if (registeredAboveHolder != null && registeredAboveHolder.Instruction != null)
-        {
-            BubbleSortInstruction bubbleInst = (BubbleSortInstruction)registeredAboveHolder.Instruction;
-            int registeredID = registeredAboveHolder.SortingElementID;
-            int nextHolder = bubbleInst.SwitchToHolder(registeredID);
-
-            if (nextHolder == holderID)
-                parent.AudioManager.Play(parent.HINT_CORRECT_SOUND);
-            else if (bubbleInst.Instruction == Util.INIT_INSTRUCTION)
-            {
-
-            }
-            else
-                base.GiveHint();
-        }
-    }
 }

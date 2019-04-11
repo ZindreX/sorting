@@ -6,7 +6,7 @@ public class BucketSortElement : SortingElementBase {
 
     private BucketSortInstruction bucketSortInstruction;
     private bool isPivot; // canEnterBucket = true;
-    private int nextBucketID;
+    private int bucketID;
     private Bucket currentInside;
 
     private Rigidbody rb;
@@ -67,20 +67,20 @@ public class BucketSortElement : SortingElementBase {
             instruction = bucketSortInstruction.Instruction;
             hID = bucketSortInstruction.HolderID;
             nextHolderID = bucketSortInstruction.NextHolderID;
-            nextBucketID = bucketSortInstruction.BucketID;
+            bucketID = bucketSortInstruction.BucketID;
 
             switch (instruction)
             {
                 case UtilSort.INIT_INSTRUCTION: status = "Init pos"; break;
                 case UtilSort.BUCKET_INDEX_INST:
-                    status = "Bucket index: " + nextBucketID;
+                    status = "Bucket index: " + bucketID;
                     break;
 
                 case UtilSort.MOVE_TO_BUCKET_INST:
-                    status = "Move to bucket" + nextBucketID;
+                    status = "Move to bucket" + bucketID;
                     intermediateMove = true;
-                    //canEnterBucket = true; // ***
                     break;
+
                 case UtilSort.MOVE_BACK_INST:
                     status = "Move to holder " + nextHolderID;
                     intermediateMove = true;
@@ -118,37 +118,60 @@ public class BucketSortElement : SortingElementBase {
                 case UtilSort.MOVE_TO_BUCKET_INST:
                     if (!bucketSortInstruction.HasBeenExecuted())
                     {
+                        // First check if the element is still standing on the init holder
                         if (currentStandingOn != null)
                         {
-                            // Check if element is standing on holder (before any user action)
+                            // Check if element is standing on holder (before any user action) / or if mistake and move back
                             if (IntermediateMove && currentStandingOn.HolderID == bucketSortInstruction.HolderID)
                                 return UtilSort.CORRECT_HOLDER;
-                            else if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.HolderID) // Mistake, going back to "start"
-                                return UtilSort.CORRECT_HOLDER;
-                            return UtilSort.WRONG_HOLDER;
                         }
+                        else if (currentInside != null)
+                        {
+                            if (IntermediateMove && currentInside.BucketID == bucketSortInstruction.BucketID)
+                            {
+                                Instruction.Status = Util.EXECUTED_INST;
+                                return UtilSort.CORRECT_BUCKET;
+                            }
+                        }
+                        return UtilSort.WRONG_BUCKET;
                     }
-                    return (currentInside != null && currentInside.BucketID == bucketSortInstruction.BucketID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
+                    else // Aftercheck (instruction has been executed)
+                        return (currentInside != null && currentInside.BucketID == bucketSortInstruction.BucketID) ? UtilSort.CORRECT_BUCKET : UtilSort.WRONG_BUCKET;
 
                 case UtilSort.MOVE_BACK_INST:
+                    Debug.Log("Moving back");
                     if (!bucketSortInstruction.HasBeenExecuted())
                     {
-                        if (IntermediateMove && currentStandingOn != null && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID)
+                        Debug.Log("Not executed yet check");
+                        if (currentStandingOn != null)
                         {
-                            intermediateMove = false;
-                            return UtilSort.CORRECT_HOLDER;
+                            Debug.Log("standing on top of holder");
+                            // Check correct move first
+                            if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID)
+                            {
+                                Instruction.Status = Util.EXECUTED_INST;
+                                intermediateMove = false;
+                                return UtilSort.CORRECT_HOLDER;
+                            }
                         }
-                        else if (IntermediateMove && currentInside != null && CurrentInside.BucketID == bucketSortInstruction.BucketID)
-                            return UtilSort.CORRECT_HOLDER;
+                        else if (currentInside != null)
+                        {
+                            Debug.Log("standing on top of bucket");
+                            if (IntermediateMove && CurrentInside.BucketID == bucketSortInstruction.BucketID)
+                                return UtilSort.CORRECT_BUCKET;
+                            return UtilSort.WRONG_HOLDER;
+                        }
+                        Debug.Log("else (not executed)");
                         return UtilSort.WRONG_HOLDER;
                     }
                     else
                     {
-                        return (currentStandingOn != null & CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
+                        Debug.Log("Already executed check");
+                        return (currentStandingOn != null && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
                     }
 
                 case UtilSort.DISPLAY_ELEMENT:
-                    return UtilSort.WRONG_HOLDER;
+                    return (currentInside != null && currentInside.BucketID == bucketSortInstruction.BucketID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
 
                 default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
             }

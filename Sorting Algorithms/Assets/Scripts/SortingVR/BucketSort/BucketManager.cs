@@ -21,6 +21,8 @@ public class BucketManager : MonoBehaviour, IManager {
 
     private SortMain superElement;
 
+    private WaitForSeconds emptyBucketDuration = new WaitForSeconds(0.5f);
+
     public void InitManager()
     {
         buckets = new GameObject[GetComponent<BucketSortManager>().NumberOfBuckets];
@@ -73,22 +75,7 @@ public class BucketManager : MonoBehaviour, IManager {
                 bucket.transform.parent = bucketContainer.transform;
             }
         }
-
-
-
         containsBuckets = true;
-    }
-
-    public void ResetSetup()
-    {
-        DestroyAndReset();
-    }
-
-    public void DestroyAndReset()
-    {
-        UtilSort.DestroyObjects(buckets);
-        containsBuckets = false;
-        Bucket.BUCKET_NR = 0;
     }
 
     public GameObject[] Buckets
@@ -112,23 +99,48 @@ public class BucketManager : MonoBehaviour, IManager {
         }
     }
 
+    //
     public IEnumerator PutElementsForDisplay(int bucketID)
     {
+        //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, false);
+
         Bucket bucket = GetBucket(bucketID);
         bucket.SetEnterTrigger(false);
-
         int numberOfElements = bucket.CurrenHolding.Count;
+
         if (numberOfElements > 0)
         {
+            StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 2));
+            yield return emptyBucketDuration;
+
             for (int y = 0; y < numberOfElements; y++)
             {
-                BucketSortElement element = (BucketSortElement)bucket.RemoveSoringElement();
-                //element.CanEnterBucket = false;
+                SortingElementBase element = bucket.GetElementForDisplay(y);
+                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR + (UtilSort.ABOVE_BUCKET_VR / 4) * y;
+                element.transform.rotation = Quaternion.identity;
+                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 
-                element.transform.position = new Vector3(0f, 2f, 0f);
-                yield return bucketSort.DemoStepDuration;
+                //element.transform.position = new Vector3(0f, 2f, 0f);
+                yield return emptyBucketDuration;
+                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             }
+            bucket.Empty();
         }
+
+        //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, true);
+        superElement.WaitForSupportToComplete--;
+    }
+
+    public void ResetSetup()
+    {
+        DestroyAndReset();
+    }
+
+    public void DestroyAndReset()
+    {
+        UtilSort.DestroyObjects(buckets);
+        containsBuckets = false;
+        Bucket.BUCKET_NR = 0;
     }
 
 

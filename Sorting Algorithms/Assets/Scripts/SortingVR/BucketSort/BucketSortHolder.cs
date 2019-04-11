@@ -29,7 +29,7 @@ public class BucketSortHolder : HolderBase {
         if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Current holding the sorting element that collided
-            BucketSortElement element = registeredAboveHolder.GetComponent<BucketSortElement>();
+            BucketSortElement element = collision.collider.GetComponent<BucketSortElement>();
             CurrentHolding = element;
 
             // Demo
@@ -43,23 +43,23 @@ public class BucketSortHolder : HolderBase {
         }
     }
 
-    protected override void GiveHint()
-    {
-        if (registeredAboveHolder != null && registeredAboveHolder.Instruction != null)
-        {
-            BucketSortInstruction bucketInst = (BucketSortInstruction)registeredAboveHolder.Instruction;
-            int registeredID = registeredAboveHolder.SortingElementID;
-            int nextHolder = bucketInst.NextHolderID;
+    //protected override void GiveHint()
+    //{
+    //    if (registeredAboveHolder != null && registeredAboveHolder.Instruction != null)
+    //    {
+    //        BucketSortInstruction bucketInst = (BucketSortInstruction)registeredAboveHolder.Instruction;
+    //        int registeredID = registeredAboveHolder.SortingElementID;
+    //        int nextHolder = bucketInst.NextHolderID;
 
-            if (nextHolder == holderID)
-                parent.AudioManager.Play(parent.HINT_CORRECT_SOUND);
-            else if (bucketInst.Instruction == Util.INIT_INSTRUCTION)
-            {
+    //        if (nextHolder == holderID)
+    //            parent.AudioManager.Play(parent.HINT_CORRECT_SOUND);
+    //        else if (bucketInst.Instruction == Util.INIT_INSTRUCTION)
+    //        {
 
-            }
-            else
-                base.GiveHint();
-        }
-    }
+    //        }
+    //        else
+    //            base.GiveHint();
+    //    }
+    //}
 
 }

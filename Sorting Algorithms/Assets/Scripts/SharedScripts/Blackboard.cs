@@ -48,4 +48,9 @@ public class Blackboard : MonoBehaviour, IDisplay {
             line.color = UtilSort.BLACKBOARD_TEXT_COLOR;
         }
     }
+
+    public void DestroyContent()
+    {
+        // Nothing to destroy
+    }
 }

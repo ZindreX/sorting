@@ -60,19 +60,15 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             TextMeshPro codelinePro = codeLine.GetComponent<TextMeshPro>();
             codelinePro.fontSize = fontSize; // startPosAndMat.fontSize;
             codelinePro.enableWordWrapping = false;
-            
+            codeLines[x] = codelinePro;
+
             // Rectangle shape
             RectTransform rt = codelinePro.rectTransform;
             rt.sizeDelta = rtDelta;
             rt.transform.position = new Vector3(rt.position.x, rt.position.y, rt.position.z); // x + 1f
 
             // Get line of code from algorithm
-            if (includeLineNr)
-                codeLine.GetComponent<TextMeshPro>().text = algorithm.CollectLine(x);
-            else
-                codeLine.GetComponent<TextMeshPro>().text = algorithm.CollectLine(x).Split(Util.PSEUDO_SPLIT_LINE_ID)[1]; // Insertionsort / bucketsort: update pseudocode (as in bubble-/graph)
-
-            codeLines[x] = codeLine.GetComponent<TextMeshPro>();
+            SetCodeLine(algorithm.CollectLine(x), Util.BLACKBOARD_TEXT_COLOR);
         }
 
         // Move/extend blackboard up if the pseudocode goes below the floor
@@ -99,14 +95,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             // Change text (with or without lineNr)
             if (includeLineNr)
             {
-                if (lineNr < 10)
-                {
-                    codeLines[lineNr].text = " ";
-                    codeLines[lineNr].text += lineNr + ": " + text;
-                }
-                else
-                    codeLines[lineNr].text = lineNr + ": " + text;
-
+                codeLines[lineNr].text = AdjustLineNr(lineNr, text);
             }
             else
                 codeLines[lineNr].text = text;
@@ -116,7 +105,22 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    // optimize?
+    /*  Adjust pseudocode line so that it goes perfectly vertically
+     *  1:
+     *  2:
+     *  .
+     *  .
+     *  .
+     *  9:
+     * 10:
+    */
+    private string AdjustLineNr(int lineNr, string text)
+    {
+        if (lineNr < 10)
+            return "  " + lineNr + ": " + text;
+        return lineNr + ": " + text;
+    }
+
     public void SetCodeLine(string text, Color color)
     {
         string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
@@ -124,8 +128,8 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
 
         if (ValidIndex(index))
         {
-            if (includeLineNr) 
-                codeLines[index].text = text;
+            if (includeLineNr)
+                codeLines[index].text = AdjustLineNr(index, lineOfCodeSplit[1]);
             else
                 codeLines[index].text = lineOfCodeSplit[1];
 
@@ -177,7 +181,6 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     {
         if (codeLines != null)
         {
-
             float lengthFromPseudocode = transform.position.z - playerPos.z;
             float fontSize = (lengthFromPseudocode/2 + lengthFromPseudocode) / algorithm.FontSize;
 
@@ -203,10 +206,12 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
             // Update pseudocode lines
             for (int i=0; i < codeLines.Length; i++)
             {
-                codeLines[i].fontSize = fontSize;
-                codeLines[i].transform.position = NextPseudoCodeLine(i, spaceBetweenLines);
+                if (codeLines[i] != null)
+                {
+                    codeLines[i].fontSize = fontSize;
+                    codeLines[i].transform.position = NextPseudoCodeLine(i, spaceBetweenLines);
+                }
             }
-
             AdjustPseudocodeAboveFloorLevel();
         }
     }
@@ -219,10 +224,14 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
     private void AdjustPseudocodeAboveFloorLevel()
     {
         // Adjust Y
-        float adjustY = codeLines[codeLines.Length - 1].transform.position.y;
-        if (adjustY < 0f)
+        TextMeshPro lastPseudoLine = codeLines[codeLines.Length - 1];
+        if (lastPseudoLine != null)
         {
-            pseudocodeLinesObj.transform.position += new Vector3(0f, Mathf.Abs(adjustY) + algorithm.AdjustYOffset, 0f);
+            float adjustY = lastPseudoLine.transform.position.y;
+            if (adjustY < 0f)
+            {
+                pseudocodeLinesObj.transform.position += new Vector3(0f, Mathf.Abs(adjustY) + algorithm.AdjustYOffset, 0f);
+            }
         }
 
         // Adjust X
@@ -264,7 +273,7 @@ public class PseudoCodeViewer : MonoBehaviour, IDisplay {
         }
     }
 
-    public void DestroyPseudoCode()
+    public void DestroyContent()
     {
         if (codeLines != null)
         {

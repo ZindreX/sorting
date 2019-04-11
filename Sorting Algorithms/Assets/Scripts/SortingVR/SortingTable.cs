@@ -17,8 +17,6 @@ public class SortingTable : StartExchangePosition {
         InScenePosition = new Vector3(0f, 0.3f, 0f);
     }
 
-
-
     public Transform ReturnPosition
     {
         get { return returnPosition; }
