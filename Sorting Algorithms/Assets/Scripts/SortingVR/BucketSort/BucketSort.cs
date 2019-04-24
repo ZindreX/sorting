@@ -595,13 +595,11 @@ public class BucketSort : SortAlgorithm {
                 case UtilSort.DISPLAY_ELEMENT:
                     if (increment)
                     {
-                        //sortingElement.CanEnterBucket = false;
                         sortingElement.transform.position = bucketManager.GetBucket(bucketInstruction.BucketID).transform.position + UtilSort.ABOVE_BUCKET_VR;
                         sortingElement.gameObject.SetActive(true);
                     }
                     else
                     {
-                        //sortingElement.CanEnterBucket = true;
                         sortingElement.gameObject.SetActive(false);
                     }
 
@@ -615,7 +613,10 @@ public class BucketSort : SortAlgorithm {
                     break;
             }
         }
-        sortMain.WaitForSupportToComplete--;
+
+        // Display element reports itself when it's done
+        if (instruction.Instruction != UtilSort.DISPLAY_ELEMENT)
+            sortMain.WaitForSupportToComplete--;
     }
     #endregion
 

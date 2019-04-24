@@ -12,9 +12,10 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
     private TextMeshPro percentText, instructionsText;
 
     private int currentProgress, userActionCount, totaltInstructions;
+    private bool standard;
 
-    private Vector3 increaseProgressSize = new Vector3(0f, 0.01f, 0f);
-    private Vector3 moveProgressBar = new Vector3(0.01f, 0f, 0f);
+    private Vector3 increaseProgressSizePerStep = new Vector3(0f, 0.01f, 0f);
+    private Vector3 moveProgressBarPerStep = new Vector3(0.01f, 0f, 0f);
     private Vector3 startPos;
 
     private void Awake()
@@ -29,20 +30,36 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
         this.totaltInstructions = totaltInstructions;
 
         float progress = 1f / userActionCount;
-        increaseProgressSize = new Vector3(0f, progress, 0f);
-        moveProgressBar = new Vector3(progress, 0f, 0f);
+        increaseProgressSizePerStep = new Vector3(0f, progress, 0f);
+        moveProgressBarPerStep = new Vector3(progress, 0f, 0f);
+    }
+
+    public void InitProgressTracker(int total)
+    {
+        standard = true;
+        InitProgressTracker(total, total);
+        progressbar.transform.localScale += increaseProgressSizePerStep * 15f;
+        moveProgressBarPerStep /= 3.35f;
+        progressbar.transform.position += moveProgressBarPerStep * 5;
     }
 
     public void Increment()
     {
         currentProgress++;
 
-        // Percent
-        progressbar.transform.localScale += increaseProgressSize;
-        progressbar.transform.position += moveProgressBar;
+        if (standard)
+        {
+            progressbar.transform.position += moveProgressBarPerStep;
+        }
+        else
+        {
+            // Percent
+            progressbar.transform.localScale += increaseProgressSizePerStep;
+            progressbar.transform.position += moveProgressBarPerStep;
 
-        // Instructions
-        instructionsText.text = currentProgress + "/" + userActionCount;
+            // Instructions
+            instructionsText.text = currentProgress + "/" + userActionCount;
+        }
     }
 
     public void Decrement()
@@ -50,8 +67,8 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
         currentProgress--;
 
         // Percent
-        progressbar.transform.localScale -= increaseProgressSize;
-        progressbar.transform.position -= moveProgressBar;
+        progressbar.transform.localScale -= increaseProgressSizePerStep;
+        progressbar.transform.position -= moveProgressBarPerStep;
 
         // Instructions
         instructionsText.text = currentProgress + "/" + userActionCount;
@@ -67,8 +84,8 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
 
     public void ResetProgress()
     {
-        progressbar.transform.localScale -= increaseProgressSize * currentProgress;
-        progressbar.transform.position -= moveProgressBar * currentProgress;
+        progressbar.transform.localScale -= increaseProgressSizePerStep * currentProgress;
+        progressbar.transform.position -= moveProgressBarPerStep * currentProgress;
         currentProgress = 0;
 
         instructionsText.text = "";

@@ -78,7 +78,7 @@ public class Util : MonoBehaviour {
 
 
     // ----- Area stuff -----
-    public const string INIT_AREA = "Init area", LOAD_SCENE = "Load scene", HEAD_COLLIDER = "HeadCollider";
+    public const string INIT_AREA = "Init area", LOAD_SCENE = "Load scene", HEAD_COLLIDER = "HeadCollider", FLOOR_TAG = "Floor";
 
 
     /* Creates a list of objects

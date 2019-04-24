@@ -95,7 +95,9 @@ public class Section : MonoBehaviour {
     public void ReportItemClicked(string sectionID, string itemID, string itemDescription)
     {
         sectionManager.UpdateInteraction(sectionID, itemID, itemDescription);
-        audioManager.Play("ButtonClick");
+
+        if (audioManager != null)
+            audioManager.Play("ButtonClick");
     }
 
     // ----------------------- Init item methods ----------------------- 

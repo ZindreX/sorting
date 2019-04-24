@@ -44,7 +44,6 @@
  * >>> BucketSort
  *  > User test: ready?
  *  > New Demo:
- *      - Last for-loops buggy pseudocode
  *      - Step-by-step: backwards needs more work
  * 
  * 
