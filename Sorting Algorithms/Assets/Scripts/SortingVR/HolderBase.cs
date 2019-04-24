@@ -93,7 +93,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     {
         //Debug.Log("Entering holder" + holderID + ": " + other.tag);
 
-        if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
+        if (other.tag == UtilSort.SORTING_ELEMENT_TAG) // .compareTag()
         {
             SortingElementBase element = other.GetComponent<SortingElementBase>();
 
