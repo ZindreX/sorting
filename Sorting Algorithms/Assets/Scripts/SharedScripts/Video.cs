@@ -23,9 +23,19 @@ public class Video : MonoBehaviour {
 
     private Vector3 startPos;
 
+    private Animator animator;
+    private readonly string VHS_ENTER_ANIMATION = "Enter";
+
+    private bool releasedFromHand;
+
+    private WaitForSeconds enterDuration = new WaitForSeconds(1f);
+
     private void Awake()
     {
         startPos = transform.position;
+        animator = GetComponentInChildren<Animator>();
+
+        releasedFromHand = true;
 
         // >>> Set title
         Component[] components = GetComponentsInChildren<TextMeshPro>();
@@ -72,6 +82,12 @@ public class Video : MonoBehaviour {
         //audioSource.Play();
     }
 
+    private void Update()
+    {
+        if (transform.position.y < 0)
+            transform.position = startPos;
+    }
+
     public string Title
     {
         get { return title; }
@@ -87,9 +103,29 @@ public class Video : MonoBehaviour {
         get { return useUrl; }
     }
 
+    public double UrlLength
+    {
+        get { return videoPlayer.length; }
+    }
+
     public VideoClip VideoClip
     {
         get { return videoClip; }
+    }
+
+    public bool ReleasedFromHand
+    {
+        get { return releasedFromHand; }
+        set { releasedFromHand = value; }
+    }
+
+    public IEnumerator Enter()
+    {
+        transform.rotation = Quaternion.identity;
+        transform.Rotate(0, -90, 0);
+        animator.SetBool(VHS_ENTER_ANIMATION, true);
+        yield return enterDuration;
+        animator.SetBool(VHS_ENTER_ANIMATION, false);
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -27,7 +27,7 @@ public class ToggleButton : SettingsMenuButton {
 
     public void InitToggleButton(bool state)
     {
-        if (state)
+        if (!this.state && state)
             Toggle();
     }
 

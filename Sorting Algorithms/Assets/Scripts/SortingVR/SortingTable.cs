@@ -12,7 +12,7 @@ public class SortingTable : StartExchangePosition {
         base.Awake();
 
         Section sortingTableSection = GetComponentInChildren<Section>();
-        sortingTableSection.SectionManager = FindObjectOfType<SettingsBase>();
+        sortingTableSection.SectionManager = FindObjectOfType<SortSettings>();
 
         InScenePosition = new Vector3(0f, 0.3f, 0f);
     }

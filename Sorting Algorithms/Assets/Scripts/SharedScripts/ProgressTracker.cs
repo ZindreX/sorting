@@ -8,11 +8,13 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
     [SerializeField]
     private GameObject progressbar;
 
+    private Transform progressbarInitTransform;
+
     [SerializeField]
     private TextMeshPro percentText, instructionsText;
 
     private int currentProgress, userActionCount, totaltInstructions;
-    private bool standard;
+    private bool otherUseCase; // temp fix
 
     private Vector3 increaseProgressSizePerStep = new Vector3(0f, 0.01f, 0f);
     private Vector3 moveProgressBarPerStep = new Vector3(0.01f, 0f, 0f);
@@ -20,7 +22,11 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
 
     private void Awake()
     {
+        // Position of the game object (used in graphVR to move it out -> pseudocode visibility)
         startPos = transform.position;
+
+        // For resetting the progressbar
+        progressbarInitTransform = progressbar.transform;
     }
 
     public void InitProgressTracker(int userActionCount, int totaltInstructions)
@@ -31,23 +37,29 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
 
         float progress = 1f / userActionCount;
         increaseProgressSizePerStep = new Vector3(0f, progress, 0f);
-        moveProgressBarPerStep = new Vector3(progress, 0f, 0f);
+
+        if (otherUseCase)
+            moveProgressBarPerStep = new Vector3(0f, 0f, progress); //???
+        else
+            moveProgressBarPerStep = new Vector3(progress, 0f, 0f);
     }
 
     public void InitProgressTracker(int total)
     {
-        standard = true;
+        otherUseCase = true;
         InitProgressTracker(total, total);
-        progressbar.transform.localScale += increaseProgressSizePerStep * 15f;
+        progressbar.transform.localScale += increaseProgressSizePerStep * 5f;
         moveProgressBarPerStep /= 3.35f;
-        progressbar.transform.position += moveProgressBarPerStep * 5;
+        progressbar.transform.position += moveProgressBarPerStep * 2;
+
+
     }
 
     public void Increment()
     {
         currentProgress++;
 
-        if (standard)
+        if (otherUseCase)
         {
             progressbar.transform.position += moveProgressBarPerStep;
         }
@@ -86,6 +98,7 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
     {
         progressbar.transform.localScale -= increaseProgressSizePerStep * currentProgress;
         progressbar.transform.position -= moveProgressBarPerStep * currentProgress;
+
         currentProgress = 0;
 
         instructionsText.text = "";
