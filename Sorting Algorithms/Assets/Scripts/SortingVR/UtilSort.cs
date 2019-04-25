@@ -45,7 +45,7 @@ public class UtilSort : Util {
 
     // ******************************************** Collision/tags ********************************************
     // Object types
-    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket", TOOLTIPS_ELEMENT = "Tooltips element";
+    public static readonly string PLAYER_TAG = "Player", SORTING_ELEMENT_TAG = "SortingElement", HOLDER_TAG = "Holder", BUCKET_TAG = "Bucket";
 
 
     // ******************************************** Visualization ********************************************

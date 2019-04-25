@@ -24,7 +24,7 @@ public class TooltipsHolder : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag(UtilSort.TOOLTIPS_ELEMENT))
+        if (collision.collider.CompareTag(UtilSort.SORTING_ELEMENT_TAG))
         {
             tooltipsText.GetComponent<TextMeshPro>().text = message;
 

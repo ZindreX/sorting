@@ -6,6 +6,19 @@ using TMPro;
 
 public class Monitor : SettingsBase {
 
+    // Editor
+    [SerializeField]
+    private Transform hatchEntrance, returnPosition;
+
+    [SerializeField]
+    private RenderTexture monitorRendererTexture;
+
+    [SerializeField]
+    private VideoClip[] videoClips;
+
+    // Screen text
+    private TextMeshPro centerScreenText, cornerScreenText;
+
     // Const variables
     public const string CASSETTE_TAG = "Cassette";
     public const string CHANNEL_CONTROL_SECTION = "Channel control", NEXT_VIDEO = "Next", PREV_VIDEO = "Prev";
@@ -13,48 +26,36 @@ public class Monitor : SettingsBase {
     public const string VOLUME_CONTROL_SECTION = "Volume control", VOLUME_DOWN = "Volume down", VOLUME_UP = "Volume up";
 
     // Animation
-    private Animator animator;
-    private readonly string NO_VHS_IDLE = "MonitorNoVHS", PLAY_VHS = "VHSPlay", STOP_VHS = "VHSStopPlaying";
-    private bool vhsReceived;
+    public readonly string NO_VHS_IDLE = "MonitorNoVHS", PLAY_VHS = "VHSPlay", STOP_VHS = "VHSStopPlaying";
 
-    [SerializeField]
-    private Transform hatchEntrance, returnPosition;
-
-    private Video currentPlayingVHS;
-    private bool currentPlayingVideoIsCompleted;
 
     // Variables
     private int currentClipIndex, numberOfVideos;
     private int prevSecond = -1, videoDuration;
-    private bool preinstalledVideos;
+    private bool preinstalledVideos, vhsReceived, currentPlayingVideoIsCompleted;
 
-    // Buttons
-    private ToggleButton playButton;
-
-    [SerializeField]
-    private RenderTexture monitorRendererTexture;
-
-    // Screen text
-    private TextMeshPro centerScreenText, cornerScreenText;
+    private Video currentPlayingVHS;
 
     // Duration stuff
     private WaitForSeconds displayScreenTextDuration = new WaitForSeconds(3f);
-    private WaitForSeconds enterVideoDuration = new WaitForSeconds(1f);
+    private WaitForSeconds insertVideoDuration = new WaitForSeconds(1f);
 
-    // Video stuff
+    // Buttons
+    private ToggleButton playButton;
+    
+    private Animator animator;
     private VideoPlayer videoPlayer;
-
-    [SerializeField]
-    private VideoClip[] videoClips;
-
+    private BoxCollider vhsTrigger;
     private ProgressTracker progressTracker;
 
-    private BoxCollider vhsTrigger;
-
-    protected override void Awake()
-    {
+    protected override void Awake() {
+        // Do settings base awake (collect sections/buttons)
         base.Awake();
 
+        // Buttons
+        playButton = GetComponentInChildren<ToggleButton>();
+
+        // Make screen black
         monitorRendererTexture.Release();
 
         currentClipIndex = 0;
@@ -81,9 +82,6 @@ public class Monitor : SettingsBase {
 
         videoPlayer = GetComponent<VideoPlayer>();
 
-        // Buttons
-        playButton = GetComponentInChildren<ToggleButton>();
-
         // Progress bar
         progressTracker = GetComponentInChildren<ProgressTracker>();
 
@@ -109,25 +107,27 @@ public class Monitor : SettingsBase {
     {
         if (videoPlayer.isPlaying && (int)videoPlayer.time != prevSecond)
         {
+            // Update progress bar
             cornerScreenText.text = (int)videoPlayer.time + "/" + videoDuration;
             progressTracker.Increment();
             prevSecond = (int)videoPlayer.time;
         }
         else if ((int)videoPlayer.time == videoDuration)
         {
+            Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> Video watched - ejecting video");
+            // Eject video when done playing
             if (currentPlayingVHS != null)
                 EjectVideo(null);
         }
         else if (vhsReceived)
         {
+            // Video received, and when the user's hand has let go of the cassette then start the insert animation
             if (currentPlayingVHS != null && currentPlayingVHS.ReleasedFromHand)
             {
-                StartCoroutine(EnterVideo(currentPlayingVHS));
+                StartCoroutine(InsertVideo(currentPlayingVHS));
                 vhsReceived = false;
             }
         }
-
-
     }
 
     public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
@@ -209,6 +209,7 @@ public class Monitor : SettingsBase {
         throw new System.NotImplementedException();
     }
 
+    // Displays a text in the center of the screen for N seconds, then remove it
     private IEnumerator UpdateCenterScreenText(string text)
     {
         centerScreenText.text = text;
@@ -216,6 +217,7 @@ public class Monitor : SettingsBase {
         centerScreenText.text = "";
     }
 
+    // Displays a text in the up right corner of the screen for N seconds, then remove it
     private IEnumerator UpdateCornerScreenText(string text)
     {
         cornerScreenText.text = text;
@@ -223,6 +225,7 @@ public class Monitor : SettingsBase {
         cornerScreenText.text = "";
     }
 
+    // Start watching the video
     private IEnumerator StartVideo(Video video)
     {
         currentPlayingVideoIsCompleted = false;
@@ -257,6 +260,7 @@ public class Monitor : SettingsBase {
         video.gameObject.SetActive(false);
     }
 
+    // Tells the unit that a video has been inserted - check update loop for continuation
     private void PrepareEnterVideo(Video vhs)
     {
         currentPlayingVHS = vhs;
@@ -268,45 +272,50 @@ public class Monitor : SettingsBase {
             videoDuration = (int)vhs.UrlLength; // url time (seconds)
     }
 
+    // Returns the duration of a video in seconds
     private double CalculateVideoDuration(VideoClip videoClip)
     {
         return videoClip.frameCount / videoClip.frameRate;
     }
 
-    private IEnumerator EnterVideo(Video vhs)
+    // Inserts the video, disables the trigger (for other incoming cassettes)
+    private IEnumerator InsertVideo(Video vhs)
     {
         vhsTrigger.enabled = false;
 
         // Play animation (vhs entering)
         MoveVideo(hatchEntrance.position);
-        StartCoroutine(vhs.Enter());
-        yield return enterVideoDuration;
+        StartCoroutine(vhs.Insert());
+        yield return insertVideoDuration;
 
         // Monitor animation
         animator.Play(PLAY_VHS);
-
-
         yield return StartVideo(vhs);
     }
 
+    // Eject video (not completly animated yet), enable trigger
     private IEnumerator EjectVideo(Video vhs)
     {
         vhsTrigger.enabled = true;
 
         animator.Play(STOP_VHS);
 
+        // Activate the cassette which has been played
         currentPlayingVHS.gameObject.SetActive(true);
         currentPlayingVHS.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 
-        yield return enterVideoDuration;
+        yield return insertVideoDuration;
 
+        // Reset
         currentPlayingVideoIsCompleted = true;
         currentPlayingVHS = null;
 
+        // Not used anymore (disabled interaction during playtime, so current need to be ejected before inserting a new cassette)
         if (vhs != null)
             PrepareEnterVideo(vhs);
     }
 
+    // Moving cassette and freeze its position/rotation: (1) infront of the monitor inside the insertion slot, (2) returned to the table next to the monitor
     private void MoveVideo(Vector3 pos)
     {
         if (currentPlayingVHS != null)
@@ -320,6 +329,7 @@ public class Monitor : SettingsBase {
     {
         Video vhs = other.GetComponent<Video>();
 
+        // If video inserted, prepare for animation
         if (vhs != null && currentPlayingVHS == null)
             PrepareEnterVideo(vhs);
     }

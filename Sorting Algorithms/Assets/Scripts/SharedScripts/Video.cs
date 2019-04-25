@@ -119,7 +119,7 @@ public class Video : MonoBehaviour {
         set { releasedFromHand = value; }
     }
 
-    public IEnumerator Enter()
+    public IEnumerator Insert()
     {
         transform.rotation = Quaternion.identity;
         transform.Rotate(0, -90, 0);
