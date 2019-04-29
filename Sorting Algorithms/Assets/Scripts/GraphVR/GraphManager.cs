@@ -30,7 +30,7 @@ public abstract class GraphManager : MonoBehaviour {
         edges = new List<GameObject>();
 
         // Cleanup?
-        GraphMain graphMain = GetComponent<GraphMain>();
+        GraphMain graphMain = GetComponentInParent<GraphMain>();
         nodePrefab = graphMain.nodePrefab;
         undirectedEdgePrefab = graphMain.undirectedEdgePrefab;
         directedEdgePrefab = graphMain.directedEdgePrefab;

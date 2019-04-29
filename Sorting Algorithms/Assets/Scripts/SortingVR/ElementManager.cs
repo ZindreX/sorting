@@ -14,6 +14,9 @@ public class ElementManager : MonoBehaviour, IManager {
     private GameObject sortingElementPrefab, sortingTableElementsObj;
     private GameObject[] sortingElements;
 
+    [SerializeField]
+    private int minValue = 0, maxValue = 100;
+
     private SortingElementBase currentMoving;
     private bool containsElements = false;
     private SortMain superElement;
@@ -23,6 +26,15 @@ public class ElementManager : MonoBehaviour, IManager {
         superElement = GetComponent<SortMain>();
     }
 
+    public int MinValue
+    {
+        get { return minValue; }
+    }
+
+    public int MaxValue
+    {
+        get { return maxValue; }
+    }
 
     public GameObject[] SortingElements
     {
@@ -34,6 +46,11 @@ public class ElementManager : MonoBehaviour, IManager {
         if (index >= 0 && index < sortingElements.Length)
             return sortingElements[index];
         return null;
+    }
+
+    public int GenerateValue()
+    {
+        return Random.Range(minValue, maxValue);
     }
 
     // Creation without rules
@@ -85,10 +102,10 @@ public class ElementManager : MonoBehaviour, IManager {
 
         for (int x = 0; x < numberOfElements; x++)
         {
-            int newValue = Random.Range(0, UtilSort.MAX_VALUE);
+            int newValue = GenerateValue();
             while (!allowDuplicates && usedValues.Contains(newValue))
             {
-                newValue = Random.Range(0, UtilSort.MAX_VALUE);
+                newValue = GenerateValue();
             }   
             usedValues.Add(newValue);
 

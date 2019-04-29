@@ -323,7 +323,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     {
         if (nodeInstruction != null)
         {
-            Debug.Log(nodeInstruction.DebugInfo());
+            //Debug.Log(nodeInstruction.DebugInfo());
 
             // Debugging
             instruction = nodeInstruction.Instruction;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StepByStepManager : InstructionControlBase {
+public class DemoManager : InstructionControlBase {
 
     /* -------------------------------------------- New Demo / Step by step --------------------------------------------
      * 

@@ -29,7 +29,7 @@ public class PositionManager : MonoBehaviour, IMoveAble {
     public void InitPositionManager(bool showDistance)
     {
         this.showDistance = showDistance;
-        SetPlayerPositionText("\nStart area");
+        SetPlayerPositionText("Start area");
         playerWithinGoalPosition = false;
 
         if (!showDistance)
@@ -76,7 +76,7 @@ public class PositionManager : MonoBehaviour, IMoveAble {
             Vector3 playerPos = playerCamera.transform.position;
             if (playerPos.z <= -2f)
             {
-                SetPlayerPositionText("\nStart area");
+                SetPlayerPositionText("Start area");
                 pseudoCodeViewer.ChangeSizeOfPseudocode(playerPos);
 
                 RotateNodesTowards(playerPos);
@@ -143,7 +143,7 @@ public class PositionManager : MonoBehaviour, IMoveAble {
 
     private void SetPlayerPositionText(string position)
     {
-        playerPositionText.text = "Player position: " + position;
+        playerPositionText.text = "Player: " + position;
     }
 
     public void RotateNodesTowards(Vector3 pos)

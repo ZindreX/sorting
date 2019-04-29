@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-[RequireComponent(typeof(GraphManager))]
-[RequireComponent(typeof(UserTestManager))]
 public class GraphMain : MainManager {
 
     [Header("Graph prefabs")]
@@ -62,6 +60,8 @@ public class GraphMain : MainManager {
     // Used by Pointer when selecting start-/end node(s)
     private int chosenNodes, numberOfNodesToChoose;
 
+    private Vector3 pseudocodeChangeSizeStartPos = new Vector3(0f, 0f, 0f);
+
     // Update list visual after user has performed correct action
     private ListVisualInstruction updateListVisualInstruction;
 
@@ -75,8 +75,10 @@ public class GraphMain : MainManager {
 
         // >>> Basic components
         graphSettings = settingsObj.GetComponent<GraphSettings>();
-        userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
-        stepByStepManager = GetComponent(typeof(StepByStepManager)) as StepByStepManager;
+
+        stepByStepManager = GetComponentInChildren<DemoManager>();
+        userTestManager = GetComponentInChildren<UserTestManager>();
+
         posManager = FindObjectOfType<PositionManager>();
 
         startPillar = FindObjectOfType<StartPillar>();
@@ -217,7 +219,7 @@ public class GraphMain : MainManager {
                 pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
                 pseudoCodeViewer.PseudoCodeSetup();
                 // Fix pseudocode for graph
-                pseudoCodeViewer.ChangeSizeOfPseudocode(new Vector3(0f, 0f, 0f));
+                pseudoCodeViewer.ChangeSizeOfPseudocode(pseudocodeChangeSizeStartPos);
             }
 
             if (difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
@@ -237,7 +239,7 @@ public class GraphMain : MainManager {
             pseudoCodeViewer.PseudoCodeSetup();
 
             // Fix pseudocode for graph
-            pseudoCodeViewer.ChangeSizeOfPseudocode(new Vector3(0f, 0f, 0f));
+            pseudoCodeViewer.ChangeSizeOfPseudocode(pseudocodeChangeSizeStartPos);
 
             // List visual
             listVisual.InitListVisual(graphAlgorithm.GetListType(), algorithmSpeed);
@@ -764,9 +766,9 @@ public class GraphMain : MainManager {
     {
         switch (graphStructure)
         {
-            case UtilGraph.GRID_GRAPH: return GetComponent<GridManager>();
-            case UtilGraph.TREE_GRAPH: return GetComponent<TreeManager>();
-            case UtilGraph.RANDOM_GRAPH: return GetComponent<RandomGraphManager>();
+            case UtilGraph.GRID_GRAPH: return GetComponentInChildren<GridManager>();
+            case UtilGraph.TREE_GRAPH: return GetComponentInChildren<TreeManager>();
+            case UtilGraph.RANDOM_GRAPH: return GetComponentInChildren<RandomGraphManager>();
 
             default: Debug.Log("Graph structure '" + graphStructure + "' not found."); break;
         }

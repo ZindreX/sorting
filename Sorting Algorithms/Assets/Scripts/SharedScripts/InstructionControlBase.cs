@@ -22,7 +22,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
 
     private void Awake()
     {
-        progressTracker = FindObjectOfType<ProgressTracker>();
+        progressTracker = GetComponentInChildren<ProgressTracker>();
         audioManager = FindObjectOfType<AudioManager>();
     }
 
@@ -82,7 +82,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Can't increment, instructionNr: " + currentInstructionNr);
+            //Debug.Log("Can't increment, instructionNr: " + currentInstructionNr);
             return false;
         }
     }

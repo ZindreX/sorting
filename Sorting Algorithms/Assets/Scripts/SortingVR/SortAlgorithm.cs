@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     // value1 <- pivot value, value2 <- compare value (usually)
+
+    protected int minValue, maxValue;
     protected int value1 = UtilSort.INIT_STATE, value2 = UtilSort.INIT_STATE - 1;
     protected string element1Value, element2Value;
 
@@ -15,6 +17,9 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     {
         this.sortMain = sortMain;
         InitTeachingAlgorithm(algorithmSpeed);
+
+        minValue = sortMain.ElementManager.MinValue;
+        maxValue = sortMain.ElementManager.MaxValue;
     }
 
     public override void AddSkipAbleInstructions()

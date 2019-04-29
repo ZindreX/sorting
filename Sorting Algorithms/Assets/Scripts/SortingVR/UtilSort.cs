@@ -15,7 +15,8 @@ public class UtilSort : Util {
     public const string NONE = "None", WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
 
     // Rules (numbers)
-    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_VALUE = 100;
+    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8;
+    //public static int MAX_VALUE = 100;
 
     // ******************************************** Instructions ******************************************** 
     // Instructions

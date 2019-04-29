@@ -86,7 +86,7 @@ public class BucketSort : SortAlgorithm {
         switch (lineNr)
         {
             //case 2: return init ? "    for i=0 to N:" : "    for i=" + i + " to " + numberOfBuckets + ":";
-            case 3: return init ? "        bucket = list[" + i + "] * N / MAX_VALUE" : "        bucket = " + element1Value  + " * " + numberOfBuckets + " / " + UtilSort.MAX_VALUE;
+            case 3: return init ? "        bucket = list[" + i + "] * N / MAX_VALUE" : "        bucket = " + element1Value  + " * " + numberOfBuckets + " / " + sortMain.ElementManager.MaxValue; // UtilSort.MAX_VALUE;
             //case 4: return init ? "        buckets[bucket] <- list[i]" : "        buckets[" + bucketIndex + "] <- list[" + i + "]";
             case 10: return init ? "            list[k] = buckets[i][j]" : "            list[" + k + "] = buckets[" + i + "][" + j + "]";
             case 11: return init ? "            k = k + 1" : "            k = " + k + " + 1";
@@ -151,10 +151,10 @@ public class BucketSort : SortAlgorithm {
     }
 
     #region Bucket Sort: Standard 1
-    public static GameObject[] BucketSortStandard(GameObject[] sortingElements, int numberOfBuckets)
+    public static GameObject[] BucketSortStandard(GameObject[] sortingElements, int numberOfBuckets, int min, int max)
     {
         // Find min-/ max values
-        int minValue = UtilSort.MAX_VALUE, maxValue = 0;
+        int minValue = max, maxValue = min;
         for (int i = 0; i < sortingElements.Length; i++)
         {
             int value = sortingElements[i].GetComponent<BucketSortElement>().Value;
@@ -196,13 +196,13 @@ public class BucketSort : SortAlgorithm {
     #endregion
 
     #region Bucket Sort: Standard 2
-    public static GameObject[] BucketSortStandard2(GameObject[] sortingElements, int numberOfBuckets)
+    public static GameObject[] BucketSortStandard2(GameObject[] sortingElements, int numberOfBuckets, int max)
     {
         // Find number of elements per bucket, + counter for later use
         int[] numberOfElementsPerBucket = new int[numberOfBuckets], counters = new int[numberOfBuckets];
         for (int i=0; i < sortingElements.Length; i++)
         {
-            int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets);
+            int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets, max);
             numberOfElementsPerBucket[index] += 1;
             counters[index] += 1;
         }
@@ -217,7 +217,7 @@ public class BucketSort : SortAlgorithm {
         // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
-            int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets);
+            int index = BucketIndex(sortingElements[i].GetComponent<SortingElementBase>().Value, numberOfBuckets, max);
             int placeIn = numberOfElementsPerBucket[index] - counters[index];
             counters[index]--;
             buckets[index][placeIn] = sortingElements[i];
@@ -246,9 +246,9 @@ public class BucketSort : SortAlgorithm {
         return sortingElements;
     }
 
-    private static int BucketIndex(int value, int numberOfBuckets)
+    private static int BucketIndex(int value, int numberOfBuckets, int maxValue)
     {
-        return value * numberOfBuckets / UtilSort.MAX_VALUE; // max + 1 ~?
+        return value * numberOfBuckets / maxValue; // max + 1 ~?                            // TODO: negative values
     }
 
     #endregion
@@ -294,7 +294,7 @@ public class BucketSort : SortAlgorithm {
             PreparePseudocodeValue(element.GetComponent<SortingElementBase>().Value, 1);
 
             // Bucket index
-            bucketIndex = BucketIndex(value1, numberOfBuckets);
+            bucketIndex = BucketIndex(value1, numberOfBuckets, maxValue);
 
             // Line 3 (Display bucket index)
             yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
@@ -547,7 +547,7 @@ public class BucketSort : SortAlgorithm {
 
             case UtilSort.MOVE_BACK_INST:
                 lineOfCode = 10;
-                PreparePseudocodeValue(sortingElement.Value, 1);
+                PreparePseudocodeValue(sortingElement.Value, 2);
                 k = bucketInstruction.NextHolderID; // ???
 
                 if (increment)
@@ -757,7 +757,7 @@ public class BucketSort : SortAlgorithm {
 
             // Get element
             BucketSortInstruction element = (BucketSortInstruction)sortingElements[i];
-            int bucketIndex = BucketIndex(element.Value, numberOfBuckets);
+            int bucketIndex = BucketIndex(element.Value, numberOfBuckets, maxValue);
 
             // Line 3 (Display bucket index)
             instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.BUCKET_INDEX_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, true, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
@@ -796,7 +796,7 @@ public class BucketSort : SortAlgorithm {
                 BucketSortInstruction t = (BucketSortInstruction)sortingElements[y];
                 if (sorted[x] == t.Value)
                 {
-                    int bucketIndex = BucketIndex(t.Value, bucketSortManager.NumberOfBuckets);
+                    int bucketIndex = BucketIndex(t.Value, bucketSortManager.NumberOfBuckets, maxValue);
                     BucketSortInstruction displayInstruction = new BucketSortInstruction(UtilSort.DISPLAY_ELEMENT, instructionNr, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, t.SortingElementID, t.Value, false, true, Util.NO_VALUE, UtilSort.NO_DESTINATION, bucketIndex);
                     instructions.Add(instructionNr++, displayInstruction);
                     buckets[bucketIndex].Add(displayInstruction);

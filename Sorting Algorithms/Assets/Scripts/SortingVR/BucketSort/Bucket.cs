@@ -21,6 +21,15 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     [SerializeField]
     private MeshRenderer innerBucket;
 
+    [SerializeField]
+    private GameObject displayWalls;
+
+    [SerializeField]
+    private Transform displayStartTransform;
+
+    [SerializeField]
+    private TextMeshPro bucketIndexText, bucketCapacityText;
+
     private SphereCollider enterTrigger;
     private CapsuleCollider onTopOfBucketTrigger;
 
@@ -38,15 +47,28 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     void Awake()
     {
         bucketID = BUCKET_NR++;
-        bucketCapacity = CreateBucketCapacity();
         currentHolding = new List<SortingElementBase>();
-        GetComponentInChildren<TextMeshPro>().text = bucketID.ToString();
+
+        // Bucket index text
+        bucketIndexText.text = bucketID.ToString();
 
         enterTrigger = GetComponent<SphereCollider>();
         onTopOfBucketTrigger = GetComponent<CapsuleCollider>();
         SetEnterTrigger(true);
 
         animator = GetComponentInChildren<Animator>();
+
+        // Disable invisible walls for display
+        displayWalls.SetActive(false);
+    }
+
+    private void Start()
+    {
+        BUCKET_SIZE = parent.ElementManager.MaxValue / ((BucketSortManager)parent.AlgorithmManagerBase).NumberOfBuckets;
+        bucketCapacity = CreateBucketCapacity();
+
+        // Bucket capacity text
+        bucketCapacityText.text = bucketCapacity[0] + " - " + (bucketCapacity[1] - 1);
     }
 
     public SortMain SuperElement
@@ -82,6 +104,17 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     {
         enterTrigger.enabled = active;
         onTopOfBucketTrigger.enabled = !active;
+    }
+
+    public void SetDisplayWallsActive(bool active)
+    {
+        displayWalls.SetActive(true);
+    }
+
+    public Vector3 DisplayNextPosition(int i)
+    {
+        Vector3 pos = displayStartTransform.position;
+        return pos + new Vector3(pos.x, pos.y * i, pos.z);
     }
 
     public static int BucketSize(int numberOfBuckets, int maxValue)
@@ -213,6 +246,9 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             {
                 Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> ON TOP TRIGGER");
                 sortingElement.CurrentInside = this;
+                sortingElement.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                sortingElement.GetComponent<Rigidbody>().constraints = ~RigidbodyConstraints.FreezePositionY;
+
             }
         }
     }

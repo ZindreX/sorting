@@ -42,7 +42,7 @@ public abstract class MainManager : MonoBehaviour {
 
     protected DemoDevice demoDevice;
 
-    protected StepByStepManager stepByStepManager;
+    protected DemoManager stepByStepManager;
     protected UserTestManager userTestManager;
 
     // Audio

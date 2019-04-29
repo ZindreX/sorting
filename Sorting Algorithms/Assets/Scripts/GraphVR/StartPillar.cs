@@ -21,7 +21,7 @@ public class StartPillar : StartExchangePosition {
         inScenePosition = new Vector3(-0.65f, 0.5f, -2.3f);
 
         Section startPillarSection = GetComponentInChildren<Section>();
-        startPillarSection.SectionManager = FindObjectOfType<SettingsBase>();
+        startPillarSection.SectionManager = FindObjectOfType<GraphSettings>();
         pointer = FindObjectOfType<Pointer>();
     }
 

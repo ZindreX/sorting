@@ -8,7 +8,7 @@ public class BucketManager : MonoBehaviour, IManager {
     private GameObject bucketPrefab;
 
     [SerializeField]
-    private Transform firstBucketPosition, firstRowUserTest, secondRowUserTest;
+    private Transform firstBucketPosition, firstRowUserTest, secondRowUserTest; // first bucket (10): x=-2.219
 
     [SerializeField]
     private GameObject bucketContainer;
@@ -21,7 +21,7 @@ public class BucketManager : MonoBehaviour, IManager {
 
     private SortMain superElement;
 
-    private WaitForSeconds emptyBucketDuration = new WaitForSeconds(0.5f);
+    private WaitForSeconds emptyBucketDuration = new WaitForSeconds(2f);
 
     public void InitManager()
     {
@@ -106,6 +106,9 @@ public class BucketManager : MonoBehaviour, IManager {
 
         Bucket bucket = GetBucket(bucketID);
         bucket.SetEnterTrigger(false);
+        bucket.SetDisplayWallsActive(true);
+        yield return emptyBucketDuration;
+
         int numberOfElements = bucket.CurrenHolding.Count;
 
         if (numberOfElements > 0)
@@ -116,9 +119,8 @@ public class BucketManager : MonoBehaviour, IManager {
             for (int y = 0; y < numberOfElements; y++)
             {
                 SortingElementBase element = bucket.GetElementForDisplay(y);
-                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR + (UtilSort.ABOVE_BUCKET_VR / 4) * y;
+                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;// + (UtilSort.ABOVE_BUCKET_VR / 10) * y;
                 element.transform.rotation = Quaternion.identity;
-                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 
                 //element.transform.position = new Vector3(0f, 2f, 0f);
                 yield return emptyBucketDuration;
@@ -128,6 +130,7 @@ public class BucketManager : MonoBehaviour, IManager {
         }
 
         //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, true);
+        bucket.SetDisplayWallsActive(false);
         superElement.WaitForSupportToComplete--;
     }
 

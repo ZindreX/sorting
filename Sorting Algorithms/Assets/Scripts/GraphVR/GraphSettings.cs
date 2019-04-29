@@ -244,7 +244,7 @@ public class GraphSettings : TeachingSettings {
                         if (selectStartEndNodes)
                             FillTooltips("Manually choose node(s).");
                         else
-                            FillTooltips("Node(s) chosen by default settings. Not recommended.");
+                            FillTooltips("Node(s) chosen in editor. Not recommended.");
                         break;
 
                     default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;

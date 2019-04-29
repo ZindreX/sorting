@@ -60,11 +60,14 @@ public abstract class TeachingSettings : SettingsBase {
 
     protected override void InitButtons()
     {
+        // Basic stuff
         InitButtonState(Util.TEACHING_MODE, teachingMode);
-        InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_STEP, pseudocodeStep);
-        InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_LINE_NR, pseudocodeLineNr);
         InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
         InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, algSpeed);
+
+        // Optional
+        InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_STEP, pseudocodeStep);
+        InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_LINE_NR, pseudocodeLineNr);
     }
 
     // All input from interactable settings menu goes through here
@@ -92,8 +95,24 @@ public abstract class TeachingSettings : SettingsBase {
             case Util.OPTIONAL:
                 switch (itemID)
                 {
-                    case Util.PSEUDOCODE_STEP: PseudocodeStep = Util.ConvertStringToBool(itemDescription); break;
-                    case Util.PSEUDOCODE_LINE_NR: PseudocodeLineNr = Util.ConvertStringToBool(itemDescription); break;
+                    case Util.PSEUDOCODE_STEP:
+                        bool stepActive = Util.ConvertStringToBool(itemDescription);
+                        PseudocodeStep = stepActive;
+                        if (stepActive)
+                            FillTooltips("Pseudoline into more steps.");
+                        else
+                            FillTooltips("Pseudoline updates directly.");
+                        break;
+
+                    case Util.PSEUDOCODE_LINE_NR:
+                        bool lineNrActive = Util.ConvertStringToBool(itemDescription);
+                        PseudocodeLineNr = lineNrActive;
+                        if (lineNrActive)
+                            FillTooltips("Line nr will be displayed.");
+                        else
+                            FillTooltips("Line nr will not be displayed.");
+                        break;
+
                     default: Debug.LogError("Couldn't update: section = " + sectionID + ", item = " + itemID + ", description = " + itemDescription); break;
                 }
 

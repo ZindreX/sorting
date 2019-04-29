@@ -93,9 +93,6 @@ public class SortSettings : TeachingSettings {
         base.InitButtons();
 
         InitButtonState(Util.ALGORITHM, algorithm);
-        InitButtonState(Util.TEACHING_MODE, teachingMode);
-        InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
-        InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, algSpeed);
         InitButtonState(UtilSort.SORTING_CASE, sortingCase);
         InitButtonState(UtilSort.DUPLICATES, UtilSort.DUPLICATES, allowDuplicates);
 

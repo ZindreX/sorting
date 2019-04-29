@@ -105,6 +105,8 @@ public class Monitor : SettingsBase {
 
     private void Update()
     {
+        // bool check?
+
         if (videoPlayer.isPlaying && (int)videoPlayer.time != prevSecond)
         {
             // Update progress bar
@@ -114,7 +116,6 @@ public class Monitor : SettingsBase {
         }
         else if ((int)videoPlayer.time == videoDuration)
         {
-            Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> Video watched - ejecting video");
             // Eject video when done playing
             if (currentPlayingVHS != null)
                 EjectVideo(null);
