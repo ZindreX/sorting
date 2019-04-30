@@ -64,6 +64,7 @@ public class BucketSortManager : AlgorithmManagerBase {
 
             case UtilSort.DISPLAY_ELEMENT:
                 Debug.Log("Display elements");
+
                 // Display elements on top of bucket
                 sortMain.WaitForSupportToComplete++;
                 StartCoroutine(bucketManager.PutElementsForDisplay(((BucketSortInstruction)instruction).BucketID));

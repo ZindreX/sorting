@@ -5,7 +5,7 @@ using UnityEngine;
 public class BucketSortElement : SortingElementBase {
 
     private BucketSortInstruction bucketSortInstruction;
-    private bool isPivot; // canEnterBucket = true;
+    private bool isPivot, isDisplaying; // canEnterBucket = true;
     private int bucketID;
     private Bucket currentInside;
 
@@ -22,7 +22,7 @@ public class BucketSortElement : SortingElementBase {
         rb.constraints = RigidbodyConstraints.None;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (parent.AlgorithmInitialized)
         {
@@ -41,10 +41,17 @@ public class BucketSortElement : SortingElementBase {
         set { bucketSortInstruction = (BucketSortInstruction)value; UpdateSortingElementState(); }
     }
 
+    // Not used yet -- maybe for later or never
     public bool IsPivot
     {
         get { return isPivot; }
         set { isPivot = value; }
+    }
+
+    public bool IsDisplaying
+    {
+        get { return isDisplaying; }
+        set { isDisplaying = value; }
     }
 
     public Bucket CurrentInside
@@ -53,11 +60,10 @@ public class BucketSortElement : SortingElementBase {
         set { currentInside = value; }
     }
 
-    //public bool CanEnterBucket
-    //{
-    //    get { return canEnterBucket; }
-    //    set { canEnterBucket = value; }
-    //}
+    public Rigidbody RigidBody
+    {
+        get { return rb; }
+    }
 
     protected override void UpdateSortingElementState()
     {
@@ -71,13 +77,13 @@ public class BucketSortElement : SortingElementBase {
 
             switch (instruction)
             {
-                case UtilSort.INIT_INSTRUCTION: status = "Init pos"; break;
+                case Util.INIT_INSTRUCTION: status = "Init pos"; break;
                 case UtilSort.BUCKET_INDEX_INST:
                     status = "Bucket index: " + bucketID;
                     break;
 
                 case UtilSort.MOVE_TO_BUCKET_INST:
-                    status = "Move to bucket" + bucketID;
+                    status = "Move to bucket " + bucketID;
                     intermediateMove = true;
                     break;
 
@@ -86,7 +92,7 @@ public class BucketSortElement : SortingElementBase {
                     intermediateMove = true;
                     break;
 
-                case UtilSort.EXECUTED_INST: status = "Performed"; break;
+                case Util.EXECUTED_INST: status = "Performed"; break;
 
                 case UtilSort.DISPLAY_ELEMENT:
                     break;

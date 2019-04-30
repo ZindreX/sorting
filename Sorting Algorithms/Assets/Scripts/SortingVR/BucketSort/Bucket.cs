@@ -22,13 +22,10 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     private MeshRenderer innerBucket;
 
     [SerializeField]
-    private GameObject displayWalls;
-
-    [SerializeField]
-    private Transform displayStartTransform;
-
-    [SerializeField]
     private TextMeshPro bucketIndexText, bucketCapacityText;
+
+    [SerializeField]
+    private Transform dropElementForDisplayPos;
 
     private SphereCollider enterTrigger;
     private CapsuleCollider onTopOfBucketTrigger;
@@ -57,9 +54,6 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         SetEnterTrigger(true);
 
         animator = GetComponentInChildren<Animator>();
-
-        // Disable invisible walls for display
-        displayWalls.SetActive(false);
     }
 
     private void Start()
@@ -106,17 +100,6 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         onTopOfBucketTrigger.enabled = !active;
     }
 
-    public void SetDisplayWallsActive(bool active)
-    {
-        displayWalls.SetActive(true);
-    }
-
-    public Vector3 DisplayNextPosition(int i)
-    {
-        Vector3 pos = displayStartTransform.position;
-        return pos + new Vector3(pos.x, pos.y * i, pos.z);
-    }
-
     public static int BucketSize(int numberOfBuckets, int maxValue)
     {
         return maxValue / numberOfBuckets;
@@ -137,17 +120,21 @@ public class Bucket : MonoBehaviour, ISortSubElement {
 
     public void AddSortingElementToBucket(SortingElementBase sortingElement)
     {
+        if (currentHolding.Contains(sortingElement))
+            return;
+
         currentHolding.Add(sortingElement);
 
         if (sortingElement is BucketSortElement)
-            ((BucketSortElement)sortingElement).CurrentInside = this;
+        {
+            BucketSortElement bucketSortElement = (BucketSortElement)sortingElement;
+            bucketSortElement.CurrentInside = this;
+            StartCoroutine(Animation(ENTER, 3));
 
-        StartCoroutine(Animation(ENTER, 3));
-
-        // Make invisible
-        sortingElement.transform.position = transform.position;
-        sortingElement.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-        //Util.HideObject(sortingElement.gameObject, false); //.SetActive(false);
+            // Make invisible
+            bucketSortElement.RigidBody.constraints = RigidbodyConstraints.FreezeAll;
+            bucketSortElement.transform.position = transform.position;
+        }
     }
 
     public SortingElementBase GetElementForDisplay(int index)
@@ -192,14 +179,12 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         {
             BucketSortElement sortingElement = other.GetComponent<BucketSortElement>();
 
-            // Check for bug (same sorting element got added twice)
+            // Check for bug(same sorting element got added twice)
             //if (prevSortingElementID == sortingElement.SortingElementID)
             //    return;
 
             if (enterTrigger.enabled)
             {
-                Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> ENTER TRIGGER");
-
                 if (parent.SortSettings.IsDemo())
                 {
                     if (ValidateSortingElement(sortingElement)) // !displayElements && 
@@ -225,7 +210,11 @@ public class Bucket : MonoBehaviour, ISortSubElement {
                         {
                             AddSortingElementToBucket(sortingElement);
                             prevSortingElementID = sortingElement.SortingElementID;
+
+                            // Score
                             parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
+                            
+                            // Progress user test
                             parent.GetComponent<UserTestManager>().ReadyForNext += 1;
                         }
                         else if (ValidateSortingElement(sortingElement))
@@ -244,10 +233,6 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             }
             else if (onTopOfBucketTrigger.enabled)
             {
-                Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>> ON TOP TRIGGER");
-                sortingElement.CurrentInside = this;
-                sortingElement.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                sortingElement.GetComponent<Rigidbody>().constraints = ~RigidbodyConstraints.FreezePositionY;
 
             }
         }
@@ -263,11 +248,35 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             {
                 sortingElement.CurrentInside = null;
             }
-
-
         }
     }
 
+    public void PutElementForDisplay(BucketSortElement sortingElement)
+    {
+        Debug.Log("Putting element " + sortingElement.SortingElementID + " for display");
+
+        // Make sure it's still considered inside the bucket
+        sortingElement.CurrentInside = this;
+
+        // Fix position and rotation
+        sortingElement.transform.position = dropElementForDisplayPos.position;
+        sortingElement.transform.rotation = Quaternion.identity;
+
+        // Enable Y-axis movement
+        sortingElement.RigidBody.constraints = ~RigidbodyConstraints.FreezePositionY;
+
+        // Disable all constraints after some seconds
+        //StartCoroutine(RemoveConstraintsDelay(sortingElement));
+    }
+
+
+
+    private IEnumerator RemoveConstraintsDelay(BucketSortElement element)
+    {
+        yield return colorChangeDuration;
+        element.RigidBody.constraints = RigidbodyConstraints.None;
+
+    }
 
 
 

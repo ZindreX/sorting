@@ -106,31 +106,25 @@ public class BucketManager : MonoBehaviour, IManager {
 
         Bucket bucket = GetBucket(bucketID);
         bucket.SetEnterTrigger(false);
-        bucket.SetDisplayWallsActive(true);
         yield return emptyBucketDuration;
 
         int numberOfElements = bucket.CurrenHolding.Count;
 
         if (numberOfElements > 0)
         {
-            StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 2));
-            yield return emptyBucketDuration;
-
+            Debug.Log("Bucket " + bucketID + " has " + numberOfElements + " to display");
             for (int y = 0; y < numberOfElements; y++)
             {
-                SortingElementBase element = bucket.GetElementForDisplay(y);
-                element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;// + (UtilSort.ABOVE_BUCKET_VR / 10) * y;
-                element.transform.rotation = Quaternion.identity;
-
-                //element.transform.position = new Vector3(0f, 2f, 0f);
+                BucketSortElement element = (BucketSortElement)bucket.GetElementForDisplay(y);
+                Debug.Log("Bucket " + bucketID + ", element " + y + " [" + element.Value + "]");
+                bucket.PutElementForDisplay(element); //element.transform.pos... bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;// + (UtilSort.ABOVE_BUCKET_VR / 10) * y;
+                StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 1));
                 yield return emptyBucketDuration;
-                element.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             }
             bucket.Empty();
         }
 
         //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, true);
-        bucket.SetDisplayWallsActive(false);
         superElement.WaitForSupportToComplete--;
     }
 
@@ -141,7 +135,7 @@ public class BucketManager : MonoBehaviour, IManager {
 
     public void DestroyAndReset()
     {
-        UtilSort.DestroyObjects(buckets);
+        Util.DestroyObjects(buckets);
         containsBuckets = false;
         Bucket.BUCKET_NR = 0;
     }
