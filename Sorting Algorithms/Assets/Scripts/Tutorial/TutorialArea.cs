@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Video;
 
 public class TutorialArea : Area {
 
@@ -16,7 +17,7 @@ public class TutorialArea : Area {
 
     private int subtasksCompleted, numberOfSubtasks;
     private bool isAreaCleared;
-
+    
     protected override void Awake()
     {
         base.Awake();

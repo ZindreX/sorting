@@ -253,32 +253,35 @@ PrefabInstance:
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_text
-      value: '- Step right for a tutorial (controller, objects etc.)
+      value: 'Tutorial ---->
+
+        (Reommended for beginners)
 
 
-        - Step left to enter the main menu if you''re already familiar with the controllers
+
+        <--- Main menu
 
 '
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 139
+      value: 59
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 25
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 24
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
@@ -315,6 +318,11 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 514
+      objectReference: {fileID: 0}
     - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -328,7 +336,7 @@ PrefabInstance:
     - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_text
-      value: Welcome to <name>VR
+      value: Welcome to CourseVR
       objectReference: {fileID: 0}
     - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
@@ -343,7 +351,7 @@ PrefabInstance:
     - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
@@ -365,6 +373,11 @@ PrefabInstance:
       propertyPath: m_firstOverflowCharacterIndex
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a6490ec68b0a3e54290905cf54ef4eb0, type: 2}
     - target: {fileID: 4187844964480214, guid: 8a2244795314b324082892e60859f7cf, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.17364816
