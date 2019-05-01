@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 using TMPro;
+using UnityEngine.Windows;
 
 public class Video : MonoBehaviour {
 
@@ -13,18 +14,20 @@ public class Video : MonoBehaviour {
     private string url;
 
     [SerializeField]
-    private VideoClip videoClip;
+    protected GetVideoFrom getVideoFrom;
+    protected enum GetVideoFrom { Streaming, LocalPath }
 
-    [SerializeField]
-    private bool useUrl;
+    //
+    private string baseFolderPath = "D:\\sindrw\\Videos\\", format = ".mp4";
 
     private VideoPlayer videoPlayer;
     private AudioSource audioSource;
 
-    private Vector3 startPos;
+    private Vector3 startPos, insertEjectMovement = new Vector3(-0.164f, 0f, 0f);
 
+    private Rigidbody rb;
     private Animator animator;
-    private readonly string VHS_ENTER_ANIMATION = "Enter";
+    private readonly string VHS_INSERT_ANIMATION = "Insert", VHS_EJECT_ANIMATION = "Eject";
 
     private bool releasedFromHand;
 
@@ -34,6 +37,7 @@ public class Video : MonoBehaviour {
     {
         startPos = transform.position;
         animator = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();
 
         releasedFromHand = true;
 
@@ -54,16 +58,17 @@ public class Video : MonoBehaviour {
         audioSource.playOnAwake = false;
         audioSource.Pause();
 
-        if (useUrl)
+        videoPlayer.source = VideoSource.Url;
+        switch ((int)getVideoFrom)
         {
-            // Video clip from Url
-            videoPlayer.source = VideoSource.Url;
-            videoPlayer.url = url;
-        }
-        else
-        {
-            videoPlayer.source = VideoSource.VideoClip;
-            videoPlayer.clip = videoClip;
+            case 0:
+                videoPlayer.url = url;
+                break;
+
+            case 1:
+                url = baseFolderPath + url + format;
+                videoPlayer.url = url;
+                break;
         }
 
         //Set Audio Output to AudioSource
@@ -75,6 +80,15 @@ public class Video : MonoBehaviour {
 
         //Set video To Play then prepare Audio to prevent Buffering        
         videoPlayer.Prepare();
+        Debug.Log("Change computer? Check filepath!");
+
+        //try
+        //{
+        //}
+        //catch ()
+        //{
+
+        //}
 
         ////Play Video
         //videoPlayer.Play();
@@ -98,19 +112,9 @@ public class Video : MonoBehaviour {
         get { return url; }
     }
 
-    public bool UseUrl
-    {
-        get { return useUrl; }
-    }
-
     public double UrlLength
     {
         get { return videoPlayer.length; }
-    }
-
-    public VideoClip VideoClip
-    {
-        get { return videoClip; }
     }
 
     public bool ReleasedFromHand
@@ -123,9 +127,20 @@ public class Video : MonoBehaviour {
     {
         transform.rotation = Quaternion.identity;
         transform.Rotate(0, -90, 0);
-        animator.SetBool(VHS_ENTER_ANIMATION, true);
+        animator.SetBool(VHS_INSERT_ANIMATION, true);
         yield return enterDuration;
-        animator.SetBool(VHS_ENTER_ANIMATION, false);
+        transform.position += insertEjectMovement;
+        animator.SetBool(VHS_INSERT_ANIMATION, false);
+    }
+
+    public IEnumerator Eject(Vector3 ejectPos)
+    {
+        transform.position = ejectPos;
+        animator.SetBool(VHS_EJECT_ANIMATION, true);
+        yield return enterDuration;
+        animator.SetBool(VHS_EJECT_ANIMATION, false);
+        transform.position -= insertEjectMovement;
+        rb.constraints = RigidbodyConstraints.None;
     }
 
     private void OnCollisionEnter(Collision collision)

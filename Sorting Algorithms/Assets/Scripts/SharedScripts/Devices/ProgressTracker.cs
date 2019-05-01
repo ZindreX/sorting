@@ -48,11 +48,22 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
     {
         otherUseCase = true;
         InitProgressTracker(total, total);
+
+        if (increaseProgressSizePerStep.y == Mathf.Infinity)
+        {
+            Debug.Log("Progressbar infinty!");
+            increaseProgressSizePerStep = new Vector3(0f, 0.01f, 0f);
+        }
+
         progressbar.transform.localScale += increaseProgressSizePerStep * 5f;
         moveProgressBarPerStep /= 3.35f;
+
+        if (moveProgressBarPerStep.z == Mathf.Infinity)
+        {
+            Debug.Log("Progressbar infinty!");
+            moveProgressBarPerStep = new Vector3(0f, 0f, 0.01f);
+        }
         progressbar.transform.position += moveProgressBarPerStep * 2;
-
-
     }
 
     public void Increment()

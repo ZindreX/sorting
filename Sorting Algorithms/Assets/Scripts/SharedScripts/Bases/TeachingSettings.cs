@@ -44,7 +44,6 @@ public abstract class TeachingSettings : SettingsBase {
         }
     }
 
-
     // Init settings menu from editor
     protected virtual void GetSettingsFromEditor()
     {

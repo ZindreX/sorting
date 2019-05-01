@@ -647,6 +647,7 @@ public class BucketSort : SortAlgorithm {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
+        useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
             case UtilSort.FIRST_INSTRUCTION:
@@ -672,6 +673,7 @@ public class BucketSort : SortAlgorithm {
 
             case UtilSort.MOVE_TO_BUCKET_INST:
                 lineOfCode = 4;
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 PreparePseudocodeValue(sortingElement.Value, 1);
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
@@ -710,6 +712,7 @@ public class BucketSort : SortAlgorithm {
 
             case UtilSort.MOVE_BACK_INST:
                 lineOfCode = 10;
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 PreparePseudocodeValue(sortingElement.Value, 2);
                 break;
 
@@ -722,7 +725,7 @@ public class BucketSort : SortAlgorithm {
                 break;
         }
         // Highlight part of code in pseudocode
-        yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
         
         // Mark prev for next round
         prevHighlightedLineOfCode = lineOfCode;

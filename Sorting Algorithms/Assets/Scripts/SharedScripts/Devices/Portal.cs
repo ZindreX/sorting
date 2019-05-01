@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Video;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Portal : MonoBehaviour {
@@ -36,6 +37,9 @@ public class Portal : MonoBehaviour {
     private Player player;
     private Animator animator;
 
+    private GameObject previewer;
+    private VideoPlayer videoPlayer;
+
     // Audio
     private AudioSource audioSource;
 
@@ -48,6 +52,14 @@ public class Portal : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
         animator = GetComponentInChildren<Animator>();
         trigger = GetComponentInChildren<BoxCollider>();
+
+        // Previewer
+        previewer = GetComponentInChildren<VideoPanel>().gameObject;
+        videoPlayer = GetComponentInChildren<VideoPlayer>();
+        if (videoPlayer.clip == null)
+            Destroy(previewer);
+
+            
     }
 
     //private void Update()

@@ -23,8 +23,6 @@
  * > ElementManager (cleanup: (duplicate) randomizing values)
  * - ElementsBasedOnCase: first gather values then distribute, instead of distribute -> redistribute based on sorting case (worst/best) ?
  * 
- * > AlgorithmManagerBase
- *  - Clean up IsTutorial() (mixed with IsTutorialStep())
  *  
  * > InstructionNr
  *  - remove it from UserTestManager++

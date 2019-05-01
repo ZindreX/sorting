@@ -58,17 +58,17 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         {
             case 0:  lineOfCode += string.Format("Dijkstra({0}, {1}):", graphStructure, startNodeAlpha); break;
             case 1:  lineOfCode += "   Set all vertices of Graph to infinity"; break;
-            case 2:  lineOfCode += string.Format("   list = [ ]         // Priority queue"); break;
+            case 2:  lineOfCode += string.Format("   list = [ ]"); break;
             case 3:  lineOfCode += string.Format("   list.Add({0})", startNodeAlpha); break;
             case 4:  lineOfCode += string.Format("   {0}.Dist = 0", startNodeAlpha); break;
             case 5:  lineOfCode += string.Format("   while ({0} > 0):", lengthOfList); break;
-            case 6:  lineOfCode += string.Format("       {0} <- list.PriorityRemove()", node1Alpha); break;
+            case 6:  lineOfCode += string.Format("       {0} <- list.RemoveMin()", node1Alpha); break;
             case 7:  lineOfCode += string.Format("       for all untraversed neighbors of {0} in Graph:", node1Alpha); break;
             case 8:  lineOfCode += string.Format("           Visit neighbor {0}", node2Alpha); break;
             case 9:  lineOfCode += string.Format("           if ({0})", ifStatementContent); break;   //"           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
             case 10: lineOfCode += string.Format("              {0}.Dist = {1}", node2Alpha, (node1Dist + edgeCost)); break;
             case 11: lineOfCode += string.Format("              {0}.Prev = {1}", node2Alpha, node1Alpha); break;
-            case 12: lineOfCode += string.Format("              list.PriorityAdd({0})", node2Alpha); break;
+            case 12: lineOfCode += string.Format("              list.Update({0})", node2Alpha); break;
             case 13: lineOfCode += string.Format("          end if"); break;
             case 14: lineOfCode += string.Format("      end for"); break;
             case 15: lineOfCode += string.Format("  end while"); break;
@@ -901,7 +901,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
 
         yield return demoStepDuration;
         graphMain.WaitForSupportToComplete--;

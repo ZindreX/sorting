@@ -5007,10 +5007,7 @@ MonoBehaviour:
   returnPosition: {fileID: 811213113671524095}
   monitorRendererTexture: {fileID: 8400000, guid: 56db710b7dcc7d34895f02761180a259,
     type: 2}
-  videoClips:
-  - {fileID: 32900000, guid: 8fd0865cfaac1a74a9fdcf7a201d0353, type: 3}
-  - {fileID: 32900000, guid: 0dda6a74e7dfed74aa815773551a1591, type: 3}
-  - {fileID: 32900000, guid: 92a2eac0eddef9a4ab739cd5dc434959, type: 3}
+  videoClips: []
 --- !u!328 &4700227161719988557
 VideoPlayer:
   m_ObjectHideFlags: 0
@@ -5057,7 +5054,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.6, y: 0.1, z: 0.2}
-  m_Center: {x: 0, y: -0.93, z: -0.03}
+  m_Center: {x: 0, y: -0.93, z: -0.1}
 --- !u!1001 &5104966889878397160
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5125,12 +5122,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.05
       objectReference: {fileID: 0}
-    - target: {fileID: 33751187202596744, guid: 5066b4eba9099e448a3042747718a9cd,
+    - target: {fileID: 33378866950618014, guid: 5066b4eba9099e448a3042747718a9cd,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 33378866950618014, guid: 5066b4eba9099e448a3042747718a9cd,
+    - target: {fileID: 33751187202596744, guid: 5066b4eba9099e448a3042747718a9cd,
         type: 3}
       propertyPath: m_Mesh
       value: 
