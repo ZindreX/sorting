@@ -8,6 +8,8 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     public const string PAUSE = "Pause", STEP_BACK = "Step back", STEP_FORWARD = "Step forward";
     public const string REDUCE_SPEED = "Reduce speed", INCREASE_SPEED = "Increase speed";
 
+    private bool demoActive;
+
     private Dictionary<string, SettingsMenuItem> buttons;
 
     private Section section;
@@ -39,6 +41,11 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
         // Find the pause button
         pauseButton = (ToggleButton)buttons[PAUSE];
+    }
+
+    protected override bool IsActive()
+    {
+        return demoActive;
     }
 
     private void Start()
@@ -78,6 +85,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     {
         section.InitItem(PAUSE, startPaused);
         TransitionPause(startPaused);
+        demoActive = true;
     }
 
     /* ----- Buttons ------
@@ -115,6 +123,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     public override void ResetDevice()
     {
         section.InitItem(PAUSE, false);
+        demoActive = false;
 
         base.ResetDevice();
     }

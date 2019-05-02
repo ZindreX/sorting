@@ -32,8 +32,10 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
         if (integrated)
             return;
 
-        if (throwAble && transform.position.y < 0.1f)
+        if (IsActive() && transform.position.y < 0.1f)
+        {
             SpawnDeviceInfrontOfPlayer();
+        }
     }
 
     public void SpawnDeviceInfrontOfPlayer()
@@ -62,8 +64,8 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
         }
         else
         {
-            if (!throwAble)
-                rb.constraints = RigidbodyConstraints.FreezeAll;
+            //if (!throwAble)
+            //    rb.constraints = RigidbodyConstraints.FreezeAll;
         }
     }
 
@@ -72,5 +74,7 @@ public abstract class InteractionDeviceBase : MonoBehaviour {
         rb.useGravity = true;
         transform.position = startPos;
     }
+
+    protected abstract bool IsActive();
 
 }

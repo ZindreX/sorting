@@ -267,7 +267,7 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmUserTest()
     {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use trigger buttons to interact\n with the sorting elements");
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use trigger button to interact\n with the sorting elements");
 
         // Enable interaction
         elementManager.InteractionWithSortingElements(true);
@@ -358,6 +358,7 @@ public class SortMain : MainManager {
             displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
         }
         displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Sorting Completed!", 1);
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Sorting Completed!");
     }
 
 

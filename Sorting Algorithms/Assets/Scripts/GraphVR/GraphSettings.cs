@@ -10,7 +10,7 @@ public class GraphSettings : TeachingSettings {
     [SerializeField]
     private GraphMain graphMain;
 
-    [Space(2)]
+    [Space(5)]
     [Header("Graph settings")]
     [SerializeField]
     private GraphStructureEditor graphStructureEditor;
@@ -292,6 +292,17 @@ public class GraphSettings : TeachingSettings {
                         break;
                 }
                 break;
+
+            case UtilGraph.SHORTEST_PATH_OPTIONAL:
+                bool shortestPathOneToAllActive = Util.ConvertStringToBool(itemDescription);
+                shortestPathOneToAll = shortestPathOneToAllActive;
+
+                if (shortestPathOneToAllActive)
+                    FillTooltips("Demo only: displays the shortest path from the start node to all the other nodes.");
+                else
+                    FillTooltips("Displays the shortest path from the start- to end node.");
+                break;
+
             default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
         }
 
@@ -307,6 +318,7 @@ public class GraphSettings : TeachingSettings {
         InitButtonState(UtilGraph.EDGE_TYPE, edgeType);
         InitButtonState(UtilGraph.EDGE_BUILD_MODE, UtilGraph.EDGE_BUILD_MODE, (int)edgeModeEditor); // TODO fix variable
         InitButtonState(Util.OPTIONAL, UtilGraph.SELECT_NODE, selectStartEndNodes);
+        InitButtonState(UtilGraph.SHORTEST_PATH_OPTIONAL, UtilGraph.SHORTEST_PATH_ONE_TO_ALL, shortestPathOneToAll);
     }
 
     protected override MainManager MainManager

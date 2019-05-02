@@ -12,7 +12,7 @@ public class Util : MonoBehaviour {
     public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
 
     // Sections
-    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", TEST_SPEED_STR = "Test";
+    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", S_FAST_STR = "SFast";
     public const string DEMO_SPEED = "Demo speed";
     public const string PLUS = "Plus", MINUS = "Minus", ON = "ON", OFF = "OFF", START = "Start", READY = "Ready", OPTIONAL = "Optional";
     public const string PSEUDOCODE_STEP = "Pseudocode step", PSEUDOCODE_LINE_NR = "Pseudocode line nr";
@@ -37,7 +37,7 @@ public class Util : MonoBehaviour {
     // Difficulty
     public const string BEGINNER_STR = "Beginner", INTERMEDIATE_STR = "Intermediate", ADVANCED_STR = "Advanced", EXAMINATION_STR = "Examination";
     public const int BEGINNER = 0, INTERMEDIATE = 1, ADVANCED = 2, EXAMINATION = 3; // enum?
-    public const int SLOW = 0, NORMAL = 1, FAST = 2, TEST_SPEED = 3;
+    public const int SLOW = 0, NORMAL = 1, FAST = 2, SFAST = 3;
 
     // Rooms
     public const string START_ROOM = "Start room", MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
@@ -163,7 +163,7 @@ public class Util : MonoBehaviour {
     //    }
     //}
 
-    public static Dictionary<int, string> algorithSpeedConverterDict = new Dictionary<int, string>() { { SLOW, SLOW_STR }, { NORMAL, NORMAL_STR }, { FAST, FAST_STR }, { TEST_SPEED, TEST_SPEED_STR } };
+    public static Dictionary<int, string> algorithSpeedConverterDict = new Dictionary<int, string>() { { SLOW, SLOW_STR }, { NORMAL, NORMAL_STR }, { FAST, FAST_STR }, { SFAST, S_FAST_STR } };
     //public static string ConvertAlgorithmSpeed(int speed)
     //{
     //    switch (speed)

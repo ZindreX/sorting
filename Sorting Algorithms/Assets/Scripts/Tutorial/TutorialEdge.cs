@@ -35,7 +35,11 @@ public class TutorialEdge : MonoBehaviour {
 
     public void ChangeAppearance(Color color)
     {
-        GetComponentInChildren<Renderer>().material.color = color;
+        Component[] components = GetComponentsInChildren<Renderer>();
+        foreach (Component comp in components)
+        {
+            comp.GetComponent<Renderer>().material.color = color;
+        }
     }
 
     public void ResetEdge()

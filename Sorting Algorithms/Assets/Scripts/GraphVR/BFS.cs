@@ -4,21 +4,10 @@ using UnityEngine;
 
 public class BFS : GraphAlgorithm, ITraverse {
 
-    [Space(2)]
-    [Header("Info plate")]
-    [SerializeField]
-    private GameObject infoPlate;
-
     public override string AlgorithmName
     {
         get { return Util.BFS; }
     }
-
-    public override GameObject InfoPlate
-    {
-        get { return infoPlate; }
-    }
-
 
     public override string GetListType()
     {

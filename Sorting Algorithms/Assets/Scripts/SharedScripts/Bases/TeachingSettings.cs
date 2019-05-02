@@ -15,16 +15,22 @@ public abstract class TeachingSettings : SettingsBase {
     [SerializeField]
     protected bool useDebuggingSettings;
 
+    [Space(5)]
+    [Header("Pseudocode optional")]
     [SerializeField]
-    protected bool pseudocodeLineNr, pseudocodeStep;
+    protected bool pseudocodeLineNr;
 
+    [SerializeField]
+    protected bool pseudocodeStep;
+
+    [Header("Main settings")]
     [SerializeField]
     protected TeachingModeEditor teachingModeEditor;
     protected enum TeachingModeEditor { Demo, UserTest }
 
     [SerializeField]
     protected AlgorithmSpeedEditor algorithmSpeedEditor;
-    protected enum AlgorithmSpeedEditor { Slow, Normal, Fast, Test }
+    protected enum AlgorithmSpeedEditor { Slow, Normal, Fast, SFast }
 
     [SerializeField]
     protected DifficultyEditor difficultyEditor;
@@ -170,10 +176,10 @@ public abstract class TeachingSettings : SettingsBase {
             InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, value);
             switch (value)
             {
-                case 0: algorithmSpeed = 2f; break;
-                case 1: algorithmSpeed = 1f; break;
-                case 2: algorithmSpeed = 0.5f; break;
-                case 3: algorithmSpeed = 0f; break;
+                case 0: algorithmSpeed = 3f; break;
+                case 1: algorithmSpeed = 2f; break;
+                case 2: algorithmSpeed = 1f; break;
+                case 3: algorithmSpeed = 0.5f; break;
             }
         }
     }

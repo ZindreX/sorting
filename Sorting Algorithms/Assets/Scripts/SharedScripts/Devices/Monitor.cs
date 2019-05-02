@@ -101,7 +101,9 @@ public class Monitor : SettingsBase {
             playButton.gameObject.SetActive(true);
             videoPlayer.clip = videoClips[0];
             videoDuration = (int)CalculateVideoDuration(videoClips[0]);
-            progressTracker.InitProgressTracker(videoDuration);
+
+            if (progressTracker != null)
+                progressTracker.InitProgressTracker(videoDuration);
         }
         // else; bool ? 
     }
@@ -114,7 +116,10 @@ public class Monitor : SettingsBase {
         {
             // Update progress bar
             cornerScreenText.text = (int)videoPlayer.time + "/" + videoDuration;
-            progressTracker.Increment();
+
+            if (progressTracker != null)
+                progressTracker.Increment();
+
             prevSecond = (int)videoPlayer.time;
         }
         //else if ((int)videoPlayer.time == videoDuration)
@@ -289,8 +294,12 @@ public class Monitor : SettingsBase {
         videoPlayer.Prepare();
 
         // Reset and init progresstracker
-        progressTracker.ResetProgress();
-        progressTracker.InitProgressTracker(videoDuration);
+        if (progressTracker != null)
+        {
+            progressTracker.ResetProgress();
+            progressTracker.InitProgressTracker(videoDuration);
+        }
+
 
         yield return UpdateCenterScreenText(video.Title);
 

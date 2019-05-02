@@ -18,11 +18,6 @@ public class InsertionSort : SortAlgorithm {
     [SerializeField]
     private InsertionSortManager insertionSortManager;
 
-    [Space(2)]
-    [Header("Info plate")]
-    [SerializeField]
-    private GameObject infoPlate;
-
     private InsertionSortHolder pivotHolder;
     private Vector3 pivotHolderPos = new Vector3(0f, 0.1f, UtilSort.SPACE_BETWEEN_HOLDERS), tutorialPivotElementHeight;
 
@@ -38,11 +33,6 @@ public class InsertionSort : SortAlgorithm {
     public override string AlgorithmName
     {
         get { return UtilSort.INSERTION_SORT; }
-    }
-
-    public override GameObject InfoPlate
-    {
-        get { return infoPlate; }
     }
 
     public HolderBase PivotHolder

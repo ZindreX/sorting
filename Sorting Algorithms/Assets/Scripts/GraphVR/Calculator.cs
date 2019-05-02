@@ -51,34 +51,19 @@ public class Calculator : InteractionDeviceBase {
         audioSource = GetComponentInParent<AudioSource>();
     }
 
+    protected override bool IsActive()
+    {
+        return calculationInProcess;
+    }
+
     // Prepare for a new calculation
     public void InitCalculation(string task)
     {
         displayText.text = "Fill in the if-statement according to the algorithm\n*Except less/greater than";
         this.task = task;
 
-        number1 = new List<int>();
-        number2 = new List<int>();
-
-        value1 = BLANK;
-        value2 = BLANK;
-        result = BLANK;
-
-        op = NO_OP_CHOSEN;
-
-
-        if (task == GRAPH_TASK)
-        {
-            number3 = new List<int>();
-            value3 = BLANK;
-            newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
-
-        }
-
+        ResetCalculation();
         calculationInProcess = true;
-        equalButtonClicked = false;
-        feedbackReceived = false;
-        undoActions = new Stack<string>();
     }
 
     // ------------------------------------- Getters/Setters -------------------------------------
@@ -135,7 +120,7 @@ public class Calculator : InteractionDeviceBase {
             }
 
             // For fun
-            throwAble = (result == 1337);
+            //throwAble = (result == 1337);
 
             return result;
         }
@@ -408,4 +393,36 @@ public class Calculator : InteractionDeviceBase {
         else
             InitCalculation(GRAPH_TASK);
     }
+
+    private void ResetCalculation()
+    {
+        number1 = new List<int>();
+        number2 = new List<int>();
+
+        value1 = BLANK;
+        value2 = BLANK;
+        result = BLANK;
+
+        op = NO_OP_CHOSEN;
+
+
+        if (task == GRAPH_TASK)
+        {
+            number3 = new List<int>();
+            value3 = BLANK;
+            newValueLessThanCurrent = ANSWER_NOT_CHOSEN;
+        }
+
+        equalButtonClicked = false;
+        feedbackReceived = false;
+        undoActions = new Stack<string>();
+    }
+
+    public override void ResetDevice()
+    {
+        base.ResetDevice();
+        calculationInProcess = false;
+        ResetCalculation();
+    }
+
 }

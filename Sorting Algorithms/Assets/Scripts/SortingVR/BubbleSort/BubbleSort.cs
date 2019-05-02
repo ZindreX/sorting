@@ -13,11 +13,6 @@ public class BubbleSort : SortAlgorithm {
     [SerializeField]
     private BubbleSortManager bubbleSortManager;
 
-    [Space(2)]
-    [Header("Info plate")]
-    [SerializeField]
-    private GameObject infoPlate;
-
     public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
         element1Value = "list[j]";
@@ -28,11 +23,6 @@ public class BubbleSort : SortAlgorithm {
     public override string AlgorithmName
     {
         get { return UtilSort.BUBBLE_SORT; }
-    }
-
-    public override GameObject InfoPlate
-    {
-        get { return infoPlate; }
     }
 
     public override void AddSkipAbleInstructions()

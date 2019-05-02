@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SortSettings : TeachingSettings {
 
@@ -38,8 +39,20 @@ public class SortSettings : TeachingSettings {
     private int numberOfElements;
 
     [SerializeField]
+    [Range(2, 10)]
+    private int numberOfBuckets;
+
+    [SerializeField]
     private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
+
+
+    [Space(10)]
+    [SerializeField]
+    private TextMeshPro numberOfElementsText;
+    
+    [SerializeField]
+    private TextMeshPro numberOfBucketsText;
 
     protected override void Start()
     {
@@ -52,9 +65,15 @@ public class SortSettings : TeachingSettings {
 
             // Init settings
             Algorithm = Util.BUBBLE_SORT;
+
             NumberOfElements = 8;
+            numberOfElementsText.text = numberOfElements.ToString();
+
             SortingCase = UtilSort.NONE;
             Duplicates = true;
+
+            NumberOfBuckets = 10;
+            numberOfBucketsText.text = numberOfBuckets.ToString();
         }
         tooltips.text = "";
 
@@ -64,6 +83,9 @@ public class SortSettings : TeachingSettings {
     protected override void GetSettingsFromEditor()
     {
         base.GetSettingsFromEditor(); // remove?
+
+        numberOfElementsText.text = numberOfElements.ToString();
+        numberOfBucketsText.text = numberOfBuckets.ToString();
 
         switch ((int)algorithmEditor)
         {
@@ -109,6 +131,7 @@ public class SortSettings : TeachingSettings {
             case UtilSort.SORTING_CASE: SortingCase = itemID; break;
             case UtilSort.NUMBER_OF_ELEMENTS: ChangeNumberOfElements(itemID); break;
             case UtilSort.DUPLICATES: Duplicates = Util.ConvertStringToBool(itemDescription); break;
+            case UtilSort.NUMBER_OF_BUCKETS: ChangeNumberOfBuckets(itemID); break;
             default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
         }
     }
@@ -131,6 +154,12 @@ public class SortSettings : TeachingSettings {
         set { numberOfElements = value; }
     }
 
+    public int NumberOfBuckets
+    {
+        get { return numberOfBuckets; }
+        set { numberOfBuckets = value; }
+    }
+
     public void ChangeNumberOfElements(string buttonID)
     {
         bool increaseNumberOfElements = buttonID == Util.PLUS;
@@ -139,8 +168,7 @@ public class SortSettings : TeachingSettings {
             if (numberOfElements < UtilSort.MAX_NUMBER_OF_ELEMENTS)
             {
                 numberOfElements += 1;
-                FillTooltips("#Elements:" + numberOfElements);
-                //buttons[] >>> fill in text #elements
+                numberOfElementsText.text = numberOfElements.ToString();
             }
             else
             {
@@ -152,11 +180,40 @@ public class SortSettings : TeachingSettings {
             if (numberOfElements > 2)
             {
                 numberOfElements -= 1;
-                FillTooltips("#Elements: " + numberOfElements);
+                numberOfElementsText.text = numberOfElements.ToString();
             }
             else
             {
                 FillTooltips("Minimum 2 elements.");
+            }
+        }
+    }
+
+    public void ChangeNumberOfBuckets(string buttonID)
+    {
+        bool increaseNumberOfElements = buttonID == Util.PLUS;
+        if (increaseNumberOfElements)
+        {
+            if (numberOfBuckets < UtilSort.MAX_NUMBER_OF_BUCKETS)
+            {
+                numberOfElements += 1;
+                numberOfBucketsText.text = numberOfBuckets.ToString();
+            }
+            else
+            {
+                FillTooltips("Max 10 buckets.");
+            }
+        }
+        else
+        {
+            if (numberOfBuckets > 2)
+            {
+                numberOfElements -= 1;
+                numberOfBucketsText.text = numberOfBuckets.ToString();
+            }
+            else
+            {
+                FillTooltips("Minimum 2 buckets.");
             }
         }
     }

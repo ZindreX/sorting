@@ -67,7 +67,7 @@ public class GraphMain : MainManager {
 
     [Header("Debugging")]
     [SerializeField]
-    private bool autoCalculation;
+    private bool autoCalculation; // Not working anymore
 
     protected override void Awake()
     {
@@ -186,9 +186,13 @@ public class GraphMain : MainManager {
         // Extra
         bool shortestPathOneToAll = graphSettings.ShortestPathOneToAll;
 
+        // Only works for Demo as for now,
+        if (shortestPathOneToAll && graphSettings.IsUserTest())
+            shortestPathOneToAll = false;
+
         // >>> Init Algorithm
         graphAlgorithm = (GraphAlgorithm)GrabAlgorithmFromObj();
-        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed, shortestPathOneToAll); // shortestPathOneToAll remove???
+        graphAlgorithm.InitGraphAlgorithm(this, graphStructure, algorithmSpeed, shortestPathOneToAll);
 
         // >>> Init Graph manager
         bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
@@ -366,7 +370,13 @@ public class GraphMain : MainManager {
 
             switch (graphSettings.GraphTask)
             {
-                case UtilGraph.TRAVERSE: instructions = ((ITraverse)graphAlgorithm).TraverseUserTestInstructions(graphManager.StartNode); break;
+                case UtilGraph.TRAVERSE:
+                    if (algorithmName == Util.DFS_RECURSIVE)
+                        instructions = ((DFS)graphAlgorithm).RecursiveInstructions(graphManager.StartNode);
+                    else
+                        instructions = ((ITraverse)graphAlgorithm).TraverseUserTestInstructions(graphManager.StartNode);
+                    break;
+
                 case UtilGraph.SHORTEST_PATH: instructions = ((IShortestPath)graphAlgorithm).ShortestPathUserTestInstructions(graphManager.StartNode, graphManager.EndNode); break;
                 default: Debug.LogError("Graph task '" + graphSettings.GraphTask + "' invalid."); break;
             }
@@ -707,7 +717,7 @@ public class GraphMain : MainManager {
     // --------------------------------------- Finish off ---------------------------------------
     protected override void TaskCompletedFinishOff()
     {
-        if (graphAlgorithm.IsTaskCompleted)
+        if (graphSettings.IsDemo())
         {
             if (!backtracking && graphAlgorithm is IShortestPath)
             {

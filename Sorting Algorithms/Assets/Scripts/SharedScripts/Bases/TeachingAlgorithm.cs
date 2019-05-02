@@ -171,9 +171,4 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
      * - Only does the visualization of the pseudocode
     */
     public abstract IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotElement);
-
-
-    // Infoplate
-    public abstract GameObject InfoPlate { get; }
-
 }

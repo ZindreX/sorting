@@ -5066,6 +5066,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ProgressTracker
       objectReference: {fileID: 0}
+    - target: {fileID: 1783075398315788, guid: 5066b4eba9099e448a3042747718a9cd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4044431362833530, guid: 5066b4eba9099e448a3042747718a9cd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

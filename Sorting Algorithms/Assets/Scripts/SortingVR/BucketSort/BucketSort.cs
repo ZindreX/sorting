@@ -19,12 +19,6 @@ public class BucketSort : SortAlgorithm {
     [SerializeField]
     private BucketSortManager bucketSortManager;
 
-    [Space(2)]
-    [Header("Info plate")]
-    [SerializeField]
-    private GameObject infoPlate;
-
-
     public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
         element1Value = "list[i]";
@@ -38,11 +32,6 @@ public class BucketSort : SortAlgorithm {
     public override string AlgorithmName
     {
         get { return UtilSort.BUCKET_SORT; }
-    }
-
-    public override GameObject InfoPlate
-    {
-        get { return infoPlate; }
     }
 
     public override string CollectLine(int lineNr)

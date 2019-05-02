@@ -15,7 +15,7 @@ public class UtilSort : Util {
     public const string NONE = "None", WORST_CASE = "Worst case", BEST_CASE = "Best case", DUPLICATES = "Duplicates", HELP_ENABLED = "Help enabled";
 
     // Rules (numbers)
-    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8;
+    public static readonly int MAX_NUMBER_OF_ELEMENTS = 8, MAX_NUMBER_OF_BUCKETS = 10;
     //public static int MAX_VALUE = 100;
 
     // ******************************************** Instructions ******************************************** 
@@ -68,7 +68,7 @@ public class UtilSort : Util {
     // ---------------------------------------------- Interface ----------------------------------------------
 
     // Buttons
-    public const string NUMBER_OF_ELEMENTS = "Number of elements", SORTING_CASE = "Sorting case";
+    public const string NUMBER_OF_ELEMENTS = "Number of elements", SORTING_CASE = "Sorting case", NUMBER_OF_BUCKETS = "Number of buckets";
 
 
     // ******************************************** Outdated stuff? ********************************************

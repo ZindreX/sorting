@@ -4,19 +4,9 @@ using UnityEngine;
 
 public class DFS : GraphAlgorithm, ITraverse {
 
-    [Space(2)]
-    [Header("Info plate")]
-    [SerializeField]
-    private GameObject infoPlate;
-
     public override string AlgorithmName
     {
         get { return Util.DFS; }
-    }
-
-    public override GameObject InfoPlate
-    {
-        get { return infoPlate; }
     }
 
     public override string GetListType()
@@ -312,78 +302,6 @@ public class DFS : GraphAlgorithm, ITraverse {
 
     #endregion
 
-    #region DFS Traverse Instructions
-    public Dictionary<int, InstructionBase> TraverseUserTestInstructions(Node startNode)
-    {
-        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
-        int instNr = 0;
-
-        // Line 0: Update start node
-        instructions.Add(instNr++, new TraverseInstruction(Util.FIRST_INSTRUCTION, instNr, startNode, false, false));
-
-        // Line 1: Create an empty list (stack)
-        Stack<Node> stack = new Stack<Node>();
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr));
-
-        // Line 2: Push start node
-        stack.Push(startNode);
-        startNode.Visited = true;
-        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, startNode, true, false, addStartNode));
-
-        while (stack.Count > 0)
-        {
-            // Line 4: Update while-loop
-            instructions.Add(instNr++, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr, stack.Count));
-
-            // Line 5: Pop node from stack
-            Node currentNode = stack.Pop();
-            currentNode.Traversed = true;
-            ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0);
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.POP_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
-
-            // Go through each edge connected to current node
-            // Line 6: Update for-loop
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
-            for (int i = 0; i < currentNode.Edges.Count; i++)
-            {
-                Edge edge = currentNode.Edges[i];               
-                Node connectedNode = edge.OtherNodeConnected(currentNode);
-
-                // No need to check the edge we came from
-                if (edge == currentNode.PrevEdge)
-                    continue;
-
-                // Optimizing check
-                //if (connectedNode.Visited || connectedNode.Traversed)
-                //    continue;
-
-                // Line 7: If statement (condition)
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, edge, false, false));
-
-                if (!connectedNode.Visited)
-                {
-                    // Line 8: Push node on top of stack
-                    stack.Push(connectedNode);
-                    connectedNode.Visited = true;
-                    ListVisualInstruction addConnectedNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode);
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, edge, true, false, addConnectedNode));
-
-                    // Set prev edge
-                    connectedNode.PrevEdge = edge;
-                }
-                // Line 10: End if statement
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));
-            }
-            // Line 11: End for-loop
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
-        }
-        // Line 12: End while-loop
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
-        return instructions;
-    }
-    #endregion
-
     #region New Demo version (Demo/Step-by-step)
     public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
@@ -638,5 +556,138 @@ public class DFS : GraphAlgorithm, ITraverse {
         yield return demoStepDuration;
         graphMain.WaitForSupportToComplete--;
     }
+    #endregion
+
+    #region DFS Traverse Instructions
+    public Dictionary<int, InstructionBase> TraverseUserTestInstructions(Node startNode)
+    {
+        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
+        int instNr = 0;
+
+        // Line 0: Update start node
+        instructions.Add(instNr++, new TraverseInstruction(Util.FIRST_INSTRUCTION, instNr, startNode, false, false));
+
+        // Line 1: Create an empty list (stack)
+        Stack<Node> stack = new Stack<Node>();
+        instructions.Add(instNr++, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr));
+
+        // Line 2: Push start node
+        stack.Push(startNode);
+        startNode.Visited = true;
+        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
+        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, startNode, true, false, addStartNode));
+
+        while (stack.Count > 0)
+        {
+            // Line 3: Update while-loop
+            instructions.Add(instNr++, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr, stack.Count));
+
+            // Line 4: Pop node from stack
+            Node currentNode = stack.Pop();
+            currentNode.Traversed = true;
+            ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0);
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.POP_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
+
+            // Go through each edge connected to current node
+            // Line 5: Update for-loop
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
+            for (int i = 0; i < currentNode.Edges.Count; i++)
+            {
+                Edge edge = currentNode.Edges[i];
+                Node connectedNode = edge.OtherNodeConnected(currentNode);
+
+                // No need to check the edge we came from
+                if (edge == currentNode.PrevEdge)
+                    continue;
+
+                // Optimizing check
+                //if (connectedNode.Visited || connectedNode.Traversed)
+                //    continue;
+
+                // Line 6: If statement (condition)
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, edge, false, false));
+
+                if (!connectedNode.Visited)
+                {
+                    // Line 7: Push node on top of stack
+                    stack.Push(connectedNode);
+                    connectedNode.Visited = true;
+                    ListVisualInstruction addConnectedNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode);
+                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, edge, true, false, addConnectedNode));
+
+                    // Set prev edge
+                    connectedNode.PrevEdge = edge;
+                }
+                // Line 8: End if statement
+                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));
+            }
+            // Line 9: End for-loop
+            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+        }
+        // Line 10: End while-loop
+        instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
+        return instructions;
+    }
+    #endregion
+
+    #region DFS Recursive Instructions
+    private Dictionary<int, InstructionBase> recursiveInstructions;
+    private int instNr;
+    public Dictionary<int, InstructionBase> RecursiveInstructions(Node startNode)
+    {
+        Debug.Log("Preparing for recursive instruction farming");
+        recursiveInstructions = new Dictionary<int, InstructionBase>();
+        instNr = 0;
+
+        // Line 0: Update start node
+        recursiveInstructions.Add(instNr++, new TraverseInstruction(Util.FIRST_INSTRUCTION, instNr, startNode, false, false));
+
+        // Line 2: Push start node
+        startNode.Visited = true;
+        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
+        recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, startNode, true, false, addStartNode));
+
+        Debug.Log("Starting recursive instruction farming");
+        StartCoroutine(RecursiveDFS(startNode));
+        Debug.Log("Finished recursive instruction farming");
+
+        // Line 10: End while-loop
+        //recursiveInstructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
+
+        return recursiveInstructions;
+    }
+
+    private IEnumerator RecursiveDFS(Node currentNode)
+    {
+        // Line 4: Pop node from stack
+        currentNode.Traversed = true;
+        ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0);
+        recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.POP_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
+
+        for (int i = 0; i < currentNode.Edges.Count; i++)
+        {
+            Edge connectedEdge = currentNode.Edges[i];
+            Node connectedNode = connectedEdge.OtherNodeConnected(currentNode);
+
+            // Line 6: If statement (condition)
+            recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, connectedEdge, false, false));
+            if (!connectedNode.Visited)
+            {
+                connectedNode.PrevEdge = connectedEdge;
+
+                // Line 7: Push node on top of stack
+                ListVisualInstruction addConnectedNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode);
+                recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.PUSH_INST, instNr, connectedNode, connectedEdge, true, false, addConnectedNode));
+
+                connectedNode.Visited = true;
+                yield return RecursiveDFS(connectedNode);
+            }
+            // Line 8: End if statement
+            //recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));
+        }
+        // Line 9: End for-loop
+        //recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+    }
+
     #endregion
 }

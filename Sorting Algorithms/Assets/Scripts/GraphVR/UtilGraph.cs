@@ -21,6 +21,7 @@ public class UtilGraph : Util {
     public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_BUILD_MODE = "Edge mode";
     public const string GRID_SUB = "Grid sub", ROWS = "Rows", COLUMNS = "Columns";
     public const string TREE_SUB = "Tree sub", TREE_DEPTH = "Tree depth", N_TREE = "N tree";
+    public const string SHORTEST_PATH_OPTIONAL = "Shortest path optional";
 
     public const string SELECT_NODE = "Select node", NO_TASK = "No task";
 
@@ -30,7 +31,7 @@ public class UtilGraph : Util {
 
 
     // Rules
-    public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all", VISIT_LEFT_FIRST = "Visit left first";
+    public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all"; // VISIT_LEFT_FIRST = "Visit left first";
 
     // Graph structures
     public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected", DIRECED_EDGE = "Directed", SYMMETRIC_EDGE = "Symmetric";

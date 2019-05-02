@@ -18,10 +18,10 @@ public class InfoPanel : MonoBehaviour {
         
         foreach (TeachingAlgorithm algorithm in algorithms)
         {
-            GameObject infoPlate = algorithm.InfoPlate;
+            //GameObject infoPlate = algorithm.InfoPlate;
 
-            if (infoPlate != null)
-                infoPlates.Add(algorithm.AlgorithmName, algorithm.InfoPlate);
+            //if (infoPlate != null)
+            //    infoPlates.Add(algorithm.AlgorithmName, algorithm.InfoPlate);
         }
     }
 
