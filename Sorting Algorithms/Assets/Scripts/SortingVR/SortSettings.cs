@@ -13,10 +13,6 @@ public class SortSettings : TeachingSettings {
     // Algorithm settings
     [Space(5)]
     [Header("Sorting settings")]
-    [SerializeField]
-    private bool allowDuplicates;
-
-    private string sortingCase;
 
     [Space(2)]
     [Header("Objects")]
@@ -34,6 +30,18 @@ public class SortSettings : TeachingSettings {
 
     [Space(2)]
     [Header("Rules / extra")]
+
+    [SerializeField]
+    private bool allowDuplicates;
+
+    [SerializeField]
+    [Range(-100, 99)]
+    private int elementMinValue;
+
+    [SerializeField]
+    [Range(-99, 100)]
+    private int elementMaxValue;
+
     [SerializeField]
     [Range(2, 8)]
     private int numberOfElements;
@@ -45,6 +53,7 @@ public class SortSettings : TeachingSettings {
     [SerializeField]
     private CaseEditor sortingCaseEditor;
     private enum CaseEditor { none, best, worst }
+    private string sortingCase;
 
 
     [Space(10)]
@@ -147,6 +156,16 @@ public class SortSettings : TeachingSettings {
         return teachingMode == Util.DEMO || teachingMode == Util.STEP_BY_STEP;
     }
 
+    public int ElementMinValue
+    {
+        get { return elementMinValue; }
+    }
+
+    public int ElementMaxValue
+    {
+        get { return elementMaxValue; }
+    }
+
     // Number of elements used
     public int NumberOfElements
     {
@@ -191,12 +210,15 @@ public class SortSettings : TeachingSettings {
 
     public void ChangeNumberOfBuckets(string buttonID)
     {
-        bool increaseNumberOfElements = buttonID == Util.PLUS;
-        if (increaseNumberOfElements)
+        bool increaseNumberOfBuckets = buttonID == Util.PLUS;
+        if (increaseNumberOfBuckets)
         {
             if (numberOfBuckets < UtilSort.MAX_NUMBER_OF_BUCKETS)
             {
-                numberOfElements += 1;
+                numberOfBuckets++;
+                while (elementMaxValue % numberOfBuckets != 0)
+                    numberOfBuckets++;
+
                 numberOfBucketsText.text = numberOfBuckets.ToString();
             }
             else
@@ -208,7 +230,10 @@ public class SortSettings : TeachingSettings {
         {
             if (numberOfBuckets > 2)
             {
-                numberOfElements -= 1;
+                numberOfBuckets--;
+                while (elementMaxValue % numberOfBuckets != 0)
+                    numberOfBuckets--;
+
                 numberOfBucketsText.text = numberOfBuckets.ToString();
             }
             else

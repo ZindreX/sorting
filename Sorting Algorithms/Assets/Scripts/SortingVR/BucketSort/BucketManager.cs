@@ -16,16 +16,24 @@ public class BucketManager : MonoBehaviour, IManager {
     [SerializeField]
     private BucketSort bucketSort;
 
+
     private GameObject[] buckets;
     private bool containsBuckets = false;
+    private int numberOfBuckets;
 
     private SortMain superElement;
 
     private WaitForSeconds emptyBucketDuration = new WaitForSeconds(2f);
 
-    public void InitManager()
+    public void InitBucketManager(int numberOfBuckets)
     {
-        buckets = new GameObject[GetComponent<BucketSortManager>().NumberOfBuckets];
+        this.numberOfBuckets = numberOfBuckets;
+        buckets = new GameObject[numberOfBuckets];
+        InitManager();
+    }
+
+    public void InitManager() // not really needed anymore
+    {
         superElement = GetComponentInParent<SortMain>();
     }
 

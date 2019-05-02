@@ -6,8 +6,7 @@ using UnityEngine;
 //[RequireComponent(typeof(BucketManager))]
 public class BucketSortManager : AlgorithmManagerBase {
 
-    [SerializeField]
-    private int numberOfBuckets = 10;
+    private int numberOfBuckets;
 
     [SerializeField]
     private BucketSort bucketSort;
@@ -23,6 +22,7 @@ public class BucketSortManager : AlgorithmManagerBase {
     public int NumberOfBuckets
     {
         get { return numberOfBuckets; }
+        set { numberOfBuckets = value; }
     }
 
     public override int MovesNeeded

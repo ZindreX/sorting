@@ -849,7 +849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: Plus
-  interactionDescription: Added a bucket
+  interactionDescription: '#Buckets updated'
 --- !u!114 &86602877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2936,8 +2936,6 @@ MonoBehaviour:
   sortingElementPrefab: {fileID: 1820651531969832, guid: 6f75d7845685db64faee5525514da0ca,
     type: 3}
   sortingTableElementsObj: {fileID: 1299882468}
-  minValue: 0
-  maxValue: 100
 --- !u!114 &236630477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3016,7 +3014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: Minus
-  interactionDescription: Removed a bucket
+  interactionDescription: '#Buckets updated'
 --- !u!1 &246450341
 GameObject:
   m_ObjectHideFlags: 0
@@ -4576,7 +4574,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444274864}
   m_LocalRotation: {x: 0.7071069, y: 0.0000000037252903, z: 0.0000000037252903, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: 0.103}
+  m_LocalPosition: {x: 0, y: 0, z: 0.1119}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 136781173}
@@ -6109,9 +6107,11 @@ MonoBehaviour:
   teachingModeEditor: 0
   algorithmSpeedEditor: 1
   difficultyEditor: 0
-  allowDuplicates: 1
   sortMain: {fileID: 236630474}
   algorithmEditor: 0
+  allowDuplicates: 1
+  elementMinValue: 0
+  elementMaxValue: 100
   numberOfElements: 4
   numberOfBuckets: 10
   sortingCaseEditor: 2
@@ -19253,7 +19253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1855e87154f5df4caca433319f1237e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfBuckets: 10
   bucketSort: {fileID: 999074478}
   bucketManager: {fileID: 2121649984}
 --- !u!114 &2121649986

@@ -80,7 +80,6 @@ public class Video : MonoBehaviour {
 
         //Set video To Play then prepare Audio to prevent Buffering        
         videoPlayer.Prepare();
-        Debug.Log("Change computer? Check filepath!");
 
         //try
         //{

@@ -166,7 +166,6 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                 if (standingInCorrectHolder && !IntermediateMove)
                 {
                     Instruction.Status = Util.EXECUTED_INST;
-                    Debug.Log("if any buggs: fix here");
                     status = Util.EXECUTED_INST;
 
                     // Check if ready for next round

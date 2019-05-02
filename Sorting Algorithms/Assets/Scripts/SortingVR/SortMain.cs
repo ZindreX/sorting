@@ -137,13 +137,16 @@ public class SortMain : MainManager {
         string sortingCase = sortSettings.SortingCase;
         float algorithmSpeed = sortSettings.AlgorithmSpeed;
 
+        // Set min max values
+        elementManager.SetMinMax(sortSettings.ElementMinValue, sortSettings.ElementMaxValue);
+
+        // Algorithm manager setup
+        algorithmManagerBase = SortingAlgorithmManager(algorithmName);
+        algorithmManagerBase.InitSortingManager(this);
+
         // Algorithm setup
         sortAlgorithm = (SortAlgorithm)GrabAlgorithmFromObj(); // SortAlgorithm object
         sortAlgorithm.InitSortAlgorithm(this, algorithmSpeed);
-
-        // Algorithm manager setup
-        algorithmManagerBase = ActivateDeactivateSortingManagers(algorithmName);
-        algorithmManagerBase.InitSortingManager(this);
 
         // Init display unit manager
         displayUnitManager.InitDisplayUnitManager();
@@ -392,18 +395,20 @@ public class SortMain : MainManager {
 
 
     // Keeps only one sorting algorithm manager active
-    private AlgorithmManagerBase ActivateDeactivateSortingManagers(string sortAlgorithm)
+    private AlgorithmManagerBase SortingAlgorithmManager(string sortAlgorithm)
     {
         switch (sortAlgorithm)
         {
             case Util.BUBBLE_SORT: return GetComponentInChildren<BubbleSortManager>();
             case Util.INSERTION_SORT: return GetComponentInChildren<InsertionSortManager>();
             case Util.BUCKET_SORT:
+                int numberOfbuckets = sortSettings.NumberOfBuckets;
+
                 BucketSortManager bucketSortManager = GetComponentInChildren<BucketSortManager>();
-                bucketSortManager.enabled = true;
+                bucketSortManager.NumberOfBuckets = numberOfbuckets;
 
                 BucketManager bucketManager = GetComponentInChildren<BucketManager>(); // Move to BucketSortManager
-                bucketManager.enabled = true;
+                bucketManager.InitBucketManager(numberOfbuckets);
                 bucketManager.InitManager();
                 return bucketSortManager;
 

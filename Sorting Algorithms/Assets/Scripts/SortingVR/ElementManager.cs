@@ -14,8 +14,7 @@ public class ElementManager : MonoBehaviour, IManager {
     private GameObject sortingElementPrefab, sortingTableElementsObj;
     private GameObject[] sortingElements;
 
-    [SerializeField]
-    private int minValue = 0, maxValue = 100;
+    private int minValue, maxValue;
 
     private SortingElementBase currentMoving;
     private bool containsElements = false;
@@ -24,6 +23,12 @@ public class ElementManager : MonoBehaviour, IManager {
     public void InitManager()
     {
         superElement = GetComponent<SortMain>();
+    }
+
+    public void SetMinMax(int min, int max)
+    {
+        minValue = min;
+        maxValue = max;
     }
 
     public int MinValue
