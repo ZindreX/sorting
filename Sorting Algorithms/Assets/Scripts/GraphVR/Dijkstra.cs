@@ -62,7 +62,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             case 13: lineOfCode += string.Format("          end if"); break;
             case 14: lineOfCode += string.Format("      end for"); break;
             case 15: lineOfCode += string.Format("  end while"); break;
-            default: return "lineNr " + lineNr + " not found!";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
         return lineOfCode;
     }
@@ -75,7 +75,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             //case 7: return init ? "       for all neighbors of w in Graph:" : "       for all neighbors of " + node1Alpha + " in Graph:";
             //case 8: return init ? "           Visit neighbor v" : "           Visit neighbor " +  node2Alpha;
             case 9: return init ? "           if (" + node1Alpha + ".Dist + edge(" + node1Alpha + ", " + node2Alpha + ").Cost < " + node2Alpha + ".Dist):" : "           if (" + node1Dist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(node2Dist) + "):";
-            default: return "X";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
     }
 

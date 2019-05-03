@@ -19,7 +19,7 @@ public class MergeSort : SortAlgorithm {
     [SerializeField]
     private MergeSortManager mergeSortManager;
 
-    private int numberOfElements, numberOfSplits;
+    private int numbElements, numberOfSplits;
     private Vector3 splitHolderPos = new Vector3(0f, 0.2f, 0.2f);
     private Dictionary<int, int[]> holderIndex = new Dictionary<int, int[]>();
 
@@ -27,7 +27,7 @@ public class MergeSort : SortAlgorithm {
     public override void InitTeachingAlgorithm(float algorithmSpeed)
     {
         base.InitTeachingAlgorithm(algorithmSpeed);
-        numberOfElements = sortMain.SortSettings.NumberOfElements;
+        //numberOfElements = sortMain.SortSettings.NumberOfElements;
     }
 
     public override string AlgorithmName
@@ -74,7 +74,7 @@ public class MergeSort : SortAlgorithm {
 
     public MergeSortHolder GetExtraHolder(int holderID)
     {
-        int splitHolderIndex = numberOfElements - holderID;
+        int splitHolderIndex = numbElements - holderID;
         return (splitHolderIndex >= 0 && splitHolderIndex < splitHolders.Count) ? splitHolders[splitHolderIndex] : null;
     }
 
@@ -267,7 +267,7 @@ public class MergeSort : SortAlgorithm {
 
         split++;
 
-        if (splitHolders.Count < numberOfElements)
+        if (splitHolders.Count < numbElements)
         {
             switch (split)
             {
@@ -275,14 +275,14 @@ public class MergeSort : SortAlgorithm {
                 case 0:
                     for (int i = 0; i < 2; i++)
                     {
-                        splitHolders.Add(CreateSplitHolder(holderIndex[numberOfElements][splitHolders.Count]));
+                        splitHolders.Add(CreateSplitHolder(holderIndex[numbElements][splitHolders.Count]));
                     }
                     //leftIndex = splitHolders.Count - 2;
                     //rightIndex = splitHolders.Count - 1;
                     break;
 
                 case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-                    int hIndex = holderIndex[numberOfElements][splitHolders.Count];
+                    int hIndex = holderIndex[numbElements][splitHolders.Count];
                     splitHolders.Add(CreateSplitHolder(hIndex));
 
                     //if (split == 3)
@@ -477,7 +477,7 @@ public class MergeSort : SortAlgorithm {
         {
             // Create new holders
             leftHolderID = 0;
-            rightHolderID = numberOfElements / 2;
+            rightHolderID = numbElements / 2;
             instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, leftHolderID));
             instructions.Add(instNr++, new MergeSortHolderInstruction(CREATE_HOLDER, instNr, rightHolderID));
             firstSplit = false;

@@ -97,7 +97,7 @@ public class BucketSortElement : SortingElementBase {
                 case UtilSort.DISPLAY_ELEMENT:
                     break;
 
-                default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
+                default: Debug.Log("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
             if (bucketSortInstruction.IsCompare)
@@ -145,13 +145,10 @@ public class BucketSortElement : SortingElementBase {
                         return (currentInside != null && currentInside.BucketID == bucketSortInstruction.BucketID) ? UtilSort.CORRECT_BUCKET : UtilSort.WRONG_BUCKET;
 
                 case UtilSort.MOVE_BACK_INST:
-                    Debug.Log("Moving back");
                     if (!bucketSortInstruction.HasBeenExecuted())
                     {
-                        Debug.Log("Not executed yet check");
                         if (currentStandingOn != null)
                         {
-                            Debug.Log("standing on top of holder");
                             // Check correct move first
                             if (IntermediateMove && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID)
                             {
@@ -162,17 +159,14 @@ public class BucketSortElement : SortingElementBase {
                         }
                         else if (currentInside != null)
                         {
-                            Debug.Log("standing on top of bucket");
                             if (IntermediateMove && CurrentInside.BucketID == bucketSortInstruction.BucketID)
                                 return UtilSort.CORRECT_BUCKET;
                             return UtilSort.WRONG_HOLDER;
                         }
-                        Debug.Log("else (not executed)");
                         return UtilSort.WRONG_HOLDER;
                     }
                     else
                     {
-                        Debug.Log("Already executed check");
                         return (currentStandingOn != null && CurrentStandingOn.HolderID == bucketSortInstruction.NextHolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
                     }
 

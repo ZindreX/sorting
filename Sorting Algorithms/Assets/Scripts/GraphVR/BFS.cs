@@ -30,14 +30,14 @@ public class BFS : GraphAlgorithm, ITraverse {
             case 8: lineOfCode += string.Format("          end if"); break;
             case 9: lineOfCode += string.Format("      end for"); break;
             case 10: lineOfCode += string.Format("  end while"); break;
-            default: return "lineNr " + lineNr + " not found!";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
         return lineOfCode;
     }
 
     protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
-        return "X";
+        return Util.INVALID_PSEUDO_CODE_LINE;
     }
 
     public override int FirstInstructionCodeLine()

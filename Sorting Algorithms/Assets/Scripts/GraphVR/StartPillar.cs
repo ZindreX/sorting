@@ -9,7 +9,7 @@ public class StartPillar : StartExchangePosition {
     private TextMeshPro displayText;
 
     [SerializeField]
-    private ToggleButton startButton;
+    private StartButton startButton;
 
     private string teachingMode;
 

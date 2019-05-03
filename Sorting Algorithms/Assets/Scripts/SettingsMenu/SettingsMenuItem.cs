@@ -51,18 +51,24 @@ public abstract class SettingsMenuItem : MonoBehaviour {
 
     public void OnClickDo()
     {
+        bool reportDirectly = true;
+
         // Perform item role first
         switch (ItemRole())
         {
             case Util.ONE_ACTIVE_BUTTON: ((OneActiveButton)this).ActivateItem(); break;
             case Util.STATIC_BUTTON: ((StaticButton)this).DoSomething(); break;
             case Util.TOGGLE_BUTTON: ((ToggleButton)this).Toggle(); break;
+            case Util.START_BUTTON:
+                ((StartButton)this).Toggle();
+                reportDirectly = false;
+                break;
             case Util.MULTI_STATE_BUTTON: ((MultiStateButton)this).ToggleNextState(); break;
         }
-        //Debug.Log("Section: " + section.SectionID + ", item: " + itemID + ", description: " + interactionDescription);
         
         // Report click to section
-        section.ReportItemClicked(section.SectionID, itemID, interactionDescription);
+        if (reportDirectly)
+            section.ReportItemClicked(section.SectionID, itemID, interactionDescription);
     }
 
 

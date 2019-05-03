@@ -76,7 +76,7 @@ public class GraphMain : MainManager {
         // >>> Basic components
         graphSettings = settingsObj.GetComponent<GraphSettings>();
 
-        stepByStepManager = GetComponentInChildren<DemoManager>();
+        demoManager = GetComponentInChildren<DemoManager>();
         userTestManager = GetComponentInChildren<UserTestManager>();
 
         posManager = FindObjectOfType<PositionManager>();
@@ -162,10 +162,10 @@ public class GraphMain : MainManager {
         }
     }
 
-    public override void InstantiateSetup()
+    public override void InstantiateSafeStart()
     {
         // First init common stuff
-        base.InstantiateSetup();
+        base.InstantiateSafeStart();
 
         // >>> Grab variable data from settings
         string teachingMode = graphSettings.TeachingMode;
@@ -344,12 +344,11 @@ public class GraphMain : MainManager {
         calculator.ResetDevice();
         demoDevice.ResetDevice();
 
-        switch (graphSettings.TeachingMode)
-        {
-            case Util.DEMO: break;
-            case Util.STEP_BY_STEP: break;
-            case Util.USER_TEST: userTestManager.ResetState(); break;
-        }
+        //switch (graphSettings.TeachingMode)
+        //{
+        //    case Util.DEMO: case Util.STEP_BY_STEP: demoManager.ResetState(); break;
+        //    case Util.USER_TEST: userTestManager.ResetState(); break;
+        //}
     }
 
     /* --------------------------------------- Demo ---------------------------------------
@@ -382,7 +381,7 @@ public class GraphMain : MainManager {
 
             Debug.Log("Number of instructions: " + instructions.Count);
 
-            stepByStepManager.InitDemo(instructions);
+            demoManager.InitDemo(instructions);
 
             graphManager.ResetGraph();
 

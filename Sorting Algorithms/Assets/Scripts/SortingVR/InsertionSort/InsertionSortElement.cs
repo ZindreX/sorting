@@ -61,7 +61,7 @@ public class InsertionSortElement : SortingElementBase {
                     break;
 
                 case UtilSort.EXECUTED_INST: status = UtilSort.EXECUTED_INST; break;
-                default: Debug.LogError("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
+                default: Debug.Log("UpdateSortingElementState(): Add '" + instruction + "' case, or ignore"); break;
             }
 
             if (insertionSortInstruction.IsPivot)
@@ -163,7 +163,7 @@ public class InsertionSortElement : SortingElementBase {
                     case UtilSort.SWITCH_INST:
                         return (insertionSortInstruction.NextHolderID == CurrentStandingOn.HolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
 
-                    default: Debug.LogError("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
+                    default: Debug.Log("IsCorrectlyPlaced(): Add '" + instruction + "' case, or ignore"); break;
                 }
             }
         }

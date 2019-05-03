@@ -5,12 +5,12 @@ using UnityEngine;
 public class ToggleButton : SettingsMenuButton {
 
     [SerializeField]
-    private Material onMaterial, offMaterial;
+    protected Material onMaterial, offMaterial;
 
     [SerializeField]
-    private string onText, offText;
+    protected string onText, offText;
 
-    private bool state;
+    protected bool state;
 
     protected override void Awake()
     {
@@ -32,7 +32,7 @@ public class ToggleButton : SettingsMenuButton {
     }
 
     // Toggles between two states
-    public void Toggle()
+    public virtual void Toggle()
     {
         state = !state;
 

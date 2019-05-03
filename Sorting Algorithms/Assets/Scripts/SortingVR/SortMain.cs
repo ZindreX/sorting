@@ -37,7 +37,7 @@ public class SortMain : MainManager {
         // >>> Objects
         holderManager = GetComponent(typeof(HolderManager)) as HolderManager;
         elementManager = GetComponent(typeof(ElementManager)) as ElementManager;
-        stepByStepManager = GetComponent(typeof(DemoManager)) as DemoManager;
+        demoManager = GetComponent(typeof(DemoManager)) as DemoManager;
         userTestManager = GetComponent(typeof(UserTestManager)) as UserTestManager;
         displayUnitManager = displayUnitManagerObj.GetComponent(typeof(DisplayUnitManager)) as DisplayUnitManager;
 
@@ -118,9 +118,9 @@ public class SortMain : MainManager {
         }
     }
 
-    public override void InstantiateSetup()
+    public override void InstantiateSafeStart()
     {
-        base.InstantiateSetup();
+        base.InstantiateSafeStart();
 
         // Get values from settings
         algorithmName = sortSettings.Algorithm; // string name
@@ -129,7 +129,7 @@ public class SortMain : MainManager {
         string sortingCase = sortSettings.SortingCase;
         float algorithmSpeed = sortSettings.AlgorithmSpeed;
 
-        // Set min max values
+        // Set min max values for sorting elements
         elementManager.SetMinMax(sortSettings.ElementMinValue, sortSettings.ElementMaxValue);
 
         // Algorithm manager setup
@@ -218,13 +218,12 @@ public class SortMain : MainManager {
 
 
         // test stuff
-        switch (sortSettings.TeachingMode)
-        {
-            case Util.DEMO: break;
-            case Util.STEP_BY_STEP: stepByStepManager.ResetState(); break;
-            case Util.USER_TEST: userTestManager.ResetState(); break;
-            default: Debug.Log("Teaching mode '" + sortSettings.TeachingMode + "' not found"); break;
-        }
+        //switch (sortSettings.TeachingMode)
+        //{
+        //    case Util.DEMO: case Util.STEP_BY_STEP: demoManager.ResetState(); break;
+        //    case Util.USER_TEST: userTestManager.ResetState(); break;
+        //    default: Debug.Log("Teaching mode '" + sortSettings.TeachingMode + "' not found"); break;
+        //}
     }
 
     /* --------------------------------------- Demo ---------------------------------------
@@ -247,7 +246,7 @@ public class SortMain : MainManager {
 
             Debug.Log("Number of instructions: " + instructions.Count);
 
-            stepByStepManager.InitDemo(instructions);
+            demoManager.InitDemo(instructions);
 
             newDemoImplemented = true;
         }

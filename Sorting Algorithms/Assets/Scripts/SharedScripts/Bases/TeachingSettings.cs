@@ -200,7 +200,7 @@ public abstract class TeachingSettings : SettingsBase {
     // Instantiates the algorithm/task, user needs to click a start button to start the task (see method below)
     public void InstantiateTask()
     {
-        MainManager.InstantiateSetup();
+        MainManager.InstantiateSafeStart();
     }
 
     // Start/stop algorithm in game
@@ -215,9 +215,6 @@ public abstract class TeachingSettings : SettingsBase {
     // Start task from in game
     private void StartTask()
     {
-        if (MainManager.CheckListModeActive)
-            return;
-
         switch (teachingMode)
         {
             case Util.DEMO: case Util.STEP_BY_STEP: break;

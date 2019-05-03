@@ -42,7 +42,7 @@ public abstract class MainManager : MonoBehaviour {
 
     protected DemoDevice demoDevice;
 
-    protected DemoManager stepByStepManager;
+    protected DemoManager demoManager;
     protected UserTestManager userTestManager;
 
     // Audio
@@ -97,10 +97,6 @@ public abstract class MainManager : MonoBehaviour {
     // Called when user click a stop button in game
     public void SafeStop()
     {
-        //if (Settings.TeachingMode == Util.DEMO && algorithmName == Util.DIJKSTRA)
-        //    Debug.Log("Waiting for old demo...");
-        //UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in step/user test
-        //else
         UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in new demo/step/user test
             
         userStoppedTask = true;
@@ -217,7 +213,7 @@ public abstract class MainManager : MonoBehaviour {
 
                 if (userPausedTask)
                 {
-                    stepByStepManager.CurrentInstructionNr--;
+                    demoManager.CurrentInstructionNr--;
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
                     demoDevice.SetDemoDeviceTitle(Util.STEP_BY_STEP);
                 }
@@ -279,12 +275,26 @@ public abstract class MainManager : MonoBehaviour {
     // Input from user during Step-By-Step (increment/decrement)
     public void PlayerStepByStepInput(bool increment)
     {
-        if (ControllerReady)
-            stepByStepManager.NotifyUserInput(increment);
+        if (ControllerReady && !WaitingForSupportToFinish())
+            demoManager.NotifyUserInput(increment);
     }
 
 
     // --------------------------------------- Settings menu / Start pillar ---------------------------------------
+
+    /* --------------------------------------- Instatiate Setup ---------------------------------------
+     * > Called from UserController
+     * > Creates the holders and the sorting elements
+    */
+    public virtual void InstantiateSafeStart()
+    {
+        // Used for shut down process
+        safeStopChecklist = new Dictionary<string, bool>();
+
+        activeChecklist = START_UP_CHECK;
+        checkListModeActive = true;
+        algorithmName = Settings.Algorithm;
+    }
 
     public void StartAlgorithm()
     {
@@ -307,9 +317,43 @@ public abstract class MainManager : MonoBehaviour {
                 break;
         }
 
+        // Start up process completed
+        activeChecklist = "";
+        checkListModeActive = false;
+
         userStoppedTask = false;
         controllerReady = true; // ???
         algorithmInitialized = true;
+    }
+
+
+    /* --------------------------------------- Destroy & Restart ---------------------------------------
+     * > Called from UserController
+     * > Destroys all the gameobjects
+     */
+    public virtual void DestroyAndReset()
+    {
+        algorithmName = "";
+
+        activeChecklist = "";
+        checkListModeActive = false;
+        safeStopChecklist = null;
+
+        algorithmInitialized = false;
+        controllerReady = false;
+        userStoppedTask = false;
+        userPausedTask = false;
+
+        WaitForSupportToComplete = 0;
+
+        switch (Settings.TeachingMode)
+        {
+            case Util.DEMO: demoManager.ResetState(); break;
+            case Util.USER_TEST: userTestManager.ResetState(); break;
+        }
+        newDemoImplemented = false;
+
+        // Reset demo device in <..>main
     }
 
 
@@ -347,46 +391,6 @@ public abstract class MainManager : MonoBehaviour {
 
     protected abstract IEnumerator ActivateTaskObjects(bool active);
 
-    /* --------------------------------------- Instatiate Setup ---------------------------------------
-     * > Called from UserController
-     * > Creates the holders and the sorting elements
-    */
-    public virtual void InstantiateSetup()
-    {
-        // Used for shut down process
-        safeStopChecklist = new Dictionary<string, bool>();
-        algorithmName = Settings.Algorithm;
-    }
-
-    /* --------------------------------------- Destroy & Restart ---------------------------------------
-     * > Called from UserController
-     * > Destroys all the gameobjects
-     */
-    public virtual void DestroyAndReset()
-    {
-        algorithmName = "";
-
-        activeChecklist = "";
-        checkListModeActive = false;
-        safeStopChecklist = null;
-
-        algorithmInitialized = false;
-        controllerReady = false;
-        userStoppedTask = false;
-        userPausedTask = false;
-
-        WaitForSupportToComplete = 0;
-
-        switch (Settings.TeachingMode)
-        {
-            case Util.DEMO: stepByStepManager.ResetState(); break;
-            case Util.USER_TEST: userTestManager.ResetState(); break;
-        }
-        newDemoImplemented = false;
-
-        // Reset demo device in <..>main
-    }
-
 
     /* --------------------------------------- Demo & Step-By-Step ---------------------------------------
      * >>> Demo
@@ -406,25 +410,25 @@ public abstract class MainManager : MonoBehaviour {
         if (newDemoImplemented)
         {
             // Step by step activated by pausing, and step requested
-            if (userPausedTask && stepByStepManager.PlayerMove)
+            if (userPausedTask && demoManager.PlayerMove)
             {
-                stepByStepManager.PlayerMove = false;
-                InstructionBase stepInstruction = stepByStepManager.GetStep();
+                demoManager.PlayerMove = false;
+                InstructionBase stepInstruction = demoManager.GetStep();
                 Debug.Log(">>> " + stepInstruction.DebugInfo());
 
-                bool increment = stepByStepManager.PlayerIncremented;
+                bool increment = demoManager.PlayerIncremented;
                 PerformInstruction(stepInstruction, increment);
             }
-            else if (!userPausedTask && stepByStepManager.HasInstructions()) // Demo mode
+            else if (!userPausedTask && demoManager.HasInstructions()) // Demo mode
             {
                 // First check if user test setup is complete
-                if (stepByStepManager.HasInstructions() && waitForSupportToComplete == 0)
+                if (demoManager.HasInstructions() && waitForSupportToComplete == 0)
                 {
-                    InstructionBase instruction = stepByStepManager.GetInstruction();
+                    InstructionBase instruction = demoManager.GetInstruction();
                     Debug.Log(instruction.DebugInfo());
 
                     PerformInstruction(instruction, true);
-                    stepByStepManager.IncrementToNextInstruction();
+                    demoManager.IncrementToNextInstruction();
                 }
             }
         }

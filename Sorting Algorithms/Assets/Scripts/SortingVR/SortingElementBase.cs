@@ -182,10 +182,11 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                         parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
                         parent.GetComponent<UserTestManager>().ReadyForNext += 1;
                         NextMove = false;
-                        elementInteraction.PickedUp = false; // Reset (comparison pick up added)
                     }
                 }
+
                 validatedUserMove++;
+                elementInteraction.PickedUp = false; // Reset (comparison pick up added)
             }
         }
         else

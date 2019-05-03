@@ -16,5 +16,4 @@ public class ElementInteraction : MonoBehaviour {
         get { return pickedUp; }
         set { pickedUp = value; }
     }
-
 }

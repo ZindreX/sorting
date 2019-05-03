@@ -10,6 +10,7 @@ public class Util : MonoBehaviour {
     // ----------------------------------------- GUI ----------------------------------------- 
     // Buttons
     public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
+    public const string START_BUTTON = "Start button";
 
     // Sections
     public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", S_FAST_STR = "SFast";
@@ -67,8 +68,8 @@ public class Util : MonoBehaviour {
     public const string ALGORITHM_MANAGER = "Algorithm manager";
 
 
-    public const string SPLIT_INST = "::";
-    public static readonly char PSEUDO_SPLIT_LINE_ID = ':';
+    public const string SPLIT_INST = "::", INVALID_PSEUDO_CODE_LINE = "X";
+    public static readonly char PSEUDO_SPLIT_LINE_ID = '§';
 
     // Skip words
     public static readonly string SKIP_NO_ELEMENT = "Skip no element", SKIP_NO_DESTINATION = "Skip no destination";

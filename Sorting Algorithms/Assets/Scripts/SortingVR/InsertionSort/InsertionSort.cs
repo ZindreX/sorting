@@ -77,7 +77,7 @@ public class InsertionSort : SortAlgorithm {
             case 9: lineOfCode +=  "        list[" + jPlus1 + "] = pivot"; break; // (j_str + 1) 
             case 10: lineOfCode += "        i = " + iPlus1; break; // i_str = (i_str - 1) + 1 
             case 11: lineOfCode += "    end while"; break;
-            default: return "X";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
         return lineOfCode;
     }
@@ -95,7 +95,7 @@ public class InsertionSort : SortAlgorithm {
             case 7: return init ? "            j = j - 1" : "            j = " + j + " - 1";
             case 9: return init ? "        list[j + 1] = pivot" : "        list[" + j + " + 1] = pivot";
             case 10: return init ? "        i = i + 1" : "        i = " + i + " + 1";
-            default: return "X";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
     }
 
@@ -432,7 +432,6 @@ public class InsertionSort : SortAlgorithm {
     }
     #endregion
 
-
     #region New Demo / Step-by-step
     public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
@@ -456,13 +455,10 @@ public class InsertionSort : SortAlgorithm {
         }
 
         // Remove highlight from previous instruction
-        for (int x = 0; x < prevHighlight.Count; x++)
-        {
-            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
-        }
+        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
 
         // Gather part of code to highlight
-        List<int> lineOfCode = new List<int>();
+        int lineOfCode = Util.NO_VALUE;
         switch (instruction.Instruction)
         {
             case UtilSort.SET_SORTED_INST:
@@ -478,17 +474,17 @@ public class InsertionSort : SortAlgorithm {
                 }
                 break;
 
-            case UtilSort.FIRST_INSTRUCTION:
-                lineOfCode.Add(FirstInstructionCodeLine());
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode = FirstInstructionCodeLine();
                 lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
                 break;
 
             case UtilSort.FIRST_LOOP:
-                lineOfCode.Add(2);
+                lineOfCode = 2;
                 break;
 
-            case UtilSort.SET_VAR_J:
-                lineOfCode.Add(3);
+            case Util.SET_VAR_J:
+                lineOfCode = 3;
                 break;
 
             case UtilSort.PIVOT_START_INST:
@@ -500,7 +496,7 @@ public class InsertionSort : SortAlgorithm {
                 PreparePseudocodeValue(sortingElement.Value, 1);
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
-                lineOfCode.Add(4);
+                lineOfCode = 4;
                 break;
 
             case UtilSort.COMPARE_START_INST:
@@ -521,7 +517,7 @@ public class InsertionSort : SortAlgorithm {
                 PreparePseudocodeValue(sortingElement.Value, 2);
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
-                lineOfCode.Add(5);
+                lineOfCode = 5;
                 break;
 
             case UtilSort.SWITCH_INST:
@@ -533,11 +529,11 @@ public class InsertionSort : SortAlgorithm {
                 else
                     sortingElement.IsCompare = !insertionInstruction.IsCompare;
 
-                lineOfCode.Add(6);
+                lineOfCode = 6;
                 break;
 
-            case UtilSort.UPDATE_VAR_J:
-                lineOfCode.Add(7);
+            case Util.UPDATE_VAR_J:
+                lineOfCode = 7;
                 break;
 
             case UtilSort.COMPARE_END_INST:
@@ -553,7 +549,7 @@ public class InsertionSort : SortAlgorithm {
                 }
 
                 UtilSort.IndicateElement(sortingElement.gameObject);
-                lineOfCode.Add(8);
+                lineOfCode = 8;
                 break;
 
             case UtilSort.PIVOT_END_INST:
@@ -569,25 +565,23 @@ public class InsertionSort : SortAlgorithm {
                 }
 
                 UtilSort.IndicateElement(sortingElement.gameObject);
-                lineOfCode.Add(9);
+                lineOfCode = 9;
                 break;
 
-            case UtilSort.INCREMENT_VAR_I:
-                lineOfCode.Add(10);
+            case Util.INCREMENT_VAR_I:
+                lineOfCode = 10;
                 break;
 
-            case UtilSort.FINAL_INSTRUCTION:
-                lineOfCode.Add(FinalInstructionCodeLine());
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode = FinalInstructionCodeLine();
                 break;
         }
-        prevHighlight = lineOfCode;
 
         // Highlight part of code in pseudocode
-        for (int x = 0; x < lineOfCode.Count; x++)
-        {
-            //pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
-            yield return HighlightPseudoCode(CollectLine(lineOfCode[x]), Util.HIGHLIGHT_COLOR);
-        }
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
+
+        // Mark prev for next round
+        prevHighlightedLineOfCode = lineOfCode;
 
         // Move sorting element
         if (instruction is InsertionSortInstruction)
@@ -637,208 +631,6 @@ public class InsertionSort : SortAlgorithm {
     #endregion
 
 
-    #region Execute order from user :: REMOVE
-    //public override void ExecuteStepByStepOrder(InstructionBase instruction, bool gotSortingElement, bool increment)
-    //{
-    //    // Gather information from instruction
-    //    InsertionSortInstruction insertionInstruction = null;
-    //    InsertionSortElement sortingElement = null;
-
-    //    if (gotSortingElement)
-    //    {
-    //        insertionInstruction = (InsertionSortInstruction)instruction;
-    //        Debug.Log("Debug: " + insertionInstruction.DebugInfo() + "\n");
-
-    //        // Change internal state of sorting element
-    //        sortingElement = sortMain.ElementManager.GetSortingElement(insertionInstruction.SortingElementID).GetComponent<InsertionSortElement>();
-    //    }
-
-    //    if (instruction is InstructionLoop)
-    //    {
-    //        i = ((InstructionLoop)instruction).I;
-    //        j = ((InstructionLoop)instruction).J;
-    //        //k = ((InstructionLoop)instruction).K;
-    //    }
-
-    //    // Remove highlight from previous instruction
-    //    for (int x = 0; x < prevHighlight.Count; x++)
-    //    {
-    //        pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
-    //    }
-
-    //    // Gather part of code to highlight
-    //    List<int> lineOfCode = new List<int>();
-    //    switch (instruction.Instruction)
-    //    {
-    //        case UtilSort.SET_SORTED_INST:
-    //            if (increment)
-    //            {
-    //                sortingElement.IsSorted = insertionInstruction.IsSorted;
-    //                UtilSort.IndicateElement(sortingElement.gameObject);
-    //            }
-    //            else
-    //            {
-    //                sortingElement.IsSorted = !insertionInstruction.IsSorted;
-    //                UtilSort.IndicateElement(sortingElement.gameObject);
-    //            }
-    //            break;
-
-    //        case UtilSort.FIRST_INSTRUCTION:
-    //            lineOfCode.Add(FirstInstructionCodeLine());
-    //            lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
-    //            break;
-
-    //        case UtilSort.FIRST_LOOP:
-    //            lineOfCode.Add(2);
-    //            break;
-
-    //        case UtilSort.SET_VAR_J:
-    //            lineOfCode.Add(3);
-    //            break;
-
-    //        case UtilSort.PIVOT_START_INST:
-    //            if (increment)
-    //                sortingElement.IsPivot = insertionInstruction.IsPivot;
-    //            else
-    //                sortingElement.IsPivot = !insertionInstruction.IsPivot;
-
-    //            PreparePseudocodeValue(sortingElement.Value, 1);
-    //            UtilSort.IndicateElement(sortingElement.gameObject);
-
-    //            lineOfCode.Add(4);
-    //            break;
-
-    //        case UtilSort.COMPARE_START_INST:
-    //            if (increment)
-    //            {
-    //                sortingElement.IsCompare = insertionInstruction.IsCompare;
-    //                sortingElement.IsSorted = insertionInstruction.IsSorted;
-    //            }
-    //            else
-    //            {
-    //                sortingElement.IsCompare = !insertionInstruction.IsCompare;
-    //                if (insertionInstruction.HolderID == sortingElement.SortingElementID) // works for worst case, none might be buggy
-    //                    sortingElement.IsSorted = insertionInstruction.IsSorted;
-    //                else
-    //                    sortingElement.IsSorted = !insertionInstruction.IsSorted;
-    //            }
-
-    //            PreparePseudocodeValue(sortingElement.Value, 2);
-    //            UtilSort.IndicateElement(sortingElement.gameObject);
-
-    //            lineOfCode.Add(5);
-    //            break;
-
-    //        case UtilSort.SWITCH_INST:
-    //            if (increment)
-    //            {
-    //                sortingElement.IsCompare = insertionInstruction.IsCompare;
-    //                sortingElement.IsSorted = insertionInstruction.IsSorted;
-    //            }
-    //            else
-    //                sortingElement.IsCompare = !insertionInstruction.IsCompare;
-
-    //            lineOfCode.Add(6);
-    //            break;
-
-    //        case UtilSort.UPDATE_VAR_J:
-    //            lineOfCode.Add(7);
-    //            break;
-
-    //        case UtilSort.COMPARE_END_INST:
-    //            if (increment)
-    //            {
-    //                sortingElement.IsCompare = insertionInstruction.IsCompare;
-    //                sortingElement.IsSorted = insertionInstruction.IsSorted;
-    //            }
-    //            else
-    //            {
-    //                sortingElement.IsCompare = !insertionInstruction.IsCompare;
-    //                sortingElement.IsSorted = !insertionInstruction.IsSorted;
-    //            }
-
-    //            UtilSort.IndicateElement(sortingElement.gameObject);
-    //            lineOfCode.Add(8);
-    //            break;
-
-    //        case UtilSort.PIVOT_END_INST:
-    //            if (increment)
-    //            {
-    //                sortingElement.IsPivot = insertionInstruction.IsPivot;
-    //                sortingElement.IsSorted = insertionInstruction.IsSorted;
-    //            }
-    //            else
-    //            {
-    //                sortingElement.IsPivot = !insertionInstruction.IsPivot;
-    //                sortingElement.IsSorted = !insertionInstruction.IsSorted;
-    //            }
-
-    //            UtilSort.IndicateElement(sortingElement.gameObject);
-    //            lineOfCode.Add(9);
-    //            break;
-
-    //        case UtilSort.INCREMENT_VAR_I:
-    //            lineOfCode.Add(10);
-    //            break;
-
-    //        case UtilSort.FINAL_INSTRUCTION:
-    //            lineOfCode.Add(FinalInstructionCodeLine());
-    //            break;
-    //    }
-    //    prevHighlight = lineOfCode;
-
-    //    // Highlight part of code in pseudocode
-    //    for (int x = 0; x < lineOfCode.Count; x++)
-    //    {
-    //        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), UtilSort.HIGHLIGHT_COLOR);
-    //    }
-
-    //    // Move sorting element
-    //    if (gotSortingElement)
-    //    {
-    //        switch (insertionInstruction.Instruction)
-    //        {
-    //            case UtilSort.COMPARE_START_INST: // testing
-    //                if (increment)
-    //                {
-    //                    // Positioning the pivot holder behind/slightly above comparing element
-    //                    pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
-    //                    // Postitioning the pivot element on top of the pivot holder
-    //                    pivotHolder.CurrentHolding.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                }
-    //                else
-    //                {
-    //                    //sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + Util.ABOVE_HOLDER_VR;
-
-    //                }
-    //                break;
-
-    //            case UtilSort.PIVOT_START_INST: // tesing (was combined with switch/pivot_end
-    //                if (increment)
-    //                {
-    //                    pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
-    //                    sortingElement.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                }
-    //                else
-    //                {
-    //                    //
-    //                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                }
-    //                break;
-
-    //            //case Util.PIVOT_START_INST: // original working setup (non moving pivot holder)
-    //            case UtilSort.SWITCH_INST:
-    //            case UtilSort.PIVOT_END_INST:
-    //                if (increment)
-    //                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                else
-    //                    sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
-    //                break;
-    //        }
-    //    }
-    //}
-    #endregion
-
     #region User test display pseudocode as support
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
@@ -857,83 +649,80 @@ public class InsertionSort : SortAlgorithm {
 
 
         // Remove highlight from previous instruction
-        for (int x = 0; x < prevHighlight.Count; x++)
-        {
-            pseudoCodeViewer.ChangeColorOfText(prevHighlight[x], UtilSort.BLACKBOARD_TEXT_COLOR);
-        }
+        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
 
         // Gather part of code to highlight
-        List<int> lineOfCode = new List<int>(); // change back to int var? no need for list, or change pseudocode?
-        Color useColor = UtilSort.HIGHLIGHT_COLOR;
+        int lineOfCode = Util.NO_VALUE;
+        useHighlightColor = Util.HIGHLIGHT_COLOR;
         switch (instruction.Instruction)
         {
             case UtilSort.SET_SORTED_INST:
                 UtilSort.IndicateElement(sortingElement.gameObject);
                 break;
 
-            case UtilSort.FIRST_INSTRUCTION:
-                lineOfCode.Add(FirstInstructionCodeLine());
+            case Util.FIRST_INSTRUCTION:
+                lineOfCode = FirstInstructionCodeLine();
                 lengthOfList = sortMain.SortSettings.NumberOfElements.ToString();
                 break;
 
             case UtilSort.FIRST_LOOP:
-                lineOfCode.Add(2);
+                lineOfCode = 2;
                 break;
 
-            case UtilSort.SET_VAR_J:
-                lineOfCode.Add(3);
+            case Util.SET_VAR_J:
+                lineOfCode = 3;
                 break;
 
             case UtilSort.PIVOT_START_INST:
+                lineOfCode = 4;
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+
                 PreparePseudocodeValue(sortingElement.Value, 1); // value1 = sortingElement.Value;
                 UtilSort.IndicateElement(sortingElement.gameObject);
-                useColor = Util.HIGHLIGHT_MOVE_COLOR;
-
-                lineOfCode.Add(4);
                 break;
 
             case UtilSort.COMPARE_START_INST:
+                lineOfCode = 5;
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+
                 PreparePseudocodeValue(sortingElement.Value, 2); // value2 = sortingElement.Value;
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
-                lineOfCode.Add(5);
                 break;
 
             case UtilSort.SWITCH_INST:
-                lineOfCode.Add(6);
-                useColor = Util.HIGHLIGHT_MOVE_COLOR;
+                lineOfCode = 6;
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
-            case UtilSort.UPDATE_VAR_J:
-                lineOfCode.Add(7);
+            case Util.UPDATE_VAR_J:
+                lineOfCode = 7;
                 break;
 
             case UtilSort.COMPARE_END_INST:
-                lineOfCode.Add(8);
+                lineOfCode = 8;
                 break;
 
             case UtilSort.PIVOT_END_INST:
-                lineOfCode.Add(9);
-                useColor = UtilSort.HIGHLIGHT_MOVE_COLOR;
+                lineOfCode = 9;
+                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
                 break;
 
-            case UtilSort.INCREMENT_VAR_I:
-                lineOfCode.Add(10);
+            case Util.INCREMENT_VAR_I:
+                lineOfCode = 10;
                 break;
 
-            case UtilSort.FINAL_INSTRUCTION:
-                lineOfCode.Add(FinalInstructionCodeLine());
+            case Util.FINAL_INSTRUCTION:
+                lineOfCode = FinalInstructionCodeLine();
                 break;
         }
-        prevHighlight = lineOfCode;
 
         // Highlight part of code in pseudocode
-        for (int x = 0; x < lineOfCode.Count; x++)
-        {
-            pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode[x]), useColor);
-        }
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
 
-        yield return demoStepDuration;
+        // Mark prev for next round
+        prevHighlightedLineOfCode = lineOfCode;
+
         sortMain.WaitForSupportToComplete--;
     }
     #endregion
@@ -1019,8 +808,8 @@ public class InsertionSort : SortAlgorithm {
             instructions.Add(instructionNr++, new InsertionSortInstruction(UtilSort.PIVOT_END_INST, instructionNr, i, j, UtilSort.NO_VALUE, pivot.SortingElementID, pivot.Value, false, true, false, pivotHolder.HolderID, temp1)); // new InsertionSortInstruction(pivot.SortingElementID, pivotHolder.HolderID, temp1, i, j, Util.PIVOT_END_INST, instructionNr, pivot.Value, false, false, true));
 
             // Line 10
-            i += 1;
             instructions.Add(instructionNr++, new InstructionLoop(UtilSort.INCREMENT_VAR_I, instructionNr, i, j, UtilSort.NO_VALUE)); // new InstructionBase(Util.INCREMENT_VAR_I, instructionNr, i, j, false, false));
+            i += 1;
         }
 
         // Line 2 (update loop before finishing)

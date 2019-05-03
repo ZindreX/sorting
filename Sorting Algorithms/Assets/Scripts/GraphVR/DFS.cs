@@ -31,14 +31,14 @@ public class DFS : GraphAlgorithm, ITraverse {
             case 8: codeLine += "           end if"; break;
             case 9: codeLine += "       end for"; break;
             case 10: codeLine += "   end while"; break;
-            default: return "lineNr " + lineNr + " not found!";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
         return codeLine;
     }
 
     protected override string PseudocodeLineIntoSteps(int lineNr, bool init)
     {
-        return "X";
+        return Util.INVALID_PSEUDO_CODE_LINE;
     }
 
     public override int FirstInstructionCodeLine()

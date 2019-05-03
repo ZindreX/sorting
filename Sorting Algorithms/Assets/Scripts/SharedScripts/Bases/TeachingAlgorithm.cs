@@ -67,46 +67,61 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     }
 
     // Reach to line of code which are not mentioned in instructions
-    public void HighllightPseudoLine(int lineNr, Color color)
-    {
-        pseudoCodeViewer.ChangeColorOfText(lineNr, color);
-    }
+    //public void HighllightPseudoLine(int lineNr, Color color)
+    //{
+    //    pseudoCodeViewer.ChangeColorOfText(lineNr, color);
+    //}
 
     // Used in Demo for highlighting pseudo code line for <seconds> then go back to normal color
-    private WaitForSeconds test = new WaitForSeconds(1f);
+    private WaitForSeconds stepDuration = new WaitForSeconds(1f);
     protected IEnumerator HighlightPseudoCode(string text, Color color)
     {
-        string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
-        int index = UtilGraph.ConvertCostToInt(lineOfCodeSplit[0]);
-        string pseudoCodeLine = lineOfCodeSplit[1];
-
-        /* If a calculation takes place, then first display formula/pseudocode -> insert values -> result
-         * E.g.:
-         * Step 1: i = i + 1
-         * Step 2: i = 1 + 1
-         * Step 3: i = 2
-        */
-        if (pseudoCodeViewer.InDetailStep)
+        // Invalid pseudocode linenr check
+        if (text != Util.INVALID_PSEUDO_CODE_LINE)
         {
-            bool valuesNotInserted = true; // First show step 1
-            for (int x=0; x < 2; x++)
+            string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
+            Debug.Log(lineOfCodeSplit.Length);
+
+            // Check if LineNr + pseudocode line is present
+            if (lineOfCodeSplit.Length == 2)
             {
-                string pseudoCodeLineStep = PseudocodeLineIntoSteps(index, valuesNotInserted);
+                int index = UtilGraph.ConvertCostToInt(lineOfCodeSplit[0]);
+                string pseudoCodeLine = lineOfCodeSplit[1];
 
-                if (pseudoCodeLineStep == "X")
-                    break;
+                /* If a calculation takes place, then first display formula/pseudocode -> insert values -> result
+                 * E.g.:
+                 * Step 1: i = i + 1
+                 * Step 2: i = 1 + 1
+                 * Step 3: i = 2
+                */
+                if (pseudoCodeViewer.InDetailStep)
+                {
+                    bool valuesNotInserted = true; // First show step 1
+                    for (int x = 0; x < 2; x++)
+                    {
+                        string pseudoCodeLineStep = PseudocodeLineIntoSteps(index, valuesNotInserted);
 
-                pseudoCodeViewer.SetCodeLine(index, pseudoCodeLineStep, color);
-                yield return test;
+                        if (pseudoCodeLineStep == Util.INVALID_PSEUDO_CODE_LINE)
+                            break;
 
-                valuesNotInserted = false; // Then show step 2
+                        pseudoCodeViewer.SetCodeLine(index, pseudoCodeLineStep, color);
+                        yield return stepDuration;
+
+                        valuesNotInserted = false; // Then show step 2
+                    }
+                }
+
+                // At last show step 3 (result)
+                pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, color);
             }
-
+            else
+                Debug.LogError("Incorrect splitlength! Split char found within pseudocode line!!!");
         }
 
-        // At last show step 3 (result)
-        pseudoCodeViewer.SetCodeLine(index, pseudoCodeLine, color);
-        yield return demoStepDuration;
+        if (pseudoCodeViewer.InDetailStep)
+            yield return stepDuration;
+        else
+            yield return demoStepDuration;
     }
 
 
@@ -130,6 +145,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         demoStepDuration = null;
         skipDict = null;
         pseudoCodeInitilized = false;
+        useHighlightColor = Util.HIGHLIGHT_COLOR;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------

@@ -7,7 +7,7 @@ using UnityEngine;
 public class BucketSort : SortAlgorithm {
 
     // value1 = value of element
-    private int bucketIndex, loopRange;
+    private int bucketIndex;
 
     public const string CHOOSE_BUCKET = "Choose bucket", PUT_BACK_TO_HOLDER = "Put back to holder", NONE = "None";
     private Dictionary<int, string> pseudoCode;
@@ -23,8 +23,6 @@ public class BucketSort : SortAlgorithm {
     {
         element1Value = "list[i]";
         element2Value = "buckets[i][j]";
-
-        numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
 
         base.InitTeachingAlgorithm(algorithmSpeed);
     }
@@ -45,7 +43,7 @@ public class BucketSort : SortAlgorithm {
         {
             case 0: lineOfCode += string.Format("BucketSort(list, {0}):", numberOfBuckets); break;
             case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", numberOfBuckets); break;
-            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfBuckets); break;
+            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfElements); break;
             case 3: lineOfCode += string.Format("        bucket = {0}", bucketIndexStr); break;
             case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, element1Value); break;
             case 5: lineOfCode += "    end for"; break;
@@ -57,7 +55,7 @@ public class BucketSort : SortAlgorithm {
             case 11: lineOfCode += "            k = " + kPlus1; break;
             case 12: lineOfCode += "        end for"; break;
             case 13: lineOfCode += "    end for"; break;
-            default: return "X";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
         return lineOfCode;
     }
@@ -66,7 +64,6 @@ public class BucketSort : SortAlgorithm {
     private void UpdatePseudoValues()
     {
         bucketIndexStr = bucketIndex.ToString();
-        bucketSize = loopRange.ToString();
         kPlus1 = (k + 1).ToString();
     }
 
@@ -79,7 +76,7 @@ public class BucketSort : SortAlgorithm {
             //case 4: return init ? "        buckets[bucket] <- list[i]" : "        buckets[" + bucketIndex + "] <- list[" + i + "]";
             case 10: return init ? "            list[k] = buckets[i][j]" : "            list[" + k + "] = buckets[" + i + "][" + j + "]";
             case 11: return init ? "            k = k + 1" : "            k = " + k + " + 1";
-            default: return "X";
+            default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
     }
 
@@ -367,12 +364,12 @@ public class BucketSort : SortAlgorithm {
             Bucket bucket = buckets[i].GetComponent<Bucket>();
 
             // number of elements in bucket
-            loopRange = bucket.CurrenHolding.Count;
+            bucketSize = bucket.CurrenHolding.Count.ToString();
 
             // Line 8 (For-loop: Concatenate all buckets)
             yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
 
-            for (j = 0; j < loopRange; j++)
+            for (j = 0; j < bucket.CurrenHolding.Count; j++)
             {
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedTask)
@@ -456,6 +453,8 @@ public class BucketSort : SortAlgorithm {
         {
             case Util.FIRST_INSTRUCTION:
                 lineOfCode = FirstInstructionCodeLine();
+                numberOfElements = sortMain.SortSettings.NumberOfElements.ToString();
+                numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
                 break;
 
             case UtilSort.CREATE_BUCKETS_INST:
@@ -531,7 +530,7 @@ public class BucketSort : SortAlgorithm {
                 else
                     lineOfCode = 9;
 
-                loopRange = j;
+                bucketSize = i.ToString();
                 break;
 
             case UtilSort.MOVE_BACK_INST:
@@ -560,7 +559,7 @@ public class BucketSort : SortAlgorithm {
             yield return null;
         else
         {
-            yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
+            yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
             prevHighlightedLineOfCode = lineOfCode;
         }
 
@@ -641,6 +640,8 @@ public class BucketSort : SortAlgorithm {
         {
             case UtilSort.FIRST_INSTRUCTION:
                 lineOfCode = FirstInstructionCodeLine();
+                numberOfElements = sortMain.SortSettings.NumberOfElements.ToString();
+                numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
                 break;
 
             case UtilSort.CREATE_BUCKETS_INST:
