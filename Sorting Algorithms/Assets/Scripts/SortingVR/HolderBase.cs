@@ -142,7 +142,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
             SortingElementBase element = collision.collider.GetComponent<SortingElementBase>();
             element.CurrentStandingOn = this;
 
-            if (parent.Settings.IsUserTest())
+            if (parent.Settings.IsUserTest() && element.UserInteraction)
                 element.PerformUserMove(this);
         }
     }

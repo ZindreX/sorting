@@ -65,7 +65,8 @@ public class BubbleSortElement : SortingElementBase {
                 case UtilSort.INIT_INSTRUCTION:
                     return (CurrentStandingOn.HolderID == sortingElementID) ? UtilSort.INIT_OK : UtilSort.INIT_ERROR;
 
-                case UtilSort.COMPARE_START_INST: break;
+                case UtilSort.COMPARE_START_INST:
+                    return elementInteraction.PickedUp && (CurrentStandingOn.HolderID == bubbleSortInstruction.GetHolderFor(sortingElementID)) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER; // break;
 
                 case UtilSort.COMPARE_END_INST:
                     return CheckPosition() ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;

@@ -85,6 +85,11 @@ public class InstructionDoubleElement : InstructionLoop {
             part2Executed = true;
     }
 
+    public int GetHolderFor(int sortingElementID)
+    {
+        return (sortingElementID == SortingElementID1) ? holderID1 : holderID2;
+    }
+
     public bool ElementHasBeenExecuted(int sortingElementID)
     {
         return (sortingElementID == SortingElementID1) ? part1Executed : part2Executed;

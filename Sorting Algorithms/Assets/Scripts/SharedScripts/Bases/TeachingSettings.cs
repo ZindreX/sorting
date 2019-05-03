@@ -215,6 +215,9 @@ public abstract class TeachingSettings : SettingsBase {
     // Start task from in game
     private void StartTask()
     {
+        if (MainManager.CheckListModeActive)
+            return;
+
         switch (teachingMode)
         {
             case Util.DEMO: case Util.STEP_BY_STEP: break;

@@ -103,16 +103,25 @@ public abstract class MainManager : MonoBehaviour {
         //else
         UpdateCheckList(Settings.TeachingMode, true); // nothing yet to safe stop in new demo/step/user test
             
-
         userStoppedTask = true;
 
         activeChecklist = SHUT_DOWN_CHECK;
         checkListModeActive = true;
     }
 
+    protected void ShutdownProcess(bool readyForDestroy)
+    {
+        if (readyForDestroy)
+        {
+            Debug.Log("Ready to shut down");
+            checkListModeActive = false;
+            DestroyAndReset();
+        }
+    }
+
     public bool CheckList(string unit)
     {
-        if (safeStopChecklist.ContainsKey(unit))
+        if (safeStopChecklist != null && safeStopChecklist.ContainsKey(unit))
         {
             return safeStopChecklist[unit];
         }
@@ -121,7 +130,7 @@ public abstract class MainManager : MonoBehaviour {
 
     public void AddToCheckList(string unit, bool ready)
     {
-        if (!safeStopChecklist.ContainsKey(unit))
+        if (safeStopChecklist != null && !safeStopChecklist.ContainsKey(unit))
         {
             safeStopChecklist.Add(unit, ready);
         }
@@ -129,7 +138,7 @@ public abstract class MainManager : MonoBehaviour {
 
     public void UpdateCheckList(string unit, bool ready)
     {
-        if (safeStopChecklist.ContainsKey(unit))
+        if (safeStopChecklist != null && safeStopChecklist.ContainsKey(unit))
         {
             safeStopChecklist[unit] = ready;
         }

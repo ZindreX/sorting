@@ -118,7 +118,7 @@ public class InsertionSortElement : SortingElementBase {
                         return UtilSort.WRONG_HOLDER;
 
                     case UtilSort.COMPARE_START_INST:
-                        break;
+                        return elementInteraction.PickedUp && (CurrentStandingOn.HolderID == insertionSortInstruction.HolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER; // break;
 
                     case UtilSort.COMPARE_END_INST:
                         return CurrentStandingOn.HolderID == insertionSortInstruction.HolderID ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
@@ -155,8 +155,7 @@ public class InsertionSortElement : SortingElementBase {
                         return CurrentStandingOn.HolderID == insertionSortInstruction.NextHolderID ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;
 
                     case UtilSort.COMPARE_START_INST:
-                        Debug.Log("What? compare start");
-                        break;
+                        return elementInteraction.PickedUp && (CurrentStandingOn.HolderID == insertionSortInstruction.HolderID) ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER; // break;
 
                     case UtilSort.COMPARE_END_INST:
                         return CurrentStandingOn.HolderID == insertionSortInstruction.HolderID ? UtilSort.CORRECT_HOLDER : UtilSort.WRONG_HOLDER;

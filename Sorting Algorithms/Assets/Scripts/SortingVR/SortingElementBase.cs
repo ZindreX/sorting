@@ -24,6 +24,8 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected HolderBase currentStandingOn;
     protected Vector3 placementAboveHolder;
 
+    protected ElementInteraction elementInteraction;
+
     // Debugging
     #region Debugging variables:
     [SerializeField]
@@ -36,6 +38,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     {
         sortingElementID = SORTING_ELEMENT_NR++;
         name = MyRole();
+        elementInteraction = GetComponent<ElementInteraction>();
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -44,6 +47,11 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     {
         get { return parent; }
         set { parent = value; }
+    }
+
+    public bool UserInteraction
+    {
+        get { return elementInteraction.PickedUp; }
     }
 
     public string MyRole()
@@ -174,6 +182,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                         parent.GetComponent<UserTestManager>().IncrementTotalCorrect();
                         parent.GetComponent<UserTestManager>().ReadyForNext += 1;
                         NextMove = false;
+                        elementInteraction.PickedUp = false; // Reset (comparison pick up added)
                     }
                 }
                 validatedUserMove++;

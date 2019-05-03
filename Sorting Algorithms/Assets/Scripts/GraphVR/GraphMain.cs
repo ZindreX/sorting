@@ -155,11 +155,7 @@ public class GraphMain : MainManager {
                 }
 
                 // If no background process, start resetting and destroying game objects
-                if (readyForDestroy)
-                {
-                    checkListModeActive = false;
-                    DestroyAndReset();
-                }
+                ShutdownProcess(readyForDestroy);
                 break;
 
             default: Debug.Log(">>>>>>>>> Unknown check '" + check + "'."); break;

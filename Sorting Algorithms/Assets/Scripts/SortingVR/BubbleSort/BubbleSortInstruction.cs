@@ -25,11 +25,6 @@ public class BubbleSortInstruction : InstructionDoubleElement {
         return (sortingElementID == SortingElementID1) ? holderID2 : holderID1;
     }
 
-    public int GetHolderFor(int sortingElementID)
-    {
-        return (sortingElementID == SortingElementID1) ? holderID1 : holderID2;
-    }
-
     public bool IsElementSorted(int sortingElementID)
     {
         return IsSorted && (holderID1 == 0 && sortingElementID == SortingElementID1 || (sortingElementID == sortingElementID2));

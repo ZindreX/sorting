@@ -37,7 +37,7 @@ public class BubbleSortManager : AlgorithmManagerBase {
             s2.Instruction = bubbleInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilSort.SWITCH_INST)
+            if (instruction.Instruction == UtilSort.COMPARE_START_INST || instruction.Instruction == UtilSort.SWITCH_INST)
             {
                 s1.NextMove = true;
                 s2.NextMove = true;

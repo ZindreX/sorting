@@ -104,24 +104,16 @@ public class SortMain : MainManager {
                 foreach (KeyValuePair<string, bool> entry in safeStopChecklist)
                 {
                     string key = entry.Key;
-                    Debug.Log("Key: " + key);
                     if (!safeStopChecklist[key])
                     {
                         readyForDestroy = false;
-                        Debug.Log("Not ready");
                         break;
                     }
 
                 }
-
-                if (readyForDestroy)
-                {
-                    Debug.Log("Starting safe shutdown");
-                    checkListModeActive = false;
-                    DestroyAndReset();
-                }
-
+                ShutdownProcess(readyForDestroy);
                 break;
+
             default: Debug.Log(">>>>>>>>> Unknown check '" + check + "'."); break;
         }
     }
@@ -383,7 +375,7 @@ public class SortMain : MainManager {
 
 
         demoDevice.gameObject.SetActive(active && SortSettings.IsDemo());
-        Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Demo device active: " + (active && SortSettings.IsDemo()));
+        //Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Demo device active: " + (active && SortSettings.IsDemo()));
 
         yield return loading;
 

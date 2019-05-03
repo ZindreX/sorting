@@ -33,8 +33,17 @@ public class InsertionSortManager : AlgorithmManagerBase {
             sortingElement.Instruction = insertionSortInstruction;
 
             // Give this sorting element permission to give feedback to progress to next intstruction
-            if (instruction.Instruction == UtilSort.PIVOT_START_INST || instruction.Instruction == UtilSort.PIVOT_END_INST || instruction.Instruction == UtilSort.SWITCH_INST)
-                sortingElement.NextMove = true;
+            switch (instruction.Instruction)
+            {
+                case UtilSort.PIVOT_START_INST:
+                case UtilSort.COMPARE_START_INST:
+                case UtilSort.PIVOT_END_INST:
+                case UtilSort.SWITCH_INST:
+                    sortingElement.NextMove = true;
+                    break;
+            }
+            //if (instruction.Instruction == UtilSort.PIVOT_START_INST || instruction.Instruction == UtilSort.PIVOT_END_INST || instruction.Instruction == UtilSort.SWITCH_INST)
+            //    sortingElement.NextMove = true;
         }
 
         // Display help on blackboard
