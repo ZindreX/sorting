@@ -45,8 +45,11 @@ public class Monitor : SettingsBase {
     private ToggleButton playButton;
     
     private Animator animator;
+
     private VideoPlayer videoPlayer;
+
     private BoxCollider vhsTrigger;
+
     private ProgressTracker progressTracker;
 
     protected override void Awake() {
@@ -105,12 +108,16 @@ public class Monitor : SettingsBase {
             if (progressTracker != null)
                 progressTracker.InitProgressTracker(videoDuration);
         }
-        // else; bool ? 
     }
 
     private void Update()
     {
-        // bool check?
+        // Eject video when done playing
+        if (currentPlayingVideoIsCompleted && currentPlayingVHS != null)
+        {
+            currentPlayingVideoIsCompleted = false;
+            StartCoroutine(EjectVideo(null));
+        }
 
         if (videoPlayer.isPlaying && (int)videoPlayer.time != prevSecond)
         {
@@ -121,14 +128,10 @@ public class Monitor : SettingsBase {
                 progressTracker.Increment();
 
             prevSecond = (int)videoPlayer.time;
+
+            if (prevSecond == videoDuration)
+                currentPlayingVideoIsCompleted = true;
         }
-        //else if ((int)videoPlayer.time == videoDuration)
-        //{
-        //    Debug.Log("Testing");
-        //    // Eject video when done playing
-        //    if (currentPlayingVHS != null)
-        //        EjectVideo(null);
-        //}
         else if (vhsReceived)
         {
             // Video received, and when the user's hand has let go of the cassette then start the insert animation
@@ -196,8 +199,6 @@ public class Monitor : SettingsBase {
 
                         if (currentPlayingVHS != null)
                             StartCoroutine(EjectVideo(null));
-
-                        monitorRendererTexture.Release();
                         break;
                 }
                 break;
@@ -246,29 +247,29 @@ public class Monitor : SettingsBase {
     // --------------------------------------- VHS insert stuff ---------------------------------------
 
     // Tells the unit that a video has been inserted - check update loop for continuation
-    private void PrepareEnterVideo(Video vhs)
+    private void PrepareMonitorForVideo(Video vhs)
     {
         currentPlayingVHS = vhs;
         vhsReceived = true;
-
-        //if (!vhs.UseUrl)
-        //    videoDuration = (int)CalculateVideoDuration(vhs.VideoClip); //(int)(vhs.VideoClip.frameCount / vhs.VideoClip.frameRate); // video clip time (seconds)
-        //else
-        videoDuration = (int)vhs.UrlLength; // url time (seconds)
     }
 
     // Inserts the video, disables the trigger (for other incoming cassettes)
     private IEnumerator InsertVideo(Video vhs)
     {
+        // Enable play/pause button
         playButton.gameObject.SetActive(true);
+
+        // Disable the trigger, so another video cant be inserted
         vhsTrigger.enabled = false;
 
-        // Play animation (vhs entering)
+        // Move video to the insertion slot
         MoveVideo(hatchEntrance.position);
+
+        // Play animation (vhs entering)
         StartCoroutine(vhs.Insert());
         yield return insertVideoDuration;
 
-        // Monitor animation
+        // Monitor animation (close the insertion slot)
         animator.Play(PLAY_VHS);
         yield return StartVideo(vhs);
     }
@@ -277,21 +278,21 @@ public class Monitor : SettingsBase {
     private IEnumerator StartVideo(Video video)
     {
         currentPlayingVideoIsCompleted = false;
-        videoPlayer.Stop();
-
         videoPlayer.source = VideoSource.Url;
         videoPlayer.url = video.Url;
 
-        //if (video.UseUrl)
-        //{
-        //}
-        //else
-        //{
-        //    videoPlayer.source = VideoSource.VideoClip;
-        //    videoPlayer.clip = video.VideoClip;
-        //}
-
+        // Prepare video
         videoPlayer.Prepare();
+
+        yield return UpdateCenterScreenText(video.Title);
+
+        if (videoPlayer.isPrepared)
+        {
+            videoDuration = (int)videoPlayer.length;
+            videoPlayer.Play();
+            playButton.InitToggleButton(true);
+        }
+        video.gameObject.SetActive(false);
 
         // Reset and init progresstracker
         if (progressTracker != null)
@@ -299,42 +300,31 @@ public class Monitor : SettingsBase {
             progressTracker.ResetProgress();
             progressTracker.InitProgressTracker(videoDuration);
         }
-
-
-        yield return UpdateCenterScreenText(video.Title);
-
-        if (videoPlayer.isPrepared)
-        {
-            videoPlayer.Play();
-            playButton.InitToggleButton(true);
-        }
-
-        //MoveVideo(returnPosition.position);
-        video.gameObject.SetActive(false);
     }
 
     // Eject video (not completly animated yet), enable trigger
     private IEnumerator EjectVideo(Video vhs)
     {
+        // Disable play/pause button
         playButton.gameObject.SetActive(false);
 
+        // Eject video animation (monitor)
         animator.Play(STOP_VHS);
         yield return insertVideoDuration;
         
         // Activate the cassette which has been played
         currentPlayingVHS.gameObject.SetActive(true);
+
+        // Eject video animation (video)
         StartCoroutine(currentPlayingVHS.Eject(hatchEntrance.position));
         yield return ejectVideoDuration;
 
         // Reset
-        currentPlayingVideoIsCompleted = true;
         currentPlayingVHS = null;
+        monitorRendererTexture.Release();
 
+        // Enable trigger again (for insertion of VHS)
         vhsTrigger.enabled = true;
-
-        // Not used anymore (disabled interaction during playtime, so current need to be ejected before inserting a new cassette)
-        if (vhs != null)
-            PrepareEnterVideo(vhs);
     }
 
     // --------------------------------------- Animation preparation ---------------------------------------
@@ -357,9 +347,7 @@ public class Monitor : SettingsBase {
 
         // If video inserted, prepare for animation
         if (vhs != null && currentPlayingVHS == null)
-            PrepareEnterVideo(vhs);
-        //else
-        //    Debug.Log("VHS is null check: " + (vhs == null) + " && currently playing VHS check: " + (currentPlayingVHS == null));
+            PrepareMonitorForVideo(vhs);
     }
 
 

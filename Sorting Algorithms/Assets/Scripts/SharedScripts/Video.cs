@@ -20,9 +20,6 @@ public class Video : MonoBehaviour {
     //
     private string baseFolderPath = "D:\\sindrw\\Videos\\", format = ".mp4";
 
-    private VideoPlayer videoPlayer;
-    private AudioSource audioSource;
-
     private Vector3 startPos, insertEjectMovement = new Vector3(-0.164f, 0f, 0f);
 
     private Rigidbody rb;
@@ -48,51 +45,8 @@ public class Video : MonoBehaviour {
             ((TextMeshPro)comp).text = title;
         }
 
-        // >>> Prepare video
-        videoPlayer = gameObject.AddComponent<VideoPlayer>();
-        //Add AudioSource
-        audioSource = gameObject.AddComponent<AudioSource>();
-
-        //Disable Play on Awake for both Video and Audio
-        videoPlayer.playOnAwake = false;
-        audioSource.playOnAwake = false;
-        audioSource.Pause();
-
-        videoPlayer.source = VideoSource.Url;
-        switch ((int)getVideoFrom)
-        {
-            case 0:
-                videoPlayer.url = url;
-                break;
-
-            case 1:
-                url = baseFolderPath + url + format;
-                videoPlayer.url = url;
-                break;
-        }
-
-        //Set Audio Output to AudioSource
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-
-        //Assign the Audio from Video to AudioSource to be played
-        videoPlayer.EnableAudioTrack(0, true);
-        videoPlayer.SetTargetAudioSource(0, audioSource);
-
-        //Set video To Play then prepare Audio to prevent Buffering        
-        videoPlayer.Prepare();
-
-        //try
-        //{
-        //}
-        //catch ()
-        //{
-
-        //}
-
-        ////Play Video
-        //videoPlayer.Play();
-        ////Play Sound
-        //audioSource.Play();
+        if ((int)getVideoFrom == 1)
+            url = baseFolderPath + url + format;
     }
 
     private void Update()
@@ -109,11 +63,6 @@ public class Video : MonoBehaviour {
     public string Url
     {
         get { return url; }
-    }
-
-    public double UrlLength
-    {
-        get { return videoPlayer.length; }
     }
 
     public bool ReleasedFromHand
