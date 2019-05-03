@@ -6239,6 +6239,16 @@ PrefabInstance:
       propertyPath: getVideoFrom
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: videoType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976b102ca0d052744bb1f0bf32b9f959, type: 3}
 --- !u!1 &632223197
@@ -6389,7 +6399,7 @@ PrefabInstance:
     - target: {fileID: 3188689690435935563, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: m_Name
-      value: BubbleVHS
+      value: BubbleIntro
       objectReference: {fileID: 0}
     - target: {fileID: 5771351243097116927, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
@@ -6907,6 +6917,16 @@ PrefabInstance:
         type: 3}
       propertyPath: getVideoFrom
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: videoType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976b102ca0d052744bb1f0bf32b9f959, type: 3}
@@ -10352,6 +10372,16 @@ PrefabInstance:
       propertyPath: getVideoFrom
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: videoType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976b102ca0d052744bb1f0bf32b9f959, type: 3}
 --- !u!4 &1057867327 stripped
@@ -11179,36 +11209,6 @@ PrefabInstance:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5093265178759109494, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5138059639712234342, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5138059639712234342, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5093453326509440864, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5138333066105006420, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5138333066105006420, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1526852406900165540, guid: 1c6479821e5152c43b03f6863bfecbda,
         type: 3}
       propertyPath: m_Mesh
@@ -11430,6 +11430,16 @@ PrefabInstance:
       propertyPath: getVideoFrom
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: videoType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976b102ca0d052744bb1f0bf32b9f959, type: 3}
 --- !u!1 &1173090157
@@ -11635,6 +11645,16 @@ PrefabInstance:
       propertyPath: getVideoFrom
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: videoType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976b102ca0d052744bb1f0bf32b9f959, type: 3}
 --- !u!1001 &1179341045
@@ -11726,7 +11746,7 @@ PrefabInstance:
     - target: {fileID: 3188689690435935563, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: m_Name
-      value: BucketVHS
+      value: BucketIntro
       objectReference: {fileID: 0}
     - target: {fileID: 5771351243097116927, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
@@ -16646,7 +16666,7 @@ PrefabInstance:
     - target: {fileID: 3188689690435935563, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: m_Name
-      value: InsertionVHS
+      value: InsertionIntro
       objectReference: {fileID: 0}
     - target: {fileID: 5771351243097116927, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
@@ -19128,6 +19148,16 @@ PrefabInstance:
     - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: getVideoFrom
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: videoType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -14,8 +14,15 @@ public class Video : MonoBehaviour {
     private string url;
 
     [SerializeField]
-    protected GetVideoFrom getVideoFrom;
-    protected enum GetVideoFrom { Streaming, LocalPath }
+    private GetVideoFrom getVideoFrom;
+    private enum GetVideoFrom { Streaming, LocalPath }
+
+    [SerializeField]
+    private TitleColor titleColor;
+    private enum TitleColor { Green, Blue, Red }
+
+    [SerializeField]
+    private Material[] textMaterials;
 
     //
     private string baseFolderPath = "D:\\sindrw\\Videos\\", format = ".mp4";
@@ -42,7 +49,13 @@ public class Video : MonoBehaviour {
         Component[] components = GetComponentsInChildren<TextMeshPro>();
         foreach (Component comp in components)
         {
-            ((TextMeshPro)comp).text = title;
+            TextMeshPro temp = (TextMeshPro)comp;
+            temp.text = title;
+
+            int useColor = (int)titleColor;
+            if (useColor < textMaterials.Length)
+                temp.fontSharedMaterial = textMaterials[useColor];
+
         }
 
         if ((int)getVideoFrom == 1)

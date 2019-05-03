@@ -128,8 +128,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Test video
   url: http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4
-  videoClip: {fileID: 0}
-  useUrl: 1
+  getVideoFrom: 0
+  videoType: 0
+  textMaterials:
+  - {fileID: 2100000, guid: a6490ec68b0a3e54290905cf54ef4eb0, type: 2}
+  - {fileID: 2100000, guid: 88f86c6758b4a9448949ca7a38982994, type: 2}
+  - {fileID: 2100000, guid: 9008761d6d7c2c5419638ab1d12f2fe0, type: 2}
 --- !u!65 &8285226272574056493
 BoxCollider:
   m_ObjectHideFlags: 0

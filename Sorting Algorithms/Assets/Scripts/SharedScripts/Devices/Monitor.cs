@@ -22,7 +22,7 @@ public class Monitor : SettingsBase {
     // Const variables
     public const string CASSETTE_TAG = "Cassette";
     public const string CHANNEL_CONTROL_SECTION = "Channel control", NEXT_VIDEO = "Next", PREV_VIDEO = "Prev";
-    public const string PLAY_CONTROL_SECTION = "Play control", PLAY = "Play", STOP = "Stop";
+    public const string PLAY_CONTROL_SECTION = "Play control", PLAY = "Play", EJECT = "Eject";
     public const string VOLUME_CONTROL_SECTION = "Volume control", VOLUME_DOWN = "Volume down", VOLUME_UP = "Volume up";
 
     // Animation
@@ -43,6 +43,7 @@ public class Monitor : SettingsBase {
 
     // Buttons
     private ToggleButton playButton;
+    private StaticButton ejectButton;
     
     private Animator animator;
 
@@ -58,7 +59,8 @@ public class Monitor : SettingsBase {
 
         // Buttons
         playButton = GetComponentInChildren<ToggleButton>();
-        playButton.gameObject.SetActive(false);
+        ejectButton = GetComponentInChildren<StaticButton>();
+        ActivateButtons(false);
 
         // Make screen black
         monitorRendererTexture.Release();
@@ -101,7 +103,7 @@ public class Monitor : SettingsBase {
     {
         if (numberOfVideos > 0)
         {
-            playButton.gameObject.SetActive(true);
+            ActivateButtons(true);
             videoPlayer.clip = videoClips[0];
             videoDuration = (int)CalculateVideoDuration(videoClips[0]);
 
@@ -142,6 +144,12 @@ public class Monitor : SettingsBase {
             }
         }
     }
+
+    private void OnApplicationQuit()
+    {
+        monitorRendererTexture.Release();
+    }
+
 
     public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
@@ -193,7 +201,7 @@ public class Monitor : SettingsBase {
                             videoPlayer.Pause();
                         break;
 
-                    case STOP:
+                    case EJECT:
                         if (videoPlayer.isPlaying)
                             videoPlayer.Stop();
 
@@ -218,6 +226,12 @@ public class Monitor : SettingsBase {
     protected override void InitButtons()
     {
         throw new System.NotImplementedException();
+    }
+
+    private void ActivateButtons(bool active)
+    {
+        playButton.gameObject.SetActive(active);
+        ejectButton.gameObject.SetActive(active);
     }
 
     // Returns the duration of a video in seconds
@@ -256,9 +270,6 @@ public class Monitor : SettingsBase {
     // Inserts the video, disables the trigger (for other incoming cassettes)
     private IEnumerator InsertVideo(Video vhs)
     {
-        // Enable play/pause button
-        playButton.gameObject.SetActive(true);
-
         // Disable the trigger, so another video cant be inserted
         vhsTrigger.enabled = false;
 
@@ -292,6 +303,11 @@ public class Monitor : SettingsBase {
             videoPlayer.Play();
             playButton.InitToggleButton(true);
         }
+
+        // Enable play/pause and eject buttons
+        ActivateButtons(true);
+
+        // Hide the VHS cassette
         video.gameObject.SetActive(false);
 
         // Reset and init progresstracker
@@ -305,13 +321,15 @@ public class Monitor : SettingsBase {
     // Eject video (not completly animated yet), enable trigger
     private IEnumerator EjectVideo(Video vhs)
     {
-        // Disable play/pause button
-        playButton.gameObject.SetActive(false);
+        monitorRendererTexture.Release();
 
         // Eject video animation (monitor)
         animator.Play(STOP_VHS);
         yield return insertVideoDuration;
         
+        // Disable play/pause button
+        ActivateButtons(false);
+
         // Activate the cassette which has been played
         currentPlayingVHS.gameObject.SetActive(true);
 
@@ -321,7 +339,6 @@ public class Monitor : SettingsBase {
 
         // Reset
         currentPlayingVHS = null;
-        monitorRendererTexture.Release();
 
         // Enable trigger again (for insertion of VHS)
         vhsTrigger.enabled = true;
