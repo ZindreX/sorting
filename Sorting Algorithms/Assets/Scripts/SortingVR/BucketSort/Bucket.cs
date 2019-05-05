@@ -62,7 +62,7 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         bucketCapacity = CreateBucketCapacity();
 
         // Bucket capacity text
-        bucketCapacityText.text = bucketCapacity[0] + " - " + (bucketCapacity[1] - 1);
+        bucketCapacityText.text = "Values:\n" + bucketCapacity[0] + " - " + (bucketCapacity[1] - 1);
     }
 
     public SortMain SuperElement
