@@ -23,6 +23,9 @@ public abstract class TeachingSettings : SettingsBase {
     [SerializeField]
     protected bool pseudocodeStep;
 
+    [SerializeField]
+    protected bool userTestScore;
+
     [Header("Main settings")]
     [SerializeField]
     protected TeachingModeEditor teachingModeEditor;
@@ -73,6 +76,7 @@ public abstract class TeachingSettings : SettingsBase {
         // Optional
         InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_STEP, pseudocodeStep);
         InitButtonState(Util.OPTIONAL, Util.PSEUDOCODE_LINE_NR, pseudocodeLineNr);
+        InitButtonState(Util.OPTIONAL, Util.SCORE, userTestScore);
     }
 
     // All input from interactable settings menu goes through here
@@ -116,6 +120,15 @@ public abstract class TeachingSettings : SettingsBase {
                             FillTooltips("Line nr will be displayed.");
                         else
                             FillTooltips("Line nr will not be displayed.");
+                        break;
+
+                    case Util.SCORE:
+                        bool scoreActive = Util.ConvertStringToBool(itemDescription);
+                        UserTestScore = scoreActive;
+                        if (scoreActive)
+                            FillTooltips("User test score enabled.");
+                        else
+                            FillTooltips("User test score disabled.");
                         break;
 
                     default: Debug.LogError("Couldn't update: section = " + sectionID + ", item = " + itemID + ", description = " + itemDescription); break;
@@ -196,6 +209,12 @@ public abstract class TeachingSettings : SettingsBase {
         set { pseudocodeStep = value; }
     }
 
+    public bool UserTestScore
+    {
+        get { return userTestScore; }
+        set { userTestScore = value; }
+    }
+
 
     // Instantiates the algorithm/task, user needs to click a start button to start the task (see method below)
     public void InstantiateTask()
@@ -217,12 +236,15 @@ public abstract class TeachingSettings : SettingsBase {
     {
         switch (teachingMode)
         {
-            case Util.DEMO: case Util.STEP_BY_STEP: break;
+            case Util.DEMO:
+            case Util.STEP_BY_STEP:
+                break;
+
             case Util.USER_TEST:
                 if (difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
-                    AlgorithmSpeedLevel = 1; // Normal speed
+                    AlgorithmSpeedLevel = 2; //
                 else
-                    AlgorithmSpeedLevel = 3; // 0 Sec per step -- no "lag"
+                    algorithmSpeed = 0f; //AlgorithmSpeedLevel = 3; // 0 Sec per step -- no "lag"
                 break;
         }
 

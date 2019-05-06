@@ -9,18 +9,21 @@ public class DisplayUnitManager : MonoBehaviour {
     private PseudoCodeViewer centerBlackboard;
 
     [SerializeField]
-    private Blackboard rightBlackboard;
-
+    private Blackboard leftBlackboard, rightBlackboard;
 
     [SerializeField]
-    private TextMeshPro leftInfoBoardText, sortingTableText, settingsMenuText;
+    private TextMeshPro sortingTableText, settingsMenuText;
 
 
     public void InitDisplayUnitManager()
     {
-        leftInfoBoardText.text = "";
         sortingTableText.text = "";
         settingsMenuText.text = "";
+    }
+
+    public Blackboard LeftBlackboard
+    {
+        get { return leftBlackboard; }
     }
 
     // Algorithm will control this blackboard
@@ -29,23 +32,23 @@ public class DisplayUnitManager : MonoBehaviour {
         get { return centerBlackboard; }
     }
 
-    public Blackboard BlackBoard
+    public Blackboard RightBlackboard
     {
         get { return rightBlackboard; }
     }
 
     public void ResetDisplays()
     {
-        leftInfoBoardText.text = "";
         sortingTableText.text = "";
         settingsMenuText.text = "";
+
+        leftBlackboard.EmptyContent();
         centerBlackboard.EmptyContent();
         rightBlackboard.EmptyContent();
     }
 
     public void DestroyDisplaysContent()
     {
-        rightBlackboard.DestroyContent();
         centerBlackboard.DestroyContent();
     }
 
@@ -53,7 +56,7 @@ public class DisplayUnitManager : MonoBehaviour {
     {
         switch (display)
         {
-            case UtilSort.LEFT_BLACKBOARD: leftInfoBoardText.text = text; break;
+            case UtilSort.LEFT_BLACKBOARD: leftBlackboard.ChangeText(index, text); break;
             case UtilSort.RIGHT_BLACKBOARD: rightBlackboard.ChangeText(index, text); break;
             case UtilSort.SORT_TABLE_TEXT: sortingTableText.text = text; break;
             case UtilSort.SETTINGS_MENU_TEXT: break;

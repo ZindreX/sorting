@@ -101,10 +101,10 @@ public class UtilSort : Util {
             case INIT_INSTRUCTION: return "Wrong non-sorted element moved";
             case PIVOT_START_INST: return "Wrong pivot chosen";
             case PIVOT_END_INST: return "Pivot placed wrong";
-            //case COMPARE_START_INST: return "";
+            case COMPARE_START_INST: return "Comparison";
             case COMPARE_END_INST: return "Moved sorted element to wrong holder";
             case SWITCH_INST: return "Wrong element moved";
-            default: return "Examination error explanation not added (" + instruction + ")";
+            default: return instruction;
         }
     }
 }

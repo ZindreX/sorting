@@ -29,8 +29,8 @@ public class UserTestManager : InstructionControlBase {
     public readonly float SCORE_UPDATE = 0.1f;
 
     private float startTime, endTime, timeSpent;
-    private int totalScore, currentStreak, longestStreak, difficultyMultiplier;
-    private string difficultyLevel;
+    private int currentScore, totalScore, currentStreak, longestStreak;
+    private int difficulty, difficultyMultiplier;
 
     private WaitForSeconds scoreUpdateDuration;
 
@@ -39,31 +39,26 @@ public class UserTestManager : InstructionControlBase {
      * - userActionToProceed    : number of user actions needed to proceed to the next instruction
      * - userActionInstructions : total number of user actions required to complete a sorting
     */
-    public void InitUserTest(Dictionary<int, InstructionBase> instructions, int userActionToProceed, int userActionInstructions)
+    public void InitUserTest(Dictionary<int, InstructionBase> instructions, int userActionToProceed, int userActionInstructions, int difficulty)
     {
         base.Init(instructions, userActionInstructions, false);
         this.userActionToProceed = userActionToProceed;
         this.userActionInstructions = userActionInstructions;
         readyForNext = userActionToProceed;
+
+        // Score
+        currentScore = 0;
         totalCorrect = 0;
         totalErrorCount = 0;
         errorLog = new Dictionary<string, int>();
         scoreUpdateDuration = new WaitForSeconds(SCORE_UPDATE);
+
+        this.difficulty = difficulty;
+        difficultyMultiplier = difficulty;
     }
 
     // -------------------------------------------- Getters/Setters --------------------------------------------
 
-    public string DifficultyLevel
-    {
-        get { return difficultyLevel; }
-        //set { difficultyLevel = value; }
-    }
-
-    public int DifficultyMultiplier
-    {
-        get { return difficultyMultiplier; }
-        set { difficultyMultiplier = value; }
-    }
 
     /* Checking whether a new instruction can be given
      * ...
@@ -97,7 +92,7 @@ public class UserTestManager : InstructionControlBase {
     public void SetStartTime()
     {
         if (startTime == 0)
-            startTime = Time.deltaTime;
+            startTime = Time.time;
     }
 
     // Sets when User Test ends
@@ -105,7 +100,7 @@ public class UserTestManager : InstructionControlBase {
     {
         if (endTime == 0 && mainManager.GetTeachingAlgorithm().IsTaskCompleted)
         {
-            endTime = Time.deltaTime;
+            endTime = Time.time;
             timeSpent = endTime - startTime;
         }
     }
@@ -115,33 +110,30 @@ public class UserTestManager : InstructionControlBase {
     public void IncrementTotalCorrect()
     {
         audioManager.Play("Correct");
+        totalCorrect++;
 
         if (mainManager.Settings.Algorithm == Util.BUBBLE_SORT && totalCorrect % 2 == 1) // Bubble sort sends 2x correct
             return;
 
-        // > Increment
-        // Streak
-        currentStreak++;
-
-        // Number of correct actions
-        totalCorrect++;
-
         // Visual
         progressTracker.Increment();
+
+        // Score
+        currentStreak++;
+        UpdateLongestStreak();
+        currentScore += StreakScore();
     }
 
     public void Mistake()
     {
         audioManager.Play("Mistake");
-
-        // Update score
-        totalScore += CalculateIntermediateScore();
-
-        // Update longest streak
-        if (currentStreak > longestStreak)
-            longestStreak = currentStreak;
-
         totalErrorCount++;
+
+        //// Update score
+        currentScore -= SUBSTRACTION_PER_ERROR * difficultyMultiplier;
+
+        if (difficulty < Util.ADVANCED && currentScore < 0)
+            currentScore = 0;
 
         // Reset streak counter
         currentStreak = 0;
@@ -150,6 +142,12 @@ public class UserTestManager : InstructionControlBase {
 
     // -------------------------------------------- Score stuff --------------------------------------------
 
+    private void UpdateLongestStreak()
+    {
+        if (currentStreak > longestStreak)
+            longestStreak = currentStreak;
+    }
+
     private int StreakScore()
     {
         return SCORE_PER_STREAK * currentStreak;
@@ -157,15 +155,33 @@ public class UserTestManager : InstructionControlBase {
 
     public int CalculateScore()
     {
-        if (mainManager.GetTeachingAlgorithm().IsTaskCompleted)
-            return CalculateTotalScore();
-        return CalculateIntermediateScore();
+        // Current score
+        totalScore = currentScore;
+
+        // Time
+        totalScore += (int)TimeReward();
+
+        // Difficulty
+        if (difficulty >= Util.INTERMEDIATE)
+            totalScore *= difficultyMultiplier;
+
+        return totalScore;
     }
 
-    private int CalculateTotalScore()
+    // Calculate a time reward (needs adjustments)
+    private float TimeReward()
     {
-        totalScore += CalculateIntermediateScore() + (int)TimeSpent;
-        return totalScore;
+        int timeRewardLimit = 0;
+
+        if (difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
+            timeRewardLimit = numberOfInstructions * (int)mainManager.Settings.AlgorithmSpeed;
+
+        timeRewardLimit = userActionInstructions * 5; //  * (Util.EXAMINATION + 1 - difficulty) * 5;
+
+        float reward = timeRewardLimit - timeSpent;
+        reward *= 10;
+
+        return (reward >= 0) ? reward : 0;
     }
 
     private int CalculateIntermediateScore()
@@ -173,37 +189,41 @@ public class UserTestManager : InstructionControlBase {
         return StreakScore() * difficultyMultiplier;
     }
 
-    // Drop this function ?
-    private int GetReduction()
-    {
-        // Do reduction to score
-        switch (difficultyLevel)
-        {
-            //case Util.BEGINNER: return 0; // No punishment
-            //case Util.INTERMEDIATE: case Util.EXAMINATION: return (SUBSTRACTION_PER_ERROR * GetComponent<UserTestManager>().TotalErrorCount) * difficultyMultiplier;
-            default:
-                Debug.LogError("Difficulty level '" + difficultyLevel + "' not implemented.");
-                return 0;
-        }
-    }
-
     // -------------------------------------------- Feedback stuff --------------------------------------------
 
-    public string GetExaminationResult()
-    {
-        string result = "Results from User Test:\n";
 
+    public string ErrorLog()
+    {
         // Add errors with some explanation | for now just the instruction ID
-        result += "Errors:\n";
+        string result = "";
         if (errorLog.Count > 0)
         {
             foreach (KeyValuePair<string, int> entry in errorLog)
             {
-                result += UtilSort.TranslateInstructionForExamination(entry.Key) + ": " + entry.Value + "\n";
+                result += entry.Key + ": " + entry.Value + "\n"; // UtilSort.TranslateInstructionForExamination(entry.Key)
             }
         }
         else
-            result += "> None, good job!";
+            result += "> Perfect, no errors";
+        return result;
+    }
+
+    public string GetExaminationResult()
+    {
+        string result = "Difficulty: " + Util.difficultyConverterDict[difficulty] + "    (x" + difficultyMultiplier + ")";
+
+        result += "\nTime: " + (int)TimeSpent + " seconds        (Time reward: " + (int)TimeReward() + ")";
+
+        // Streak
+        UpdateLongestStreak();
+        result += "\nLongest streak: " + longestStreak;
+
+        // Score
+        result += "\nTotal score: " + totalScore;
+        result += "\nErrors: " + TotalErrorCount;
+
+        if (totalErrorCount > 0)
+            result += "    (See left blackboard for details)";
         return result;
     }
 
@@ -232,6 +252,8 @@ public class UserTestManager : InstructionControlBase {
         startTime = 0;
         endTime = 0;
         timeSpent = 0;
+
+        currentScore = 0;
         totalScore = 0;
         currentStreak = 0;
         longestStreak = 0;
@@ -241,13 +263,11 @@ public class UserTestManager : InstructionControlBase {
 
     public override string FillInBlackboard()
     {
-        return "Inst cleared: " + totalCorrect + "/" + userActionInstructions + "\nInst. nr.: " + CurrentInstructionNr + "\n" + UtilSort.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount; // + "\nDebugging: " + GetInstruction().DebugInfo();
-    }
+        string blackboardFill = "Current streak: " + currentStreak;
+        blackboardFill += "\nLongest streak: " + longestStreak;
+        blackboardFill += "\nScore: " + currentScore;
 
-    // Show of at the end of the user test
-    public IEnumerator VisualizeScore()
-    {
-        // TODO: display score on blackboard at end of game
-        yield return scoreUpdateDuration;
+
+        return blackboardFill; //"Inst. nr.: " + CurrentInstructionNr + "/" + numberOfInstructions + "\n" + Util.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount;
     }
 }

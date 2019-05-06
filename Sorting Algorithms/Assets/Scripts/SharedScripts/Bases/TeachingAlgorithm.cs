@@ -80,7 +80,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         if (text != Util.INVALID_PSEUDO_CODE_LINE)
         {
             string[] lineOfCodeSplit = text.Split(Util.PSEUDO_SPLIT_LINE_ID);
-            Debug.Log(lineOfCodeSplit.Length);
 
             // Check if LineNr + pseudocode line is present
             if (lineOfCodeSplit.Length == 2)

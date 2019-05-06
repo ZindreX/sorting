@@ -9,7 +9,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
      * 
     */
 
-    protected int currentInstructionNr = 0;
+    protected int currentInstructionNr = 0, numberOfInstructions;
     protected bool autoProgress;
 
     protected Dictionary<int, InstructionBase> instructions;
@@ -30,6 +30,8 @@ public abstract class InstructionControlBase : MonoBehaviour {
     {
         this.instructions = instructions;
         currentInstructionNr = -1; // ?
+        numberOfInstructions = instructions.Count - 1;
+
         this.autoProgress = autoProgress;
 
         mainManager = GetComponent<MainManager>();
@@ -114,6 +116,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     {
         instructions = null;
         currentInstructionNr = -1;
+        numberOfInstructions = 0;
 
         mainManager = null;
         progressTracker.ResetProgress();

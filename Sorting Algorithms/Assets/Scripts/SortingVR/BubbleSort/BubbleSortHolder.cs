@@ -8,8 +8,8 @@ public class BubbleSortHolder : HolderBase {
         if (!currentHolding.StandingInCorrectHolder)
         {
             CurrentColor = UtilSort.ERROR_COLOR;
-            //if (hasPermission)
-            //    parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
+            if (hasPermission)
+                parent.GetComponent<UserTestManager>().ReportError(currentHolding.SortingElementID);
             hasPermission = false;
         }
         //else if (CurrentHolding.IntermediateMove)

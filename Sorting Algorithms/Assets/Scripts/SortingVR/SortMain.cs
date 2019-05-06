@@ -211,7 +211,8 @@ public class SortMain : MainManager {
         sortAlgorithm.ResetSetup();
 
         // Reset displays
-        displayUnitManager.DestroyDisplaysContent(); // pseudocode, blackboard, etc
+        displayUnitManager.DestroyDisplaysContent(); // pseudocode
+        displayUnitManager.ResetDisplays();
 
         // Hide sorting table and bring back menu
         StartCoroutine(ActivateTaskObjects(false));
@@ -261,7 +262,7 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmUserTest()
     {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use trigger button to interact\n with the sorting elements");
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use the trigger button to interact\n with the sorting elements");
 
         // Enable interaction
         elementManager.InteractionWithSortingElements(true);
@@ -271,7 +272,7 @@ public class SortMain : MainManager {
 
         // Initialize user test
         int numberOfUserActions = FindNumberOfUserAction(instructions);
-        userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, numberOfUserActions);
+        userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, numberOfUserActions, Settings.Difficulty);
 
         // Set start time
         userTestManager.SetStartTime();
@@ -319,7 +320,9 @@ public class SortMain : MainManager {
 
                 }
             }
-            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.FillInBlackboard());
+
+            if (Settings.IsUserTest() && sortSettings.UserTestScore)
+                displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, userTestManager.FillInBlackboard(), 1);
         }
     }
 
@@ -345,13 +348,22 @@ public class SortMain : MainManager {
     // Finish off user test
     protected override void TaskCompletedFinishOff()
     {
-        if (sortSettings.IsUserTest() && userTestManager.TimeSpent == 0)
+        if (sortSettings.IsUserTest() && sortSettings.UserTestScore)
         {
-            userTestManager.SetEndTime();
-            userTestManager.CalculateScore();
-            displayUnitManager.BlackBoard.ChangeText(displayUnitManager.BlackBoard.TextIndex, userTestManager.GetExaminationResult());
+            if (userTestManager.TimeSpent == 0)
+            {
+                userTestManager.SetEndTime();
+                userTestManager.CalculateScore();
+
+                // Left blackboard
+                displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, "User test incorrect action details", 0);
+                displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, userTestManager.ErrorLog(), 1);
+
+                // Right blackboard
+                displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "User test score", 0);
+                displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, userTestManager.GetExaminationResult(), 1);
+            }
         }
-        displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Sorting Completed!", 1);
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Sorting Completed!");
     }
 
@@ -362,9 +374,7 @@ public class SortMain : MainManager {
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
         sortSettings.FillTooltips("Loading setup...");
-        displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading setup", 1);
         yield return loading;
-        displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Loading complete!", 1);
 
         // Settings menu
         sortSettings.ActiveInScene(!active);
@@ -404,7 +414,7 @@ public class SortMain : MainManager {
                 return bucketSortManager;
 
             case Util.MERGE_SORT: return GetComponentInChildren<MergeSortManager>();
-            default: Debug.Log("Sorting algorithm '" + sortAlgorithm + "' not found."); break;
+            default: Debug.LogError("Sorting algorithm '" + sortAlgorithm + "' not found."); break;
         }
         return null;
     }

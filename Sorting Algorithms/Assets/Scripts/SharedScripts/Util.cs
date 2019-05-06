@@ -16,7 +16,7 @@ public class Util : MonoBehaviour {
     public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", S_FAST_STR = "SFast";
     public const string DEMO_SPEED = "Demo speed";
     public const string PLUS = "Plus", MINUS = "Minus", ON = "ON", OFF = "OFF", START = "Start", READY = "Ready", OPTIONAL = "Optional";
-    public const string PSEUDOCODE_STEP = "Pseudocode step", PSEUDOCODE_LINE_NR = "Pseudocode line nr";
+    public const string PSEUDOCODE_STEP = "Pseudocode step", PSEUDOCODE_LINE_NR = "Pseudocode line nr", SCORE = "Score";
 
     // ----------------------------------------- ... ----------------------------------------- 
 

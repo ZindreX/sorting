@@ -419,7 +419,7 @@ public class GraphMain : MainManager {
         Debug.Log("Number of instructions: " + instructions.Count);
 
         // Initialize user test
-        userTestManager.InitUserTest(instructions, 1, FindNumberOfUserAction(instructions));
+        userTestManager.InitUserTest(instructions, 1, FindNumberOfUserAction(instructions), Settings.Difficulty);
 
         // Set start time
         userTestManager.SetStartTime();
