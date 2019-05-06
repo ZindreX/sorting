@@ -7,6 +7,7 @@ public class UtilGraph : Util {
     // ----------------------------------------- Graph limitations ----------------------------------------- 
     public static readonly int MAX_ROWS = 5, MAX_COLUMNS = 5;
     public static readonly int MAX_TREE_DEPTH = 3, MAX_N_TREE = 3;
+    public static readonly int MAX_RANDOM_NODES = 5, MAX_RANDOM_EDGES = 20;
     public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
@@ -21,6 +22,7 @@ public class UtilGraph : Util {
     public const string GRAPH_STRUCTURE = "Graph structure", EDGE_TYPE = "Edge type", EDGE_BUILD_MODE = "Edge mode";
     public const string GRID_SUB = "Grid sub", ROWS = "Rows", COLUMNS = "Columns";
     public const string TREE_SUB = "Tree sub", TREE_DEPTH = "Tree depth", N_TREE = "N tree";
+    public const string RANDOM_SUB = "Random sub", RANDOM_NODES = "Random nodes", RANDOM_EDGES = "Random edges", RANDOM_SPACE = "Random space";
     public const string SHORTEST_PATH_OPTIONAL = "Shortest path optional";
 
     public const string SELECT_NODE = "Select node", NO_TASK = "No task";
@@ -34,7 +36,7 @@ public class UtilGraph : Util {
     public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all"; // VISIT_LEFT_FIRST = "Visit left first";
 
     // Graph structures
-    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random graph", UNDIRECTED_EDGE = "Undirected", DIRECED_EDGE = "Directed", SYMMETRIC_EDGE = "Symmetric";
+    public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random", UNDIRECTED_EDGE = "Undirected", DIRECED_EDGE = "Directed", SYMMETRIC_EDGE = "Symmetric";
     public const string FULL_EDGES = "Full", FULL_EDGES_NO_CROSSING = "Full no cross", PARTIAL_EDGES = "Partial", PARTIAL_EDGES_NO_CROSSING = "Partial no cross";
 
     // Node types

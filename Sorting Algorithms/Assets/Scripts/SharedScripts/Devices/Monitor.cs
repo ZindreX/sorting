@@ -22,7 +22,7 @@ public class Monitor : SettingsBase {
     // Const variables
     public const string CASSETTE_TAG = "Cassette";
     public const string CHANNEL_CONTROL_SECTION = "Channel control", NEXT_VIDEO = "Next", PREV_VIDEO = "Prev";
-    public const string PLAY_CONTROL_SECTION = "Play control", PLAY = "Play", EJECT = "Eject";
+    public const string PLAY_CONTROL_SECTION = "Play control", PLAY = "Play", RESTART = "Restart", EJECT = "Eject";
     public const string VOLUME_CONTROL_SECTION = "Volume control", VOLUME_DOWN = "Volume down", VOLUME_UP = "Volume up";
 
     // Animation
@@ -199,6 +199,11 @@ public class Monitor : SettingsBase {
                             videoPlayer.Play();
                         else
                             videoPlayer.Pause();
+                        break;
+
+                    case RESTART: // Not added yet
+                        videoPlayer.Stop();
+                        videoPlayer.Play();
                         break;
 
                     case EJECT:

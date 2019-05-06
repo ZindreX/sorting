@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RandomGraphManager : GraphManager {
 
-    private int numberOfNodes, numberOfEdges, spaceBetweenNodes;
+    private int numberOfNodes, numberOfEdges, minimumSpaceBetweenNodes;
 
     private List<RandomNode> nodes;
 
@@ -14,7 +14,7 @@ public class RandomGraphManager : GraphManager {
 
         numberOfNodes = graphStructure[0];
         numberOfEdges = graphStructure[1];
-        spaceBetweenNodes = graphStructure[2];
+        minimumSpaceBetweenNodes = graphStructure[2];
     }
 
     public override int GetMaxNumberOfNodes()
@@ -43,7 +43,7 @@ public class RandomGraphManager : GraphManager {
             bool flag = false;
             for (int i=0; i < nodes.Count; i++)
             {
-                if (Mathf.Sqrt(Mathf.Pow(nodes[i].transform.position.x - xPos, 2) + Mathf.Pow(nodes[i].transform.position.z - zPos, 2)) < spaceBetweenNodes)
+                if (Mathf.Sqrt(Mathf.Pow(nodes[i].transform.position.x - xPos, 2) + Mathf.Pow(nodes[i].transform.position.z - zPos, 2)) < minimumSpaceBetweenNodes)
                     flag = true;
             }
 
@@ -97,10 +97,17 @@ public class RandomGraphManager : GraphManager {
 
             // Find a random node
             RandomNode node2 = nodes[RandomRangeExcept(0, numberOfNodes, leastUsedNode)];
-            while (node1.IsNeighborWith(node2))
+            bool extraChance = true;
+            while (node1.IsNeighborWith(node2) && extraChance)
             {
                 node2 = nodes[RandomRangeExcept(0, numberOfNodes, leastUsedNode)];
+
+                if (node1.IsNeighborWith(node2))
+                    extraChance = false;
             }
+
+            if (!extraChance)
+                break;
 
             // Add edge between nodes (if no collisions with other edges or nodes)
             if (AddEdgeBetween(node1, node2))

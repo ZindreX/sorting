@@ -66,6 +66,21 @@ public class GraphSettings : TeachingSettings {
     [Range(1, 2)]
     private int levelDepthLength;
 
+    // *** Random graph ***
+    [Header("Random graph settings")]
+    [SerializeField]
+    [Range(2, 5)]
+    private int randomNodes;
+
+    [SerializeField]
+    [Range(1, 20)]
+    private int randomEdges;
+
+    [SerializeField]
+    [Range(2, 5)]
+    private int minRandomSpace;
+
+
     // *** Start-/End nodes ***
     [Space(2)]
     [Header("Start node")]
@@ -119,17 +134,25 @@ public class GraphSettings : TeachingSettings {
             EdgeType = UtilGraph.UNDIRECTED_EDGE;
             EdgeBuildMode = UtilGraph.FULL_EDGES_NO_CROSSING;
 
-            if (graphStructure == UtilGraph.GRID_GRAPH)
+            switch (graphStructure)
             {
-                gridRows = 5;
-                gridColumns = 5;
-                gridSpace = 4;
-            }
-            else if (graphStructure == UtilGraph.TREE_GRAPH)
-            {
-                treeDepth = 2;
-                nTree = 2;
-                levelDepthLength = 4;
+                case UtilGraph.GRID_GRAPH:
+                    gridRows = 5;
+                    gridColumns = 5;
+                    gridSpace = 4;
+                    break;
+
+                case UtilGraph.TREE_GRAPH:
+                    treeDepth = 2;
+                    nTree = 2;
+                    levelDepthLength = 4;
+                    break;
+
+                case UtilGraph.RANDOM_GRAPH:
+                    randomNodes = 5;
+                    randomEdges = 6;
+                    minRandomSpace = 4;
+                    break;
             }
         }
         tooltips.text = "";
@@ -293,6 +316,27 @@ public class GraphSettings : TeachingSettings {
                 }
                 break;
 
+            case UtilGraph.RANDOM_SUB:
+                switch (itemID)
+                {
+                    case UtilGraph.RANDOM_NODES:
+                        switch (itemDescription)
+                        {
+                            case Util.PLUS: ChangeNumberOfRandomNodes(true); break;
+                            case Util.MINUS: ChangeNumberOfRandomNodes(false); break;
+                        }
+                        break;
+
+                    case UtilGraph.RANDOM_EDGES:
+                        switch (itemDescription)
+                        {
+                            case Util.PLUS: ChangeNumberofRandomEdges(true); break;
+                            case Util.MINUS: ChangeNumberofRandomEdges(false); break;
+                        }
+                        break;
+                }
+                break;
+
             case UtilGraph.SHORTEST_PATH_OPTIONAL:
                 bool shortestPathOneToAllActive = Util.ConvertStringToBool(itemDescription);
                 shortestPathOneToAll = shortestPathOneToAllActive;
@@ -351,6 +395,7 @@ public class GraphSettings : TeachingSettings {
         set { edgeBuildMode = value; }
     }
 
+    #region Grid sub
     public void ChangeGridRows(bool increment)
     {
         if (increment)
@@ -402,7 +447,9 @@ public class GraphSettings : TeachingSettings {
         }
         FillTooltips("#Columns: " + gridColumns);
     }
+    #endregion
 
+    #region Tree sub
     public void ChangeTreeDepth(bool increment)
     {
         if (increment)
@@ -454,6 +501,61 @@ public class GraphSettings : TeachingSettings {
         }
         FillTooltips("n-tree: " + treeDepth);
     }
+    #endregion
+
+    #region Random sub
+    public void ChangeNumberOfRandomNodes(bool increment)
+    {
+        if (increment)
+        {
+            if (randomNodes < UtilGraph.MAX_RANDOM_NODES)
+                randomNodes++;
+            else
+            {
+                FillTooltips("Max #nodes: " + UtilGraph.MAX_RANDOM_NODES);
+                return;
+            }
+        }
+        else
+        {
+            if (randomNodes > 2)
+                randomNodes--;
+            else
+            {
+                FillTooltips("Min #nodes: 2");
+                return;
+            }
+
+        }
+        FillTooltips("#Nodes: " + randomNodes);
+    }
+
+    public void ChangeNumberofRandomEdges(bool increment)
+    {
+        if (increment)
+        {
+            if (randomEdges < UtilGraph.MAX_RANDOM_EDGES)
+                randomEdges++;
+            else
+            {
+                FillTooltips("Max #edges: " + UtilGraph.MAX_RANDOM_EDGES);
+                return;
+            }
+        }
+        else
+        {
+            if (randomEdges > 1)
+                randomEdges--;
+            else
+            {
+                FillTooltips("Min #edges: 2");
+                return;
+            }
+
+        }
+        FillTooltips("#Edges: " + randomEdges);
+    }
+    #endregion
 
     public int[] StartNode()
     {
@@ -489,7 +591,7 @@ public class GraphSettings : TeachingSettings {
         {
             case UtilGraph.GRID_GRAPH: return new int[3] { gridRows, gridColumns, gridSpace };
             case UtilGraph.TREE_GRAPH: return new int[3] { treeDepth, nTree, levelDepthLength };
-            case UtilGraph.RANDOM_GRAPH: return new int[3] { 5, 6, 2 };
+            case UtilGraph.RANDOM_GRAPH: return new int[3] { randomNodes, randomEdges, minRandomSpace }; //{ 5, 6, 2 };
             default: Debug.LogError("Couldn't setup graph! Unknown graph structure: '" + graphStructure + "'."); return null;
         }
     }

@@ -50,6 +50,10 @@ public class TreeManager : GraphManager {
 
         // Number of nodes w/children (aka no leafs included)
         int internalNodes = NumberOfInternalNodes();
+
+        if (nTree == 3 && treeLevel == 2)
+            internalNodes += 5;
+
         Debug.Log("Number of internal nodes: " + internalNodes);
 
         // Set level (starting one level below root)
