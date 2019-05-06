@@ -421,9 +421,6 @@ public class GraphMain : MainManager {
         // Initialize user test
         userTestManager.InitUserTest(instructions, 1, FindNumberOfUserAction(instructions), Settings.Difficulty);
 
-        // Set start time
-        userTestManager.SetStartTime();
-
         graphManager.ResetGraph();
     }
 
@@ -495,7 +492,7 @@ public class GraphMain : MainManager {
                 userTestManager.ReadyForNext = 0;
 
                 // Check if we still have any instructions
-                if (!userTestManager.HasInstructions())
+                if (!userTestManager.HasInstructions()) // ???
                 {
                     graphAlgorithm.IsTaskCompleted = true;
                 }
@@ -507,12 +504,11 @@ public class GraphMain : MainManager {
                     // Hot fix - solve in some other way?
                     if (hasInstruction)
                         userTestManager.ReadyForNext += PrepareNextInstruction(userTestManager.GetInstruction());
-                    //else if (elementManager.AllSorted())
-                    //    StartCoroutine(FinishUserTest());
-
                 }
             }
-            blackboard.ChangeText(1, userTestManager.FillInBlackboard());
+
+            if (Settings.UserTestScore)
+                blackboard.ChangeText(1, userTestManager.FillInBlackboard());
         }
     }
 
@@ -684,8 +680,10 @@ public class GraphMain : MainManager {
                 break;
 
             case UtilGraph.NO_PATH_FOUND:
+            case Util.FINAL_INSTRUCTION:
                 // No path found
-                Debug.Log("Completed! - No path found");
+                WaitForSupportToComplete++;
+                StartCoroutine(FinishUserTest());
                 break;
         }
 
@@ -710,20 +708,50 @@ public class GraphMain : MainManager {
 
 
     // --------------------------------------- Finish off ---------------------------------------
+
+    protected override IEnumerator FinishUserTest()
+    {
+        yield return base.FinishUserTest();
+        pseudoCodeViewer.RemoveHightlight();
+
+        // Do any graph visual stuff???
+        //yield return graphManager.AllNodes()
+
+        WaitForSupportToComplete--;
+    }
+
     protected override void TaskCompletedFinishOff()
     {
         if (graphSettings.IsDemo())
         {
-            if (!backtracking && graphAlgorithm is IShortestPath)
+            switch (graphSettings.GraphTask)
             {
-                if (graphAlgorithm.ShortestPathOneToAll)
-                    StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
-                else
-                {
-                    listVisual.CreateBackTrackList(graphManager.EndNode);
-                    StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
-                }
-                backtracking = true;
+                case UtilGraph.TRAVERSE:
+                    break;
+
+                case UtilGraph.SHORTEST_PATH:
+                    if (!backtracking)
+                    {
+                        if (graphAlgorithm.ShortestPathOneToAll)
+                            StartCoroutine(graphManager.BacktrackShortestPathsAll(graphAlgorithm.DemoStepDuration));
+                        else
+                        {
+                            listVisual.CreateBackTrackList(graphManager.EndNode);
+                            StartCoroutine(graphManager.BacktrackShortestPath(graphManager.EndNode, graphAlgorithm.DemoStepDuration));
+                        }
+                        backtracking = true;
+                    }
+                    break;
+            }
+
+        }
+        else if (Settings.IsUserTest())
+        {
+            if (Settings.UserTestScore)
+            {
+                userTestManager.SetEndTime();
+                userTestManager.CalculateScore();
+                blackboard.ChangeText(1, userTestManager.GetExaminationResult() + "\n" + userTestManager.IncorrectActionDetails(true));
             }
         }
     }

@@ -28,7 +28,7 @@ public abstract class MainManager : MonoBehaviour {
     // Blocks the Update loop until the application is ready and initialized
     protected bool algorithmInitialized = false;
 
-    protected bool newDemoImplemented;
+    protected bool newDemoImplemented, hasFinishedOff;
 
 
     // Check list (startup, shutdown)
@@ -75,8 +75,12 @@ public abstract class MainManager : MonoBehaviour {
         if (GetTeachingAlgorithm().IsTaskCompleted)
         {
             // When an algorithm task is finished, do some stuff
-            TaskCompletedFinishOff();
-            UpdateCheckList(Settings.TeachingMode, true);
+            if (!hasFinishedOff)
+            {
+                TaskCompletedFinishOff();
+                UpdateCheckList(Settings.TeachingMode, true);
+                hasFinishedOff = true;
+            }
         }
         else
         {
@@ -343,6 +347,7 @@ public abstract class MainManager : MonoBehaviour {
         controllerReady = false;
         userStoppedTask = false;
         userPausedTask = false;
+        hasFinishedOff = false;
 
         WaitForSupportToComplete = 0;
 
@@ -471,6 +476,17 @@ public abstract class MainManager : MonoBehaviour {
 
 
     // --------------------------------------- Other ---------------------------------------
+
+    protected virtual IEnumerator FinishUserTest()
+    {
+        audioManager.Play("Finish");
+
+        yield return finishStepDuration;
+
+        TeachingAlgorithm algorithm = GetTeachingAlgorithm();
+        algorithm.IsTaskCompleted = true;
+        algorithm.PseudoCodeViewer.RemoveHightlight();
+    }
 
     protected abstract void TaskCompletedFinishOff(); // Finish off visualization
 

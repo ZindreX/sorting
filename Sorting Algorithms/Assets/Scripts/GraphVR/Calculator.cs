@@ -341,25 +341,25 @@ public class Calculator : InteractionDeviceBase {
                 }
                 else
                 {
-                    feedback = "right hand side error";
+                    feedback = "Incorrect: right hand side";
                     return Feedback(false, feedback);
                 }
             }
             else
             {
-                feedback += "krokodille kjeft error";
+                feedback += "Incorrect: less/greater";
                 return Feedback(false, feedback);
             }
         }
 
         if (correctNode1Dist != value1)
-            feedback += "> w node dist error\n";
+            feedback += "Incorrect\n> w node dist error\n";
 
         if (op != '+')
-            feedback += "operand error";
+            feedback += "> operand error";
 
         if (correctEdgeCost != value2)
-            feedback += "> edge cost error\n";
+            feedback += "> edge cost error";
 
         return Feedback(false, feedback);
     }

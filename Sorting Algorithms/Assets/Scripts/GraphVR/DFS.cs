@@ -626,6 +626,8 @@ public class DFS : GraphAlgorithm, ITraverse {
         }
         // Line 10: End while-loop
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
+
+        instructions.Add(instNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instNr));
         return instructions;
     }
     #endregion

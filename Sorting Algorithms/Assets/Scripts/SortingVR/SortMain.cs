@@ -273,14 +273,6 @@ public class SortMain : MainManager {
         // Initialize user test
         int numberOfUserActions = FindNumberOfUserAction(instructions);
         userTestManager.InitUserTest(instructions, algorithmManagerBase.MovesNeeded, numberOfUserActions, Settings.Difficulty);
-
-        // Set start time
-        userTestManager.SetStartTime();
-
-        //foreach (KeyValuePair<int, InstructionBase> entry in instructions)
-        //{
-        //    Debug.Log(entry.Value.DebugInfo());
-        //}
     }
 
     protected override void UserTestUpdate()
@@ -327,13 +319,15 @@ public class SortMain : MainManager {
     }
 
     // Give feedback to the user when the sorting task (user test) is completed)
-    private IEnumerator FinishUserTest()
+    protected override IEnumerator FinishUserTest()
     {
-        audioManager.Play("Finish");
+        yield return base.FinishUserTest();
 
-        yield return finishStepDuration;
-        sortAlgorithm.IsTaskCompleted = true;
-        displayUnitManager.PseudoCodeViewer.RemoveHightlight();
+        //audioManager.Play("Finish");
+
+        //yield return finishStepDuration;
+        //sortAlgorithm.IsTaskCompleted = true;
+        //displayUnitManager.PseudoCodeViewer.RemoveHightlight();
 
         // Visual feedback (make each element "jump")
         for (int x = 0; x < sortSettings.NumberOfElements; x++)
@@ -350,19 +344,19 @@ public class SortMain : MainManager {
     {
         if (sortSettings.IsUserTest() && sortSettings.UserTestScore)
         {
-            if (userTestManager.TimeSpent == 0)
-            {
-                userTestManager.SetEndTime();
-                userTestManager.CalculateScore();
+            //if (userTestManager.TimeSpent == 0)
+            //{
+            userTestManager.SetEndTime();
+            userTestManager.CalculateScore();
 
-                // Left blackboard
-                displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, "User test incorrect action details", 0);
-                displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, userTestManager.ErrorLog(), 1);
+            // Left blackboard
+            displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, "User test incorrect action details", 0);
+            displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, userTestManager.IncorrectActionDetails(false), 1);
 
-                // Right blackboard
-                displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "User test score", 0);
-                displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, userTestManager.GetExaminationResult(), 1);
-            }
+            // Right blackboard
+            displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "User test score", 0);
+            displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, userTestManager.GetExaminationResult(), 1);
+            //}
         }
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Sorting Completed!");
     }

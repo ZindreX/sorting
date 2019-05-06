@@ -317,6 +317,8 @@ public class BFS : GraphAlgorithm, ITraverse {
             instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
         instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
+
+        instructions.Add(instNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instNr));
         return instructions;
     }
     #endregion

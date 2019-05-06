@@ -100,12 +100,16 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_DIST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE);
 
+        // List visual
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.HAS_NODE_REPRESENTATION); // ?
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.PRIORITY_ADD_NODE); // ?
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION); // ?
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.END_NODE_FOUND);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.PREPARE_BACKTRACKING);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.BACKTRACK_REMOVE_CURRENT_NODE);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.DESTROY_CURRENT_NODE); // test
+
+
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilGraph.MARK_END_NODE);
 
         skipDict[Util.SKIP_NO_ELEMENT].Add(UtilGraph.SET_ALL_NODES_TO_INFINITY);

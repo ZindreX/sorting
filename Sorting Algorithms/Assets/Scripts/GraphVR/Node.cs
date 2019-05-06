@@ -484,6 +484,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     shootStatus = false;
                     traverseStatus = false;
                     graphMain.GetComponent<UserTestManager>().Mistake();
+                    graphMain.GetComponent<UserTestManager>().ReportError();
                     animator.Play("NodeError");
                     break;
 

@@ -55,6 +55,9 @@ public class UserTestManager : InstructionControlBase {
 
         this.difficulty = difficulty;
         difficultyMultiplier = difficulty;
+
+        // Set start time
+        SetStartTime();
     }
 
     // -------------------------------------------- Getters/Setters --------------------------------------------
@@ -192,19 +195,25 @@ public class UserTestManager : InstructionControlBase {
     // -------------------------------------------- Feedback stuff --------------------------------------------
 
 
-    public string ErrorLog()
+    public string IncorrectActionDetails(bool title)
     {
         // Add errors with some explanation | for now just the instruction ID
         string result = "";
+
+        if (title)
+        {
+            result += "Incorrect action details\n";
+        }
+
         if (errorLog.Count > 0)
         {
             foreach (KeyValuePair<string, int> entry in errorLog)
             {
-                result += entry.Key + ": " + entry.Value + "\n"; // UtilSort.TranslateInstructionForExamination(entry.Key)
+                result += "> " + entry.Key + ": " + entry.Value + "\n"; // UtilSort.TranslateInstructionForExamination(entry.Key)
             }
         }
         else
-            result += "> Perfect, no errors";
+            result += "> Perfect! No mistakes";
         return result;
     }
 
@@ -220,24 +229,40 @@ public class UserTestManager : InstructionControlBase {
 
         // Score
         result += "\nTotal score: " + totalScore;
-        result += "\nErrors: " + TotalErrorCount;
+        result += "\nIncorrect moves: " + TotalErrorCount;
 
-        if (totalErrorCount > 0)
-            result += "    (See left blackboard for details)";
+        //if (totalErrorCount > 0)
+        //    result += "    (See left blackboard for details)";
         return result;
     }
 
     // Error counting
     public void ReportError(int sortingElementID)
     {
-        string instructionID = instructions[currentInstructionNr].Instruction;      
+        if (instructions != null)
+        {
+            string instructionID = instructions[currentInstructionNr].Instruction;      
         
-        //totalErrorCount++;
-        if (errorLog.ContainsKey(instructionID))
-            errorLog[instructionID] += 1;
-        else
-            errorLog.Add(instructionID, 1);
+            //totalErrorCount++;
+            if (errorLog.ContainsKey(instructionID))
+                errorLog[instructionID] += 1;
+            else
+                errorLog.Add(instructionID, 1);
+        }
+    }
 
+    public void ReportError()
+    {
+        if (instructions != null)
+        {
+            string instructionID = instructions[currentInstructionNr].Instruction;
+
+            //totalErrorCount++;
+            if (errorLog.ContainsKey(instructionID))
+                errorLog[instructionID] += 1;
+            else
+                errorLog.Add(instructionID, 1);
+        }
     }
 
     public override void ResetState()

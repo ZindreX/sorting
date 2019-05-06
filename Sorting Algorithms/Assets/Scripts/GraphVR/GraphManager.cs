@@ -220,6 +220,7 @@ public abstract class GraphManager : MonoBehaviour {
             //instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
         }
         instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr));
+        instructions.Add(instNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instNr));
     }
 
 
@@ -251,7 +252,6 @@ public abstract class GraphManager : MonoBehaviour {
             }
         }
     }
-
 
     // Delete graph
     public virtual void DeleteGraph()
