@@ -6,8 +6,8 @@ public abstract class MainManager : MonoBehaviour {
 
     /* -------------------------------------------- Main Manager ----------------------------------------------------
      * The main manager of this application
-     * - AlgorithmManagerBase (sorting) <- change name?
-     * - GraphMain
+     * - SortMain (Sorting algorithms)
+     * - GraphMain (Graph algorithms)
      * 
     */
 

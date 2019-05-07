@@ -214,4 +214,17 @@ public class ElementManager : MonoBehaviour, IManager {
         }
     }
 
+    // Returns a string with the initial list values, e.g.: [13, 4, 2, ..., 43]
+    public string InitList()
+    {
+        string result = "[";
+
+        foreach (GameObject obj in sortingElements)
+        {
+            SortingElementBase element = obj.GetComponent<SortingElementBase>();
+            result += element.Value + ", ";
+        }
+        return result.Substring(0, result.Length - 2) + "]";
+    }
+
 }

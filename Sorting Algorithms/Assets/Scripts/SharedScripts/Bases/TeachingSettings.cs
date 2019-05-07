@@ -87,20 +87,27 @@ public abstract class TeachingSettings : SettingsBase {
             case Util.ALGORITHM: Algorithm = itemID; break;
             case Util.TEACHING_MODE:
                 TeachingMode = itemID;
-                if (TeachingMode == Util.DEMO && difficulty > 0)
-                {
-                    difficulty = 0;
-                    InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
-                }
-                else if (TeachingMode == Util.USER_TEST)
-                {
-                    AlgorithmSpeedLevel = Difficulty; // button fixed in method
-                }
+                //if (TeachingMode == Util.DEMO && difficulty > 0)
+                //{
+                //    difficulty = 0;
+                //    InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
+                //}
+                //else if (TeachingMode == Util.USER_TEST)
+                //{
+                //    AlgorithmSpeedLevel = Difficulty; // button fixed in method
+                //}
 
                 break;
 
-            case Util.DIFFICULTY: Difficulty = Util.difficultyConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
-            case Util.DEMO_SPEED: AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key; break;
+            case Util.DIFFICULTY:
+                Difficulty = Util.difficultyConverterDict.FirstOrDefault(x => x.Value == itemID).Key;
+                FillTooltips(FixNewLines(itemDescription), true);
+                break;
+
+            case Util.DEMO_SPEED:
+                AlgorithmSpeedLevel = Util.algorithSpeedConverterDict.FirstOrDefault(x => x.Value == itemID).Key;
+                break;
+
             case Util.OPTIONAL:
                 switch (itemID)
                 {
@@ -108,27 +115,27 @@ public abstract class TeachingSettings : SettingsBase {
                         bool stepActive = Util.ConvertStringToBool(itemDescription);
                         PseudocodeStep = stepActive;
                         if (stepActive)
-                            FillTooltips("Pseudoline into more steps.");
+                            FillTooltips("Pseudoline into more steps.", false);
                         else
-                            FillTooltips("Pseudoline updates directly.");
+                            FillTooltips("Pseudoline updates directly.", false);
                         break;
 
                     case Util.PSEUDOCODE_LINE_NR:
                         bool lineNrActive = Util.ConvertStringToBool(itemDescription);
                         PseudocodeLineNr = lineNrActive;
                         if (lineNrActive)
-                            FillTooltips("Line nr will be displayed.");
+                            FillTooltips("Line nr will be displayed.", false);
                         else
-                            FillTooltips("Line nr will not be displayed.");
+                            FillTooltips("Line nr will not be displayed.", false);
                         break;
 
                     case Util.SCORE:
                         bool scoreActive = Util.ConvertStringToBool(itemDescription);
                         UserTestScore = scoreActive;
                         if (scoreActive)
-                            FillTooltips("User test score enabled.");
+                            FillTooltips("User test score enabled.", false);
                         else
-                            FillTooltips("User test score disabled.");
+                            FillTooltips("User test score disabled.", false);
                         break;
 
                     default: Debug.LogError("Couldn't update: section = " + sectionID + ", item = " + itemID + ", description = " + itemDescription); break;
@@ -238,6 +245,7 @@ public abstract class TeachingSettings : SettingsBase {
         {
             case Util.DEMO:
             case Util.STEP_BY_STEP:
+                algorithmSpeed = AlgorithmSpeedLevel;
                 break;
 
             case Util.USER_TEST:
@@ -259,5 +267,25 @@ public abstract class TeachingSettings : SettingsBase {
 
     protected abstract MainManager MainManager { get; set; }
 
+
+
+    private string FixNewLines(string itemDescription)
+    {
+        string[] headerBodySplit = itemDescription.Split(':');
+
+        if (headerBodySplit.Length == 2)
+        {
+            string result = headerBodySplit[0]; // Header line
+
+            string[] body = headerBodySplit[1].Split(','); // Body part
+
+            foreach (string part in body)
+            {
+                result += "\n> " + part;
+            }
+            return result;
+        }
+        return itemDescription;
+    }
 
 }

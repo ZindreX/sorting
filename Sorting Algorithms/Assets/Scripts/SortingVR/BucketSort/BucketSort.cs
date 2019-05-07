@@ -41,7 +41,7 @@ public class BucketSort : SortAlgorithm {
 
         switch (lineNr)
         {
-            case 0: lineOfCode += string.Format("BucketSort(list, {0}):", numberOfBuckets); break;
+            case 0: lineOfCode += string.Format("BucketSort({0}, {1}):", listValues, numberOfBuckets); break;
             case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", numberOfBuckets); break;
             case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfElements); break;
             case 3: lineOfCode += string.Format("        bucket = {0}", bucketIndexStr); break;

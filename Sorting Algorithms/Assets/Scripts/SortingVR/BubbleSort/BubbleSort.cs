@@ -42,7 +42,7 @@ public class BubbleSort : SortAlgorithm {
 
         switch (lineNr)
         {
-            case 0: lineOfCode += "BubbleSort( list ):"; break;
+            case 0: lineOfCode += string.Format("BubbleSort({0}):", listValues); break;
             case 1: lineOfCode += string.Format("  n = {0}", n); break;
             case 2: lineOfCode += string.Format("  for i={0} to {1}:", i, (n-1)); break;
             case 3: lineOfCode += string.Format("      for j={0} to {1}:", j, (n-i-1)); break;

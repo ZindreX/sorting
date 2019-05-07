@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class InstructionControlBase : MonoBehaviour {
 
-    /* --------------------------------------------  Manager --------------------------------------------
-     * 
-     * 
+    /* --------------------------------------------  Instruction Control Base --------------------------------------------
+     * - Base of Demo- and User Test managers
+     * - Keeps track of all the basic stuff for instructions
     */
 
     protected int currentInstructionNr = 0, numberOfInstructions;
@@ -15,9 +15,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     protected Dictionary<int, InstructionBase> instructions;
 
     protected MainManager mainManager;
-
     protected AudioManager audioManager;
-
     protected ProgressTracker progressTracker;
 
     private void Awake()

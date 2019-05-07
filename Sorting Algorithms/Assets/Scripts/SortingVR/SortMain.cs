@@ -152,6 +152,7 @@ public class SortMain : MainManager {
         // Init element manager
         elementManager.InitManager();
         elementManager.CreateObjects(numberOfElements, HolderPositions, allowDuplicates, sortingCase);
+        sortAlgorithm.ListValues = elementManager.InitList();
 
         // Only Insertion sort using this method so far, here: create pivot holder
         sortAlgorithm.Specials(UtilSort.INIT, Util.NO_VALUE, false);
@@ -185,7 +186,6 @@ public class SortMain : MainManager {
 
         // Pseudocode initialized
         sortAlgorithm.PseudoCodeInitilized = true; // Sort only
-
         
         // Hide menu and display sorting table
         StartCoroutine(ActivateTaskObjects(true));
@@ -323,12 +323,6 @@ public class SortMain : MainManager {
     {
         yield return base.FinishUserTest();
 
-        //audioManager.Play("Finish");
-
-        //yield return finishStepDuration;
-        //sortAlgorithm.IsTaskCompleted = true;
-        //displayUnitManager.PseudoCodeViewer.RemoveHightlight();
-
         // Visual feedback (make each element "jump")
         for (int x = 0; x < sortSettings.NumberOfElements; x++)
         {
@@ -351,7 +345,7 @@ public class SortMain : MainManager {
 
             // Left blackboard
             displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, "User test incorrect action details", 0);
-            displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, userTestManager.IncorrectActionDetails(false), 1);
+            displayUnitManager.SetTextWithIndex(UtilSort.LEFT_BLACKBOARD, userTestManager.IncorrectActionDetails(), 1);
 
             // Right blackboard
             displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "User test score", 0);
@@ -367,7 +361,7 @@ public class SortMain : MainManager {
     // Makes specific objects visible/invisible based on when they should be active
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
-        sortSettings.FillTooltips("Loading setup...");
+        sortSettings.FillTooltips("Loading setup...", false);
         yield return loading;
 
         // Settings menu
@@ -385,7 +379,7 @@ public class SortMain : MainManager {
         if (active)
             displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "Teaching mode: " + sortSettings.TeachingMode, 1);
         else
-            sortSettings.FillTooltips("Loading complete!");
+            sortSettings.FillTooltips("Loading complete!", false);
     }
 
 

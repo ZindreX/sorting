@@ -295,7 +295,7 @@ public class GraphMain : MainManager {
     // Makes the settings menu and start pillar visible/invisible
     protected override IEnumerator ActivateTaskObjects(bool active)
     {
-        graphSettings.FillTooltips("Loading setup...");
+        graphSettings.FillTooltips("Loading setup...", false);
         yield return loading;
 
         // Settings menu
@@ -304,7 +304,7 @@ public class GraphMain : MainManager {
         startPillar.ActiveInScene(active);
 
         yield return loading;
-        graphSettings.FillTooltips("");
+        graphSettings.FillTooltips("", false);
 
 
         pointer.AllowShooting = active;
@@ -712,7 +712,6 @@ public class GraphMain : MainManager {
     protected override IEnumerator FinishUserTest()
     {
         yield return base.FinishUserTest();
-        pseudoCodeViewer.RemoveHightlight();
 
         // Do any graph visual stuff???
         //yield return graphManager.AllNodes()
@@ -751,7 +750,8 @@ public class GraphMain : MainManager {
             {
                 userTestManager.SetEndTime();
                 userTestManager.CalculateScore();
-                blackboard.ChangeText(1, userTestManager.GetExaminationResult() + "\n" + userTestManager.IncorrectActionDetails(true));
+                blackboard.ChangeText(0, "Incorrect action details:");
+                blackboard.ChangeText(1, userTestManager.GetExaminationResult() + "\n" + userTestManager.IncorrectActionDetails());
             }
         }
     }

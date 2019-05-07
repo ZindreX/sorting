@@ -65,7 +65,7 @@ public class InsertionSort : SortAlgorithm {
 
         switch (lineNr)
         {
-            case 0: lineOfCode +=  "InsertionSort(list)"; break;
+            case 0: lineOfCode +=  "InsertionSort(" + listValues + ")"; break;
             case 1: lineOfCode +=  "    i = 1"; break;
             case 2: lineOfCode +=  "    while ( " + i + " < " + lengthOfList + " )"; break;
             case 3: lineOfCode +=  "        j = " + iMinus1; break;

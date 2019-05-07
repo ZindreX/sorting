@@ -207,9 +207,6 @@ public class Monitor : SettingsBase {
                         break;
 
                     case EJECT:
-                        if (videoPlayer.isPlaying)
-                            videoPlayer.Stop();
-
                         if (currentPlayingVHS != null)
                             StartCoroutine(EjectVideo(null));
                         break;
@@ -326,6 +323,7 @@ public class Monitor : SettingsBase {
     // Eject video (not completly animated yet), enable trigger
     private IEnumerator EjectVideo(Video vhs)
     {
+        videoPlayer.Stop();
         monitorRendererTexture.Release();
 
         // Eject video animation (monitor)

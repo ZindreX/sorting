@@ -14,7 +14,7 @@ public class Portal : MonoBehaviour {
      * 
     */
 
-    private static int LARGEST_BUILD_INDEX = 4;
+    private static int LARGEST_BUILD_INDEX = 5;
 
     [SerializeField]
     private int sceneBuildIndex;
@@ -62,34 +62,6 @@ public class Portal : MonoBehaviour {
             
     }
 
-    //private void Update()
-    //{
-    //    Vector3 playerPos = player.transform.position;
-
-    //    // >>> Check if player is standing near this portal
-    //    float playerRelToNodeX = Mathf.Abs(playerPos.x - transportPoint.position.x);
-    //    float playerRelToNodeZ = Mathf.Abs(playerPos.z - transportPoint.position.z);
-
-    //    if (playerRelToNodeX < withinWidth && playerRelToNodeZ < withinDepth)
-    //    {
-    //        playerStandingNearPortal = true;
-
-    //        if (sceneBuildIndex > LARGEST_BUILD_INDEX)
-    //            return;
-
-    //        if (!countdownStarted)
-    //        {
-    //            StartCoroutine(PortalStart());
-    //            animator.SetBool("EnterPortal", true);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        playerStandingNearPortal = false;
-    //        animator.SetBool("EnterPortal", false);
-    //    }
-    //}
-
     private IEnumerator PortalStart()
     {
         countdownStarted = true;
@@ -97,7 +69,7 @@ public class Portal : MonoBehaviour {
         audioSource.Play();
         for (int i=0; i < 3; i++)
         {
-            Debug.Log("Countdown: " + countdown);
+            //Debug.Log("Countdown: " + countdown);
             yield return portalSubLoadDuration;
             countdown--;
         }
@@ -122,7 +94,7 @@ public class Portal : MonoBehaviour {
             case 2: return Util.MAIN_MENU;
             case 3: return Util.SORTING_ALGORITHMS;
             case 4: return Util.GRAPH_ALGORITHMS;
-            case 5: return "Don't enter";
+            case 5: return "Cinema";
             default: return "X";
 
         }

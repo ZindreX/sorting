@@ -61,26 +61,6 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
             Destroy(buttons[STEP_BACK].gameObject);
     }
 
-    //private void Update()
-    //{
-    //    // Hide buttons based on state (Pause: Step-by-step with (back-)/forward step, Unpaused: Demo with reduce-/increase speed
-    //    bool gamePaused = pauseButton.State;
-    //    if (currentState != gamePaused)
-    //    {
-    //        Debug.Log("State changed, paused: " + gamePaused);
-
-    //        buttons[REDUCE_SPEED].gameObject.SetActive(!gamePaused);
-    //        buttons[INCREASE_SPEED].gameObject.SetActive(!gamePaused);
-
-    //        if (enableStepBack)
-    //            buttons[STEP_BACK].gameObject.SetActive(gamePaused);
-
-    //        buttons[STEP_FORWARD].gameObject.SetActive(gamePaused);
-
-    //        currentState = gamePaused;
-    //    }
-    //}
-
     public void InitDemoDevice(bool startPaused)
     {
         section.InitItem(PAUSE, startPaused);

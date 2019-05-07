@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GraphSettings : TeachingSettings {
 
@@ -114,6 +115,9 @@ public class GraphSettings : TeachingSettings {
 
     private string graphTask, graphStructure, edgeType, edgeBuildMode;
 
+    [SerializeField]
+    private TextMeshPro variable1Text, variable2Text;
+
     protected override void Start()
     {
         // Debugging editor (fast edit settings)
@@ -155,6 +159,9 @@ public class GraphSettings : TeachingSettings {
                     break;
             }
         }
+
+        // Update variable texts in the settings menu
+        UpdateGraphSubVariables();
         tooltips.text = "";
 
         InitButtons();
@@ -220,7 +227,7 @@ public class GraphSettings : TeachingSettings {
     public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
         // Fill information on the "display" on the settings menu about the button just clicked
-        FillTooltips(itemDescription);
+        FillTooltips(itemDescription, false);
 
         switch (sectionID)
         {
@@ -240,7 +247,11 @@ public class GraphSettings : TeachingSettings {
                 }
                 break;
 
-            case UtilGraph.GRAPH_STRUCTURE: GraphStructure = itemID; break;
+            case UtilGraph.GRAPH_STRUCTURE:
+                GraphStructure = itemID;
+                UpdateGraphSubVariables();
+                break;
+
             case UtilGraph.GRAPH_TASK:
                 if (itemID == UtilGraph.SHORTEST_PATH && algorithm == Util.DIJKSTRA || itemID == UtilGraph.TRAVERSE && (algorithm == Util.BFS || algorithm == Util.DFS))
                 {
@@ -248,7 +259,7 @@ public class GraphSettings : TeachingSettings {
                 }
                 else
                 {
-                    FillTooltips("Not implemented yet.");
+                    FillTooltips("Not implemented yet.", false);
                     if (itemID == UtilGraph.SHORTEST_PATH)
                         InitButtonState(sectionID, UtilGraph.TRAVERSE);
                     else
@@ -265,9 +276,9 @@ public class GraphSettings : TeachingSettings {
                     case UtilGraph.SELECT_NODE:
                         SelectStartEndNodes = Util.ConvertStringToBool(itemDescription);
                         if (selectStartEndNodes)
-                            FillTooltips("Manually choose node(s).");
+                            FillTooltips("Manually choose node(s).", false);
                         else
-                            FillTooltips("Node(s) chosen in editor. Not recommended.");
+                            FillTooltips("Node(s) chosen in editor. Not recommended.", false);
                         break;
 
                     default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
@@ -342,9 +353,9 @@ public class GraphSettings : TeachingSettings {
                 shortestPathOneToAll = shortestPathOneToAllActive;
 
                 if (shortestPathOneToAllActive)
-                    FillTooltips("Demo only: displays the shortest path from the start node to all the other nodes.");
+                    FillTooltips("Demo only: displays the shortest path from the start node to all the other nodes.", false);
                 else
-                    FillTooltips("Displays the shortest path from the start- to end node.");
+                    FillTooltips("Displays the shortest path from the start- to end node.", false);
                 break;
 
             default: base.UpdateInteraction(sectionID, itemID, itemDescription); break;
@@ -395,6 +406,28 @@ public class GraphSettings : TeachingSettings {
         set { edgeBuildMode = value; }
     }
 
+    private void UpdateGraphSubVariables()
+    {
+        switch (graphStructure)
+        {
+            case UtilGraph.GRID_GRAPH:
+                variable1Text.text = gridRows.ToString();
+                variable2Text.text = gridColumns.ToString();
+                break;
+
+            case UtilGraph.TREE_GRAPH:
+                variable1Text.text = treeDepth.ToString();
+                variable2Text.text = nTree.ToString();
+                break;
+
+            case UtilGraph.RANDOM_GRAPH:
+                variable1Text.text = randomNodes.ToString();
+                variable2Text.text = randomEdges.ToString();
+                break;
+        }
+    }
+
+
     #region Grid sub
     public void ChangeGridRows(bool increment)
     {
@@ -404,7 +437,7 @@ public class GraphSettings : TeachingSettings {
                 gridRows++;
             else
             {
-                FillTooltips("Max rows: " + UtilGraph.MAX_ROWS);
+                FillTooltips("Max rows: " + UtilGraph.MAX_ROWS, false);
                 return;
             }
         }
@@ -414,12 +447,13 @@ public class GraphSettings : TeachingSettings {
                 gridRows--;
             else
             {
-                FillTooltips("Min rows: 1");
+                FillTooltips("Min rows: 1", false);
                 return;
             }
 
         }
-        FillTooltips("#Rows: " + gridRows);
+        //FillTooltips("#Rows: " + gridRows, false);
+        variable1Text.text = gridRows.ToString();
     }
 
     public void ChangeGridColumns(bool increment)
@@ -430,7 +464,7 @@ public class GraphSettings : TeachingSettings {
                 gridColumns++;
             else
             {
-                FillTooltips("Max columns: " + UtilGraph.MAX_COLUMNS);
+                FillTooltips("Max columns: " + UtilGraph.MAX_COLUMNS, false);
                 return;
             }
         }
@@ -440,12 +474,13 @@ public class GraphSettings : TeachingSettings {
                 gridColumns--;
             else
             {
-                FillTooltips("Min columns: 1");
+                FillTooltips("Min columns: 1", false);
                 return;
             }
 
         }
-        FillTooltips("#Columns: " + gridColumns);
+        //FillTooltips("#Columns: " + gridColumns, false);
+        variable2Text.text = gridColumns.ToString();
     }
     #endregion
 
@@ -458,7 +493,7 @@ public class GraphSettings : TeachingSettings {
                 treeDepth++;
             else
             {
-                FillTooltips("Max tree depth: " + UtilGraph.MAX_TREE_DEPTH);
+                FillTooltips("Max tree depth: " + UtilGraph.MAX_TREE_DEPTH, false);
                 return;
             }
         }
@@ -468,12 +503,13 @@ public class GraphSettings : TeachingSettings {
                 treeDepth--;
             else
             {
-                FillTooltips("Min tree depth: 0");
+                FillTooltips("Min tree depth: 0", false);
                 return;
             }
 
         }
-        FillTooltips("#Tree depth: " + treeDepth);
+        //FillTooltips("#Tree depth: " + treeDepth, false);
+        variable1Text.text = treeDepth.ToString();
     }
 
     public void ChangeNTree(bool increment)
@@ -484,7 +520,7 @@ public class GraphSettings : TeachingSettings {
                 nTree++;
             else
             {
-                FillTooltips("Max n-tree: " + UtilGraph.MAX_N_TREE);
+                FillTooltips("Max n-tree: " + UtilGraph.MAX_N_TREE, false);
                 return;
             }
         }
@@ -494,12 +530,13 @@ public class GraphSettings : TeachingSettings {
                 nTree--;
             else
             {
-                FillTooltips("Min n-tree: 2");
+                FillTooltips("Min n-tree: 2", false);
                 return;
             }
 
         }
-        FillTooltips("n-tree: " + treeDepth);
+        //FillTooltips("n-tree: " + treeDepth, false);
+        variable2Text.text = nTree.ToString();
     }
     #endregion
 
@@ -512,7 +549,7 @@ public class GraphSettings : TeachingSettings {
                 randomNodes++;
             else
             {
-                FillTooltips("Max #nodes: " + UtilGraph.MAX_RANDOM_NODES);
+                FillTooltips("Max #nodes: " + UtilGraph.MAX_RANDOM_NODES, false);
                 return;
             }
         }
@@ -522,12 +559,13 @@ public class GraphSettings : TeachingSettings {
                 randomNodes--;
             else
             {
-                FillTooltips("Min #nodes: 2");
+                FillTooltips("Min #nodes: 2", false);
                 return;
             }
 
         }
-        FillTooltips("#Nodes: " + randomNodes);
+        //FillTooltips("#Nodes: " + randomNodes, false);
+        variable1Text.text = randomNodes.ToString();
     }
 
     public void ChangeNumberofRandomEdges(bool increment)
@@ -538,7 +576,7 @@ public class GraphSettings : TeachingSettings {
                 randomEdges++;
             else
             {
-                FillTooltips("Max #edges: " + UtilGraph.MAX_RANDOM_EDGES);
+                FillTooltips("Max #edges: " + UtilGraph.MAX_RANDOM_EDGES, false);
                 return;
             }
         }
@@ -548,12 +586,13 @@ public class GraphSettings : TeachingSettings {
                 randomEdges--;
             else
             {
-                FillTooltips("Min #edges: 2");
+                FillTooltips("Min #edges: 2", false);
                 return;
             }
 
         }
-        FillTooltips("#Edges: " + randomEdges);
+        //FillTooltips("#Edges: " + randomEdges, false);
+        variable2Text.text = randomEdges.ToString();
     }
     #endregion
 

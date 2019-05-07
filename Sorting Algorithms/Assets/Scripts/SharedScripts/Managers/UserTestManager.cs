@@ -5,8 +5,10 @@ using UnityEngine;
 public class UserTestManager : InstructionControlBase {
 
     /* -------------------------------------------- User Test Manager --------------------------------------------
-     * 
-     * 
+     * > Keeps tracks of the user tests
+     *  - Score
+     *  - Incorrect moves details
+     *  - ...
     */
 
     // User test
@@ -26,7 +28,6 @@ public class UserTestManager : InstructionControlBase {
 
     // Score
     public readonly int SCORE_PER_STREAK = 10, SUBSTRACTION_PER_ERROR = 2;
-    public readonly float SCORE_UPDATE = 0.1f;
 
     private float startTime, endTime, timeSpent;
     private int currentScore, totalScore, currentStreak, longestStreak;
@@ -51,7 +52,7 @@ public class UserTestManager : InstructionControlBase {
         totalCorrect = 0;
         totalErrorCount = 0;
         errorLog = new Dictionary<string, int>();
-        scoreUpdateDuration = new WaitForSeconds(SCORE_UPDATE);
+        scoreUpdateDuration = new WaitForSeconds(0.1f);
 
         this.difficulty = difficulty;
         difficultyMultiplier = difficulty;
@@ -195,15 +196,10 @@ public class UserTestManager : InstructionControlBase {
     // -------------------------------------------- Feedback stuff --------------------------------------------
 
 
-    public string IncorrectActionDetails(bool title)
+    public string IncorrectActionDetails()
     {
         // Add errors with some explanation | for now just the instruction ID
         string result = "";
-
-        if (title)
-        {
-            result += "Incorrect action details\n";
-        }
 
         if (errorLog.Count > 0)
         {

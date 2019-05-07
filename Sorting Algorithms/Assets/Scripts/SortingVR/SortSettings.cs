@@ -132,7 +132,7 @@ public class SortSettings : TeachingSettings {
     public override void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
         // Fill information on the "display" on the settings menu about the button just clicked
-        FillTooltips(itemDescription);
+        FillTooltips(itemDescription, false);
 
         switch (sectionID)
         {
@@ -191,7 +191,7 @@ public class SortSettings : TeachingSettings {
             }
             else
             {
-                FillTooltips("Can't add more elements!");
+                FillTooltips("Can't add more elements!", false);
             }
         }
         else
@@ -203,7 +203,7 @@ public class SortSettings : TeachingSettings {
             }
             else
             {
-                FillTooltips("Minimum 2 elements.");
+                FillTooltips("Minimum 2 elements.", false);
             }
         }
     }
@@ -223,7 +223,7 @@ public class SortSettings : TeachingSettings {
             }
             else
             {
-                FillTooltips("Max 10 buckets.");
+                FillTooltips("Maximum 10 buckets.", false);
             }
         }
         else
@@ -238,7 +238,7 @@ public class SortSettings : TeachingSettings {
             }
             else
             {
-                FillTooltips("Minimum 2 buckets.");
+                FillTooltips("Minimum 2 buckets.", false);
             }
         }
     }

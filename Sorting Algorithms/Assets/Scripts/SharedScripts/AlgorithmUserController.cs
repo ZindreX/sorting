@@ -11,11 +11,7 @@ public class AlgorithmUserController : MonoBehaviour {
      *  https://www.youtube.com/watch?v=bn8eMxBcI70
     */
 
-    [SerializeField]
     private MainManager mainManager;
-
-    [SerializeField]
-    private UnityEngine.UI.Text warningMessage;
 
     [SteamVR_DefaultAction("Increment")]
     public SteamVR_Action_Boolean incrementAction;
@@ -27,6 +23,9 @@ public class AlgorithmUserController : MonoBehaviour {
     public SteamVR_Action_Boolean toggleStartAction;
 
 
+    private bool debugNextReady = true;
+
+
     private void Awake()
     {
         mainManager = FindObjectOfType<MainManager>();
@@ -35,13 +34,6 @@ public class AlgorithmUserController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        // Used to start / stop sorting task
-        if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.Any))
-        {
-            //Debug.Log("Toggle");
-            mainManager.ToggleVisibleStuff();
-        }
-
         // ************* DEBUGGING *************
         if (debugNextReady)
         {
@@ -74,20 +66,44 @@ public class AlgorithmUserController : MonoBehaviour {
         // Do actions according to what teaching mode the player has activated
         if (mainManager.AlgorithmInitialized)
         {
+            // Used to start / stop sorting task
+            if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.LeftHand))
+            {
+                mainManager.ToggleVisibleStuff();
+            }
+
+
             switch (mainManager.Settings.TeachingMode)
             {
                 case Util.DEMO:
                 case Util.STEP_BY_STEP:
-                    if (!mainManager.UserPausedTask)
-                        return;
 
-                    // Progress to the next instruction
-                    if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                        mainManager.PlayerStepByStepInput(true);
+                    if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.RightHand))
+                    {
+                        mainManager.PerformDemoDeviceAction(DemoDevice.PAUSE);
+                    }
 
-                    // Backwards to the previous instruction
-                    else if (mainManager.Settings.StepBack && SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                        mainManager.PlayerStepByStepInput(false);
+                    if (mainManager.UserPausedTask) // Demo paused --> Step-by-step
+                    {
+                        // Progress to the next instruction
+                        if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
+                            mainManager.PlayerStepByStepInput(true);
+
+                        // Backwards to the previous instruction
+                        else if (mainManager.Settings.StepBack && SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                            mainManager.PlayerStepByStepInput(false);
+                    }
+                    else // Demo play --> automatically update (speed adjustable)
+                    {
+                        // Increase algorithm speed
+                        if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
+                            mainManager.PerformDemoDeviceAction(DemoDevice.INCREASE_SPEED);
+
+                        // Reduce algorithm speed
+                        else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                            mainManager.PerformDemoDeviceAction(DemoDevice.REDUCE_SPEED);
+                    }
+
                     break;
 
                 case Util.USER_TEST:
@@ -109,21 +125,12 @@ public class AlgorithmUserController : MonoBehaviour {
         }
     }
 
-    private bool debugNextReady = true;
+
     private WaitForSeconds buttonClickWait = new WaitForSeconds(0.2f), warningMessageDuration = new WaitForSeconds(3f);
     private IEnumerator DebugWait()
     {
         debugNextReady = false;
         yield return buttonClickWait;
         debugNextReady = true;
-    }
-
-    // Test of warning messages in UI (only works on the monitor)
-    public IEnumerator CreateWarningMessage(string warningMessage, Color color)
-    {
-        this.warningMessage.color = color;
-        this.warningMessage.text = warningMessage;
-        yield return warningMessageDuration;
-        this.warningMessage.text = "";
     }
 }

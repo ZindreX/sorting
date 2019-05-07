@@ -65,7 +65,7 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     {
         get { return GetComponentInChildren<Renderer>().material.color; }
         set {
-            if (parent.SortSettings.Difficulty < Util.EXAMINATION || parent.GetTeachingAlgorithm().IsTaskCompleted)
+            if (parent.SortSettings.Difficulty <= Util.INTERMEDIATE || parent.GetTeachingAlgorithm().IsTaskCompleted)
             {
                 prevColor = currentColor;
                 GetComponentInChildren<Renderer>().material.color = value;

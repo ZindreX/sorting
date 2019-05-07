@@ -41,10 +41,18 @@ public abstract class SettingsBase : StartExchangePosition, ISectionManager {
     public abstract void UpdateInteraction(string sectionID, string itemID, string itemDescription);
 
     // Set thje settings menu text
-    public void FillTooltips(string text)
+    public void FillTooltips(string text, bool leftAlignment)
     {
         if (tooltips != null)
+        {
+            if (leftAlignment)
+                tooltips.alignment = TextAlignmentOptions.Left;
+            else
+                tooltips.alignment = TextAlignmentOptions.Center;
+
             tooltips.text = text;
+
+        }
     }
 
     // ----------------------- Init settings menu buttons -----------------------
