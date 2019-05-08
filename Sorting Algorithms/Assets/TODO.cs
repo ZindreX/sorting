@@ -1,13 +1,21 @@
 ﻿/* 
- * >>> Status of algorithms:
+ * >>> Status of sorting algorithms:
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
- *    Algorithm name    |   Standard    |   Tutorial    |   Step-by-step    |   User Test   |                               Comment                                 |
+ *    Algorithm name    |   Non-3D/VR   |   Tutorial    |   Step-by-step    |   User Test   |                               Comment                                 |
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
  *    Bubble Sort       |     Yes       |     Yes       |       Yes         |       Yes     | Complete                                                              |
  *    Insertion Sort    |     Yes       |     Yes       |       Yes*        |       Yes     | Complete*: found small bug in step-by-step                            |
  *    Bucket Sort       |     Yes       |     Yes       |       Yes*        |       Yes*    | Standard/Tutorial/Step-by-step: ok**, user test needs more work       |
  *    Merge Sort        |     Yes       |     No        |       No          |       No      | Standard: OK, Tutorial started/not finished                           |
- *    Quick Sort        |      No       |     No        |       No          |       No      | Not started                                                           |
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ * 
+ *  * >>> Status of graph algorithms:
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ *    Algorithm name    |   Demo/Step-by-step    |       User Test          |                               Comment                                                 |
+ * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ *          BFS         |         Yes            |          Yes             |                                                                                       |
+ *          DFS         |         Yes            |          Yes             |                                                                                       |
+ *        Dijkstra      |         Yes            |          Yes             |                                                                                       |
  * -----------------------------------------------------------------------------------------------------------------------------------------------------------------|
  * 
  * 
@@ -24,8 +32,6 @@
  * - ElementsBasedOnCase: first gather values then distribute, instead of distribute -> redistribute based on sorting case (worst/best) ?
  * 
  *  
- * > InstructionNr
- *  - remove it from UserTestManager++
  * 
  * 
  * 
@@ -43,6 +49,9 @@
  *  > User test: ready?
  *  > New Demo:
  *      - Step-by-step: backwards needs more work
+ *      
+ *      
+ * >>> Instruction numbers ********************************************** <-----
  * 
  * 
  * 
@@ -62,5 +71,5 @@
  * 
  * > User test
  *  - gather all user inputs (during examination?)
- *  - if any mistakes has been done by buser --> show what and how (step/instructions/feedback/animations)
+ *  - if any mistakes has been done by user --> show what and how (step/instructions/feedback/animations)
 */

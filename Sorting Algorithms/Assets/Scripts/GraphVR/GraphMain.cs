@@ -5,6 +5,9 @@ using System.Linq;
 
 public class GraphMain : MainManager {
 
+    [Space(10)]
+    [Header("Graph main")]
+    [Space(2)]
     [Header("Graph prefabs")]
     public GameObject nodePrefab;
     public GameObject undirectedEdgePrefab;
@@ -298,6 +301,14 @@ public class GraphMain : MainManager {
         graphSettings.FillTooltips("Loading setup...", false);
         yield return loading;
 
+        if (feedbackDisplayText != null)
+        {
+            if (active)
+                feedbackDisplayText.text = graphSettings.TeachingMode;
+            else
+                feedbackDisplayText.text = "";
+        }
+
         // Settings menu
         graphSettings.ActiveInScene(!active);
 
@@ -305,7 +316,6 @@ public class GraphMain : MainManager {
 
         yield return loading;
         graphSettings.FillTooltips("", false);
-
 
         pointer.AllowShooting = active;
     }
@@ -755,7 +765,6 @@ public class GraphMain : MainManager {
             }
         }
     }
-
 
     /* --------------------------------------- List visual / Node representation ---------------------------------------
      * Some help functions for list visual

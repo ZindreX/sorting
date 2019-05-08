@@ -22,7 +22,6 @@ public class AlgorithmUserController : MonoBehaviour {
     [SteamVR_DefaultAction("ToggleStart")]
     public SteamVR_Action_Boolean toggleStartAction;
 
-
     private bool debugNextReady = true;
 
 
@@ -80,28 +79,33 @@ public class AlgorithmUserController : MonoBehaviour {
 
                     if (SteamVR_Input.__actions_default_in_ToggleStart.GetStateDown(SteamVR_Input_Sources.RightHand))
                     {
-                        mainManager.PerformDemoDeviceAction(DemoDevice.PAUSE);
+                        mainManager.PerformDemoDeviceAction(DemoDevice.PAUSE, true);
                     }
 
                     if (mainManager.UserPausedTask) // Demo paused --> Step-by-step
                     {
                         // Progress to the next instruction
                         if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                            mainManager.PlayerStepByStepInput(true);
+                            mainManager.PerformDemoDeviceAction(DemoDevice.STEP_FORWARD, true);
 
                         // Backwards to the previous instruction
-                        else if (mainManager.Settings.StepBack && SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                            mainManager.PlayerStepByStepInput(false);
+                        else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
+                        {
+                            if (mainManager.Settings.StepBack)
+                                mainManager.PerformDemoDeviceAction(DemoDevice.STEP_BACK, true);
+                            else
+                                StartCoroutine(mainManager.SetFeedbackDisplay("Backward step not available for this algorithm."));
+                        }
                     }
                     else // Demo play --> automatically update (speed adjustable)
                     {
                         // Increase algorithm speed
                         if (SteamVR_Input.__actions_default_in_Increment.GetStateDown(SteamVR_Input_Sources.RightHand))
-                            mainManager.PerformDemoDeviceAction(DemoDevice.INCREASE_SPEED);
+                            mainManager.PerformDemoDeviceAction(DemoDevice.INCREASE_SPEED, true);
 
                         // Reduce algorithm speed
                         else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
-                            mainManager.PerformDemoDeviceAction(DemoDevice.REDUCE_SPEED);
+                            mainManager.PerformDemoDeviceAction(DemoDevice.REDUCE_SPEED, true);
                     }
 
                     break;

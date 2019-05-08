@@ -10,7 +10,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     */
 
     protected int currentInstructionNr = 0, numberOfInstructions;
-    protected bool autoProgress;
+    protected bool autoProgress, firstInstruction, finalInstruction;
 
     protected Dictionary<int, InstructionBase> instructions;
 
@@ -38,6 +38,9 @@ public abstract class InstructionControlBase : MonoBehaviour {
         progressTracker.InitProgressTracker(userActionInstructions, userActionInstructions);
     }
 
+    public bool FirstInstruction { get; set; }
+    public bool FinalInstruction { get; set; }
+
     // Returns false if there are no instructions or all instructions have been dealt out, otherwise true
     public bool HasInstructions()
     {
@@ -51,6 +54,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     {
         return currentInstructionNr == (instructions.Count - 1);
     }
+
 
     // Returns correct instruction (within the bounderies - step by step might fall outside?)
     public InstructionBase GetInstruction()
@@ -99,7 +103,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Can't decrement, instructionNr: " + currentInstructionNr);
+            //Debug.Log("Can't decrement, instructionNr: " + currentInstructionNr);
             return false;
         }
     }
@@ -115,6 +119,8 @@ public abstract class InstructionControlBase : MonoBehaviour {
         instructions = null;
         currentInstructionNr = -1;
         numberOfInstructions = 0;
+        firstInstruction = false;
+        finalInstruction = false;
 
         mainManager = null;
         progressTracker.ResetProgress();

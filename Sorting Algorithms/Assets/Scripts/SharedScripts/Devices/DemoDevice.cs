@@ -75,6 +75,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     public void TransitionPause(bool paused)
     {
         Debug.Log("State changed, paused: " + paused);
+
         buttons[REDUCE_SPEED].gameObject.SetActive(!paused);
         buttons[INCREASE_SPEED].gameObject.SetActive(!paused);
 
@@ -84,6 +85,14 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
         buttons[STEP_FORWARD].gameObject.SetActive(paused);
     }
 
+    public void OtherSourceClick(string itemID)
+    {
+        switch (itemID)
+        {
+            case PAUSE: pauseButton.Toggle(); break;
+        }
+    }
+
     public void SetDemoDeviceTitle(string title)
     {
         section.SetSectionTitle(title);
@@ -91,7 +100,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
 
     public void UpdateInteraction(string sectionID, string itemID, string itemDescription)
     {
-        mainManager.PerformDemoDeviceAction(itemID);
+        mainManager.PerformDemoDeviceAction(itemID, false);
     }
 
     public void ButtonActive(string buttonID, bool active)

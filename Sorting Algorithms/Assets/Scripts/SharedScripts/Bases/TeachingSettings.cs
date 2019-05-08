@@ -172,7 +172,7 @@ public abstract class TeachingSettings : SettingsBase {
     public bool StepBack
     {
         get { return stepBack; }
-        set { stepBack = value; }
+        set { stepBack = value; } // Set by demo device,. check with each specific algorithm instead?
     }
 
     // Beginner, Intermediate, or Examination

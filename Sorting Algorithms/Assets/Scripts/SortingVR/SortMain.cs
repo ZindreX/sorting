@@ -7,6 +7,9 @@ public class SortMain : MainManager {
     // Audio
     public readonly string SORTED_SOUND = "Sorted";
 
+    [Space(10)]
+    [Header("Sort main")]
+    [Space(2)]
     // Base object instances
     [SerializeField]
     private SortSettings sortSettings;
@@ -75,6 +78,9 @@ public class SortMain : MainManager {
     {
         get { return holderManager; }
     }
+
+    private bool test;
+    public bool Test { get; set; }
 
     // The positions of the holders
     public Vector3[] HolderPositions
@@ -247,6 +253,12 @@ public class SortMain : MainManager {
 
             Debug.Log("Number of instructions: " + instructions.Count);
 
+            //foreach (KeyValuePair<int, InstructionBase> entry in instructions)
+            //{
+            //    Debug.Log(">>> " + entry.Key + ": " + entry.Value.DebugInfo());
+            //}
+
+
             demoManager.InitDemo(instructions);
 
             newDemoImplemented = true;
@@ -294,7 +306,7 @@ public class SortMain : MainManager {
                 if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                 {
                     sortAlgorithm.IsTaskCompleted = true;
-                    Debug.LogError("Manage to enter this case???"); // ???
+                    Debug.Log("This update loop needs some fixes.... Ever getting into this case????"); // ???
                 }
                 else
                 {
@@ -309,7 +321,6 @@ public class SortMain : MainManager {
                         WaitForSupportToComplete++;
                         StartCoroutine(FinishUserTest());
                     }
-
                 }
             }
 
@@ -364,6 +375,14 @@ public class SortMain : MainManager {
         sortSettings.FillTooltips("Loading setup...", false);
         yield return loading;
 
+        if (feedbackDisplayText != null)
+        {
+            if (active)
+                feedbackDisplayText.text = sortSettings.TeachingMode;
+            else
+                feedbackDisplayText.text = "";
+        }
+
         // Settings menu
         sortSettings.ActiveInScene(!active);
 
@@ -381,7 +400,6 @@ public class SortMain : MainManager {
         else
             sortSettings.FillTooltips("Loading complete!", false);
     }
-
 
     // Keeps only one sorting algorithm manager active
     private AlgorithmManagerBase SortingAlgorithmManager(string sortAlgorithm)
@@ -422,6 +440,15 @@ public class SortMain : MainManager {
 
     public override void ToggleVisibleStuff()
     {
-        Debug.Log("Toggle");
+
+    }
+
+
+    // Variables to reset on destroy (player leaving scene without stopping demo/user test)
+    private void OnDestroy()
+    {
+        SortingElementBase.SORTING_ELEMENT_NR = 0;
+        HolderBase.HOLDER_NR = 0;
+        Bucket.BUCKET_NR = 0;
     }
 }

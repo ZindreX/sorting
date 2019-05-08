@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public abstract class MainManager : MonoBehaviour {
 
@@ -30,6 +31,7 @@ public abstract class MainManager : MonoBehaviour {
 
     protected bool newDemoImplemented, hasFinishedOff;
 
+    private bool requestBacktrack;
 
     // Check list (startup, shutdown)
     public const string START_UP_CHECK = "Start up check", WAIT_FOR_SUPPORT = "Wait for support", SHUT_DOWN_CHECK = "Shut down check";
@@ -38,9 +40,15 @@ public abstract class MainManager : MonoBehaviour {
     protected Dictionary<string, bool> safeStopChecklist;
 
     protected WaitForSeconds loading = new WaitForSeconds(1f);
+    protected WaitForSeconds warningMessageDuration = new WaitForSeconds(2f);
     protected WaitForSeconds finishStepDuration = new WaitForSeconds(0.5f);
 
     protected DemoDevice demoDevice;
+
+    [Header("Main manager")]
+    [Space(2)]
+    [SerializeField]
+    protected TextMeshPro feedbackDisplayText;
 
     protected DemoManager demoManager;
     protected UserTestManager userTestManager;
@@ -80,6 +88,14 @@ public abstract class MainManager : MonoBehaviour {
                 TaskCompletedFinishOff();
                 UpdateCheckList(Settings.TeachingMode, true);
                 hasFinishedOff = true;
+
+                if (Settings.IsDemo())
+                    demoManager.FinalInstruction = true;
+            }
+            else if (requestBacktrack)
+            {
+                GetTeachingAlgorithm().IsTaskCompleted = false;
+                requestBacktrack = false;
             }
         }
         else
@@ -87,7 +103,6 @@ public abstract class MainManager : MonoBehaviour {
             // Update based on the active teaching mode
             if (Settings.IsDemo())
                 DemoUpdate();
-
             else if (Settings.IsUserTest())
                     UserTestUpdate();
         }
@@ -198,26 +213,39 @@ public abstract class MainManager : MonoBehaviour {
 
     // --------------------------------------- Demo Device ---------------------------------------
 
-    public void PerformDemoDeviceAction(string itemID)
+    public void PerformDemoDeviceAction(string itemID, bool otherSource)
     {
         switch (itemID)
         {
             case DemoDevice.STEP_BACK:
                 if (!WaitingForSupportToFinish())
+                {
                     PlayerStepByStepInput(false);
+                    if (!demoManager.IsValidStep)
+                        StartCoroutine(SetFeedbackDisplay("First instruction reached.\nCan't decrement."));
+                    else
+                        StartCoroutine(SetFeedbackDisplay("Backward step"));
+                }
                 else
-                    Debug.Log("Can't perform step yet. Wait for support to finish");
+                    StartCoroutine(SetFeedbackDisplay("System in progress. Wait a second and try again."));
                 break;
 
             case DemoDevice.PAUSE:
                 UserPausedTask = !userPausedTask;
-                Debug.Log("Pause: " + userPausedTask);
 
+                // Tips display
+                StartCoroutine(SetFeedbackDisplay(UserPausedText(UserPausedTask)));
+
+                // Demo device button replacing
                 demoDevice.TransitionPause(userPausedTask);
+
+                if (otherSource)
+                    demoDevice.OtherSourceClick(DemoDevice.PAUSE);
 
                 if (userPausedTask)
                 {
-                    demoManager.CurrentInstructionNr--;
+                    // Step back when paused
+                    //demoManager.CurrentInstructionNr--;
                     GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
                     demoDevice.SetDemoDeviceTitle(Util.STEP_BY_STEP);
                 }
@@ -230,9 +258,15 @@ public abstract class MainManager : MonoBehaviour {
 
             case DemoDevice.STEP_FORWARD:
                 if (!WaitingForSupportToFinish())
+                {
                     PlayerStepByStepInput(true);
+                    if (!demoManager.IsValidStep)
+                        StartCoroutine(SetFeedbackDisplay("Final instruction reached.\nCan't increment."));
+                    else
+                        StartCoroutine(SetFeedbackDisplay("Forward step"));
+                }
                 else
-                    Debug.Log("Can't perform step yet. Wait for support to finish");
+                    StartCoroutine(SetFeedbackDisplay("System in progress. Wait a second and try again"));
                 break;
 
             case DemoDevice.REDUCE_SPEED:
@@ -246,12 +280,11 @@ public abstract class MainManager : MonoBehaviour {
                         case 0: demoDevice.ButtonActive(DemoDevice.REDUCE_SPEED, false); break;
                         case 2: demoDevice.ButtonActive(DemoDevice.INCREASE_SPEED, true); break;
                     }
-
-                    Debug.Log("Speed changed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]);
+                    StartCoroutine(SetFeedbackDisplay("Speed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]));
 
                 }
                 else
-                    Debug.Log("Can't reduce speed more!");
+                    StartCoroutine(SetFeedbackDisplay("Minimum speed already set."));
                 break;
 
             case DemoDevice.INCREASE_SPEED:
@@ -265,15 +298,18 @@ public abstract class MainManager : MonoBehaviour {
                         case 1: demoDevice.ButtonActive(DemoDevice.REDUCE_SPEED, true); break;
                         case 3: demoDevice.ButtonActive(DemoDevice.INCREASE_SPEED, false); break;
                     }
-                    
-
-                    Debug.Log("Speed changed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]);
+                    StartCoroutine(SetFeedbackDisplay("Speed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]));
 
                 }
                 else
-                    Debug.Log("Can't increase speed more!");
+                    StartCoroutine(SetFeedbackDisplay("Maximum speed already set."));
                 break;
         }
+    }
+
+    private string UserPausedText(bool pause)
+    {
+        return pause ? "Demo paused\nStep-by-step enabled" : "Demo unpaused\nAutomatically progress enabled";
     }
 
     // Input from user during Step-By-Step (increment/decrement)
@@ -281,6 +317,9 @@ public abstract class MainManager : MonoBehaviour {
     {
         if (ControllerReady && !WaitingForSupportToFinish())
             demoManager.NotifyUserInput(increment);
+
+        if (demoManager.FinalInstruction && !increment)
+            requestBacktrack = true;
     }
 
 
@@ -348,6 +387,7 @@ public abstract class MainManager : MonoBehaviour {
         userStoppedTask = false;
         userPausedTask = false;
         hasFinishedOff = false;
+        requestBacktrack = false;
 
         WaitForSupportToComplete = 0;
 
@@ -388,7 +428,16 @@ public abstract class MainManager : MonoBehaviour {
         return count;
     }
 
-
+    // Text feedback to user (controller input demo device etc.)
+    public IEnumerator SetFeedbackDisplay(string text)
+    {
+        if (feedbackDisplayText!= null)
+        {
+            feedbackDisplayText.text = text;
+            yield return warningMessageDuration;
+            feedbackDisplayText.text = "";
+        }
+    }
 
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
     protected abstract TeachingAlgorithm GrabAlgorithmFromObj();
@@ -427,7 +476,7 @@ public abstract class MainManager : MonoBehaviour {
             else if (!userPausedTask && demoManager.HasInstructions()) // Demo mode
             {
                 // First check if user test setup is complete
-                if (demoManager.HasInstructions() && waitForSupportToComplete == 0)
+                if (!WaitingForSupportToFinish())//waitForSupportToComplete == 0)
                 {
                     InstructionBase instruction = demoManager.GetInstruction();
                     Debug.Log(instruction.DebugInfo());

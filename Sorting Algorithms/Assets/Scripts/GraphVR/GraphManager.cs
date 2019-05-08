@@ -264,6 +264,7 @@ public abstract class GraphManager : MonoBehaviour {
         endNode = null;
     }
 
+
     // ************************************ Abstract methods ************************************ 
 
     // Initialize the setup variables for the graph

@@ -43,7 +43,7 @@ public class BucketSort : SortAlgorithm {
         {
             case 0: lineOfCode += string.Format("BucketSort({0}, {1}):", listValues, numberOfBuckets); break;
             case 1: lineOfCode += string.Format("    buckets = new array of {0} empty lists", numberOfBuckets); break;
-            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, numberOfElements); break;
+            case 2: lineOfCode += string.Format("    for i={0} to {1}:", i, lengthOfList); break;
             case 3: lineOfCode += string.Format("        bucket = {0}", bucketIndexStr); break;
             case 4: lineOfCode += string.Format("        buckets[{0}] <- {1}", bucketIndex, element1Value); break;
             case 5: lineOfCode += "    end for"; break;
@@ -453,7 +453,7 @@ public class BucketSort : SortAlgorithm {
         {
             case Util.FIRST_INSTRUCTION:
                 lineOfCode = FirstInstructionCodeLine();
-                numberOfElements = sortMain.SortSettings.NumberOfElements.ToString();
+                SetLengthOfList();
                 numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
                 break;
 
@@ -640,7 +640,7 @@ public class BucketSort : SortAlgorithm {
         {
             case UtilSort.FIRST_INSTRUCTION:
                 lineOfCode = FirstInstructionCodeLine();
-                numberOfElements = sortMain.SortSettings.NumberOfElements.ToString();
+                SetLengthOfList();
                 numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
                 break;
 

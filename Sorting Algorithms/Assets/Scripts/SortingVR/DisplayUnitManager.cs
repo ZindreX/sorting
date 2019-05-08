@@ -68,5 +68,10 @@ public class DisplayUnitManager : MonoBehaviour {
         SetTextWithIndex(display, text, Util.NO_INDEX_VALUE);
     }
 
+    public TextMeshPro SortingTableTextMeshPro
+    {
+        get { return sortingTableText; }
+    }
+
 
 }

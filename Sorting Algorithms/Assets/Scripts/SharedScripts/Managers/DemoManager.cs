@@ -9,7 +9,7 @@ public class DemoManager : InstructionControlBase {
      * 
     */
 
-    private bool playerMove = false, playerIncremented = false, isValidStep = false, firstInstruction = false, finalInstruction = false;
+    private bool playerMove = false, playerIncremented = false, isValidStep = false;
 
     public void InitDemo(Dictionary<int, InstructionBase> instructions)//, int userActionInstructions)
     {
@@ -37,18 +37,6 @@ public class DemoManager : InstructionControlBase {
         get { return isValidStep; }
     }
 
-    public bool FirstInstruction
-    {
-        get { return firstInstruction; }
-        set { firstInstruction = value; }
-    }
-
-    public bool FinalInstruction
-    {
-        get { return finalInstruction; }
-        set { finalInstruction = value; }
-    }
-
     public void NotifyUserInput(bool increment)
     {
         playerIncremented = increment;
@@ -56,12 +44,11 @@ public class DemoManager : InstructionControlBase {
         if (playerIncremented)
         {
             if (IncrementToNextInstruction())
-            {
                 playerMove = true;
-            }
             else
             {
                 isValidStep = false;
+                finalInstruction = true;
             }
 
         }
@@ -70,7 +57,10 @@ public class DemoManager : InstructionControlBase {
             if (DecrementToPreviousInstruction())
                 playerMove = true;
             else
+            {
                 isValidStep = false;
+                firstInstruction = true;
+            }
         }
     }
 

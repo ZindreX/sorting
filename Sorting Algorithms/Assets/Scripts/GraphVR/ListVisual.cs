@@ -43,7 +43,10 @@ public class ListVisual : MonoBehaviour, IMoveAble {
     private List<NodeRepresentation> nodeRepresentations;
 
     public TextMeshPro debugging;
-    private bool debugUpdate;
+    private bool timeForDebugUpdate;
+
+    [SerializeField]
+    private bool useDebugText;
 
     private void Awake()
     {
@@ -59,22 +62,26 @@ public class ListVisual : MonoBehaviour, IMoveAble {
 
         nodeRepresentations = new List<NodeRepresentation>();
         graphMain.AddToCheckList(UtilGraph.LIST_VISUAL, true);
+
     }
 
     private void Update()
     {
-        if (nodeRepresentations != null && debugUpdate)
+        if (useDebugText)
         {
-            debugging.text = "";
-            for (int i=nodeRepresentations.Count - 1; i >= 0; i--)
+            if (nodeRepresentations != null && timeForDebugUpdate)
             {
-                NodeRepresentation noderep = nodeRepresentations[i];
-                debugging.text += "Node: " + noderep.Node.NodeAlphaID + ", index: " + noderep.ListIndex + "\n"; // + " | name = " + noderep.name + "\n\n";
-            }
-            if (currentNode != null)
-                debugging.text += "Current node: " + currentNode.Node.NodeAlphaID + ", index: " + currentNode.ListIndex; // + " | name = " + currentNode.name;
+                debugging.text = "";
+                for (int i=nodeRepresentations.Count - 1; i >= 0; i--)
+                {
+                    NodeRepresentation noderep = nodeRepresentations[i];
+                    debugging.text += "Node: " + noderep.Node.NodeAlphaID + ", index: " + noderep.ListIndex + "\n"; // + " | name = " + noderep.name + "\n\n";
+                }
+                if (currentNode != null)
+                    debugging.text += "Current node: " + currentNode.Node.NodeAlphaID + ", index: " + currentNode.ListIndex; // + " | name = " + currentNode.name;
 
-            debugUpdate = false;
+                timeForDebugUpdate = false;
+            }
         }
     }
 
@@ -473,9 +480,9 @@ public class ListVisual : MonoBehaviour, IMoveAble {
 
                 break;
 
-            default: Debug.LogError("List visual instruction '" + instruction.Instruction + "' invalid."); break;
+            default: Debug.Log("List visual instruction '" + instruction.Instruction + "' invalid."); break;
         }
-        debugUpdate = true;
+        timeForDebugUpdate = true;
 
     }
 

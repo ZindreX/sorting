@@ -11,10 +11,6 @@ public class PositionManager : MonoBehaviour, IMoveAble {
     private Node currentGoal, reportedNode, previousNode;
     private Node[] allNodes;
 
-    [Header("Other areas")]
-    [SerializeField]
-    private BoxCollider[] otherAreas;
-
     private bool showDistance, playerWithinGoalPosition;
     private TextMeshPro playerPositionText, nodeDistText;
 

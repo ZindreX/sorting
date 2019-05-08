@@ -24,6 +24,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected int i, j, k;
     //protected string i_str = "i", j_str = "j", k_str = "k";
     protected string lengthOfList = "len(list)";
+    protected int lengthOfListInteger;
 
     // User Test
     protected Dictionary<string, List<string>> skipDict;
@@ -123,7 +124,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
             yield return demoStepDuration;
     }
 
-
     // ---------------------------- Maybe overriden in the algorithm class which inherite this base class ----------------------------
 
     // Instructions which the user don't need to perform any actions to proceed
@@ -140,6 +140,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         j = 0;
         k = 0;
         lengthOfList = "len(list)";
+        lengthOfListInteger = 0;
         isTaskCompleted = false;
         demoStepDuration = null;
         skipDict = null;

@@ -6,7 +6,8 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
 
     // value1 <- pivot value, value2 <- compare value (usually)
 
-    protected string listValues = "list", numberOfElements = "len(list)";
+    protected string listValues = "list";
+
     protected int minValue, maxValue;
     protected int value1 = UtilSort.INIT_STATE, value2 = UtilSort.INIT_STATE - 1;
     protected string element1Value, element2Value;
@@ -68,10 +69,15 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
         set { listValues = value; }
     }
 
-
+    protected void SetLengthOfList()
+    {
+        lengthOfListInteger = sortMain.SortSettings.NumberOfElements;
+        lengthOfList = lengthOfListInteger.ToString();
+    }
 
     public override void ResetSetup()
     {
+        lengthOfListInteger = 0;
         listValues = "list";
         value1 = UtilSort.INIT_STATE;
         value2 = UtilSort.INIT_STATE;

@@ -206,11 +206,19 @@ public class ElementManager : MonoBehaviour, IManager {
     // Change whether the user can interact with the sorting elements
     public void InteractionWithSortingElements(bool enable)
     {
+        Debug.Log("Sorting elements enabled: " + enable);
         foreach (GameObject obj in SortingElements)
         {
-            //obj.GetComponent<Interactable>().enabled = enable;
-            //obj.GetComponent<Throwable>().enabled = enable;
-            //obj.GetComponent<VelocityEstimator>().enabled = enable;
+            if (!enable)
+            {
+                Destroy(obj.GetComponent<Throwable>());
+                Destroy(obj.GetComponent<VelocityEstimator>());
+                Destroy(obj.GetComponent<Interactable>());
+            }
+            else if (enable && obj.GetComponent<Throwable>() == null)
+                obj.AddComponent<Throwable>();
+            else
+                break;
         }
     }
 
