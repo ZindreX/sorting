@@ -8,15 +8,19 @@ public class InstructionBase {
      * 
     */
 
-    public readonly int INSTRUCION_NR;
-
+    protected int instructionNr;
     protected string instruction, status;
 
     public InstructionBase(string instruction, int instructionNr)
     {
-        INSTRUCION_NR = instructionNr;
+        this.instructionNr = instructionNr;
         this.instruction = instruction;
         status = UtilSort.NOT_EXECUTED;
+    }
+
+    public int InstructionNr
+    {
+        get { return instructionNr; }
     }
 
     public string Instruction
@@ -39,7 +43,7 @@ public class InstructionBase {
     // Debug checker
     public virtual string DebugInfo()
     {
-        return "Instruction: " + instruction + ", Nr.: " + INSTRUCION_NR + ", Status: " + status;
+        return instructionNr + ": Instruction: " + instruction + ", Status: " + status;
     }
 
 

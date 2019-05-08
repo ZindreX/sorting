@@ -5720,6 +5720,51 @@ PrefabInstance:
       propertyPath: graphMain
       value: 
       objectReference: {fileID: 570977841}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: selectStartEndNodes
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: algorithmEditor
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: algorithmSpeedEditor
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: graphTaskEditor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: graphStructureEditor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: gridRows
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: gridColumns
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: x2
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: z2
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8329764293765762908, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: m_Mesh

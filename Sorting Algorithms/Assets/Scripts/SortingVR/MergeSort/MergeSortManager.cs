@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent(typeof(MergeSort))]
-public class MergeSortManager : AlgorithmManagerBase {
+public class MergeSortManager : SortAlgorithmManager {
 
     [SerializeField]
     private MergeSort mergeSort;

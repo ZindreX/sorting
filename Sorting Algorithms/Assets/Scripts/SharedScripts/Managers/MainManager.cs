@@ -479,7 +479,8 @@ public abstract class MainManager : MonoBehaviour {
                 if (!WaitingForSupportToFinish())//waitForSupportToComplete == 0)
                 {
                     InstructionBase instruction = demoManager.GetInstruction();
-                    Debug.Log(instruction.DebugInfo());
+                    Debug.Log("Current: " + demoManager.CurrentInstructionNr + ", Actual: " + instruction.InstructionNr);
+                    //Debug.Log(">>> " + instruction.DebugInfo());
 
                     PerformInstruction(instruction, true);
                     demoManager.IncrementToNextInstruction();

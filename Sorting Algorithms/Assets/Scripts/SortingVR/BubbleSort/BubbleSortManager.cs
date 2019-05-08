@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent(typeof(BubbleSort))]
-public class BubbleSortManager : AlgorithmManagerBase {
+public class BubbleSortManager : SortAlgorithmManager {
 
     [SerializeField]
     private BubbleSort bubbleSort;

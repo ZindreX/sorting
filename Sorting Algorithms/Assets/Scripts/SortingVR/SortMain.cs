@@ -18,7 +18,7 @@ public class SortMain : MainManager {
     private SortingTable sortingTable;
 
     // Managers
-    private AlgorithmManagerBase algorithmManagerBase;
+    private SortAlgorithmManager algorithmManagerBase;
     private ElementManager elementManager;
     private HolderManager holderManager;
 
@@ -54,7 +54,7 @@ public class SortMain : MainManager {
         return sortAlgorithm;
     }
 
-    public AlgorithmManagerBase AlgorithmManagerBase
+    public SortAlgorithmManager AlgorithmManagerBase
     {
         get { return algorithmManagerBase; }
     }
@@ -402,7 +402,7 @@ public class SortMain : MainManager {
     }
 
     // Keeps only one sorting algorithm manager active
-    private AlgorithmManagerBase SortingAlgorithmManager(string sortAlgorithm)
+    private SortAlgorithmManager SortingAlgorithmManager(string sortAlgorithm)
     {
         switch (sortAlgorithm)
         {

@@ -257,33 +257,33 @@ public class BFS : GraphAlgorithm, ITraverse {
         int instNr = 0;
 
         // Line 0: Update start node
-        instructions.Add(instNr++, new TraverseInstruction(Util.FIRST_INSTRUCTION, instNr, startNode, false, false));
+        instructions.Add(instNr, new TraverseInstruction(Util.FIRST_INSTRUCTION, instNr++, startNode, false, false));
 
         // Line 1: Create emtpy list (queue)
         Queue<Node> queue = new Queue<Node>();
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr));
+        instructions.Add(instNr, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr++));
 
         // Line 2: Enqueue first node
         queue.Enqueue(startNode);
         startNode.Visited = true;
         ListVisualInstruction addStartNode =  new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, startNode, true, false, addStartNode));
+        instructions.Add(instNr, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr++, startNode, true, false, addStartNode));
 
         while (queue.Count > 0)
         {
             // Line 4: While loop
-            instructions.Add(instNr++, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr, queue.Count));
+            instructions.Add(instNr, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr++, queue.Count));
 
             // Line 5: Dequeue node
             Node currentNode = queue.Dequeue();
             currentNode.Traversed = true;
 
             ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode, 0);
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.DEQUEUE_NODE_INST, instNr++, currentNode, currentNode.PrevEdge, false, true, removeCurrentNode));
 
             // Go through each edge connected to current node
             // Line 6: For-loop update
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false)); //new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode.Edges.Count, Util.NO_INDEX_VALUE));
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr++, currentNode, false, false)); //new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, i, currentNode.Edges.Count, Util.NO_INDEX_VALUE));
             for (int i = 0; i < currentNode.Edges.Count; i++)
             {
                 Edge edge = currentNode.Edges[i];
@@ -298,7 +298,7 @@ public class BFS : GraphAlgorithm, ITraverse {
                 //    continue;
                   
                 // Line 7: check neighbor
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr, connectedNode, edge, false, false)); // check if correct ***
+                instructions.Add(instNr, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr++, connectedNode, edge, false, false)); // check if correct ***
                 
                 // Check if node has already been traversed or already is marked
                 if (!connectedNode.Visited)
@@ -307,18 +307,18 @@ public class BFS : GraphAlgorithm, ITraverse {
                     queue.Enqueue(connectedNode);
                     connectedNode.Visited = true;
                     ListVisualInstruction addConnectedNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, connectedNode);
-                    instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr, connectedNode, edge, true, false, addConnectedNode));
+                    instructions.Add(instNr, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr++, connectedNode, edge, true, false, addConnectedNode));
 
                     // Set prev edge
                     connectedNode.PrevEdge = edge;
                 }
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_IF_INST, instNr, connectedNode, edge, false, false));
+                instructions.Add(instNr, new TraverseInstruction(UtilGraph.END_IF_INST, instNr++, connectedNode, edge, false, false));
             }
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr++, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
+        instructions.Add(instNr, new InstructionBase(UtilGraph.END_WHILE_INST, instNr++));
 
-        instructions.Add(instNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instNr));
+        instructions.Add(instNr, new InstructionBase(Util.FINAL_INSTRUCTION, instNr++));
         return instructions;
     }
     #endregion

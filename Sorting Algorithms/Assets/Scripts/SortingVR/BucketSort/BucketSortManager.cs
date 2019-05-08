@@ -4,7 +4,7 @@ using UnityEngine;
 
 //[RequireComponent(typeof(BucketSort))]
 //[RequireComponent(typeof(BucketManager))]
-public class BucketSortManager : AlgorithmManagerBase {
+public class BucketSortManager : SortAlgorithmManager {
 
     private int numberOfBuckets;
 

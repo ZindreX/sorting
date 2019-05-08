@@ -27,7 +27,7 @@ public abstract class InstructionControlBase : MonoBehaviour {
     public virtual void Init(Dictionary<int, InstructionBase> instructions, int userActionInstructions, bool autoProgress)
     {
         this.instructions = instructions;
-        currentInstructionNr = -1; // ?
+        currentInstructionNr = 0;// -1; // ?
         numberOfInstructions = instructions.Count - 1;
 
         this.autoProgress = autoProgress;

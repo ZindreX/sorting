@@ -453,15 +453,15 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         int instNr = 0;
 
         // Line 0: (update startnode)
-        instructions.Add(instNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instNr));
+        instructions.Add(instNr, new InstructionBase(Util.FIRST_INSTRUCTION, instNr++));
 
         // Line 1: Set all vertices of G to inifity
         graphMain.GraphManager.SetAllNodesDist(UtilGraph.INF);
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.SET_ALL_NODES_TO_INFINITY, instNr));
+        instructions.Add(instNr, new InstructionBase(UtilGraph.SET_ALL_NODES_TO_INFINITY, instNr++));
 
         // Line 2: Create (priority) list
         List<Node> list = new List<Node>();
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr));
+        instructions.Add(instNr, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr++));
 
 
         // Line 3: Add starting node and set its cost to 0
@@ -469,15 +469,15 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         startNode.Visited = true;
         startNode.Dist = 0;
         ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, startNode, 0);
-        instructions.Add(instNr++, new TraverseInstruction(UtilGraph.ADD_NODE, instNr, startNode, true, false, addStartNode));
+        instructions.Add(instNr, new TraverseInstruction(UtilGraph.ADD_NODE, instNr++, startNode, true, false, addStartNode));
 
         // Line 4: Set total cost (Dist) of start node to 0
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr));
+        instructions.Add(instNr, new InstructionBase(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr++));
         
         while (list.Count > 0 && !objectiveFound)
         {
             // Line 5: Update while-loop
-            instructions.Add(instNr++, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr, list.Count));
+            instructions.Add(instNr, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr++, list.Count));
 
             //
             Node currentNode = list[list.Count - 1];
@@ -485,13 +485,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
             // Line 6: Remove element with lowest distance
             ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode);
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr, currentNode, false, true, removeCurrentNode));
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr++, currentNode, false, true, removeCurrentNode));
             //instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
 
             // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
             if (!shortestPathOnToAll && currentNode == endNode)
             {
-                instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.END_NODE_FOUND, instNr, currentNode));
+                instructions.Add(instNr, new ListVisualInstruction(UtilGraph.END_NODE_FOUND, instNr++, currentNode));
                 objectiveFound = true;
                 break;
             }
@@ -500,7 +500,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             List<Edge> edges = currentNode.Edges;
 
             // Line 7: Update for-loop
-            instructions.Add(instNr++, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr, currentNode, false, false));
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr++, currentNode, false, false));
             for (int i = 0; i < edges.Count; i++)
             {
                 // Checking edge
@@ -522,20 +522,20 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 int currentDistAndEdgeCost = currentNode.Dist + currentEdge.Cost;
 
                 // Line 8: Visit connected node
-                instructions.Add(instNr++, new TraverseInstruction(UtilGraph.VISIT_CONNECTED_NODE, instNr, connectedNode, currentEdge, true, false));
+                instructions.Add(instNr, new TraverseInstruction(UtilGraph.VISIT_CONNECTED_NODE, instNr++, connectedNode, currentEdge, true, false));
 
                 // Line 9: If statement
-                instructions.Add(instNr++, new ShortestPathInstruction(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN, instNr, currentNode, connectedNode, currentEdge));
+                instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN, instNr++, currentNode, connectedNode, currentEdge));
 
                 // Update cost of connected node
                 if (currentDistAndEdgeCost < connectedNode.Dist)
                 {
                     // Line 10: Update total cost (Dist) of connected node (w)
                     connectedNode.Dist = currentDistAndEdgeCost;
-                    instructions.Add(instNr++, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_DIST, instNr, currentNode, connectedNode, currentEdge));
+                    instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_DIST, instNr++, currentNode, connectedNode, currentEdge));
 
                     // Line 11: Update prev edge (Prev) of connected node (w)
-                    instructions.Add(instNr++, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE, instNr, connectedNode, currentEdge));
+                    instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE, instNr++, connectedNode, currentEdge));
                     connectedNode.PrevEdge = currentEdge;
 
 
@@ -550,25 +550,25 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     int index = list.IndexOf(connectedNode);
 
                     // Line 12: Add to list
-                    instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.HAS_NODE_REPRESENTATION, instNr, connectedNode, index, UtilGraph.PRIORITY_ADD_NODE, UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION));
+                    instructions.Add(instNr, new ListVisualInstruction(UtilGraph.HAS_NODE_REPRESENTATION, instNr++, connectedNode, index, UtilGraph.PRIORITY_ADD_NODE, UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION));
 
                     //instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
                 }
                 // Line 13: End if
-                instructions.Add(instNr++, new InstructionBase(UtilGraph.END_IF_INST, instNr));
+                instructions.Add(instNr, new InstructionBase(UtilGraph.END_IF_INST, instNr++));
             }
             // Line 14: End for-loop
-            instructions.Add(instNr++, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr)); // <--- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+            instructions.Add(instNr, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr++)); // <--- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
 
             currentNode.Traversed = true;
         }
         // Line 15: End while-loop
-        instructions.Add(instNr++, new InstructionBase(UtilGraph.END_WHILE_INST, instNr));
+        instructions.Add(instNr, new InstructionBase(UtilGraph.END_WHILE_INST, instNr++));
 
         if (objectiveFound)
             graphMain.GraphManager.ShortestPatBacktrackingInstructions(instructions, instNr);
         else
-            instructions.Add(instNr++, new InstructionBase(UtilGraph.NO_PATH_FOUND, instNr));
+            instructions.Add(instNr, new InstructionBase(UtilGraph.NO_PATH_FOUND, instNr++));
 
         // Gather instruction for backtracking
         return instructions;

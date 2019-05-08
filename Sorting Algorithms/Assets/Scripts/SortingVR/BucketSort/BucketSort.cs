@@ -108,24 +108,24 @@ public class BucketSort : SortAlgorithm {
     {
         base.AddSkipAbleInstructions();
         // > No destination
-        skipDict.Add(UtilSort.SKIP_NO_DESTINATION, new List<string>());
-        skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.FIRST_INSTRUCTION);
-        skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.FINAL_INSTRUCTION);
+        skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FINAL_INSTRUCTION);
 
         // > No element
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_LOOP);
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(Util.SET_VAR_K);
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(Util.UPDATE_VAR_K);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(UtilSort.FIRST_LOOP);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.SET_VAR_K);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(Util.UPDATE_VAR_K);
 
 
         // Bucket sort only
         // > No destination
-        skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.BUCKET_INDEX_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilSort.BUCKET_INDEX_INST);
         skipDict[Util.SKIP_NO_DESTINATION].Add(UtilSort.DISPLAY_ELEMENT);
 
         // > No element
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.CREATE_BUCKETS_INST);
-        skipDict[UtilSort.SKIP_NO_ELEMENT].Add(UtilSort.PHASING_INST);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(UtilSort.CREATE_BUCKETS_INST);
+        skipDict[Util.SKIP_NO_ELEMENT].Add(UtilSort.PHASING_INST);
     }
 
     public override void Specials(string method, int number, bool activate)
@@ -551,6 +551,7 @@ public class BucketSort : SortAlgorithm {
 
             case Util.FINAL_INSTRUCTION:
                 lineOfCode = FinalInstructionCodeLine();
+                IsTaskCompleted = increment;
                 break;
         }
 
@@ -729,10 +730,10 @@ public class BucketSort : SortAlgorithm {
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
-        int instructionNr = 0;
+        int instNr = 0;
 
         // Line 0 (set parameter)
-        instructions.Add(instructionNr++, new InstructionBase(Util.FIRST_INSTRUCTION, instructionNr));
+        instructions.Add(instNr, new InstructionBase(Util.FIRST_INSTRUCTION, instNr++));
 
         // Create buckets
         Vector3[] pos = new Vector3[1] { bucketManager.FirstBucketPosition };
@@ -740,30 +741,30 @@ public class BucketSort : SortAlgorithm {
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
         // Line 1 (Create buckets)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.CREATE_BUCKETS_INST, instructionNr));
+        instructions.Add(instNr, new InstructionBase(UtilSort.CREATE_BUCKETS_INST, instNr++));
 
         // Add elements to buckets
         for (int i = 0; i < sortingElements.Length; i++)
         {
             // Line 2 (Update for-loop)
-            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.FIRST_LOOP, instructionNr, i, UtilSort.OUTER_LOOP, Util.NO_VALUE)); // TODO: create one unique instruction for each loop
+            instructions.Add(instNr, new InstructionLoop(UtilSort.FIRST_LOOP, instNr++, i, UtilSort.OUTER_LOOP, Util.NO_VALUE)); // TODO: create one unique instruction for each loop
 
             // Get element
             BucketSortInstruction element = (BucketSortInstruction)sortingElements[i];
             int bucketIndex = BucketIndex(element.Value, numberOfBuckets, maxValue);
 
             // Line 3 (Display bucket index)
-            instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.BUCKET_INDEX_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, true, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
+            instructions.Add(instNr, new BucketSortInstruction(UtilSort.BUCKET_INDEX_INST, instNr++, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, true, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
 
             // Line 4 (Put element into bucket)
-            instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.MOVE_TO_BUCKET_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, false, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
+            instructions.Add(instNr, new BucketSortInstruction(UtilSort.MOVE_TO_BUCKET_INST, instNr++, i, Util.NO_VALUE, Util.NO_VALUE, element.SortingElementID, element.Value, false, false, element.HolderID, UtilSort.NO_DESTINATION, bucketIndex));
         }
 
         // Line 5 (end for-loop)
-        instructions.Add(instructionNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instructionNr, Util.NO_VALUE, UtilSort.OUTER_LOOP, Util.NO_VALUE));
+        instructions.Add(instNr, new InstructionLoop(UtilSort.END_LOOP_INST, instNr++, Util.NO_VALUE, UtilSort.OUTER_LOOP, Util.NO_VALUE));
 
         // Line 6 (make the buckets sort what they hold)
-        instructions.Add(instructionNr++, new InstructionBase(UtilSort.PHASING_INST, instructionNr));
+        instructions.Add(instNr, new InstructionBase(UtilSort.PHASING_INST, instNr++));
 
         // Sorting elements
         int[] values = new int[sortingElements.Length];
@@ -783,15 +784,14 @@ public class BucketSort : SortAlgorithm {
         // Look for correct value and add element to bucket
         for (int x = 0; x < sorted.Length; x++)
         {
-            BucketSortInstruction temp = null;
             for (int y = 0; y < sortingElements.Length; y++)
             {
                 BucketSortInstruction t = (BucketSortInstruction)sortingElements[y];
                 if (sorted[x] == t.Value)
                 {
                     int bucketIndex = BucketIndex(t.Value, bucketSortManager.NumberOfBuckets, maxValue);
-                    BucketSortInstruction displayInstruction = new BucketSortInstruction(UtilSort.DISPLAY_ELEMENT, instructionNr, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, t.SortingElementID, t.Value, false, true, Util.NO_VALUE, UtilSort.NO_DESTINATION, bucketIndex);
-                    instructions.Add(instructionNr++, displayInstruction);
+                    BucketSortInstruction displayInstruction = new BucketSortInstruction(UtilSort.DISPLAY_ELEMENT, instNr, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, t.SortingElementID, t.Value, false, true, Util.NO_VALUE, UtilSort.NO_DESTINATION, bucketIndex);
+                    instructions.Add(instNr++, displayInstruction);
                     buckets[bucketIndex].Add(displayInstruction);
                     break;
                 }
@@ -800,7 +800,7 @@ public class BucketSort : SortAlgorithm {
 
         int k = 0;
         // Line 7 (For-loop: Concatenate all buckets)
-        instructions.Add(instructionNr++, new InstructionBase(Util.SET_VAR_K, instructionNr));
+        instructions.Add(instNr, new InstructionBase(Util.SET_VAR_K, instNr++));
 
         // Holder positions (where the sorting elements initialized)
         Vector3[] holderPos = sortMain.HolderManager.GetHolderPositions();
@@ -810,27 +810,26 @@ public class BucketSort : SortAlgorithm {
             int numberOfElementsInBucket = bucket.Count;
 
             // Line 8 (For-loop: Concatenate all buckets)
-            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instructionNr, i, Util.NO_VALUE, Util.NO_VALUE));
+            instructions.Add(instNr, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr++, i, Util.NO_VALUE, Util.NO_VALUE));
 
             for (int j = 0; j < numberOfElementsInBucket; j++)
             {
                 // Line 9 (2nd For-loop: Concatenate all buckets)
-                instructions.Add(instructionNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instructionNr, numberOfElementsInBucket, j, k));
+                instructions.Add(instNr, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr++, numberOfElementsInBucket, j, k));
 
                 // Line 10 (Put element back into list)
-                instructions.Add(instructionNr++, new BucketSortInstruction(UtilSort.MOVE_BACK_INST, instructionNr, i, j, k, bucket[j].SortingElementID, bucket[j].Value, false, true, Util.NO_VALUE, k, bucket[j].BucketID)); 
+                instructions.Add(instNr, new BucketSortInstruction(UtilSort.MOVE_BACK_INST, instNr++, i, j, k, bucket[j].SortingElementID, bucket[j].Value, false, true, Util.NO_VALUE, k, bucket[j].BucketID)); 
 
                 // Line 11 (Update k)
-                instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_VAR_K, instructionNr, Util.NO_VALUE, Util.NO_VALUE, k)); 
+                instructions.Add(instNr, new InstructionLoop(Util.UPDATE_VAR_K, instNr++, Util.NO_VALUE, Util.NO_VALUE, k)); 
                 k++;
             }
             // Line 12 (2nd for-loop end)
-            instructions.Add(instructionNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instructionNr, i, UtilSort.INNER_LOOP, Util.NO_VALUE));
+            instructions.Add(instNr, new InstructionLoop(UtilSort.END_LOOP_INST, instNr++, i, UtilSort.INNER_LOOP, Util.NO_VALUE));
         }
         // Line 13 (2nd for-loop end)
-        instructions.Add(instructionNr++, new InstructionBase(Util.FINAL_INSTRUCTION, instructionNr));
+        instructions.Add(instNr, new InstructionBase(Util.FINAL_INSTRUCTION, instNr++));
 
-        //status = NONE;
         return instructions;
     }
     #endregion

@@ -506,16 +506,16 @@ public class BubbleSort : SortAlgorithm {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instNr = 0, i = 0, j = 0;
         // Add first instruction
-        instructions.Add(instNr++, new InstructionBase(UtilSort.FIRST_INSTRUCTION, instNr)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FIRST_INSTRUCTION, instructionNr, false, false));
+        instructions.Add(instNr, new InstructionBase(UtilSort.FIRST_INSTRUCTION, instNr++));
 
         int N = sortingElements.Length; // line 1 
         for (i = 0; i < N; i++)
         {
-            instructions.Add(instNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr, i, j, UtilSort.OUTER_LOOP));
+            instructions.Add(instNr, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr++, i, j, UtilSort.OUTER_LOOP));
             for (j = 0; j < N - i - 1; j++)
             {
                 // Update for loop instruction
-                instructions.Add(instNr++, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr, i, j, UtilSort.INNER_LOOP)); //new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, instructionNr, false, false));
+                instructions.Add(instNr, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr++, i, j, UtilSort.INNER_LOOP));
 
                 // Choose sorting elements to compare
                 BubbleSortInstruction comparison = MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, UtilSort.COMPARE_START_INST, instNr, true, false);
@@ -526,7 +526,7 @@ public class BubbleSort : SortAlgorithm {
                 if (comparison.Value1 > comparison.Value2)
                 {
                     // Switch their positions
-                    instructions.Add(instNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, UtilSort.SWITCH_INST, instNr, true, false));
+                    instructions.Add(instNr, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, UtilSort.SWITCH_INST, instNr++, true, false));
 
                     int holder1 = ((BubbleSortInstruction)sortingElements[j]).HolderID1;
                     int holder2 = ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1;
@@ -539,18 +539,18 @@ public class BubbleSort : SortAlgorithm {
                     ((BubbleSortInstruction)sortingElements[j + 1]).HolderID1 = holder2;
                 }
                 // Add this instruction
-                instructions.Add(instNr++, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, UtilSort.COMPARE_END_INST, instNr, false, false));
+                instructions.Add(instNr, MakeInstruction(sortingElements[j], sortingElements[j + 1], i, j, UtilSort.COMPARE_END_INST, instNr++, false, false));
             }
             if (instructions[instructions.Count - 1] is BubbleSortInstruction)
                 ((BubbleSortInstruction)instructions[instructions.Count - 1]).IsSorted = true;
 
             // Update end 2nd for-loop instruction
-            instructions.Add(instNr++, new InstructionLoop(UtilSort.END_LOOP_INST, instNr, i, j, UtilSort.INNER_LOOP)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.END_LOOP_INST, instructionNr, false, false));
+            instructions.Add(instNr, new InstructionLoop(UtilSort.END_LOOP_INST, instNr++, i, j, UtilSort.INNER_LOOP));
         }
-        //instructions.Add(instructionNr++, new InstructionLoop(Util.UPDATE_LOOP_INST, instructionNr, i, j, Util.OUTER_LOOP)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.UPDATE_LOOP_INST, instructionNr, false, false));
+        instructions.Add(instNr, new InstructionLoop(UtilSort.END_LOOP_INST, instNr++, i, j, UtilSort.OUTER_LOOP));
 
         // Final instruction
-        instructions.Add(instNr, new InstructionBase(UtilSort.FINAL_INSTRUCTION, instNr)); // new BubbleSortInstruction(Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, i, j, Util.FINAL_INSTRUCTION, instructionNr, false, false));
+        instructions.Add(instNr, new InstructionBase(Util.FINAL_INSTRUCTION, instNr++));
         return instructions;
     }
     #endregion

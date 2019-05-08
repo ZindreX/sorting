@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//[RequireComponent(typeof(HolderManager))]
-//[RequireComponent(typeof(ElementManager))]
-//[RequireComponent(typeof(UserTestManager))]
-//[RequireComponent(typeof(StepByStepManager))]
-//[RequireComponent(typeof(SortAlgorithm))]
-//[RequireComponent(typeof(DisplayUnitManager))]
-public abstract class AlgorithmManagerBase : MonoBehaviour {
+public abstract class SortAlgorithmManager : MonoBehaviour {
 
     /* -------------------------------------------- Sorting Algorithm Manager Base ----------------------------------------------------
      * 

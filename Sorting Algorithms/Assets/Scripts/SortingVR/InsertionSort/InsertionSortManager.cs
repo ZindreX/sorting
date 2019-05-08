@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent(typeof(InsertionSort))]
-public class InsertionSortManager : AlgorithmManagerBase {
+public class InsertionSortManager : SortAlgorithmManager {
 
     [SerializeField]
     private InsertionSort insertionSort;

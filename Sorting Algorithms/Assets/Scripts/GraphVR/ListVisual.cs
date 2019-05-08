@@ -421,7 +421,7 @@ public class ListVisual : MonoBehaviour, IMoveAble {
                     if (increment)
                         PriorityAdd(node, index);
                     else
-                        ExecuteInstruction(new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instruction.INSTRUCION_NR, node), false);
+                        ExecuteInstruction(new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instruction.InstructionNr, node), false);
                 }
                 else // Case 2
                 {
