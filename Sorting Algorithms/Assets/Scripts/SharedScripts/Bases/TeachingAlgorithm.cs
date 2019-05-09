@@ -21,7 +21,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     protected Color useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
 
     // Demo variables
-    protected int i, j, k;
+    protected int i, j, k, loopType;
     protected string i_str = "i", j_str = "j", k_str = "k";
     protected string lengthOfList = "len(list)";
     protected int lengthOfListInteger;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InstructionLoop : InstructionBase {
 
-    protected int i, j, k;
+    protected int i, j, k, loopType;
 
     public InstructionLoop(string instruction, int instructionNr, int i)
     : base(instruction, instructionNr)
@@ -28,6 +28,15 @@ public class InstructionLoop : InstructionBase {
         this.k = k;
     }
 
+    public InstructionLoop(string instruction, int instructionNr, int i, int j, int k, int loopType)
+    : base(instruction, instructionNr)
+    {
+        this.i = i;
+        this.j = j;
+        this.k = k;
+        this.loopType = loopType;
+    }
+
     public int I
     {
         get { return i; }
@@ -41,6 +50,11 @@ public class InstructionLoop : InstructionBase {
     public int K
     {
         get { return k; }
+    }
+
+    public int LoopType
+    {
+        get { return loopType; }
     }
 
     public override string DebugInfo()
