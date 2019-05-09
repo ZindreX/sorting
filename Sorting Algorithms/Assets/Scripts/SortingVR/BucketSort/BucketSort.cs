@@ -726,7 +726,7 @@ public class BucketSort : SortAlgorithm {
     #endregion
 
 
-    #region Bucket Sort: User Test
+    #region Bucket Sort: Instructions
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();

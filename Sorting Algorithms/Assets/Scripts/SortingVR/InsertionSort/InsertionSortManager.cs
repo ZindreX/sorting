@@ -20,6 +20,8 @@ public class InsertionSortManager : SortAlgorithmManager {
 
     public override int PrepareNextInstruction(InstructionBase instruction)
     {
+        Debug.Log(instruction.DebugInfo());
+
         bool gotSortingElement = !insertionSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
         bool noDestination = insertionSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 

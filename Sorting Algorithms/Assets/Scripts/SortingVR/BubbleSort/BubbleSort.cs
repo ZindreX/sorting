@@ -26,17 +26,17 @@ public class BubbleSort : SortAlgorithm {
 
     public override string AlgorithmName
     {
-        get { return UtilSort.BUBBLE_SORT; }
+        get { return Util.BUBBLE_SORT; }
     }
 
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();
-        skipDict.Add(UtilSort.SKIP_NO_DESTINATION, new List<string>());
-        skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.FIRST_INSTRUCTION);
-        skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.FINAL_INSTRUCTION);
+        skipDict.Add(Util.SKIP_NO_DESTINATION, new List<string>());
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FIRST_INSTRUCTION);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(Util.FINAL_INSTRUCTION);
         //skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.COMPARE_START_INST);
-        skipDict[UtilSort.SKIP_NO_DESTINATION].Add(UtilSort.COMPARE_END_INST);
+        skipDict[Util.SKIP_NO_DESTINATION].Add(UtilSort.COMPARE_END_INST);
     }
 
     public override string CollectLine(int lineNr)
@@ -301,29 +301,71 @@ public class BubbleSort : SortAlgorithm {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
                 lineOfCode = FirstInstructionCodeLine();
-                SetLengthOfList();
-                n = lengthOfList;
+                if (increment)
+                    SetLengthOfList();
+                else
+                    lengthOfList = "len(list)";
                 break;
 
             case UtilSort.UPDATE_LOOP_INST:
                 if (k == UtilSort.OUTER_LOOP)
+                {
                     lineOfCode = 2;
+                    if (increment)
+                    {
+                        n = lengthOfList;
+                        if (i == lengthOfListInteger)
+                            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    }
+                    else
+                    {
+                        if (i == 0)
+                            n = "n";
+                        else
+                            i -= 1;
+                    }
+                }
                 else if (k == UtilSort.INNER_LOOP)
                 {
                     lineOfCode = 3;
-                    numberOfElementsMinusI1 = (lengthOfListInteger - i - 1).ToString();
+                    if (increment)
+                    {
+                        numberOfElementsMinusI1 = (lengthOfListInteger - i - 1).ToString();
+                        if (j == lengthOfListInteger-i-1)
+                            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    }
+                    else
+                    {
+                        if (i == 0 && j == 0)
+                            numberOfElementsMinusI1 = "n-i-1";
+                        else if (j == 0)
+                        {
+                            j = lengthOfListInteger - i;
+                            numberOfElementsMinusI1 = j.ToString();
+                        }
+                        else
+                            j -= 1;
+                    }
                 }
                 break;
 
             case UtilSort.COMPARE_START_INST:
+                lineOfCode = 4;
+                PreparePseudocodeValue(se1.Value, 1);
+                PreparePseudocodeValue(se2.Value, 2);
+
                 if (increment)
                 {
                     se1.IsCompare = bubbleInstruction.IsCompare;
                     se2.IsCompare = bubbleInstruction.IsCompare;
+
+                    if (se1.Value <= se2.Value)
+                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
                 }
                 else
                 {
@@ -338,17 +380,26 @@ public class BubbleSort : SortAlgorithm {
                 }
                 UtilSort.IndicateElement(se1.gameObject);
                 UtilSort.IndicateElement(se2.gameObject);
-
-                lineOfCode = 4;
-                PreparePseudocodeValue(se1.Value, 1);
-                PreparePseudocodeValue(se2.Value, 2);
                 break;
 
             case UtilSort.SWITCH_INST:
                 lineOfCode = 5;
+
+                if (increment)
+                {
+                    PreparePseudocodeValue(se1.Value, 1);
+                    PreparePseudocodeValue(se2.Value, 2);
+                }
+                else
+                {
+                    element1Value = "list[j]";
+                    element2Value = "list[j + 1]";
+                }
                 break;
 
             case UtilSort.COMPARE_END_INST:
+                lineOfCode = 6;
+
                 if (increment)
                 {
                     se1.IsCompare = bubbleInstruction.IsCompare;
@@ -368,8 +419,6 @@ public class BubbleSort : SortAlgorithm {
                 }
                 UtilSort.IndicateElement(se1.gameObject);
                 UtilSort.IndicateElement(se2.gameObject);
-
-                lineOfCode = 6;
                 break;
 
             case UtilSort.END_LOOP_INST:
@@ -386,7 +435,7 @@ public class BubbleSort : SortAlgorithm {
         }
 
         // Highlight part of code in pseudocode
-        yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_STANDARD_COLOR);
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
 
         // Mark prev for next round
         prevHighlightedLineOfCode = lineOfCode;
@@ -415,12 +464,9 @@ public class BubbleSort : SortAlgorithm {
     }
     #endregion
 
-
     #region User test display pseudocode as support
     public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotSortingElement)
     {
-        Debug.Log(instruction.DebugInfo());
-
         // Gather information from instruction
         BubbleSortElement se1 = null, se2 = null;
 
@@ -453,9 +499,19 @@ public class BubbleSort : SortAlgorithm {
 
             case UtilSort.UPDATE_LOOP_INST:
                 if (k == UtilSort.OUTER_LOOP)
+                {
                     lineOfCode = 2;
+                    if (i == lengthOfListInteger)
+                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                }
                 else if (k == UtilSort.INNER_LOOP)
+                {
                     lineOfCode = 3;
+                    numberOfElementsMinusI1 = (lengthOfListInteger - i - 1).ToString();
+
+                    if (j == lengthOfListInteger-i-1)
+                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                }
                 break;
 
             case UtilSort.COMPARE_START_INST:
@@ -500,13 +556,14 @@ public class BubbleSort : SortAlgorithm {
     }
     #endregion
 
-    #region Bubble Sort: Instruction generator (User test / step-by-step)
+    #region Bubble Sort: Instructions
     public override Dictionary<int, InstructionBase> UserTestInstructions(InstructionBase[] sortingElements)
     {
         Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
         int instNr = 0, i = 0, j = 0;
+
         // Add first instruction
-        instructions.Add(instNr, new InstructionBase(UtilSort.FIRST_INSTRUCTION, instNr++));
+        instructions.Add(instNr, new InstructionBase(Util.FIRST_INSTRUCTION, instNr++));
 
         int N = sortingElements.Length; // line 1 
         for (i = 0; i < N; i++)
@@ -545,8 +602,10 @@ public class BubbleSort : SortAlgorithm {
                 ((BubbleSortInstruction)instructions[instructions.Count - 1]).IsSorted = true;
 
             // Update end 2nd for-loop instruction
+            instructions.Add(instNr, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr++, i, j, UtilSort.INNER_LOOP));
             instructions.Add(instNr, new InstructionLoop(UtilSort.END_LOOP_INST, instNr++, i, j, UtilSort.INNER_LOOP));
         }
+        instructions.Add(instNr, new InstructionLoop(UtilSort.UPDATE_LOOP_INST, instNr++, i, j, UtilSort.OUTER_LOOP));
         instructions.Add(instNr, new InstructionLoop(UtilSort.END_LOOP_INST, instNr++, i, j, UtilSort.OUTER_LOOP));
 
         // Final instruction

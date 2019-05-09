@@ -529,6 +529,9 @@ public class InsertionSort : SortAlgorithm {
                     sortingElement.IsCompare = insertionInstruction.IsCompare;
                     sortingElement.IsSorted = insertionInstruction.IsSorted;
                     j_str = j.ToString();
+
+                    if (j < 0 || sortingElement.Value <= value1)
+                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
                 }
                 else
                 {
@@ -565,7 +568,7 @@ public class InsertionSort : SortAlgorithm {
 
                 if (increment)
                 {
-                    PreparePseudocodeValue(sortingElement.Value, 2);
+                    //PreparePseudocodeValue(sortingElement.Value, 2); // testing
                     sortingElement.IsCompare = insertionInstruction.IsCompare;
                     sortingElement.IsSorted = insertionInstruction.IsSorted;
                     jPlus1 = (j + 1).ToString();
@@ -620,6 +623,7 @@ public class InsertionSort : SortAlgorithm {
                 }
                 else
                 {
+                    PreparePseudocodeValue(sortingElement.Value, 1);
                     sortingElement.IsPivot = !insertionInstruction.IsPivot;
                     sortingElement.IsSorted = !insertionInstruction.IsSorted;
                     jPlus1 = "j + 1";

@@ -12,7 +12,7 @@ public abstract class MainManager : MonoBehaviour {
      * 
     */
 
-    protected string algorithmName;
+    protected string algorithmName, prevInstruction;
 
     // When the user pause
     protected bool userPausedTask;
@@ -377,6 +377,7 @@ public abstract class MainManager : MonoBehaviour {
     public virtual void DestroyAndReset()
     {
         algorithmName = "";
+        prevInstruction = "";
 
         activeChecklist = "";
         checkListModeActive = false;
@@ -463,29 +464,32 @@ public abstract class MainManager : MonoBehaviour {
     {
         if (newDemoImplemented)
         {
+            InstructionBase instruction = null;
+
             // Step by step activated by pausing, and step requested
             if (userPausedTask && demoManager.PlayerMove)
             {
                 demoManager.PlayerMove = false;
-                InstructionBase stepInstruction = demoManager.GetStep();
-                Debug.Log(">>> " + stepInstruction.DebugInfo());
+                instruction = demoManager.GetStep();
 
                 bool increment = demoManager.PlayerIncremented;
-                PerformInstruction(stepInstruction, increment);
+                PerformInstruction(instruction, increment);
             }
             else if (!userPausedTask && demoManager.HasInstructions()) // Demo mode
             {
                 // First check if user test setup is complete
                 if (!WaitingForSupportToFinish())//waitForSupportToComplete == 0)
                 {
-                    InstructionBase instruction = demoManager.GetInstruction();
+                    instruction = demoManager.GetInstruction();
                     //Debug.Log("Current: " + demoManager.CurrentInstructionNr + ", Actual: " + instruction.InstructionNr);
-                    Debug.Log(">>> " + instruction.DebugInfo());
 
                     PerformInstruction(instruction, true);
                     demoManager.IncrementToNextInstruction();
                 }
             }
+
+            if (instruction != null && prevInstruction != instruction.Instruction)
+                Debug.Log(instruction.DebugInfo());
         }
     }
 

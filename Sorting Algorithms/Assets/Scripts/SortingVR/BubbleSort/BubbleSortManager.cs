@@ -20,6 +20,8 @@ public class BubbleSortManager : SortAlgorithmManager {
 
     public override int PrepareNextInstruction(InstructionBase instruction)
     {
+        Debug.Log(instruction.DebugInfo());
+
         bool gotSortingElement = !bubbleSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
         bool noDestination = bubbleSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
