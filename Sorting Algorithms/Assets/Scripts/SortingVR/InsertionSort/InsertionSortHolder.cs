@@ -36,7 +36,7 @@ public class InsertionSortHolder : HolderBase
             hasPermission = false;
         }
         else if (CurrentHolding.IntermediateMove)
-            CurrentColor = UtilSort.STANDARD_COLOR;
+            CurrentColor = Util.STANDARD_COLOR;
         else if (IsPivotHolder)
             CurrentColor = UtilSort.PIVOT_COLOR;
         else if (((InsertionSortElement)CurrentHolding).IsPivot)

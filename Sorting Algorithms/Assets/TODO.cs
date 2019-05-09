@@ -38,7 +38,7 @@
  * *********************************** Bugs to fix **********************************************
  * 
  * >>> Bubble sort
- *  > Any new bugs found?
+ *  > Seems ok
  *  
  *  
  * >>> Insertion sort

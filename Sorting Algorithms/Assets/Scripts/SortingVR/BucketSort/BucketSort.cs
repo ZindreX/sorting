@@ -254,7 +254,7 @@ public class BucketSort : SortAlgorithm {
         bucketManager.CreateObjects(numberOfBuckets, pos);
 
         // Line 1 (Create buckets)
-        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Buckets
         GameObject[] buckets = null;
@@ -269,7 +269,7 @@ public class BucketSort : SortAlgorithm {
                 break;
 
             // Line 2 (Update for-loop)
-            yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_STANDARD_COLOR);
 
             // Check if user wants to stop the demo
             if (sortMain.UserStoppedTask)
@@ -283,7 +283,7 @@ public class BucketSort : SortAlgorithm {
             bucketIndex = BucketIndex(value1, numberOfBuckets, maxValue);
 
             // Line 3 (Display bucket index)
-            yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_STANDARD_COLOR);
 
             // Check if user wants to stop the demo
             if (sortMain.UserStoppedTask)
@@ -296,11 +296,11 @@ public class BucketSort : SortAlgorithm {
             element.transform.position = bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;
 
             // Line 4 (Put element into bucket)
-            yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_STANDARD_COLOR);
         }
 
         // Line 5 (end for-loop)
-        yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Display elements
         for (int x=0; x < numberOfBuckets; x++)
@@ -322,7 +322,7 @@ public class BucketSort : SortAlgorithm {
 
             // Line 6 (Sort elements in bucket)
             i = x;
-            yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_STANDARD_COLOR);
 
             // Check if user wants to stop the demo
             if (sortMain.UserStoppedTask)
@@ -350,7 +350,7 @@ public class BucketSort : SortAlgorithm {
         // Put elements back into list
         k = 0;
         // Line 7 (set k)
-        yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Holder positions (where the sorting elements initialized)
         Vector3[] holderPos = sortMain.HolderManager.GetHolderPositions();
@@ -367,7 +367,7 @@ public class BucketSort : SortAlgorithm {
             bucketSize = bucket.CurrenHolding.Count.ToString();
 
             // Line 8 (For-loop: Concatenate all buckets)
-            yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_STANDARD_COLOR);
 
             for (j = 0; j < bucket.CurrenHolding.Count; j++)
             {
@@ -376,7 +376,7 @@ public class BucketSort : SortAlgorithm {
                     break;
 
                 // Line 9 (2nd For-loop: Concatenate all buckets)
-                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedTask)
@@ -393,25 +393,25 @@ public class BucketSort : SortAlgorithm {
                 sortingElements[k].GetComponent<SortingElementBase>().IsSorted = true;
 
                 // Line 10 (Put element back into list)
-                yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedTask)
                     break;
 
                 // Line 11 (Update k)
-                yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_STANDARD_COLOR);
                 k++;
             }
             // Line 12 (2nd for-inner-loop end)
-            yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_STANDARD_COLOR);
 
             // Check if user wants to stop the demo
             if (sortMain.UserStoppedTask)
                 break;
         }
         // Line 13 (2nd for-loop end)
-        yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_STANDARD_COLOR);
 
 
         if (sortMain.UserStoppedTask)
@@ -560,7 +560,7 @@ public class BucketSort : SortAlgorithm {
             yield return null;
         else
         {
-            yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_STANDARD_COLOR);
             prevHighlightedLineOfCode = lineOfCode;
         }
 
@@ -636,7 +636,7 @@ public class BucketSort : SortAlgorithm {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case UtilSort.FIRST_INSTRUCTION:
@@ -664,7 +664,7 @@ public class BucketSort : SortAlgorithm {
 
             case UtilSort.MOVE_TO_BUCKET_INST:
                 lineOfCode = 4;
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 PreparePseudocodeValue(sortingElement.Value, 1);
                 UtilSort.IndicateElement(sortingElement.gameObject);
 
@@ -703,7 +703,7 @@ public class BucketSort : SortAlgorithm {
 
             case UtilSort.MOVE_BACK_INST:
                 lineOfCode = 10;
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 PreparePseudocodeValue(sortingElement.Value, 2);
                 break;
 

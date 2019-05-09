@@ -145,7 +145,7 @@ public class BubbleSort : SortAlgorithm {
         j = 0;
 
         // Display pseudocode (list length)
-        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_STANDARD_COLOR);
 
         for (i=0; i < N; i++)
         {
@@ -154,7 +154,7 @@ public class BubbleSort : SortAlgorithm {
                 break;
 
             // Display outer loop
-            yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_STANDARD_COLOR);
 
             for (j = 0; j < N - i - 1; j++)
             {
@@ -163,7 +163,7 @@ public class BubbleSort : SortAlgorithm {
                     break;
 
                 // Display pseudocode (update for-loops)
-                yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedTask)
@@ -190,7 +190,7 @@ public class BubbleSort : SortAlgorithm {
                     PreparePseudocodeValue(p2.Value, 2);
 
                 // Display pseudocode (list length)
-                yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedTask)
@@ -212,14 +212,14 @@ public class BubbleSort : SortAlgorithm {
                     UtilSort.ResetRotation(temp2);
 
                     // Display pseudocode (swap)
-                    yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_STANDARD_COLOR);
 
                     // Check if user wants to stop the demo
                     if (sortMain.UserStoppedTask)
                         break;
                 }
                 // Display pseudocode (comparison/if end)
-                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 // Check if user wants to stop the demo
                 if (sortMain.UserStoppedTask)
@@ -233,7 +233,7 @@ public class BubbleSort : SortAlgorithm {
                     p2.CurrentStandingOn.CurrentColor = UtilSort.STANDARD_COLOR;
             }
             // Display pseudocode (end 2nd for-loop)
-            yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_STANDARD_COLOR);
 
             // Check if user wants to stop the demo
             if (sortMain.UserStoppedTask)
@@ -252,7 +252,7 @@ public class BubbleSort : SortAlgorithm {
         }
 
         // Display pseudocode (end 1st for-loop)
-        yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_STANDARD_COLOR);
 
         if (sortMain.UserStoppedTask)
             sortMain.UpdateCheckList(Util.DEMO, true);
@@ -386,7 +386,7 @@ public class BubbleSort : SortAlgorithm {
         }
 
         // Highlight part of code in pseudocode
-        yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Mark prev for next round
         prevHighlightedLineOfCode = lineOfCode;
@@ -442,7 +442,7 @@ public class BubbleSort : SortAlgorithm {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -460,7 +460,7 @@ public class BubbleSort : SortAlgorithm {
 
             case UtilSort.COMPARE_START_INST:
                 lineOfCode = 4;
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
 
                 PreparePseudocodeValue(se1.Value, 1);
                 PreparePseudocodeValue(se2.Value, 2);
@@ -471,7 +471,7 @@ public class BubbleSort : SortAlgorithm {
 
             case UtilSort.SWITCH_INST:
                 lineOfCode = 5;
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 break;
 
             case UtilSort.COMPARE_END_INST:

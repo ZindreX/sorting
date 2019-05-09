@@ -73,13 +73,13 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         // Line 1: Create an empty list (stack)
         Stack<Node> stack = new Stack<Node>();
-        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Line 2: Push start node
         stack.Push(startNode);
         graphMain.UpdateListVisual(UtilGraph.ADD_NODE, startNode, Util.NO_VALUE); //listVisual.AddListObject(startNode); // Node Representation
         startNode.Visited = true;
-        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_STANDARD_COLOR);
 
         lengthOfList = "1";
         while (stack.Count > 0)
@@ -91,7 +91,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             #endregion
 
             // Line 3: Update while-loop
-            yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_STANDARD_COLOR);
 
             #region Stop demo
             // Check if user wants to stop the demo
@@ -103,7 +103,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             Node currentNode = stack.Pop();
             graphMain.UpdateListVisual(UtilGraph.REMOVE_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.RemoveCurrentNode(); // Node Representation
             SetNodePseudoCode(currentNode, 1);
-            yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_STANDARD_COLOR);
 
             #region Stop demo
             // Check if user wants to stop the demo
@@ -137,7 +137,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             if (currentNode.Edges.Count == 0)
             {
                 i = 0;
-                yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_STANDARD_COLOR);
             }
 
             #region Stop demo
@@ -157,7 +157,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
                 // Line 5: Update for-loop
                 this.i = i;
-                yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 #region Stop demo
                 // Check if user wants to stop the demo
@@ -178,7 +178,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 edge.CurrentColor = UtilGraph.VISITED_COLOR;
 
                 // Line 6: If statement (condition)
-                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 #region Stop demo
                 // Check if user wants to stop the demo
@@ -192,7 +192,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                     stack.Push(checkingNode);
                     graphMain.UpdateListVisual(UtilGraph.ADD_NODE, checkingNode, Util.NO_VALUE); //listVisual.AddListObject(checkingNode); // Node Representation
                     checkingNode.Visited = true;
-                    yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_STANDARD_COLOR);
 
                     #region Stop demo
                     // Check if user wants to stop the demo
@@ -211,7 +211,7 @@ public class DFS : GraphAlgorithm, ITraverse {
                 #endregion
 
                 // Line 8: End if statement
-                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 #region Stop demo
                 // Check if user wants to stop the demo
@@ -228,7 +228,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             #endregion
 
             // Line 9: End for-loop
-            yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_STANDARD_COLOR);
 
             #region Stop demo
             // Check if user wants to stop the demo
@@ -242,7 +242,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); //listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 10: End while-loop
-        yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_STANDARD_COLOR);
 
         if (graphMain.UserStoppedTask)
             graphMain.UpdateCheckList(Util.DEMO, true);
@@ -259,7 +259,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         SetNodePseudoCode(node, 1);
         //listVisual.RemoveAndMoveElementOut(); // List visual
-        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Line 3: Mark as visited
         //node.Visited = true;
@@ -332,7 +332,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -501,7 +501,7 @@ public class DFS : GraphAlgorithm, ITraverse {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -512,7 +512,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 1; break;
             case UtilGraph.PUSH_INST:
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
 
                 if (!startNodeAdded)
                 {
@@ -531,7 +531,7 @@ public class DFS : GraphAlgorithm, ITraverse {
             case UtilGraph.POP_INST:
                 lineOfCode = 4;
                 SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:

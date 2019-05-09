@@ -18,11 +18,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
     
     // Instruction variables
     protected int prevHighlightedLineOfCode;
-    protected Color useHighlightColor = Util.HIGHLIGHT_COLOR;
+    protected Color useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
 
     // Demo variables
     protected int i, j, k;
-    //protected string i_str = "i", j_str = "j", k_str = "k";
+    protected string i_str = "i", j_str = "j", k_str = "k";
     protected string lengthOfList = "len(list)";
     protected int lengthOfListInteger;
 
@@ -139,13 +139,16 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         i = 0;
         j = 0;
         k = 0;
+        i_str = "i";
+        j_str = "j";
+        k_str = "k";
         lengthOfList = "len(list)";
         lengthOfListInteger = 0;
         isTaskCompleted = false;
         demoStepDuration = null;
         skipDict = null;
         pseudoCodeInitilized = false;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
     }
 
     // ---------------------------- Overriden in the algorithm class which inherite this base class ----------------------------

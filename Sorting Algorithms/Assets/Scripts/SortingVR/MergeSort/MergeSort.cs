@@ -704,7 +704,7 @@ public class MergeSort : SortAlgorithm {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_COLOR);
+        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), Util.HIGHLIGHT_STANDARD_COLOR);
         yield return demoStepDuration;
         sortMain.WaitForSupportToComplete--;
     }

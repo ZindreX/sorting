@@ -29,9 +29,9 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     {
         // Change color of if statement
         if (currentNodeDist + edgeCost < connectedNodeDist)
-            useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+            useHighlightColor = Util.HIGHLIGHT_CONDITION_FULFILLED;
         else
-            useHighlightColor = Color.red;
+            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
 
         return currentNodeDist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(connectedNode.Dist);
     }
@@ -133,21 +133,21 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
         // Line 1: Set all vertices of G to inifity
         graphMain.GraphManager.SetAllNodesDist(UtilGraph.INF);
-        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Line 2: Create (priority) list
         List<Node> list = new List<Node>();
-        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(2), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Line 3: Add starting node and set its cost to 0
         list.Add(startNode);
         startNode.Visited = true;
         SetNodePseudoCode(startNode, 1, 0); // PseudoCode (line 3+4)
         graphMain.UpdateListVisual(UtilGraph.PRIORITY_ADD_NODE, startNode, 0); //listVisual.PriorityAdd(startNode, 0); // List visual
-        yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(3), Util.HIGHLIGHT_STANDARD_COLOR);
 
         // Line 4: Set total cost (Dist) of start node to 0
-        yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(4), Util.HIGHLIGHT_STANDARD_COLOR);
 
         lengthOfList = "1";
         while (list.Count > 0 && !objectiveFound)
@@ -159,7 +159,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             #endregion
 
             // Line 5: Update while-loop
-            yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(5), Util.HIGHLIGHT_STANDARD_COLOR);
 
             #region Stop demo
             // Check if user wants to stop the demo
@@ -177,7 +177,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
 
             // Line 6: Remove element with lowest distance
-            yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(6), Util.HIGHLIGHT_STANDARD_COLOR);
 
             #region Stop demo
             // Check if user wants to stop the demo
@@ -200,7 +200,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             if (numberOfEdges == 0)
             {
                 i = 0; // not used anymore
-                yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_STANDARD_COLOR);
             }
 
             #region Stop demo
@@ -219,7 +219,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
                 // Line 7: Update for-loop
                 this.i = i;
-                yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(7), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 #region Stop demo
                 // Check if user wants to stop the demo
@@ -254,7 +254,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     connectedNode.Visited = true;
 
                 // Line 8: visit connected node
-                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(8), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 #region Stop demo
                 // Check if user wants to stop the demo
@@ -267,7 +267,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 ifStatementContent = currentDistAndEdgeCost +  " < " + UtilGraph.ConvertDist(node2Dist);
 
                 // Line 9: If statement
-                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(9), Util.HIGHLIGHT_STANDARD_COLOR);
 
                 #region Stop demo
                 // Check if user wants to stop the demo
@@ -280,7 +280,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 {
                     // Line 10: Update total cost (Dist) of connected node (w)
                     connectedNode.Dist = currentDistAndEdgeCost;
-                    yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(10), Util.HIGHLIGHT_STANDARD_COLOR);
 
                     #region Stop demo
                     // Check if user wants to stop the demo
@@ -290,7 +290,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
                     // Line 11: Update prev edge (Prev) of connected node (w)
                     connectedNode.PrevEdge = currentEdge;
-                    yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(11), Util.HIGHLIGHT_STANDARD_COLOR);
 
                     #region Stop demo
                     // Check if user wants to stop the demo
@@ -324,7 +324,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                     #endregion
 
                     // Line 12: Add to list
-                    yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_COLOR);
+                    yield return HighlightPseudoCode(CollectLine(12), Util.HIGHLIGHT_STANDARD_COLOR);
                 }
 
                 #region Stop demo
@@ -336,7 +336,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 currentEdge.CurrentColor = UtilGraph.VISITED_COLOR;
 
                 // Line 13: End if
-                yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_COLOR);
+                yield return HighlightPseudoCode(CollectLine(13), Util.HIGHLIGHT_STANDARD_COLOR);
             }
 
             #region Stop demo
@@ -346,7 +346,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             #endregion
 
             // Line 14: End for-loop
-            yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_COLOR);
+            yield return HighlightPseudoCode(CollectLine(14), Util.HIGHLIGHT_STANDARD_COLOR);
 
             #region Stop demo
             // Check if user wants to stop the demo
@@ -360,7 +360,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             graphMain.UpdateListVisual(UtilGraph.DESTROY_CURRENT_NODE, null, Util.NO_VALUE); // listVisual.DestroyCurrentNode(); // Node Representation
         }
         // Line 15: End while-loop
-        yield return HighlightPseudoCode(CollectLine(15), Util.HIGHLIGHT_COLOR);
+        yield return HighlightPseudoCode(CollectLine(15), Util.HIGHLIGHT_STANDARD_COLOR);
 
         if (graphMain.UserStoppedTask)
             graphMain.UpdateCheckList(Util.DEMO, true);
@@ -622,7 +622,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -818,7 +818,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
         // Gather part of code to highlight
         int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_COLOR;
+        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
         switch (instruction.Instruction)
         {
             case Util.FIRST_INSTRUCTION:
@@ -836,7 +836,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.ADD_NODE:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 lineOfCode = 3;
                 break;
 
@@ -851,7 +851,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
 
             case UtilGraph.PRIORITY_REMOVE_NODE:
                 SetNodePseudoCode(currentNode, 1);
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 lineOfCode = 6;
                 break;
 
@@ -861,13 +861,13 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.VISIT_CONNECTED_NODE:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 8;
                 break;
 
             case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
-                useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
+                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 9;
                 edgeCost = currentEdge.Cost;

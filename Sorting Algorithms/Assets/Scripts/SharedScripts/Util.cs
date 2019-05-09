@@ -46,7 +46,7 @@ public class Util : MonoBehaviour {
 
     // Colors
     public static Color STANDARD_COLOR = Color.black, BLACKBOARD_TEXT_COLOR = Color.white;
-    public static Color HIGHLIGHT_MOVE_COLOR = Color.green, HIGHLIGHT_COLOR = Color.magenta;
+    public static Color HIGHLIGHT_USER_ACTION = Color.green, HIGHLIGHT_STANDARD_COLOR = Color.magenta, HIGHLIGHT_CONDITION_FULFILLED = Color.Lerp(Color.green, Color.yellow, 0.5f), HIGHLIGHT_CONDITION_NOT_FULFILLED = Color.red;
 
 
     // Instruction values (todo: update Utilsort)
