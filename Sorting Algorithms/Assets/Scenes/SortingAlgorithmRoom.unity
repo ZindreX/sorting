@@ -1959,6 +1959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feedbackDisplayText: {fileID: 640991410}
   debugText: {fileID: 969399249}
+  useDebugText: 0
   debugLineNumbers: 15
   sortSettings: {fileID: 602294980}
   algorithmUserController: {fileID: 678766950}
@@ -11862,7 +11863,7 @@ PrefabInstance:
     - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
         type: 3}
       propertyPath: pseudocodeStep
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
         type: 3}
@@ -11872,7 +11873,7 @@ PrefabInstance:
     - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
         type: 3}
       propertyPath: algorithmSpeedEditor
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
         type: 3}

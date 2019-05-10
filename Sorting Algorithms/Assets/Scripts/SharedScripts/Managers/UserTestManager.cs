@@ -61,6 +61,28 @@ public class UserTestManager : InstructionControlBase {
         SetStartTime();
     }
 
+    // TODO: display all instructions in progress tracker
+    public void InitUserTest(Dictionary<int, InstructionBase> instructions, int userActionToProceed, int difficulty)
+    {
+        base.Init(instructions, userActionInstructions, false);
+        this.userActionToProceed = userActionToProceed;
+        readyForNext = userActionToProceed;
+
+        // Score
+        currentScore = 0;
+        totalCorrect = 0;
+        totalErrorCount = 0;
+        errorLog = new Dictionary<string, int>();
+        scoreUpdateDuration = new WaitForSeconds(0.1f);
+
+        this.difficulty = difficulty;
+        difficultyMultiplier = difficulty;
+
+        // Set start time
+        SetStartTime();
+    }
+
+
     // -------------------------------------------- Getters/Setters --------------------------------------------
 
 

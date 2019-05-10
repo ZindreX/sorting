@@ -741,8 +741,11 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                SetNodePseudoCode(currentNode, 1);
                 lineOfCode = 7;
+                if (i != UtilGraph.NEIGHBORS_VISITED)
+                    SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+
+                useHighlightColor = UseConditionColor(i != UtilGraph.NEIGHBORS_VISITED);
                 break;
 
             case UtilGraph.VISIT_CONNECTED_NODE:

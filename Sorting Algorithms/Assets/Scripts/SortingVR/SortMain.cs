@@ -248,14 +248,7 @@ public class SortMain : MainManager {
             if (instructions == null)
                 return;
 
-            Debug.Log("Number of instructions: " + instructions.Count);
-
-            //foreach (KeyValuePair<int, InstructionBase> entry in instructions)
-            //{
-            //    Debug.Log(">>> " + entry.Key + ": " + entry.Value.DebugInfo());
-            //}
-
-
+            //Debug.Log("Number of instructions: " + instructions.Count);
             demoManager.InitDemo(instructions);
 
             newDemoImplemented = true;

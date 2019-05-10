@@ -12,7 +12,7 @@ public class UtilGraph : Util {
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
     // ----------------------------------------- Support until lvl ----------------------------------------- 
-    public static readonly int LIST_VISUAL_MAX_DIFFICULTY = ADVANCED;
+    public static readonly int LIST_VISUAL_MAX_DIFFICULTY = INTERMEDIATE;
 
 
     // ----------------------------------------- GUI ----------------------------------------- 

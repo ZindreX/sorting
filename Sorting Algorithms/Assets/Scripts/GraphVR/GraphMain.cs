@@ -214,12 +214,12 @@ public class GraphMain : MainManager {
         bool inDetailStep = Settings.PseudocodeStep;
 
         // Prepare difficulty level related stuff for user test (copied from sort)
+        pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
         if (graphSettings.TeachingMode == Util.USER_TEST)
         {
             if (difficulty <= Util.PSEUDO_CODE_MAX_DIFFICULTY)
             {
                 // Pseudocode
-                pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
                 pseudoCodeViewer.PseudoCodeSetup();
                 // Fix pseudocode for graph
                 pseudoCodeViewer.ChangeSizeOfPseudocode(pseudocodeChangeSizeStartPos);
@@ -236,9 +236,7 @@ public class GraphMain : MainManager {
         else
         {
             // >>> Demo
-
             // Pseudocode
-            pseudoCodeViewer.InitPseudoCodeViewer(graphAlgorithm, includeLineNr, inDetailStep);
             pseudoCodeViewer.PseudoCodeSetup();
 
             // Fix pseudocode for graph
@@ -761,7 +759,7 @@ public class GraphMain : MainManager {
             {
                 userTestManager.SetEndTime();
                 userTestManager.CalculateScore();
-                blackboard.ChangeText(0, "Incorrect action details:");
+                blackboard.ChangeText(0, "User test details:");
                 blackboard.ChangeText(1, userTestManager.GetExaminationResult() + "\n" + userTestManager.IncorrectActionDetails());
             }
         }

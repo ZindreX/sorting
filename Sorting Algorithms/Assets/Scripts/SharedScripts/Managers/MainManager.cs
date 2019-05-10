@@ -246,7 +246,9 @@ public abstract class MainManager : MonoBehaviour {
                 // Toggle pause
                 UserPausedTask = !userPausedTask;
                 Debug.Log("Pause action: " + userPausedTask);
-                debugText.text += "\nPause action: " + userPausedTask;
+
+                if (useDebugText && debugText != null)
+                    debugText.text += "\nPause action: " + userPausedTask;
 
                 // Tips display
                 string pauseOrUnPauseText = UserPausedText(UserPausedTask);
@@ -584,7 +586,8 @@ public abstract class MainManager : MonoBehaviour {
 
         TeachingAlgorithm algorithm = GetTeachingAlgorithm();
         algorithm.IsTaskCompleted = true;
-        algorithm.PseudoCodeViewer.RemoveHightlight();
+        if (algorithm.PseudoCodeViewer != null)
+            algorithm.PseudoCodeViewer.RemoveHightlight();
     }
 
     protected abstract void TaskCompletedFinishOff(); // Finish off visualization

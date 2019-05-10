@@ -316,6 +316,11 @@ PrefabInstance:
       propertyPath: getVideoFrom
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5001174324511222102, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -1447,6 +1452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feedbackDisplayText: {fileID: 1526100757}
   debugText: {fileID: 743485942}
+  useDebugText: 0
   debugLineNumbers: 20
   nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 3}
   undirectedEdgePrefab: {fileID: 1280941747897418, guid: 8af68416d4f8a2147824ca6da27ff252,
@@ -2468,7 +2474,7 @@ PrefabInstance:
     - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: titleColor
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5001174324511222102, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
@@ -2758,6 +2764,11 @@ PrefabInstance:
     - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: getVideoFrom
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
+        type: 3}
+      propertyPath: titleColor
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5001174324511222102, guid: 976b102ca0d052744bb1f0bf32b9f959,
@@ -3347,7 +3358,7 @@ PrefabInstance:
     - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: titleColor
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5001174324511222102, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
@@ -4040,7 +4051,7 @@ PrefabInstance:
     - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: titleColor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5001174324511222102, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
@@ -4912,7 +4923,7 @@ PrefabInstance:
     - target: {fileID: 449179963919713093, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
       propertyPath: titleColor
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5001174324511222102, guid: 976b102ca0d052744bb1f0bf32b9f959,
         type: 3}
