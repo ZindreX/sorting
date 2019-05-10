@@ -13,7 +13,7 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     // Basis variables for all modes
     protected WaitForSeconds demoStepDuration;
-    protected bool pseudoCodeInitilized = false, isTaskCompleted = false;
+    protected bool isTaskCompleted = false; // pseudoCodeInitilized = false;
     protected PseudoCodeViewer pseudoCodeViewer;
     
     // Instruction variables
@@ -35,13 +35,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         
         skipDict = new Dictionary<string, List<string>>();
         AddSkipAbleInstructions();
-    }
-
-    // Mark to change values according to demo etc. (before initialized: init pseudocode displays)
-    public bool PseudoCodeInitilized
-    {
-        get { return pseudoCodeInitilized; }
-        set { pseudoCodeInitilized = value; }
     }
 
     public WaitForSeconds DemoStepDuration
@@ -66,12 +59,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         get { return pseudoCodeViewer; }
         set { pseudoCodeViewer = value; }
     }
-
-    // Reach to line of code which are not mentioned in instructions
-    //public void HighllightPseudoLine(int lineNr, Color color)
-    //{
-    //    pseudoCodeViewer.ChangeColorOfText(lineNr, color);
-    //}
 
     // Used in Demo for highlighting pseudo code line for <seconds> then go back to normal color
     private WaitForSeconds stepDuration = new WaitForSeconds(1f);
@@ -124,6 +111,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
             yield return demoStepDuration;
     }
 
+    protected Color UseConditionColor(bool condition)
+    {
+        return condition ? Util.HIGHLIGHT_CONDITION_FULFILLED : Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+    }
+
     // ---------------------------- Maybe overriden in the algorithm class which inherite this base class ----------------------------
 
     // Instructions which the user don't need to perform any actions to proceed
@@ -147,7 +139,6 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
         isTaskCompleted = false;
         demoStepDuration = null;
         skipDict = null;
-        pseudoCodeInitilized = false;
         useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
     }
 

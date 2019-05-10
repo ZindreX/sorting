@@ -189,9 +189,6 @@ public class SortMain : MainManager {
             displayUnitManager.PseudoCodeViewer.InitPseudoCodeViewer(sortAlgorithm, includeLineNr, inDetailStep);
             displayUnitManager.PseudoCodeViewer.PseudoCodeSetup();
         }
-
-        // Pseudocode initialized
-        sortAlgorithm.PseudoCodeInitilized = true; // Sort only
         
         // Hide menu and display sorting table
         StartCoroutine(ActivateTaskObjects(true));

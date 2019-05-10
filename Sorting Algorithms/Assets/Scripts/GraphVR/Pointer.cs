@@ -148,7 +148,7 @@ public class Pointer : MonoBehaviour {
                         {
                             if (prevNodeShot != node)
                             {
-                                Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
+                                //Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
                                 node.PerformUserMove(UtilGraph.NODE_VISITED);
                                 prevNodeShot = node;
                             }

@@ -42,11 +42,14 @@ public class ListVisual : MonoBehaviour, IMoveAble {
     private NodeRepresentation currentNode;
     private List<NodeRepresentation> nodeRepresentations;
 
-    public TextMeshPro debugging;
-    private bool timeForDebugUpdate;
 
+    [Space(10)]
+    [Header("Debugging")]
     [SerializeField]
     private bool useDebugText;
+    private bool timeForDebugUpdate;
+
+    public TextMeshPro debuggingText;
 
     private void Awake()
     {
@@ -71,14 +74,14 @@ public class ListVisual : MonoBehaviour, IMoveAble {
         {
             if (nodeRepresentations != null && timeForDebugUpdate)
             {
-                debugging.text = "";
+                debuggingText.text = "";
                 for (int i=nodeRepresentations.Count - 1; i >= 0; i--)
                 {
                     NodeRepresentation noderep = nodeRepresentations[i];
-                    debugging.text += "Node: " + noderep.Node.NodeAlphaID + ", index: " + noderep.ListIndex + "\n"; // + " | name = " + noderep.name + "\n\n";
+                    debuggingText.text += "Node: " + noderep.Node.NodeAlphaID + ", index: " + noderep.ListIndex + "\n"; // + " | name = " + noderep.name + "\n\n";
                 }
                 if (currentNode != null)
-                    debugging.text += "Current node: " + currentNode.Node.NodeAlphaID + ", index: " + currentNode.ListIndex; // + " | name = " + currentNode.name;
+                    debuggingText.text += "Current node: " + currentNode.Node.NodeAlphaID + ", index: " + currentNode.ListIndex; // + " | name = " + currentNode.name;
 
                 timeForDebugUpdate = false;
             }

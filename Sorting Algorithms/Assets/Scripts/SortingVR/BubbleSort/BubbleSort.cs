@@ -319,8 +319,7 @@ public class BubbleSort : SortAlgorithm {
                     if (increment)
                     {
                         n = lengthOfList;
-                        if (i == lengthOfListInteger)
-                            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                        useHighlightColor = UseConditionColor(i != lengthOfListInteger);
                     }
                     else
                     {
@@ -336,8 +335,7 @@ public class BubbleSort : SortAlgorithm {
                     if (increment)
                     {
                         numberOfElementsMinusI1 = (lengthOfListInteger - i - 1).ToString();
-                        if (j == lengthOfListInteger-i-1)
-                            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                        useHighlightColor = UseConditionColor(j != lengthOfListInteger - i - 1);
                     }
                     else
                     {
@@ -363,9 +361,7 @@ public class BubbleSort : SortAlgorithm {
                 {
                     se1.IsCompare = bubbleInstruction.IsCompare;
                     se2.IsCompare = bubbleInstruction.IsCompare;
-
-                    if (se1.Value <= se2.Value)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(se1.Value > se2.Value);
                 }
                 else
                 {
@@ -501,16 +497,13 @@ public class BubbleSort : SortAlgorithm {
                 if (k == UtilSort.OUTER_LOOP)
                 {
                     lineOfCode = 2;
-                    if (i == lengthOfListInteger)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(i != lengthOfListInteger);
                 }
                 else if (k == UtilSort.INNER_LOOP)
                 {
                     lineOfCode = 3;
                     numberOfElementsMinusI1 = (lengthOfListInteger - i - 1).ToString();
-
-                    if (j == lengthOfListInteger-i-1)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(j != lengthOfListInteger - i - 1);
                 }
                 break;
 

@@ -39,6 +39,8 @@ public abstract class MainManager : MonoBehaviour {
     protected string activeChecklist;
     protected Dictionary<string, bool> safeStopChecklist;
 
+    protected WaitForSeconds demoSpeedBeforePause;
+    protected WaitForSeconds stepByStepMode = new WaitForSeconds(0f);
     protected WaitForSeconds loading = new WaitForSeconds(1f);
     protected WaitForSeconds warningMessageDuration = new WaitForSeconds(2f);
     protected WaitForSeconds finishStepDuration = new WaitForSeconds(0.5f);
@@ -49,6 +51,13 @@ public abstract class MainManager : MonoBehaviour {
     [Space(2)]
     [SerializeField]
     protected TextMeshPro feedbackDisplayText;
+
+    [SerializeField]
+    private TextMeshPro debugText;
+
+    public bool useDebugText;
+    public int debugLineNumbers = 20;
+    private int deleteWhenReached;
 
     protected DemoManager demoManager;
     protected UserTestManager userTestManager;
@@ -109,7 +118,7 @@ public abstract class MainManager : MonoBehaviour {
     }
 
     // --------------------------------------- Checklist / Safe stop ---------------------------------------
-
+    #region Checklist
     // Check list used for start/stop
     protected abstract void PerformCheckList(string check);
 
@@ -160,7 +169,7 @@ public abstract class MainManager : MonoBehaviour {
         else
             Debug.Log(">>>>>>>>>>>>>>>>>> Not containing '" + unit + "'.");
     }
-
+    #endregion
     // --------------------------------------- Getters / Setters ---------------------------------------
 
     // Algorithm is initialized and ready to go
@@ -212,7 +221,7 @@ public abstract class MainManager : MonoBehaviour {
     }
 
     // --------------------------------------- Demo Device ---------------------------------------
-
+    #region Demo device / controller input
     public void PerformDemoDeviceAction(string itemID, bool otherSource)
     {
         switch (itemID)
@@ -220,7 +229,10 @@ public abstract class MainManager : MonoBehaviour {
             case DemoDevice.STEP_BACK:
                 if (!WaitingForSupportToFinish())
                 {
+                    // Report backward step
                     PlayerStepByStepInput(false);
+
+                    // Give feedback incase of invalid step
                     if (!demoManager.IsValidStep)
                         StartCoroutine(SetFeedbackDisplay("First instruction reached.\nCan't decrement."));
                     else
@@ -231,10 +243,14 @@ public abstract class MainManager : MonoBehaviour {
                 break;
 
             case DemoDevice.PAUSE:
+                // Toggle pause
                 UserPausedTask = !userPausedTask;
+                Debug.Log("Pause action: " + userPausedTask);
+                debugText.text += "\nPause action: " + userPausedTask;
 
                 // Tips display
-                StartCoroutine(SetFeedbackDisplay(UserPausedText(UserPausedTask)));
+                string pauseOrUnPauseText = UserPausedText(UserPausedTask);
+                StartCoroutine(SetFeedbackDisplay(pauseOrUnPauseText));
 
                 // Demo device button replacing
                 demoDevice.TransitionPause(userPausedTask);
@@ -244,22 +260,28 @@ public abstract class MainManager : MonoBehaviour {
 
                 if (userPausedTask)
                 {
-                    // Step back when paused
-                    //demoManager.CurrentInstructionNr--;
-                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(0f); // If pause -> Step by step (player choose pace themself)
-                    demoDevice.SetDemoDeviceTitle(Util.STEP_BY_STEP);
+                    // Step back when paused (otherwise it'll skip 1 instruction)
+                    demoManager.DecrementToPreviousInstruction(); //demoManager.CurrentInstructionNr--;
+
+                    // Save the current speed used
+                    demoSpeedBeforePause = GetTeachingAlgorithm().DemoStepDuration;
+
+                    // Set to step-by-step speed (instant)
+                    GetTeachingAlgorithm().DemoStepDuration = stepByStepMode; // If pause -> Step by step (player choose pace themself)
                 }
                 else
                 {
-                    GetTeachingAlgorithm().DemoStepDuration = new WaitForSeconds(Settings.AlgorithmSpeed); // Use demo speed
-                    demoDevice.SetDemoDeviceTitle(Util.DEMO);
+                    GetTeachingAlgorithm().DemoStepDuration = demoSpeedBeforePause; // Use demo speed
                 }
                 break;
 
             case DemoDevice.STEP_FORWARD:
                 if (!WaitingForSupportToFinish())
                 {
+                    // Report forward step
                     PlayerStepByStepInput(true);
+
+                    // Give feedback incase of invalid step
                     if (!demoManager.IsValidStep)
                         StartCoroutine(SetFeedbackDisplay("Final instruction reached.\nCan't increment."));
                     else
@@ -307,11 +329,6 @@ public abstract class MainManager : MonoBehaviour {
         }
     }
 
-    private string UserPausedText(bool pause)
-    {
-        return pause ? "Demo paused\nStep-by-step enabled" : "Demo unpaused\nAutomatically progress enabled";
-    }
-
     // Input from user during Step-By-Step (increment/decrement)
     public void PlayerStepByStepInput(bool increment)
     {
@@ -322,8 +339,13 @@ public abstract class MainManager : MonoBehaviour {
             requestBacktrack = true;
     }
 
+    private string UserPausedText(bool pause)
+    {
+        return pause ? "Demo paused\nStep-by-step enabled" : "Demo unpaused\nAutomatically progress enabled";
+    }
+    #endregion
 
-    // --------------------------------------- Settings menu / Start pillar ---------------------------------------
+    // --------------------------------------- Settings menu / Startpillar / Sorting table ---------------------------------------
 
     /* --------------------------------------- Instatiate Setup ---------------------------------------
      * > Called from UserController
@@ -331,12 +353,18 @@ public abstract class MainManager : MonoBehaviour {
     */
     public virtual void InstantiateSafeStart()
     {
+        demoSpeedBeforePause = new WaitForSeconds(Settings.AlgorithmSpeed);
+
         // Used for shut down process
         safeStopChecklist = new Dictionary<string, bool>();
 
         activeChecklist = START_UP_CHECK;
         checkListModeActive = true;
         algorithmName = Settings.Algorithm;
+
+
+        // Debugging
+        deleteWhenReached = debugLineNumbers;
     }
 
     public void StartAlgorithm()
@@ -489,7 +517,24 @@ public abstract class MainManager : MonoBehaviour {
             }
 
             if (instruction != null && prevInstruction != instruction.Instruction)
+            {
+                prevInstruction = instruction.DebugInfo();
                 Debug.Log(instruction.DebugInfo());
+
+                if (useDebugText && debugText != null)
+                {
+                    if (deleteWhenReached <= 0)
+                    {
+                        debugText.text = instruction.DebugInfo();
+                        deleteWhenReached = debugLineNumbers;
+                    }
+                    else
+                        debugText.text += "\n" + instruction.DebugInfo();
+
+                    deleteWhenReached--;
+
+                }
+            }
         }
     }
 

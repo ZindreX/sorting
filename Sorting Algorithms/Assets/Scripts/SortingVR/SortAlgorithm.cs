@@ -52,7 +52,6 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     public override MainManager MainManager
     {
         get { return sortMain; }
-        //set { sortMain = (SortMain)value; }
     }
 
     protected void PreparePseudocodeValue(int value, int elementNr)
@@ -92,7 +91,7 @@ public abstract class SortAlgorithm : TeachingAlgorithm, IAlgorithm {
     // To do stuff important for individual classes
     public abstract void Specials(string method, int number, bool activate); // used?
 
-    /* Tutorial of the chosen sorting algorithm
+    /* Tutorial of the chosen sorting algorithm (NOT USED ANYMORE)
      * - No interaction from the user (except for settings)
     */
     public abstract IEnumerator Demo(GameObject[] list);

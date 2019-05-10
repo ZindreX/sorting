@@ -526,6 +526,7 @@ public class GraphMain : MainManager {
     public int PrepareNextInstruction(InstructionBase instruction)
     {
         string inst = instruction.Instruction;
+        Debug.Log(">>> " + instruction.DebugInfo());
 
         // First check whether the instruction contains a node and/or destination
         bool gotNode = !graphAlgorithm.SkipDict[Util.SKIP_NO_ELEMENT].Contains(inst);
@@ -541,7 +542,7 @@ public class GraphMain : MainManager {
             ListVisualInstruction listVisualInst = (ListVisualInstruction)instruction;
             listVisual.ExecuteInstruction(listVisualInst, true);
 
-            Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
+            //Debug.Log("List visual instruction: " + listVisualInst.DebugInfo());
         }
         else
         {
@@ -552,7 +553,7 @@ public class GraphMain : MainManager {
                 if (instruction is TraverseInstruction)
                 {
                     TraverseInstruction traverseInstruction = (TraverseInstruction)instruction;
-                    Debug.Log("Traverse instruction: " + traverseInstruction.DebugInfo());
+                    //Debug.Log("Traverse instruction: " + traverseInstruction.DebugInfo());
 
                     // Get the Sorting element
                     node = traverseInstruction.Node;
@@ -604,7 +605,7 @@ public class GraphMain : MainManager {
                 else if (instruction is ShortestPathInstruction)
                 {
                     ShortestPathInstruction spInst = (ShortestPathInstruction)instruction;
-                    Debug.Log("Shortest path instruction: " + spInst.DebugInfo());
+                    //Debug.Log("Shortest path instruction: " + spInst.DebugInfo());
 
                     // Get the Sorting element
                     if (spInst.CurrentNode != null)
@@ -650,10 +651,10 @@ public class GraphMain : MainManager {
                         updateListVisualInstruction = spInst.ListVisualInstruction;
                 }
             }
-            else if (instruction is InstructionLoop)
-                Debug.Log("Loop instruction: " + ((InstructionLoop)instruction).DebugInfo());
-            else
-                Debug.Log("Instruction base: " + instruction.DebugInfo());
+            //else if (instruction is InstructionLoop)
+            //    Debug.Log("Loop instruction: " + ((InstructionLoop)instruction).DebugInfo());
+            //else
+            //    Debug.Log("Instruction base: " + instruction.DebugInfo());
         }
 
 
@@ -697,10 +698,10 @@ public class GraphMain : MainManager {
                 break;
         }
 
-        Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
+        //Debug.Log("Got node: " + gotNode + ", no destination: " + noDestination);
         if (gotNode && !noDestination)
             return 0;
-        Debug.Log("Nothing to do for player, get another instruction");
+        //Debug.Log("Nothing to do for player, get another instruction");
         return 1;
     }
 

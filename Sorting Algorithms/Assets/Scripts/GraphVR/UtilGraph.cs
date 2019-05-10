@@ -62,6 +62,7 @@ public class UtilGraph : Util {
     // *** Instructions ***
     // Validation
     public const string NODE_VISITED = "Node visited", NODE_TRAVERSED = "Node traversed", NODE_BACKTRACKED = "Node backtracked", NODE_ERROR = "Node error", NODE_OK = "Node ok";
+    public const int NEIGHBORS_VISITED = -1;
 
     // Common graph instructions
     public const string EMPTY_LIST_CONTAINER = "Empty list inst", WHILE_LIST_NOT_EMPTY_INST = "While list not empty inst", FOR_ALL_NEIGHBORS_INST = "For all neighbors inst";

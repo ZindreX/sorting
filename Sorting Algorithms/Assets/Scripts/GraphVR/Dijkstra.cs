@@ -28,11 +28,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     private string CreateIfStatementContent(int currentNodeDist, int edgeCost, int connectedNodeDist)
     {
         // Change color of if statement
-        if (currentNodeDist + edgeCost < connectedNodeDist)
-            useHighlightColor = Util.HIGHLIGHT_CONDITION_FULFILLED;
-        else
-            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
-
+        useHighlightColor = UseConditionColor(currentNodeDist + edgeCost < connectedNodeDist);
         return currentNodeDist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(connectedNode.Dist);
     }
 
@@ -445,137 +441,6 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     }
     #endregion
 
-
-    #region Shortest path Instructions
-    public Dictionary<int, InstructionBase> ShortestPathUserTestInstructions(Node startNode, Node endNode)
-    {
-        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
-        int instNr = 0;
-
-        // Line 0: (update startnode)
-        instructions.Add(instNr, new InstructionBase(Util.FIRST_INSTRUCTION, instNr++));
-
-        // Line 1: Set all vertices of G to inifity
-        graphMain.GraphManager.SetAllNodesDist(UtilGraph.INF);
-        instructions.Add(instNr, new InstructionBase(UtilGraph.SET_ALL_NODES_TO_INFINITY, instNr++));
-
-        // Line 2: Create (priority) list
-        List<Node> list = new List<Node>();
-        instructions.Add(instNr, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr++));
-
-
-        // Line 3: Add starting node and set its cost to 0
-        list.Add(startNode);
-        startNode.Visited = true;
-        startNode.Dist = 0;
-        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, startNode, 0);
-        instructions.Add(instNr, new TraverseInstruction(UtilGraph.ADD_NODE, instNr++, startNode, true, false, addStartNode));
-
-        // Line 4: Set total cost (Dist) of start node to 0
-        instructions.Add(instNr, new InstructionBase(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr++));
-        
-        while (list.Count > 0 && !objectiveFound)
-        {
-            // Line 5: Update while-loop
-            instructions.Add(instNr, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr++, list.Count));
-
-            //
-            Node currentNode = list[list.Count - 1];
-            list.RemoveAt(list.Count - 1);
-
-            // Line 6: Remove element with lowest distance
-            ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode);
-            instructions.Add(instNr, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr++, currentNode, false, true, removeCurrentNode));
-            //instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
-
-            // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
-            if (!shortestPathOnToAll && currentNode == endNode)
-            {
-                instructions.Add(instNr, new ListVisualInstruction(UtilGraph.END_NODE_FOUND, instNr++, currentNode));
-                objectiveFound = true;
-                break;
-            }
-
-            // Check all nodes connected with current node
-            List<Edge> edges = currentNode.Edges;
-
-            // Line 7: Update for-loop
-            instructions.Add(instNr, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr++, currentNode, false, false));
-            for (int i = 0; i < edges.Count; i++)
-            {
-                // Checking edge
-                Edge currentEdge = edges[i];
-
-                // Dont check edge we came from
-                if (currentEdge == currentNode.PrevEdge)
-                    continue;
-
-                // Checking node on the other side of the edge (directed edge scenario)
-                Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
-                if (connectedNode == null || connectedNode.Traversed)
-                    continue;
-
-                if (!connectedNode.Visited)
-                    connectedNode.Visited = true;
-
-                // Cost between nodes
-                int currentDistAndEdgeCost = currentNode.Dist + currentEdge.Cost;
-
-                // Line 8: Visit connected node
-                instructions.Add(instNr, new TraverseInstruction(UtilGraph.VISIT_CONNECTED_NODE, instNr++, connectedNode, currentEdge, true, false));
-
-                // Line 9: If statement
-                instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN, instNr++, currentNode, connectedNode, currentEdge));
-
-                // Update cost of connected node
-                if (currentDistAndEdgeCost < connectedNode.Dist)
-                {
-                    // Line 10: Update total cost (Dist) of connected node (w)
-                    connectedNode.Dist = currentDistAndEdgeCost;
-                    instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_DIST, instNr++, currentNode, connectedNode, currentEdge));
-
-                    // Line 11: Update prev edge (Prev) of connected node (w)
-                    instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE, instNr++, connectedNode, currentEdge));
-                    connectedNode.PrevEdge = currentEdge;
-
-
-                    if (!list.Contains(connectedNode))
-                        list.Add(connectedNode);
-
-                    // Sort list such that the lowest distance node gets out first
-                    list.Sort();
-
-
-                    // List visual
-                    int index = list.IndexOf(connectedNode);
-
-                    // Line 12: Add to list
-                    instructions.Add(instNr, new ListVisualInstruction(UtilGraph.HAS_NODE_REPRESENTATION, instNr++, connectedNode, index, UtilGraph.PRIORITY_ADD_NODE, UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION));
-
-                    //instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
-                }
-                // Line 13: End if
-                instructions.Add(instNr, new InstructionBase(UtilGraph.END_IF_INST, instNr++));
-            }
-            // Line 14: End for-loop
-            instructions.Add(instNr, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr++)); // <--- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
-
-            currentNode.Traversed = true;
-        }
-        // Line 15: End while-loop
-        instructions.Add(instNr, new InstructionBase(UtilGraph.END_WHILE_INST, instNr++));
-
-        if (objectiveFound)
-            graphMain.GraphManager.ShortestPatBacktrackingInstructions(instructions, instNr);
-        else
-            instructions.Add(instNr, new InstructionBase(UtilGraph.NO_PATH_FOUND, instNr++));
-
-        // Gather instruction for backtracking
-        return instructions;
-    }
-    #endregion
-
-
     #region New Demo
     public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
     {
@@ -669,6 +534,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
                 lineOfCode = 5;
                 lengthOfList = i.ToString();
+                useHighlightColor = UseConditionColor(i != 0);
                 break;
 
             case UtilGraph.PRIORITY_REMOVE_NODE:
@@ -698,8 +564,20 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                SetNodePseudoCode(currentNode, 1);
                 lineOfCode = 7;
+
+                if (increment)
+                {
+                    if (i != UtilGraph.NEIGHBORS_VISITED)
+                        SetNodePseudoCode(currentNode, 1);
+
+                    useHighlightColor = UseConditionColor(i != UtilGraph.NEIGHBORS_VISITED);
+                }
+                else
+                {
+                    if (currentNode == startNode)
+                        node1Alpha = 'w';
+                }
                 break;
 
             case UtilGraph.VISIT_CONNECTED_NODE:
@@ -722,11 +600,18 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 break;
 
             case UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN:
-                SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 9;
 
-                edgeCost = currentEdge.Cost;
-                ifStatementContent = CreateIfStatementContent(currentNode.Dist, edgeCost, connectedNode.Dist);
+                if (increment)
+                {
+                    SetNodePseudoCode(connectedNode, 2);
+                    edgeCost = currentEdge.Cost;
+                    ifStatementContent = CreateIfStatementContent(currentNode.Dist, edgeCost, connectedNode.Dist);
+                }
+                else
+                {
+                    // TODO
+                }
                 break;
 
             case UtilGraph.UPDATE_CONNECTED_NODE_DIST:
@@ -903,6 +788,138 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
     #endregion
 
 
+    #region Shortest path Instructions
+    public Dictionary<int, InstructionBase> ShortestPathUserTestInstructions(Node startNode, Node endNode)
+    {
+        Dictionary<int, InstructionBase> instructions = new Dictionary<int, InstructionBase>();
+        int instNr = 0;
+
+        // Line 0: (update startnode)
+        instructions.Add(instNr, new InstructionBase(Util.FIRST_INSTRUCTION, instNr++));
+
+        // Line 1: Set all vertices of G to inifity
+        graphMain.GraphManager.SetAllNodesDist(UtilGraph.INF);
+        instructions.Add(instNr, new InstructionBase(UtilGraph.SET_ALL_NODES_TO_INFINITY, instNr++));
+
+        // Line 2: Create (priority) list
+        List<Node> list = new List<Node>();
+        instructions.Add(instNr, new InstructionBase(UtilGraph.EMPTY_LIST_CONTAINER, instNr++));
+
+        // Line 3: Add starting node and set its cost to 0
+        list.Add(startNode);
+        startNode.Visited = true;
+        startNode.Dist = 0;
+        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.PRIORITY_ADD_NODE, instNr, startNode, 0);
+        instructions.Add(instNr, new TraverseInstruction(UtilGraph.ADD_NODE, instNr++, startNode, true, false, addStartNode));
+
+        // Line 4: Set total cost (Dist) of start node to 0
+        instructions.Add(instNr, new InstructionBase(UtilGraph.SET_START_NODE_DIST_TO_ZERO, instNr++));
+
+        while (list.Count > 0 && !objectiveFound)
+        {
+            // Line 5: Update while-loop
+            instructions.Add(instNr, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr++, list.Count));
+
+            //
+            Node currentNode = list[list.Count - 1];
+            list.RemoveAt(list.Count - 1);
+
+            // Line 6: Remove element with lowest distance
+            ListVisualInstruction removeCurrentNode = new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode);
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.PRIORITY_REMOVE_NODE, instNr++, currentNode, false, true, removeCurrentNode));
+            //instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.REMOVE_CURRENT_NODE, instNr, currentNode));
+
+            // Stop search if end node found and we dont want shortest path to all - stop when first visited instead? (not always global optimal)
+            if (!shortestPathOnToAll && currentNode == endNode)
+            {
+                instructions.Add(instNr, new ListVisualInstruction(UtilGraph.END_NODE_FOUND, instNr++, currentNode));
+                objectiveFound = true;
+                break;
+            }
+
+            // Check all nodes connected with current node
+            List<Edge> edges = currentNode.Edges;
+
+            // Line 7: Update for-loop
+            instructions.Add(instNr, new TraverseInstruction(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr++, currentNode, false, false));
+            for (int i = 0; i < edges.Count; i++)
+            {
+                // Checking edge
+                Edge currentEdge = edges[i];
+
+                // Dont check edge we came from
+                if (currentEdge == currentNode.PrevEdge)
+                    continue;
+
+                // Checking node on the other side of the edge (directed edge scenario)
+                Node connectedNode = currentEdge.OtherNodeConnected(currentNode);
+                if (connectedNode == null || connectedNode.Traversed)
+                    continue;
+
+                if (!connectedNode.Visited)
+                    connectedNode.Visited = true;
+
+                // Cost between nodes
+                int currentDistAndEdgeCost = currentNode.Dist + currentEdge.Cost;
+
+                // Line 8: Visit connected node
+                instructions.Add(instNr, new TraverseInstruction(UtilGraph.VISIT_CONNECTED_NODE, instNr++, connectedNode, currentEdge, true, false));
+
+                // Line 9: If statement
+                instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN, instNr++, currentNode, connectedNode, currentEdge));
+
+                // Update cost of connected node
+                if (currentDistAndEdgeCost < connectedNode.Dist)
+                {
+                    // Line 10: Update total cost (Dist) of connected node (w)
+                    connectedNode.Dist = currentDistAndEdgeCost;
+                    instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_DIST, instNr++, currentNode, connectedNode, currentEdge));
+
+                    // Line 11: Update prev edge (Prev) of connected node (w)
+                    instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.UPDATE_CONNECTED_NODE_PREV_EDGE, instNr++, connectedNode, currentEdge));
+                    connectedNode.PrevEdge = currentEdge;
+
+
+                    if (!list.Contains(connectedNode))
+                        list.Add(connectedNode);
+
+                    // Sort list such that the lowest distance node gets out first
+                    list.Sort();
+
+
+                    // List visual
+                    int index = list.IndexOf(connectedNode);
+
+                    // Line 12: Add to list
+                    instructions.Add(instNr, new ListVisualInstruction(UtilGraph.HAS_NODE_REPRESENTATION, instNr++, connectedNode, index, UtilGraph.PRIORITY_ADD_NODE, UtilGraph.UPDATE_LIST_VISUAL_VALUE_AND_POSITION));
+
+                    //instructions.Add(instNr++, new InstructionBase(UtilGraph.PRIORITY_ADD_NODE, instNr));
+                }
+                // Line 13: End if
+                instructions.Add(instNr, new InstructionBase(UtilGraph.END_IF_INST, instNr++));
+            }
+            // Line 7: Update for-loop
+            instructions.Add(instNr, new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr++, UtilGraph.NEIGHBORS_VISITED));
+
+            // Line 14: End for-loop
+            instructions.Add(instNr, new InstructionBase(UtilGraph.END_FOR_LOOP_INST, instNr++)); // <--- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
+
+            currentNode.Traversed = true;
+        }
+        // Line 5: condition
+        instructions.Add(instNr, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr++, 0));
+        // Line 15: End while-loop
+        instructions.Add(instNr, new InstructionBase(UtilGraph.END_WHILE_INST, instNr++));
+
+        if (objectiveFound)
+            graphMain.GraphManager.ShortestPatBacktrackingInstructions(instructions, instNr);
+        else
+            instructions.Add(instNr, new InstructionBase(UtilGraph.NO_PATH_FOUND, instNr++));
+
+        // Gather instruction for backtracking
+        return instructions;
+    }
+    #endregion
 
 
     // *** Debugging ***

@@ -474,9 +474,7 @@ public class InsertionSort : SortAlgorithm {
                 {
                     i_str = i.ToString();
                     SetLengthOfList();
-
-                    if (i >= lengthOfListInteger)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(i < lengthOfListInteger);
                 }
                 else
                 {
@@ -529,9 +527,7 @@ public class InsertionSort : SortAlgorithm {
                     sortingElement.IsCompare = insertionInstruction.IsCompare;
                     sortingElement.IsSorted = insertionInstruction.IsSorted;
                     j_str = j.ToString();
-
-                    if (j < 0 || sortingElement.Value <= value1)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(j >= 0 && sortingElement.Value > value1);
                 }
                 else
                 {
@@ -742,9 +738,7 @@ public class InsertionSort : SortAlgorithm {
                 lineOfCode = 2;
                 i_str = i.ToString();
                 SetLengthOfList();
-
-                if (i >= lengthOfListInteger)
-                    useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                useHighlightColor = UseConditionColor(i < lengthOfListInteger);
                 break;
 
             case Util.SET_VAR_J:

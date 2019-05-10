@@ -87,15 +87,18 @@ public abstract class TeachingSettings : SettingsBase {
             case Util.ALGORITHM: Algorithm = itemID; break;
             case Util.TEACHING_MODE:
                 TeachingMode = itemID;
-                //if (TeachingMode == Util.DEMO && difficulty > 0)
-                //{
-                //    difficulty = 0;
-                //    InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
-                //}
-                //else if (TeachingMode == Util.USER_TEST)
-                //{
-                //    AlgorithmSpeedLevel = Difficulty; // button fixed in method
-                //}
+
+                // Reset User test button (difficulty)
+                if (TeachingMode == Util.DEMO && difficulty > 0)
+                {
+                    difficulty = 0;
+                    InitButtonState(Util.DIFFICULTY, Util.DIFFICULTY, difficulty);
+                }
+                else if (TeachingMode == Util.USER_TEST) // Reset Demo button (speed)
+                {
+                    // Button gets reinitialized in method
+                    AlgorithmSpeedLevel = 1;
+                }
 
                 break;
 
@@ -192,6 +195,7 @@ public abstract class TeachingSettings : SettingsBase {
         get { return algSpeed; }
         set
         {
+            //Debug.Log("Algorithm speed level changed: " + value);
             algSpeed = value;
             InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, value);
             switch (value)
@@ -223,7 +227,7 @@ public abstract class TeachingSettings : SettingsBase {
     }
 
 
-    // Instantiates the algorithm/task, user needs to click a start button to start the task (see method below)
+    // Instantiates the algorithm/task when the player has clicked the "ready" button
     public void InstantiateTask()
     {
         MainManager.InstantiateSafeStart();
@@ -250,7 +254,7 @@ public abstract class TeachingSettings : SettingsBase {
 
             case Util.USER_TEST:
                 if (difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
-                    AlgorithmSpeedLevel = 2; //
+                    AlgorithmSpeedLevel = 1; // Normal speed
                 else
                     algorithmSpeed = 0f; //AlgorithmSpeedLevel = 3; // 0 Sec per step -- no "lag"
                 break;
@@ -268,7 +272,7 @@ public abstract class TeachingSettings : SettingsBase {
     protected abstract MainManager MainManager { get; set; }
 
 
-
+    // For listing items in the settings menu description
     private string FixNewLines(string itemDescription)
     {
         string[] headerBodySplit = itemDescription.Split(':');

@@ -120,11 +120,11 @@ public class BucketManager : MonoBehaviour, IManager {
 
         if (numberOfElements > 0)
         {
-            Debug.Log("Bucket " + bucketID + " has " + numberOfElements + " to display");
+            //Debug.Log("Bucket " + bucketID + " has " + numberOfElements + " to display");
             for (int y = 0; y < numberOfElements; y++)
             {
                 BucketSortElement element = (BucketSortElement)bucket.GetElementForDisplay(y);
-                Debug.Log("Bucket " + bucketID + ", element " + y + " [" + element.Value + "]");
+                //Debug.Log("Bucket " + bucketID + ", element " + y + " [" + element.Value + "]");
                 bucket.PutElementForDisplay(element); //element.transform.pos... bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;// + (UtilSort.ABOVE_BUCKET_VR / 10) * y;
                 StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 1));
                 yield return emptyBucketDuration;

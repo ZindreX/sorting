@@ -1446,6 +1446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   feedbackDisplayText: {fileID: 1526100757}
+  debugText: {fileID: 743485942}
+  debugLineNumbers: 20
   nodePrefab: {fileID: 1155645530711212, guid: c2ceb21140f790949bc22a479734d7bb, type: 3}
   undirectedEdgePrefab: {fileID: 1280941747897418, guid: 8af68416d4f8a2147824ca6da27ff252,
     type: 3}
@@ -1820,6 +1822,11 @@ PrefabInstance:
       propertyPath: debugging
       value: 
       objectReference: {fileID: 743485942}
+    - target: {fileID: 114381882798811282, guid: 5038125895bab364d927cb32cb0b755a,
+        type: 3}
+      propertyPath: debuggingText
+      value: 
+      objectReference: {fileID: 743485942}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5038125895bab364d927cb32cb0b755a, type: 3}
 --- !u!1 &697791960
@@ -2173,7 +2180,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 514
+  m_textAlignment: 513
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -2204,7 +2211,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -12.640222, y: -19.998564, z: -7.801543, w: -11.918472}
+  m_margin: {x: -42.979404, y: -19.998564, z: -18.127243, w: -11.918472}
   m_textInfo:
     textComponent: {fileID: 743485942}
     characterCount: 0
@@ -2293,13 +2300,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743485941}
-  m_LocalRotation: {x: -0, y: -0.7025723, z: -0, w: 0.71161246}
-  m_LocalPosition: {x: 0, y: 0, z: 8.66}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 45.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: -89.267006, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -17.83, y: 13}
@@ -4782,6 +4789,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 114226885870660142, guid: ffe9fb955b7b28740954081c2d8ea449,
+        type: 3}
+      propertyPath: enableStepBack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffe9fb955b7b28740954081c2d8ea449, type: 3}
 --- !u!1001 &1889822606
@@ -5723,12 +5735,12 @@ PrefabInstance:
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: selectStartEndNodes
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: algorithmEditor
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
@@ -5738,12 +5750,12 @@ PrefabInstance:
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: graphTaskEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: graphStructureEditor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}

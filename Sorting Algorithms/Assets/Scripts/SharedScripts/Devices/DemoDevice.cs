@@ -74,7 +74,10 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     */
     public void TransitionPause(bool paused)
     {
-        Debug.Log("State changed, paused: " + paused);
+        if (paused)
+            SetDemoDeviceTitle(Util.STEP_BY_STEP);
+        else
+            SetDemoDeviceTitle(Util.DEMO);
 
         buttons[REDUCE_SPEED].gameObject.SetActive(!paused);
         buttons[INCREASE_SPEED].gameObject.SetActive(!paused);

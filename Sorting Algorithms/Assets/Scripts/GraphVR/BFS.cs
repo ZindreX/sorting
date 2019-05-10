@@ -63,7 +63,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         base.ResetSetup();
     }
 
-    #region BFS Demo
+    #region BFS Demo (OLD: Not used anymore)
     public IEnumerator TraverseDemo(Node startNode)
     {
         // Line 0: Set graph/start node
@@ -250,6 +250,280 @@ public class BFS : GraphAlgorithm, ITraverse {
     }
     #endregion
 
+    #region Demo
+    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
+    {
+        yield return ExecuteDemoTraverseAlgorithm(instruction, increment); // BFS / DFS Shares most of instructions
+
+        //Node currentNode = null, connectedNode = null;
+
+        //// Gather information from instruction
+        //if (instruction is TraverseInstruction)
+        //{
+        //    TraverseInstruction travInst = (TraverseInstruction)instruction;
+        //    if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.END_IF_INST || instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
+        //        connectedNode = travInst.Node;
+        //    else
+        //        currentNode = travInst.Node;
+
+        //    edge = travInst.PrevEdge;
+
+        //    // Do list visual instruction if there is one
+        //    if (travInst.ListVisualInstruction != null)
+        //        graphMain.ListVisual.ExecuteInstruction(travInst.ListVisualInstruction, increment);
+        //}
+        //else if (instruction is InstructionLoop)
+        //{
+        //    i = ((InstructionLoop)instruction).I;
+        //}
+
+        //// Remove highlight from previous instruction
+        //pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
+
+        //// Gather part of code to highlight
+        //int lineOfCode = Util.NO_VALUE;
+        //useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
+        //switch (instruction.Instruction)
+        //{
+        //    case Util.FIRST_INSTRUCTION:
+        //        lineOfCode = 0;
+        //        if (increment)
+        //            SetNodePseudoCode(currentNode, 0);
+        //        else
+        //            startNodeAlpha = 's';
+        //        break;
+
+        //    case UtilGraph.EMPTY_LIST_CONTAINER:
+        //        lineOfCode = 1;
+        //        break;
+
+        //    case UtilGraph.ENQUEUE_NODE_INST:
+        //        if (increment)
+        //        {
+        //            if (!startNodeAdded)
+        //            {
+        //                lineOfCode = 2;
+        //                SetNodePseudoCode(currentNode, 1);
+        //                startNodeAdded = true;
+        //            }
+        //            else
+        //            {
+        //                lineOfCode = 7;
+        //                SetNodePseudoCode(connectedNode, 2);
+        //                connectedNode.Visited = ((TraverseInstruction)instruction).VisitInst;
+        //                if (edge != null)
+        //                    edge.CurrentColor = UtilGraph.VISITED_COLOR;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (connectedNode == null)
+        //                startNodeAdded = false;
+
+        //            if (!startNodeAdded)
+        //            {
+        //                lineOfCode = 2;
+        //                startNodeAlpha = 's';// SetNodePseudoCode(currentNode, 1);
+        //            }
+        //            else
+        //            {
+        //                lineOfCode = 7;
+        //                connectedNode.Visited = !((TraverseInstruction)instruction).VisitInst;
+
+
+        //                if (edge != null)
+        //                {
+        //                    SetNodePseudoCode(connectedNode, 2);
+        //                    edge.CurrentColor = Util.STANDARD_COLOR;
+        //                }
+        //                else
+        //                {
+        //                    node2Alpha = 'v';
+        //                    startNodeAdded = false;
+        //                }
+        //            }
+        //        }
+        //        break;
+
+        //    case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
+        //        lineOfCode = 3;
+        //        lengthOfList = i.ToString();
+        //        break;
+
+        //    case UtilGraph.DEQUEUE_NODE_INST:
+        //        lineOfCode = 4;
+        //        if (increment)
+        //        {
+        //            SetNodePseudoCode(currentNode, 1);
+        //            currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+        //            if (edge != null)
+        //                edge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
+        //        }
+        //        else
+        //        {
+        //            node1Alpha = 'w';
+        //            currentNode.CurrentColor = UtilGraph.VISITED_COLOR;
+        //            if (edge != null)
+        //                edge.CurrentColor = UtilGraph.VISITED_COLOR;
+        //        }
+        //        break;
+
+        //    case UtilGraph.FOR_ALL_NEIGHBORS_INST:
+        //        lineOfCode = 5;
+        //        if (increment)
+        //            SetNodePseudoCode(currentNode, 1);
+        //        else
+        //        {
+        //            if (currentNode == startNode)
+        //                node1Alpha = 'w';
+        //        }
+        //        break;
+
+        //    case UtilGraph.IF_NOT_VISITED_INST:
+        //        lineOfCode = 6;
+        //        if (increment)
+        //        {
+        //            SetNodePseudoCode(connectedNode, 2);
+
+        //            if (connectedNode.Visited)
+        //                useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+
+        //            if (edge != null)
+        //            {
+        //                connectedNode.PrevEdge = edge;
+        //                edge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+        //            }
+        //            connectedNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
+        //        }
+        //        else
+        //        {
+        //            node2Alpha = 'v';
+
+        //            connectedNode.CurrentColor = connectedNode.PrevColor;
+        //            if (edge != null)
+        //                edge.CurrentColor = edge.PrevColor;
+        //        }
+        //        break;
+
+        //    case UtilGraph.END_IF_INST:
+        //        lineOfCode = 8;
+        //        if (increment)
+        //        {
+        //            if (connectedNode.CurrentColor == UtilGraph.TRAVERSE_COLOR)
+        //            {
+        //                connectedNode.CurrentColor = connectedNode.PrevColor;
+        //                if (edge != null)
+        //                    edge.CurrentColor = edge.PrevColor;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            connectedNode.CurrentColor = connectedNode.PrevColor;
+        //            if (edge != null)
+        //                edge.CurrentColor = edge.PrevColor;
+        //        }
+        //        break;
+
+        //    case UtilGraph.END_FOR_LOOP_INST:
+        //        lineOfCode = 9;
+        //        currentNode.Traversed = increment;
+
+        //        // Destroy current node in list visual / Recreate it
+        //        graphMain.ListVisual.ExecuteInstruction(new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, Util.NO_INSTRUCTION_NR, currentNode), increment);
+        //        break;
+
+        //    case UtilGraph.END_WHILE_INST:
+        //        lineOfCode = 10;
+        //        IsTaskCompleted = increment;
+        //        break;
+        //}
+        //prevHighlightedLineOfCode = lineOfCode;
+
+        //// Highlight part of code in pseudocode
+        //pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
+
+        //yield return demoStepDuration;
+        //graphMain.WaitForSupportToComplete--;
+    }
+    #endregion
+
+    #region User Test Highlight Pseudocode
+    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
+    {
+        yield return UserTestHighlightTraverse(instruction);
+        //if (gotNode)
+        //    currentNode = ((TraverseInstruction)instruction).Node;
+
+        //if (instruction is InstructionLoop)
+        //{
+        //    i = ((InstructionLoop)instruction).I;
+        //}
+
+        //// Remove highlight from previous instruction
+        //pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
+
+        //// Gather part of code to highlight
+        //int lineOfCode = Util.NO_VALUE;
+        //useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
+        //switch (instruction.Instruction)
+        //{
+        //    case Util.FIRST_INSTRUCTION:
+        //        SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
+        //        lineOfCode = 0;
+        //        break;
+
+        //    case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 1; break;
+        //    case UtilGraph.ENQUEUE_NODE_INST:
+        //        SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+        //        useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
+        //        if (!startNodeAdded)
+        //        {
+        //            lineOfCode = 2;
+        //            startNodeAdded = true;
+        //        }
+        //        else
+        //            lineOfCode = 7;
+        //        break;
+
+        //    case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
+        //        lineOfCode = 3;
+        //        lengthOfList = i.ToString();
+        //        break;
+
+        //    case UtilGraph.DEQUEUE_NODE_INST:
+        //        SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+        //        useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
+        //        lineOfCode = 4;
+        //        break;
+
+        //    case UtilGraph.FOR_ALL_NEIGHBORS_INST:
+        //        lineOfCode = 5;
+        //        SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
+        //        break;
+
+        //    case UtilGraph.IF_NOT_VISITED_INST:
+        //        lineOfCode = 6;
+        //        Node node = ((TraverseInstruction)instruction).Node;
+        //        SetNodePseudoCode(node, 2);
+
+        //        if (node.Visited)
+        //            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+        //        break;
+
+        //    case UtilGraph.END_IF_INST: lineOfCode = 8; break;
+        //    case UtilGraph.END_FOR_LOOP_INST: lineOfCode = 9; break;
+        //    case UtilGraph.END_WHILE_INST: lineOfCode = 10; break;
+        //}
+        //prevHighlightedLineOfCode = lineOfCode;
+
+        //// Highlight part of code in pseudocode
+        //pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
+
+        //yield return demoStepDuration;
+        //graphMain.WaitForSupportToComplete--;
+    }
+    #endregion
+
     #region BFS Traverse instructions
     public Dictionary<int, InstructionBase> TraverseUserTestInstructions(Node startNode)
     {
@@ -266,7 +540,7 @@ public class BFS : GraphAlgorithm, ITraverse {
         // Line 2: Enqueue first node
         queue.Enqueue(startNode);
         startNode.Visited = true;
-        ListVisualInstruction addStartNode =  new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
+        ListVisualInstruction addStartNode = new ListVisualInstruction(UtilGraph.ADD_NODE, instNr, startNode);
         instructions.Add(instNr, new TraverseInstruction(UtilGraph.ENQUEUE_NODE_INST, instNr++, startNode, true, false, addStartNode));
 
         while (queue.Count > 0)
@@ -296,10 +570,10 @@ public class BFS : GraphAlgorithm, ITraverse {
                 // Optimizing check
                 //if (connectedNode.Visited || connectedNode.Traversed)
                 //    continue;
-                  
+
                 // Line 7: check neighbor
                 instructions.Add(instNr, new TraverseInstruction(UtilGraph.IF_NOT_VISITED_INST, instNr++, connectedNode, edge, false, false)); // check if correct ***
-                
+
                 // Check if node has already been traversed or already is marked
                 if (!connectedNode.Visited)
                 {
@@ -314,267 +588,18 @@ public class BFS : GraphAlgorithm, ITraverse {
                 }
                 instructions.Add(instNr, new TraverseInstruction(UtilGraph.END_IF_INST, instNr++, connectedNode, edge, false, false));
             }
+            // Line 5: Update for-loop
+            instructions.Add(instNr, new InstructionLoop(UtilGraph.FOR_ALL_NEIGHBORS_INST, instNr++, UtilGraph.NEIGHBORS_VISITED));
+            // Line 9: End for-loop
             instructions.Add(instNr, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr++, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
         }
+        // Line 3: condition
+        instructions.Add(instNr, new InstructionLoop(UtilGraph.WHILE_LIST_NOT_EMPTY_INST, instNr++, 0));
+        // Line 10: end while-loop
         instructions.Add(instNr, new InstructionBase(UtilGraph.END_WHILE_INST, instNr++));
 
         instructions.Add(instNr, new InstructionBase(Util.FINAL_INSTRUCTION, instNr++));
         return instructions;
-    }
-    #endregion
-
-    #region New Demo version (Demo/Step-by-step)
-    public override IEnumerator ExecuteDemoInstruction(InstructionBase instruction, bool increment)
-    {
-        Node currentNode = null, connectedNode = null;
-
-        // Gather information from instruction
-        if (instruction is TraverseInstruction)
-        {
-            TraverseInstruction travInst = (TraverseInstruction)instruction;
-            if (instruction.Instruction == UtilGraph.IF_NOT_VISITED_INST || instruction.Instruction == UtilGraph.END_IF_INST || instruction.Instruction == UtilGraph.ENQUEUE_NODE_INST && ((TraverseInstruction)instruction).Node != graphMain.GraphManager.StartNode)
-                connectedNode = travInst.Node;
-            else
-                currentNode = travInst.Node;
-
-            edge = travInst.PrevEdge;
-
-            // Do list visual instruction if there is one
-            if (travInst.ListVisualInstruction != null)
-                graphMain.ListVisual.ExecuteInstruction(travInst.ListVisualInstruction, increment);
-        }
-        else if (instruction is InstructionLoop)
-        {
-            i = ((InstructionLoop)instruction).I;
-        }
-
-        // Remove highlight from previous instruction
-        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
-
-        // Gather part of code to highlight
-        int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
-        switch (instruction.Instruction)
-        {
-            case Util.FIRST_INSTRUCTION:
-                lineOfCode = 0;
-                if (increment)
-                {
-                    SetNodePseudoCode(currentNode, 0);
-                }
-                else
-                {
-                    startNodeAlpha = 's';
-                }
-                break;
-
-            case UtilGraph.EMPTY_LIST_CONTAINER:
-                lineOfCode = 1;
-                break;
-
-            case UtilGraph.ENQUEUE_NODE_INST:
-                //useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
-                if (increment)
-                {
-                    if (!startNodeAdded)
-                    {
-                        SetNodePseudoCode(currentNode, 1);
-                        lineOfCode = 2;
-                        startNodeAdded = true;
-                    }
-                    else
-                    {
-                        SetNodePseudoCode(connectedNode, 2);
-                        lineOfCode = 7;
-                        connectedNode.Visited = ((TraverseInstruction)instruction).VisitInst;
-                        if (edge != null)
-                            edge.CurrentColor = UtilGraph.VISITED_COLOR;
-                    }
-                }
-                else
-                {
-                    if (!startNodeAdded)
-                    {
-                        SetNodePseudoCode(currentNode, 1);
-                        lineOfCode = 2;
-                    }
-                    else
-                    {
-                        SetNodePseudoCode(connectedNode, 2);
-                        lineOfCode = 7;
-                        connectedNode.Visited = !((TraverseInstruction)instruction).VisitInst;
-                        if (edge != null)
-                            edge.CurrentColor = Util.STANDARD_COLOR;
-                        else
-                            startNodeAdded = false;
-                    }
-                }
-                break;
-
-            case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
-                lineOfCode = 3;
-                lengthOfList = i.ToString();
-                break;
-
-            case UtilGraph.DEQUEUE_NODE_INST:
-                //useHighlightColor = Util.HIGHLIGHT_MOVE_COLOR;
-                SetNodePseudoCode(currentNode, 1);
-                lineOfCode = 4;
-
-                if (increment)
-                {
-                    currentNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-                    if (edge != null)
-                        edge.CurrentColor = UtilGraph.TRAVERSED_COLOR;
-                }
-                else
-                {
-                    currentNode.CurrentColor = UtilGraph.VISITED_COLOR;
-                    if (edge != null)
-                        edge.CurrentColor = UtilGraph.VISITED_COLOR;
-                }
-                break;
-
-            case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                SetNodePseudoCode(currentNode, 1);
-                lineOfCode = 5;
-                break;
-
-            case UtilGraph.IF_NOT_VISITED_INST:
-                SetNodePseudoCode(connectedNode, 2);
-                lineOfCode = 6;
-
-                if (increment)
-                {
-                    if (edge != null)
-                    {
-                        connectedNode.PrevEdge = edge;
-                        edge.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-                    }
-                    connectedNode.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-                }
-                else
-                {
-                    connectedNode.CurrentColor = connectedNode.PrevColor;
-                    if (edge != null)
-                        edge.CurrentColor = edge.PrevColor;
-                }
-                break;
-
-            case UtilGraph.END_IF_INST:
-                lineOfCode = 8;
-                if (increment)
-                {
-                    if (connectedNode.CurrentColor == UtilGraph.TRAVERSE_COLOR)
-                    {
-                        connectedNode.CurrentColor = connectedNode.PrevColor;
-                        if (edge != null)
-                            edge.CurrentColor = edge.PrevColor;
-                    }
-                }
-                else
-                {
-                    connectedNode.CurrentColor = connectedNode.PrevColor;
-                    if (edge != null)
-                        edge.CurrentColor = edge.PrevColor;
-                }
-                break;
-
-            case UtilGraph.END_FOR_LOOP_INST:
-                lineOfCode = 9;
-                currentNode.Traversed = increment;
-
-                // Destroy current node in list visual / Recreate it
-                graphMain.ListVisual.ExecuteInstruction(new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, Util.NO_INSTRUCTION_NR, currentNode), increment);
-                break;
-
-            case UtilGraph.END_WHILE_INST:
-                lineOfCode = 10;
-                IsTaskCompleted = increment;
-                break;
-        }
-        prevHighlightedLineOfCode = lineOfCode;
-
-        // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
-
-        yield return demoStepDuration;
-        graphMain.WaitForSupportToComplete--;
-    }
-    #endregion
-
-    #region User Test Highlight Pseudocode
-    public override IEnumerator UserTestHighlightPseudoCode(InstructionBase instruction, bool gotNode)
-    {
-        // Gather information from instruction
-        if (gotNode)
-            currentNode = ((TraverseInstruction)instruction).Node;
-
-        if (instruction is InstructionLoop)
-        {
-            i = ((InstructionLoop)instruction).I;
-            //j = ((InstructionLoop)instruction).J;
-            //k = ((InstructionLoop)instruction).K;
-        }
-
-        // Remove highlight from previous instruction
-        pseudoCodeViewer.ChangeColorOfText(prevHighlightedLineOfCode, Util.BLACKBOARD_TEXT_COLOR);
-
-        // Gather part of code to highlight
-        int lineOfCode = Util.NO_VALUE;
-        useHighlightColor = Util.HIGHLIGHT_STANDARD_COLOR;
-        switch (instruction.Instruction)
-        {
-            case Util.FIRST_INSTRUCTION:
-                SetNodePseudoCode(graphMain.GraphManager.StartNode, 0);
-                lineOfCode = 0;
-                break;
-
-            case UtilGraph.EMPTY_LIST_CONTAINER: lineOfCode = 1; break;
-            case UtilGraph.ENQUEUE_NODE_INST:
-                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
-                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
-                if (!startNodeAdded)
-                {
-                    lineOfCode = 2;
-                    startNodeAdded = true;
-                }
-                else
-                    lineOfCode = 7;
-                break;
-
-            case UtilGraph.WHILE_LIST_NOT_EMPTY_INST:
-                lineOfCode = 3;
-                lengthOfList = i.ToString();
-                break;
-
-            case UtilGraph.DEQUEUE_NODE_INST:
-                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
-                useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
-                lineOfCode = 4;
-                break;
-
-            case UtilGraph.FOR_ALL_NEIGHBORS_INST:
-                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 1);
-                lineOfCode = 5;
-                break;
-
-            case UtilGraph.IF_NOT_VISITED_INST:
-                SetNodePseudoCode(((TraverseInstruction)instruction).Node, 2);
-                lineOfCode = 6;
-                break;
-
-            case UtilGraph.END_IF_INST: lineOfCode = 8; break;
-            case UtilGraph.END_FOR_LOOP_INST: lineOfCode = 9; break;
-            case UtilGraph.END_WHILE_INST: lineOfCode = 10; break;
-        }
-        prevHighlightedLineOfCode = lineOfCode;
-
-        // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
-
-        yield return demoStepDuration;
-        graphMain.WaitForSupportToComplete--;
     }
     #endregion
 
