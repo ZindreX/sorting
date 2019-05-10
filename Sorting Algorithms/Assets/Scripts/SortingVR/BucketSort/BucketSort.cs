@@ -460,8 +460,7 @@ public class BucketSort : SortAlgorithm {
                 if (increment)
                 {
                     SetLengthOfList();
-                    if (i == lengthOfListInteger)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(i != lengthOfListInteger);
                 }
                 else
                 {
@@ -546,9 +545,7 @@ public class BucketSort : SortAlgorithm {
                     if (increment)
                     {
                         numberOfBuckets = bucketSortManager.NumberOfBuckets.ToString();
-
-                        if (i == j)
-                            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                        useHighlightColor = UseConditionColor(i != j);
                     }
                     else
                     {
@@ -565,9 +562,7 @@ public class BucketSort : SortAlgorithm {
                     if (increment)
                     {
                         bucketSize = k.ToString();
-
-                        if (j == k)
-                            useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                        useHighlightColor = UseConditionColor(j != k);
                     }
                     else
                     {
@@ -713,8 +708,7 @@ public class BucketSort : SortAlgorithm {
 
             case UtilSort.FIRST_LOOP:
                 lineOfCode = 2;
-                if (i == lengthOfListInteger)
-                    useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                useHighlightColor = UseConditionColor(i != lengthOfListInteger);
                 break;
 
             case UtilSort.BUCKET_INDEX_INST:
@@ -758,16 +752,13 @@ public class BucketSort : SortAlgorithm {
                 {
                     //j = 0;
                     lineOfCode = 8;
-                    if (i == j)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(i != j);
                 }
                 else // 2nd loop (inner)
                 {
                     lineOfCode = 9;
                     bucketSize = k.ToString();
-
-                    if (j == k)
-                        useHighlightColor = Util.HIGHLIGHT_CONDITION_NOT_FULFILLED;
+                    useHighlightColor = UseConditionColor(j != k);
                 }
                 break;
 
