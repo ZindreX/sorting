@@ -710,7 +710,7 @@ public class GraphMain : MainManager {
         {
             case Util.BFS: return inst == UtilGraph.ENQUEUE_NODE_INST || inst == UtilGraph.DEQUEUE_NODE_INST;
             case Util.DFS: return inst == UtilGraph.PUSH_INST || inst == UtilGraph.POP_INST;
-            case Util.DIJKSTRA: return inst == UtilGraph.ADD_NODE || inst == UtilGraph.PRIORITY_REMOVE_NODE || inst == UtilGraph.VISIT_CONNECTED_NODE || inst == UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN || inst == UtilGraph.BACKTRACK;
+            case Util.DIJKSTRA: return inst == UtilGraph.ADD_NODE || inst == UtilGraph.PRIORITY_REMOVE_NODE || inst == UtilGraph.RELAX_NEIGHBOR_NODE || inst == UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN || inst == UtilGraph.BACKTRACK;
             default: Debug.LogError("Next move rules not defined for algorithm: " + algorithmName + "'."); return false;
         }
     }

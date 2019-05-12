@@ -50,7 +50,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
             case 5:  lineOfCode += string.Format("   while ({0} > 0):", lengthOfList); break;
             case 6:  lineOfCode += string.Format("       {0} <- list.RemoveMin()", node1Alpha); break;
             case 7:  lineOfCode += string.Format("       for all untraversed neighbors of {0} in Graph:", node1Alpha); break;
-            case 8:  lineOfCode += string.Format("           Visit neighbor {0}", node2Alpha); break;
+            case 8:  lineOfCode += string.Format("           Relax neighbor {0}", node2Alpha); break;
             case 9:  lineOfCode += string.Format("           if ({0})", ifStatementContent); break;   //"           if ({0}.Dist={1} + edge({0}, {2}).Cost={3} < {2}.Dist={4}):", node1Alpha, node1Dist, node2Alpha, edgeCost, UtilGraph.ConvertDist(node2Dist)); break;
             case 10: lineOfCode += string.Format("              {0}.Dist = {1}", node2Alpha, (node1Dist + edgeCost)); break;
             case 11: lineOfCode += string.Format("              {0}.Prev = {1}", node2Alpha, node1Alpha); break;
@@ -580,7 +580,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 }
                 break;
 
-            case UtilGraph.VISIT_CONNECTED_NODE:
+            case UtilGraph.RELAX_NEIGHBOR_NODE:
                 SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 8;
 
@@ -748,7 +748,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 useHighlightColor = UseConditionColor(i != UtilGraph.NEIGHBORS_VISITED);
                 break;
 
-            case UtilGraph.VISIT_CONNECTED_NODE:
+            case UtilGraph.RELAX_NEIGHBOR_NODE:
                 useHighlightColor = Util.HIGHLIGHT_USER_ACTION;
                 SetNodePseudoCode(connectedNode, 2);
                 lineOfCode = 8;
@@ -865,8 +865,8 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
                 // Cost between nodes
                 int currentDistAndEdgeCost = currentNode.Dist + currentEdge.Cost;
 
-                // Line 8: Visit connected node
-                instructions.Add(instNr, new TraverseInstruction(UtilGraph.VISIT_CONNECTED_NODE, instNr++, connectedNode, currentEdge, true, false));
+                // Line 8: Relax connected node
+                instructions.Add(instNr, new TraverseInstruction(UtilGraph.RELAX_NEIGHBOR_NODE, instNr++, connectedNode, currentEdge, true, false));
 
                 // Line 9: If statement
                 instructions.Add(instNr, new ShortestPathInstruction(UtilGraph.IF_DIST_PLUS_EDGE_COST_LESS_THAN, instNr++, currentNode, connectedNode, currentEdge));

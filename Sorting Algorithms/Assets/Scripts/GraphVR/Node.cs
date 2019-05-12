@@ -533,7 +533,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 case UtilGraph.ENQUEUE_NODE_INST:
                 case UtilGraph.PUSH_INST:
                 case UtilGraph.ADD_NODE:
-                case UtilGraph.VISIT_CONNECTED_NODE:
+                case UtilGraph.RELAX_NEIGHBOR_NODE:
                     return visitNextMove ? UtilGraph.NODE_VISITED : UtilGraph.NODE_ERROR;
 
                 default: return UtilGraph.NODE_ERROR;

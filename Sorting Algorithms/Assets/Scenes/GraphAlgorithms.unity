@@ -5746,7 +5746,7 @@ PrefabInstance:
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: selectStartEndNodes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
