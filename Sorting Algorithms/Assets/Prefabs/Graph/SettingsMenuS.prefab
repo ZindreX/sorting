@@ -17710,8 +17710,8 @@ MonoBehaviour:
   graphTaskEditor: 0
   edgeTypeEditor: 0
   edgeModeEditor: 1
-  gridRows: 5
-  gridColumns: 5
+  gridRows: 3
+  gridColumns: 3
   gridSpace: 2
   treeDepth: 2
   nTree: 2
@@ -17719,12 +17719,7 @@ MonoBehaviour:
   randomNodes: 5
   randomEdges: 10
   minRandomSpace: 4
-  x1: 0
-  z1: 0
-  x2: 3
-  z2: 0
   shortestPathOneToAll: 0
-  selectStartEndNodes: 1
   symmetricEdgeChance: 2
   partialBuildTreeChildChance: 5
   buildEdgeChance: 2
@@ -18090,9 +18085,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Help provided:
-
-    pseud'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -18120,10 +18113,10 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 1
-  m_fontSizeBase: 4
+  m_fontSize: 0.5
+  m_fontSizeBase: 0.5
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 0.1
   m_fontSizeMax: 1
   m_fontStyle: 0
@@ -18161,13 +18154,13 @@ MonoBehaviour:
   m_margin: {x: 9.543298, y: 2.2876024, z: 9.539304, w: 2.1811488}
   m_textInfo:
     textComponent: {fileID: 8218896532359730069}
-    characterCount: 20
+    characterCount: 0
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 0
+    wordCount: 0
     linkCount: 0
-    lineCount: 2
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
@@ -18354,22 +18347,22 @@ PrefabInstance:
       propertyPath: borderMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 55e94cafedcfc794eb733294631e43cb, type: 2}
-    - target: {fileID: 5619665128923591157, guid: 1b275b4997d0af44f95ec0f5fb96b396,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 55e94cafedcfc794eb733294631e43cb, type: 2}
     - target: {fileID: 5884492032155760199, guid: 1b275b4997d0af44f95ec0f5fb96b396,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 55e94cafedcfc794eb733294631e43cb, type: 2}
-    - target: {fileID: 69085197031857417, guid: 1b275b4997d0af44f95ec0f5fb96b396,
+    - target: {fileID: 5619665128923591157, guid: 1b275b4997d0af44f95ec0f5fb96b396,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 55e94cafedcfc794eb733294631e43cb, type: 2}
     - target: {fileID: 3989398456535641946, guid: 1b275b4997d0af44f95ec0f5fb96b396,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 55e94cafedcfc794eb733294631e43cb, type: 2}
+    - target: {fileID: 69085197031857417, guid: 1b275b4997d0af44f95ec0f5fb96b396,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -18531,16 +18524,6 @@ PrefabInstance:
       propertyPath: m_textInfo.lineCount
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 33152461197928554, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 002e146dcd8a6a743b4fba6eb7fbb626, type: 3}
 --- !u!4 &8329069037182838377 stripped
@@ -18678,16 +18661,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.lineCount
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 33152461197928554, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 002e146dcd8a6a743b4fba6eb7fbb626, type: 3}
@@ -18833,16 +18806,6 @@ PrefabInstance:
         type: 3}
       propertyPath: offText
       value: Off
-      objectReference: {fileID: 0}
-    - target: {fileID: 33997047045007222, guid: bac9038a824c14d40ba947b3e45f014c,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 33594413239480432, guid: bac9038a824c14d40ba947b3e45f014c,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bac9038a824c14d40ba947b3e45f014c, type: 3}
@@ -19294,11 +19257,6 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: aab2715fce5d96142958128b54911190, type: 2}
-    - target: {fileID: 33009029638453788, guid: b0f0760f676cf1d49873a41d4d59e049,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0f0760f676cf1d49873a41d4d59e049, type: 3}
 --- !u!224 &8108262003072071399 stripped
@@ -19611,11 +19569,6 @@ PrefabInstance:
       propertyPath: m_textInfo.lineCount
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 33152461197928554, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
         type: 3}
       propertyPath: m_text
@@ -19655,11 +19608,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.pageCount
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 002e146dcd8a6a743b4fba6eb7fbb626, type: 3}
@@ -19815,6 +19763,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4575904856380196, guid: ad05c403532360c4b90bb9e07c438a40, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 4380325024637938, guid: ad05c403532360c4b90bb9e07c438a40, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.06
@@ -19823,26 +19775,15 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.05
       objectReference: {fileID: 0}
-    - target: {fileID: 4575904856380196, guid: ad05c403532360c4b90bb9e07c438a40, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 33253718308170718, guid: ad05c403532360c4b90bb9e07c438a40,
+    - target: {fileID: 114865792681941826, guid: ad05c403532360c4b90bb9e07c438a40,
         type: 3}
-      propertyPath: m_Mesh
-      value: 
+      propertyPath: itemID
+      value: Pseudocode line nr
       objectReference: {fileID: 0}
-    - target: {fileID: 114365458023749604, guid: ad05c403532360c4b90bb9e07c438a40,
+    - target: {fileID: 114865792681941826, guid: ad05c403532360c4b90bb9e07c438a40,
         type: 3}
-      propertyPath: m_text
-      value: 'Pseudocode
-
-        step'
-      objectReference: {fileID: 0}
-    - target: {fileID: 114365458023749604, guid: ad05c403532360c4b90bb9e07c438a40,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 2
+      propertyPath: interactionDescription
+      value: Display line nr
       objectReference: {fileID: 0}
     - target: {fileID: 114710135857501118, guid: ad05c403532360c4b90bb9e07c438a40,
         type: 3}
@@ -19856,35 +19797,17 @@ PrefabInstance:
       propertyPath: m_textInfo.lineCount
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114865792681941826, guid: ad05c403532360c4b90bb9e07c438a40,
+    - target: {fileID: 114365458023749604, guid: ad05c403532360c4b90bb9e07c438a40,
         type: 3}
-      propertyPath: itemID
-      value: Pseudocode line nr
+      propertyPath: m_text
+      value: 'Pseudocode
+
+        step'
       objectReference: {fileID: 0}
-    - target: {fileID: 114865792681941826, guid: ad05c403532360c4b90bb9e07c438a40,
+    - target: {fileID: 114365458023749604, guid: ad05c403532360c4b90bb9e07c438a40,
         type: 3}
-      propertyPath: interactionDescription
-      value: Display line nr
-      objectReference: {fileID: 0}
-    - target: {fileID: 33401775544189334, guid: ad05c403532360c4b90bb9e07c438a40,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 33407017657566824, guid: ad05c403532360c4b90bb9e07c438a40,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 33276647904931834, guid: ad05c403532360c4b90bb9e07c438a40,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 33643613848675154, guid: ad05c403532360c4b90bb9e07c438a40,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
+      propertyPath: m_textInfo.lineCount
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad05c403532360c4b90bb9e07c438a40, type: 3}

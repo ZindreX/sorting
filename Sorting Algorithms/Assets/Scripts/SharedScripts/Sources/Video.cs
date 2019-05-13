@@ -42,8 +42,19 @@ public class Video : MonoBehaviour {
         startPos = transform.position;
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
-
         releasedFromHand = true;
+
+        // Fix filepath, destroy if it doesn't exists
+        if ((int)getVideoFrom == 1)
+        {
+            url = baseFolderPath + url + format;
+
+            if (!File.Exists(url))
+            {
+                title = "Bad tape";
+                Destroy(gameObject, 5f);
+            }
+        }
 
         // >>> Set title
         Component[] components = GetComponentsInChildren<TextMeshPro>();
@@ -57,9 +68,6 @@ public class Video : MonoBehaviour {
                 temp.fontSharedMaterial = textMaterials[useColor];
 
         }
-
-        if ((int)getVideoFrom == 1)
-            url = baseFolderPath + url + format;
     }
 
     private void Update()
@@ -112,4 +120,8 @@ public class Video : MonoBehaviour {
         }
     }
 
+    private void OnDestroy()
+    {
+        Debug.Log("VHS Destroyed, check path: " + url);
+    }
 }

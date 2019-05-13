@@ -105,6 +105,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         get { return 1f; }
     }
 
+    // BFS / DFS Shares most of instructions
     protected IEnumerator ExecuteDemoTraverseAlgorithm(InstructionBase instruction, bool increment)
     {
         Node currentNode = null, connectedNode = null;
@@ -317,6 +318,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         graphMain.WaitForSupportToComplete--;
     }
 
+    // BFS / DFS Shares most of instructions
     protected IEnumerator UserTestHighlightTraverse(InstructionBase instruction)
     {
         Node currentNode = null, connectedNode = null;
@@ -414,9 +416,7 @@ public abstract class GraphAlgorithm : TeachingAlgorithm {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
-
-        yield return demoStepDuration;
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
         graphMain.WaitForSupportToComplete--;
     }
 

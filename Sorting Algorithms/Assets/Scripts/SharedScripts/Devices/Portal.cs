@@ -25,7 +25,6 @@ public class Portal : MonoBehaviour {
 
     // New feature
     private int countdown;
-    private float withinWidth = 1f, withinDepth = 0.5f;
     private bool playerStandingNearPortal, countdownStarted;
 
     private WaitForSeconds portalSubLoadDuration = new WaitForSeconds(1f);
@@ -94,9 +93,8 @@ public class Portal : MonoBehaviour {
             case 2: return Util.MAIN_MENU;
             case 3: return Util.SORTING_ALGORITHMS;
             case 4: return Util.GRAPH_ALGORITHMS;
-            case 5: return "Cinema";
+            case 5: return "Auditorium";
             default: return "X";
-
         }
     }
 

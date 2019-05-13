@@ -3394,7 +3394,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319499141698788, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 3}
       propertyPath: m_Name
-      value: PortalCinema
+      value: PortalAuditorium
       objectReference: {fileID: 0}
     - target: {fileID: 4497051163190238, guid: 81f45eded87f0014e894ca6d1b6edb32, type: 3}
       propertyPath: m_RootOrder
@@ -3480,7 +3480,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VideoClip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 32900000, guid: 16f9f8a50cfdb2b498f13774dfb922cb,
+        type: 3}
     - target: {fileID: 7508245366894556166, guid: 81f45eded87f0014e894ca6d1b6edb32,
         type: 3}
       propertyPath: m_ControlledAudioTrackCount

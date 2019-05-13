@@ -445,12 +445,16 @@ public class BubbleSort : SortAlgorithm {
                     if (increment)
                     {
                         se1.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se1.transform.rotation = Quaternion.identity;
                         se2.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID1).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se2.transform.rotation = Quaternion.identity;
                     }
                     else
                     {
                         se1.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID1).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se1.transform.rotation = Quaternion.identity;
                         se2.transform.position = sortMain.AlgorithmManagerBase.GetCorrectHolder(bubbleInstruction.HolderID2).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        se2.transform.rotation = Quaternion.identity;
                     }
                     break;
             }

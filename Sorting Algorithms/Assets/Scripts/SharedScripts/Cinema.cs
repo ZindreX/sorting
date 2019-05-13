@@ -18,7 +18,7 @@ public class Cinema : MonoBehaviour {
     private void Awake()
     {
         current = transform.position;
-        canCreate = true;
+        canCreate = false;
     }
 
     private void Update()

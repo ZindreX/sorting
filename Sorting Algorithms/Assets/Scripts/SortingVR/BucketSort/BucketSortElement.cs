@@ -9,30 +9,16 @@ public class BucketSortElement : SortingElementBase {
     private int bucketID;
     private Bucket currentInside;
 
-    private Rigidbody rb;
-    private Vector3 returnPos;
-
     protected override void Awake()
     {
         base.Awake();
-        Instruction = new BucketSortInstruction(UtilSort.INIT_INSTRUCTION, 0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, sortingElementID, value, false, false, sortingElementID, UtilSort.NO_DESTINATION, UtilSort.NO_VALUE); // new BucketSortInstruction(sortingElementID, sortingElementID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, false, false, false);
-
-        //returnPos = 
-        rb = GetComponent<Rigidbody>();
-        rb.constraints = RigidbodyConstraints.None;
+        Instruction = new BucketSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, value, false, false, sortingElementID, UtilSort.NO_DESTINATION, Util.NO_VALUE);
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        if (parent.AlgorithmInitialized)
-        {
-            if (currentInside == null && transform.position.y < 0.1f)
-            {
-                rb.constraints = RigidbodyConstraints.FreezeAll;
-                transform.position = FindObjectOfType<SortingTable>().ReturnPosition.position;
-                rb.constraints = RigidbodyConstraints.None;
-            }
-        }
+        if (currentInside == null)
+            base.FixedUpdate();
     }
 
     public override InstructionBase Instruction
@@ -62,7 +48,7 @@ public class BucketSortElement : SortingElementBase {
 
     public Rigidbody RigidBody
     {
-        get { return rb; }
+        get { return rigidBody; }
     }
 
     protected override void UpdateSortingElementState()

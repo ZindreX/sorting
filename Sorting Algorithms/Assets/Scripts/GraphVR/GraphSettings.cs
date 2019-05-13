@@ -81,26 +81,19 @@ public class GraphSettings : TeachingSettings {
     [Range(2, 5)]
     private int minRandomSpace;
 
+    [Space(5)]
+    [Header("Shortest path")]
+    [SerializeField]
+    private bool shortestPathOneToAll;
 
-    // *** Start-/End nodes ***
-    [Space(2)]
-    [Header("Start node")]
+    [Space(5)]
+    [Header("Optional stuff")]
     [SerializeField]
-    private int x1;
-    [SerializeField]
-    private int z1;
-
-    [Header("End node (Shortest path)")]
-    [SerializeField]
-    private int x2;
-    [SerializeField]
-    private int z2;
-
-    [SerializeField]
-    private bool shortestPathOneToAll, selectStartEndNodes;
+    private bool selectStartEndNodes;
 
     // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
-    [Header("RNG stuff")]
+    [Space(5)]
+    [Header("RNG stuff (Editor only)")]
     [SerializeField]
     [Range(0, 10)]
     private int symmetricEdgeChance;
@@ -595,17 +588,6 @@ public class GraphSettings : TeachingSettings {
         variable2Text.text = randomEdges.ToString();
     }
     #endregion
-
-    public int[] StartNode()
-    {
-        return new int[2] { x1, z1 };
-    }
-
-    public int[] EndNode()
-    {
-        return new int[2] { x2, z2 };
-    }
-
 
     public bool SelectStartEndNodes
     {

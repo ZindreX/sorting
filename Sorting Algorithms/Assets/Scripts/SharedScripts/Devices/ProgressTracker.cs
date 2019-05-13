@@ -97,14 +97,6 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
         instructionsText.text = currentProgress + "/" + userActionCount;
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.E))
-    //    {
-    //        Increment();
-    //    }
-    //}
-
     public void ResetProgress()
     {
         progressbar.transform.localScale -= increaseProgressSizePerStep * currentProgress;
@@ -118,7 +110,7 @@ public class ProgressTracker : MonoBehaviour, IMoveAble {
 
     public void MoveOut()
     {
-        transform.position += new Vector3(4f, 0f, 0f);
+        transform.position += new Vector3(3.1f, 0f, 0f);
     }
 
     public void MoveBack()

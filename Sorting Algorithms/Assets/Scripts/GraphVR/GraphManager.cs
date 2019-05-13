@@ -60,6 +60,13 @@ public abstract class GraphManager : MonoBehaviour {
         }
     }
 
+    public void SetNodes(bool isShortestPath)
+    {
+        StartNode = FirstNode();
+        if (isShortestPath)
+            EndNode = LastNode();
+    }
+
     public Node StartNode
     {
         get { return startNode; }
@@ -278,12 +285,16 @@ public abstract class GraphManager : MonoBehaviour {
 
     // Get specific node
     public abstract Node GetNode(int a, int b);
+    public abstract Node FirstNode();
+    public abstract Node LastNode();
 
     // Creates the edges of the graph (in case not already done)
     public abstract void CreateEdges(string mode);
 
     // #Edges
     public abstract int GetNumberOfEdges();
+
+
 
     // ------------------ Shortest path ------------------ 
 

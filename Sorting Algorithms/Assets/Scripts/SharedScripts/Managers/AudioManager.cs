@@ -32,16 +32,6 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void Play(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);

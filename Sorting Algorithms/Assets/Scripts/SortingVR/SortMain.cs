@@ -236,7 +236,9 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn");
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn\nPause for step-by-step");
+
+        // Enable interaction
         elementManager.InteractionWithSortingElements(false);
 
         if (true)
@@ -296,7 +298,7 @@ public class SortMain : MainManager {
                 if (!userTestManager.HasInstructions() && elementManager.AllSorted())
                 {
                     sortAlgorithm.IsTaskCompleted = true;
-                    Debug.Log("This update loop needs some fixes.... Ever getting into this case????"); // ???
+                    Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> This update loop needs some fixes.... Ever getting into this case????"); // ???
                 }
                 else
                 {
@@ -339,8 +341,6 @@ public class SortMain : MainManager {
     {
         if (sortSettings.IsUserTest() && sortSettings.UserTestScore)
         {
-            //if (userTestManager.TimeSpent == 0)
-            //{
             userTestManager.SetEndTime();
             userTestManager.CalculateScore();
 
@@ -351,7 +351,6 @@ public class SortMain : MainManager {
             // Right blackboard
             displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, "User test score", 0);
             displayUnitManager.SetTextWithIndex(UtilSort.RIGHT_BLACKBOARD, userTestManager.GetExaminationResult(), 1);
-            //}
         }
         displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Sorting Completed!");
     }

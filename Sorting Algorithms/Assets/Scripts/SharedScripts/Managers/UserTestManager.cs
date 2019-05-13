@@ -202,7 +202,8 @@ public class UserTestManager : InstructionControlBase {
         if (difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
             timeRewardLimit = numberOfInstructions * (int)mainManager.Settings.AlgorithmSpeed;
 
-        timeRewardLimit = userActionInstructions * 5; //  * (Util.EXAMINATION + 1 - difficulty) * 5;
+        // Time given: 5 sec/user action instruction + all instructions * inverse difficulty
+        timeRewardLimit = userActionInstructions * 5 + instructions.Count * (Util.EXAMINATION - difficulty);
 
         float reward = timeRewardLimit - timeSpent;
         reward *= 10;
@@ -248,9 +249,6 @@ public class UserTestManager : InstructionControlBase {
         // Score
         result += "\nTotal score: " + totalScore;
         result += "\nIncorrect moves: " + TotalErrorCount;
-
-        //if (totalErrorCount > 0)
-        //    result += "    (See left blackboard for details)";
         return result;
     }
 
@@ -275,7 +273,6 @@ public class UserTestManager : InstructionControlBase {
         {
             string instructionID = instructions[currentInstructionNr].Instruction;
 
-            //totalErrorCount++;
             if (errorLog.ContainsKey(instructionID))
                 errorLog[instructionID] += 1;
             else
@@ -309,8 +306,6 @@ public class UserTestManager : InstructionControlBase {
         string blackboardFill = "Current streak: " + currentStreak;
         blackboardFill += "\nLongest streak: " + longestStreak;
         blackboardFill += "\nScore: " + currentScore;
-
-
-        return blackboardFill; //"Inst. nr.: " + CurrentInstructionNr + "/" + numberOfInstructions + "\n" + Util.ModifyPluralString("error", totalErrorCount) + ": " + TotalErrorCount;
+        return blackboardFill;
     }
 }

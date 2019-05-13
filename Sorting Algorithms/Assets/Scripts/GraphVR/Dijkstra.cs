@@ -69,7 +69,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         {
             //case 6: return init ? "       w <- list.PriorityRemove()" : "       " + node1Alpha + " <- list.PriorityRemove()";
             //case 7: return init ? "       for all neighbors of w in Graph:" : "       for all neighbors of " + node1Alpha + " in Graph:";
-            //case 8: return init ? "           Visit neighbor v" : "           Visit neighbor " +  node2Alpha;
+            //case 8: return init ? "           Relax neighbor v" : "           Relax neighbor " +  node2Alpha;
             case 9: return init ? "           if (" + node1Alpha + ".Dist + edge(" + node1Alpha + ", " + node2Alpha + ").Cost < " + node2Alpha + ".Dist):" : "           if (" + node1Dist + " + " + edgeCost + " < " + UtilGraph.ConvertDist(node2Dist) + "):";
             default: return Util.INVALID_PSEUDO_CODE_LINE;
         }
@@ -657,9 +657,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
-
-        yield return demoStepDuration;
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
         graphMain.WaitForSupportToComplete--;
     }
     #endregion
@@ -783,9 +781,7 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         prevHighlightedLineOfCode = lineOfCode;
 
         // Highlight part of code in pseudocode
-        pseudoCodeViewer.SetCodeLine(CollectLine(lineOfCode), useHighlightColor);
-
-        yield return demoStepDuration;
+        yield return HighlightPseudoCode(CollectLine(lineOfCode), useHighlightColor);
         graphMain.WaitForSupportToComplete--;
     }
     #endregion

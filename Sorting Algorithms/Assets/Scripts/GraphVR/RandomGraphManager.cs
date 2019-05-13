@@ -168,6 +168,16 @@ public class RandomGraphManager : GraphManager {
         return null;
     }
 
+    public override Node FirstNode()
+    {
+        return nodes[0];
+    }
+
+    public override Node LastNode()
+    {
+        return nodes[nodes.Count - 1];
+    }
+
     public override void ResetGraph()
     {
         for (int i=0; i < nodes.Count; i++)

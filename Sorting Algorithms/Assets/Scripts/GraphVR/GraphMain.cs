@@ -280,15 +280,8 @@ public class GraphMain : MainManager {
     {
         yield return loading;
 
-        // Set starting nodes
-        int[] startCell = graphSettings.StartNode();
-        graphManager.SetNode(startCell, true);
-
-        if (isShortestPath)
-        {
-            int[] endCell = graphSettings.EndNode();
-            graphManager.SetNode(endCell, false);
-        }
+        // Set start (and end) node(s)
+        graphManager.SetNodes(isShortestPath);
 
         checkListModeActive = false;
     }
@@ -351,12 +344,6 @@ public class GraphMain : MainManager {
 
         calculator.ResetDevice();
         demoDevice.ResetDevice();
-
-        //switch (graphSettings.TeachingMode)
-        //{
-        //    case Util.DEMO: case Util.STEP_BY_STEP: demoManager.ResetState(); break;
-        //    case Util.USER_TEST: userTestManager.ResetState(); break;
-        //}
     }
 
     /* --------------------------------------- Demo ---------------------------------------
@@ -580,9 +567,6 @@ public class GraphMain : MainManager {
                         case UtilGraph.DEQUEUE_NODE_INST:
                         case UtilGraph.POP_INST:
                         case UtilGraph.PRIORITY_REMOVE_NODE:
-                            //if (GraphSettings.Difficulty < Util.ADVANCED)
-                            //    node.CurrentColor = UtilGraph.TRAVERSE_COLOR;
-
                             // Hide all edge cost to make it easier to see node distances
                             if (graphSettings.GraphTask == UtilGraph.SHORTEST_PATH)
                                 graphManager.MakeEdgeCostVisible(false);
@@ -649,12 +633,7 @@ public class GraphMain : MainManager {
                         updateListVisualInstruction = spInst.ListVisualInstruction;
                 }
             }
-            //else if (instruction is InstructionLoop)
-            //    Debug.Log("Loop instruction: " + ((InstructionLoop)instruction).DebugInfo());
-            //else
-            //    Debug.Log("Instruction base: " + instruction.DebugInfo());
         }
-
 
         // Display help on blackboard
         if (graphSettings.Difficulty <= Util.PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY)
@@ -671,8 +650,11 @@ public class GraphMain : MainManager {
                 break;
 
             case UtilGraph.SET_START_NODE_DIST_TO_ZERO:
+                // Find start node and set distance to 0
                 Node startNode = graphManager.StartNode;
                 startNode.Dist = 0;
+
+                // If list visual: update value
                 if (Settings.Difficulty <= UtilGraph.LIST_VISUAL_MAX_DIFFICULTY)
                     listVisual.FindNodeRepresentation(startNode).UpdateSurfaceText(UtilGraph.DIST_UPDATE_COLOR);
                 break;
@@ -788,9 +770,6 @@ public class GraphMain : MainManager {
             case UtilGraph.HAS_NODE_REPRESENTATION: return listVisual.HasNodeRepresentation(node);
             default: Debug.LogError("Add case!"); return false;
         }
-
-        Debug.LogError("False false!");
-        return true; // returning true leads to UpdateListVisual which will be blocked anyways
     }
 
     // Remove and fix methods?
@@ -841,31 +820,4 @@ public class GraphMain : MainManager {
     }
 
 
-
-
-
-
-
-
-
-    //switch (graphSettings.Algorithm)
-    //{
-    //    case Util.BFS: StartCoroutine(((BFS)graphAlgorithm).Demo(graphManager.StartNode)); break;
-
-    //    case Util.DFS:
-    //        StartCoroutine(((DFS)graphAlgorithm).Demo(graphManager.StartNode));
-    //        break;
-
-    //    case Util.DFS_RECURSIVE:
-    //        //algorithm.ListVisual.AddListObject(GetNode(startNode[0], startNode[1]).NodeAlphaID);
-    //        StartCoroutine(((DFS)graphAlgorithm).DemoRecursive(graphManager.StartNode));
-    //        break;
-
-    //    case Util.DIJKSTRA:
-    //        StartCoroutine(((Dijkstra)graphAlgorithm).Demo(graphManager.StartNode, );
-    //        //StartCoroutine(((Dijkstra)graphAlgorithm).DemoNoPseudocode(startNode, endNode));
-    //        break;
-
-    //    default: Debug.LogError("'" + algorithmName + "' unknown."); break;
-    //}
 }

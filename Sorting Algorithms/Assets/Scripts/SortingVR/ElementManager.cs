@@ -144,7 +144,7 @@ public class ElementManager : MonoBehaviour, IManager {
     // Destroys all elements + reset
     public void DestroyAndReset()
     {
-        UtilSort.DestroyObjects(sortingElements);
+        Util.DestroyObjects(sortingElements);
         containsElements = false;
         SortingElementBase.SORTING_ELEMENT_NR = 0;
         usedValues = new HashSet<int>();

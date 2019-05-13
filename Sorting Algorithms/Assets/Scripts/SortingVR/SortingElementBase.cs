@@ -25,6 +25,8 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected Vector3 placementAboveHolder;
 
     protected ElementInteraction elementInteraction;
+    protected Rigidbody rigidBody;
+
 
     // Debugging
     #region Debugging variables:
@@ -39,6 +41,23 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         sortingElementID = SORTING_ELEMENT_NR++;
         name = MyRole();
         elementInteraction = GetComponent<ElementInteraction>();
+
+        rigidBody = GetComponent<Rigidbody>();
+        rigidBody.constraints = RigidbodyConstraints.None;
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        if (parent.AlgorithmInitialized)
+        {
+            if (transform.position.y < 0.1f)
+            {
+                rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+                transform.rotation = Quaternion.identity;
+                transform.position = FindObjectOfType<SortingTable>().ReturnPosition.position;
+                rigidBody.constraints = RigidbodyConstraints.None;
+            }
+        }
     }
 
     // --------------------------------------- Sorting element info ---------------------------------------
@@ -66,6 +85,11 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     }
 
     // --------------------------------------- Getters & setters ---------------------------------------
+
+    public Rigidbody RigidBody
+    {
+        get { return rigidBody; }
+    }
 
     public bool IsSorted
     {

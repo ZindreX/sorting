@@ -5,7 +5,9 @@ using UnityEngine;
 public class Util : MonoBehaviour {
 
     // Support until lvl
-    public static readonly int PSEUDO_CODE_MAX_DIFFICULTY = ADVANCED, PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY = BEGINNER;
+    public static readonly int PSEUDO_CODE_MAX_DIFFICULTY = ADVANCED;
+    public static readonly int PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY = BEGINNER;
+    public static readonly int SOUND_EFFECT_MAX_DIFFICULTY = EXAMINATION; // Not implemented/decided yet
 
     // ----------------------------------------- GUI ----------------------------------------- 
     // Buttons
@@ -80,7 +82,6 @@ public class Util : MonoBehaviour {
 
     // ----- Area stuff -----
     public const string INIT_AREA = "Init area", LOAD_SCENE = "Load scene", HEAD_COLLIDER = "HeadCollider", FLOOR_TAG = "Floor";
-
 
     /* Creates a list of objects
      * - Puts them ontop of another object if positions are provided 

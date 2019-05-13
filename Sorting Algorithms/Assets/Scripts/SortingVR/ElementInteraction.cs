@@ -5,7 +5,7 @@ using UnityEngine;
 public class ElementInteraction : MonoBehaviour {
 
     /* Used to check if user has interacted with the sorting element
-     * For instance, picked up the element for comparison (Bubblesort was kinda screwed at higher difficulty levels, because it just skipped to the next swap instruction) 
+     * For instance, picked up the element for comparison (Bubblesort was kinda screwed at higher difficulty levels, because it just skipped all instruction but the swap instruction) 
      * 
     */
 

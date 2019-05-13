@@ -39,19 +39,20 @@ public abstract class MainManager : MonoBehaviour {
     protected string activeChecklist;
     protected Dictionary<string, bool> safeStopChecklist;
 
-    protected WaitForSeconds demoSpeedBeforePause;
-    protected WaitForSeconds stepByStepMode = new WaitForSeconds(0f);
-    protected WaitForSeconds loading = new WaitForSeconds(1f);
-    protected WaitForSeconds warningMessageDuration = new WaitForSeconds(2f);
-    protected WaitForSeconds finishStepDuration = new WaitForSeconds(0.5f);
+    protected WaitForSeconds demoSpeedBeforePause;                              // Switching between demo <--> step-by-step
+    protected WaitForSeconds stepByStepMode = new WaitForSeconds(0f);           // User set their own pace of step-by-step - no lag
+    protected WaitForSeconds loading = new WaitForSeconds(1f);                  // Loading time (spawning/moving objects)
+    protected WaitForSeconds warningMessageDuration = new WaitForSeconds(2f);   // Feedback display time
+    protected WaitForSeconds finishStepDuration = new WaitForSeconds(0.5f);     // Finish off (after user test)
 
     protected DemoDevice demoDevice;
 
     [Header("Main manager")]
-    [Space(2)]
     [SerializeField]
     protected TextMeshPro feedbackDisplayText;
 
+    [Space(5)]
+    [Header("Debugging")]
     [SerializeField]
     private TextMeshPro debugText;
 
@@ -234,12 +235,12 @@ public abstract class MainManager : MonoBehaviour {
 
                     // Give feedback incase of invalid step
                     if (!demoManager.IsValidStep)
-                        StartCoroutine(SetFeedbackDisplay("First instruction reached.\nCan't decrement."));
+                        StartCoroutine(SetFeedbackDisplayDuration("First instruction reached.\nCan't decrement."));
                     else
-                        StartCoroutine(SetFeedbackDisplay("Backward step"));
+                        StartCoroutine(SetFeedbackDisplayDuration("Backward step"));
                 }
                 else
-                    StartCoroutine(SetFeedbackDisplay("System in progress. Wait a second and try again."));
+                    StartCoroutine(SetFeedbackDisplayDuration("Support working (" + waitForSupportToComplete + "). Wait a second and try again."));
                 break;
 
             case DemoDevice.PAUSE:
@@ -252,7 +253,7 @@ public abstract class MainManager : MonoBehaviour {
 
                 // Tips display
                 string pauseOrUnPauseText = UserPausedText(UserPausedTask);
-                StartCoroutine(SetFeedbackDisplay(pauseOrUnPauseText));
+                SetFeedbackDisplay(pauseOrUnPauseText);
 
                 // Demo device button replacing
                 demoDevice.TransitionPause(userPausedTask);
@@ -285,12 +286,12 @@ public abstract class MainManager : MonoBehaviour {
 
                     // Give feedback incase of invalid step
                     if (!demoManager.IsValidStep)
-                        StartCoroutine(SetFeedbackDisplay("Final instruction reached.\nCan't increment."));
+                        StartCoroutine(SetFeedbackDisplayDuration("Final instruction reached.\nCan't increment."));
                     else
-                        StartCoroutine(SetFeedbackDisplay("Forward step"));
+                        StartCoroutine(SetFeedbackDisplayDuration("Forward step"));
                 }
                 else
-                    StartCoroutine(SetFeedbackDisplay("System in progress. Wait a second and try again"));
+                    StartCoroutine(SetFeedbackDisplayDuration("Support working (" + waitForSupportToComplete + "). Wait a second and try again."));
                 break;
 
             case DemoDevice.REDUCE_SPEED:
@@ -304,11 +305,11 @@ public abstract class MainManager : MonoBehaviour {
                         case 0: demoDevice.ButtonActive(DemoDevice.REDUCE_SPEED, false); break;
                         case 2: demoDevice.ButtonActive(DemoDevice.INCREASE_SPEED, true); break;
                     }
-                    StartCoroutine(SetFeedbackDisplay("Speed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]));
+                    StartCoroutine(SetFeedbackDisplayDuration("Speed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]));
 
                 }
                 else
-                    StartCoroutine(SetFeedbackDisplay("Minimum speed already set."));
+                    StartCoroutine(SetFeedbackDisplayDuration("Minimum speed already set."));
                 break;
 
             case DemoDevice.INCREASE_SPEED:
@@ -322,11 +323,11 @@ public abstract class MainManager : MonoBehaviour {
                         case 1: demoDevice.ButtonActive(DemoDevice.REDUCE_SPEED, true); break;
                         case 3: demoDevice.ButtonActive(DemoDevice.INCREASE_SPEED, false); break;
                     }
-                    StartCoroutine(SetFeedbackDisplay("Speed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]));
+                    StartCoroutine(SetFeedbackDisplayDuration("Speed: " + Util.algorithSpeedConverterDict[Settings.AlgorithmSpeedLevel]));
 
                 }
                 else
-                    StartCoroutine(SetFeedbackDisplay("Maximum speed already set."));
+                    StartCoroutine(SetFeedbackDisplayDuration("Maximum speed already set."));
                 break;
         }
     }
@@ -343,7 +344,9 @@ public abstract class MainManager : MonoBehaviour {
 
     private string UserPausedText(bool pause)
     {
-        return pause ? "Demo paused\nStep-by-step enabled" : "Demo unpaused\nAutomatically progress enabled";
+        if (Settings.StepBack)
+            return pause ? "Step-by-step\nUse grip buttons to step forward/backward" : "Demo\nUse grip buttons to adjust speed";
+        return pause ? "Step-by-step\nClick right grip button to step forward" : "Demo\nUse grip buttons to adjust speed";
     }
     #endregion
 
@@ -363,7 +366,6 @@ public abstract class MainManager : MonoBehaviour {
         activeChecklist = START_UP_CHECK;
         checkListModeActive = true;
         algorithmName = Settings.Algorithm;
-
 
         // Debugging
         deleteWhenReached = debugLineNumbers;
@@ -460,7 +462,7 @@ public abstract class MainManager : MonoBehaviour {
     }
 
     // Text feedback to user (controller input demo device etc.)
-    public IEnumerator SetFeedbackDisplay(string text)
+    public IEnumerator SetFeedbackDisplayDuration(string text)
     {
         if (feedbackDisplayText!= null)
         {
@@ -468,6 +470,11 @@ public abstract class MainManager : MonoBehaviour {
             yield return warningMessageDuration;
             feedbackDisplayText.text = "";
         }
+    }
+
+    public void SetFeedbackDisplay(string text)
+    {
+        feedbackDisplayText.text = text;
     }
 
     public abstract TeachingAlgorithm GetTeachingAlgorithm();
@@ -518,6 +525,7 @@ public abstract class MainManager : MonoBehaviour {
                 }
             }
 
+            // Debugging
             if (instruction != null && prevInstruction != instruction.Instruction)
             {
                 prevInstruction = instruction.DebugInfo();
@@ -534,7 +542,6 @@ public abstract class MainManager : MonoBehaviour {
                         debugText.text += "\n" + instruction.DebugInfo();
 
                     deleteWhenReached--;
-
                 }
             }
         }
@@ -555,8 +562,6 @@ public abstract class MainManager : MonoBehaviour {
             instruction.Status = Util.NOT_EXECUTED;
     }
 
-
-
     /* --------------------------------------- User Test ---------------------------------------
      * - Gives a visual presentation of elements used in <algorithm>
      * - Player needs to interact with the <algorithm objects> to progress through the algorithm
@@ -571,9 +576,6 @@ public abstract class MainManager : MonoBehaviour {
      * - Skips instructions which doesn't contain any elements nor destination
     */
     //protected abstract int PrepareNextInstruction(InstructionBase instruction);
-
-
-
 
 
     // --------------------------------------- Other ---------------------------------------

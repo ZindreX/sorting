@@ -663,8 +663,11 @@ public class InsertionSort : SortAlgorithm {
                     {
                         // Positioning the pivot holder behind/slightly above comparing element
                         pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
+
                         // Postitioning the pivot element on top of the pivot holder
-                        pivotHolder.CurrentHolding.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        SortingElementBase pivotElement = pivotHolder.CurrentHolding;
+                        pivotElement.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        pivotElement.transform.rotation = Quaternion.identity;
                     }
                     else
                     {
@@ -678,11 +681,13 @@ public class InsertionSort : SortAlgorithm {
                     {
                         pivotHolder.transform.position = new Vector3(insertionSortManager.GetCorrectHolder(sortingElement.CurrentStandingOn.HolderID).transform.position.x, pivotHolder.transform.position.y, pivotHolder.transform.position.z);
                         sortingElement.transform.position = pivotHolder.transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        sortingElement.transform.rotation = Quaternion.identity;
                     }
                     else
                     {
                         //
                         sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        sortingElement.transform.rotation = Quaternion.identity;
                     }
                     break;
 
@@ -690,9 +695,15 @@ public class InsertionSort : SortAlgorithm {
                 case UtilSort.SWITCH_INST:
                 case UtilSort.PIVOT_END_INST:
                     if (increment)
+                    {
                         sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.NextHolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        sortingElement.transform.rotation = Quaternion.identity;
+                    }
                     else
+                    {
                         sortingElement.transform.position = insertionSortManager.GetCorrectHolder(insertionInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
+                        sortingElement.transform.rotation = Quaternion.identity;
+                    }
                     break;
             }
         }

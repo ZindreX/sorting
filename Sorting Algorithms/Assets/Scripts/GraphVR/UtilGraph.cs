@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class UtilGraph : Util {
 
-    // ----------------------------------------- Graph limitations ----------------------------------------- 
-    public static readonly int MAX_ROWS = 5, MAX_COLUMNS = 5;
-    public static readonly int MAX_TREE_DEPTH = 3, MAX_N_TREE = 3;
-    public static readonly int MAX_RANDOM_NODES = 5, MAX_RANDOM_EDGES = 20;
-    public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
-    public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
-
     // ----------------------------------------- Support until lvl ----------------------------------------- 
     public static readonly int LIST_VISUAL_MAX_DIFFICULTY = INTERMEDIATE;
+    
+    // Animation
+    public static readonly int ANIMATION_DIRECTION_MAX_DIFFICULTY = ADVANCED;
+    public static readonly int ADD_RELAX_NODE_ANIMATION_MAX_DIFFICULTY = ADVANCED;    // Not used, but might change
+    public static readonly int TRAVERSE_NODE_ANIMATION_MAX_DIFFICULTY = INTERMEDIATE; // Not used, but might change
 
+    // ----------------------------------------- Graph limitations ----------------------------------------- 
+    // Grid
+    public static readonly int MAX_ROWS = 5, MAX_COLUMNS = 5;
+
+    // Tree
+    public static readonly int MAX_TREE_DEPTH = 3, MAX_N_TREE = 3;
+
+    // Random
+    public static readonly int MAX_RANDOM_NODES = 5, MAX_RANDOM_EDGES = 20;
+
+    // Graph space
+    public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
+    public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
     // ----------------------------------------- GUI ----------------------------------------- 
     // Graph task
@@ -31,9 +42,8 @@ public class UtilGraph : Util {
 
     public static readonly string NODE_VISIT_ANIMATION = "NodeVisit", NODE_TRAVERSE_ANIMATION = "NodeTraverse", NODE_ERROR_ANIMATION = "NodeError";
 
-
     // Rules
-    public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all"; // VISIT_LEFT_FIRST = "Visit left first";
+    public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all";
 
     // Graph structures
     public const string GRID_GRAPH = "Grid", TREE_GRAPH = "Tree", RANDOM_GRAPH = "Random", UNDIRECTED_EDGE = "Undirected", DIRECED_EDGE = "Directed", SYMMETRIC_EDGE = "Symmetric";

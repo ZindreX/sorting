@@ -321,6 +321,16 @@ public class GridManager : GraphManager {
         return null;
     }
 
+    public override Node FirstNode()
+    {
+        return gridNodes[0, 0];
+    }
+
+    public override Node LastNode()
+    {
+        return gridNodes[rows - 1, cols - 1];
+    }
+
     public override void ResetGraph()
     {
         for (int i=0; i < rows; i++)

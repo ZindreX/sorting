@@ -68,6 +68,23 @@ public class InsertionSortHolder : HolderBase
                 else if (currentHolding.IsSorted)
                     CurrentColor = UtilSort.SORTED_COLOR;
             }
+
+            //if (isPivotHolder)
+            //{
+            //    currentHolding.RigidBody.constraints = RigidbodyConstraints.FreezePositionX;
+            //    currentHolding.RigidBody.constraints = RigidbodyConstraints.FreezePositionZ;
+            //}
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
+        {
+            // Current holding the sorting element that collided
+            InsertionSortElement wasHolding = collision.collider.GetComponent<InsertionSortElement>();
+            //if (isPivotHolder)
+            //    wasHolding.RigidBody.constraints = RigidbodyConstraints.None;
         }
     }
 

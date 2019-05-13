@@ -157,7 +157,7 @@ public class PositionManager : MonoBehaviour, IMoveAble {
 
     public void MoveOut()
     {
-        transform.position += new Vector3(4f, 0f, 0f);
+        transform.position += new Vector3(3.1f, 0f, 0f);
     }
 
     public void MoveBack()

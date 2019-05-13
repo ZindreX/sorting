@@ -167,6 +167,16 @@ public class TreeManager : GraphManager {
         return null;
     }
 
+    public override Node FirstNode()
+    {
+        return tree[0];
+    }
+
+    public override Node LastNode()
+    {
+        return tree[tree.Count - 1];
+    }
+
     public override void ResetGraph()
     {
         for (int i=0; i < tree.Count; i++)

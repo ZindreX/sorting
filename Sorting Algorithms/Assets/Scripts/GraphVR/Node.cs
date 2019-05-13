@@ -111,7 +111,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "HeadCollider" && positionManager.ReportedNode != this)
+        if (other.name == Util.HEAD_COLLIDER && positionManager.ReportedNode != this)
         {
             // Hide text
             textNodeDist.text = "";
@@ -323,33 +323,9 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
     {
         if (nodeInstruction != null)
         {
-            //Debug.Log(nodeInstruction.DebugInfo());
-
             // Debugging
             instruction = nodeInstruction.Instruction;
             status = nodeInstruction.Status;
-
-            //switch (instruction)
-            //{
-            //    case Util.INIT_INSTRUCTION: status = "Init pos"; break;
-            //    case UtilGraph.ENQUEUE_NODE_INST: // BFS
-            //    case UtilGraph.PUSH_INST: // DFS
-            //    case UtilGraph.ADD_NODE: // Dijkstra
-            //    case UtilGraph.VISIT_CONNECTED_NODE: // Dijkstra <- // PRIORITY_ADD_NODE ?
-            //        status = "Shot node";
-            //        break;
-
-            //    case UtilGraph.DEQUEUE_NODE_INST: // BFS
-            //    case UtilGraph.POP_INST: // DFS
-            //    case UtilGraph.PRIORITY_REMOVE_NODE: // Dijkstra
-            //        status = "Move to node";
-            //        break;
-
-            //    case UtilGraph.BACKTRACK: status = "Backtracking moving from end to start node"; break;
-
-            //    case Util.EXECUTED_INST: status = Util.EXECUTED_INST; break;
-            //    default: Debug.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UpdateNodeState(): Add '" + instruction + "' case, or ignore"); break;
-            //}
 
             // This node is the next to be visited (shot at)
             if (nodeInstruction is TraverseInstruction)
@@ -361,7 +337,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 {
                     visitNextMove = true;
 
-                    if (graphMain.Settings.Difficulty < Util.EXAMINATION)
+                    if (graphMain.Settings.Difficulty <= UtilGraph.ANIMATION_DIRECTION_MAX_DIFFICULTY)
                         animator.SetBool("NodeVisit", true);
                 }
 
@@ -370,7 +346,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 {
                     traverseNextMove = true;
 
-                    if (graphMain.Settings.Difficulty < Util.EXAMINATION)
+                    if (graphMain.Settings.Difficulty <= UtilGraph.ANIMATION_DIRECTION_MAX_DIFFICULTY)
                         animator.SetBool("NodeTraverse", true);
                 }
 
@@ -406,9 +382,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                         break;
                 }
-
-                //if (spInst.PrevEdge != null)
-                //    PrevEdge = spInst.PrevEdge;
             }
         }
     }
@@ -485,6 +458,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     traverseStatus = false;
                     graphMain.GetComponent<UserTestManager>().Mistake();
                     graphMain.GetComponent<UserTestManager>().ReportError();
+
+                    // mistake animation
                     animator.Play("NodeError");
                     break;
 
@@ -502,6 +477,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
             if (NextMove)
             {
+                // Report instruction complete
                 graphMain.GetComponent<UserTestManager>().ReadyForNext += 1;
                 graphMain.GetComponent<UserTestManager>().IncrementTotalCorrect();
 
@@ -510,7 +486,8 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 visitNextMove = false;
                 traverseNextMove = false;
 
-                if (graphMain.Settings.Difficulty < Util.EXAMINATION)
+                // Stop animation
+                if (graphMain.Settings.Difficulty <= UtilGraph.ANIMATION_DIRECTION_MAX_DIFFICULTY)
                 {
                     animator.SetBool("NodeVisit", false);
                     animator.SetBool("NodeTraverse", false);

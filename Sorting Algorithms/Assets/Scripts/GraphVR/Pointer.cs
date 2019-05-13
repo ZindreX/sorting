@@ -7,6 +7,12 @@ using TMPro;
 [RequireComponent(typeof(LineRenderer))]
 public class Pointer : MonoBehaviour {
 
+    /* ---------------------------------- Pointer ----------------------------------
+     * - Used for adding a node to a queue/stack
+     * - or relaxing a node (adding or updating a node in a priortiy list)
+     * 
+    */
+
     [SteamVR_DefaultAction("PointerShoot")]
     public SteamVR_Action_Boolean pointerShootAction;
 
@@ -70,7 +76,10 @@ public class Pointer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        // Right hand only
+        // Position
         transform.position = rightHand.position;
+        // Rotation
         transform.rotation = rightHand.rotation;
 
         if (!allowShooting)
@@ -84,21 +93,23 @@ public class Pointer : MonoBehaviour {
             if (currentTask == Util.DEMO || currentTask == Util.STEP_BY_STEP)
                 return;
 
+            //if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.Any))
+            //{
+            //    if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.LeftHand))
+            //    {
+            //        transform.position = leftHand.position;
+            //        transform.rotation = leftHand.rotation;
+            //    }
+            //    else if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.RightHand))
+            //    {
+            //        transform.position = rightHand.position;
+            //        transform.rotation = rightHand.rotation;
+            //    }
+            //}
+
             //if (SteamVR_Input.__actions_default_in_ToggleStart.GetState(SteamVR_Input_Sources.Any))
             if (SteamVR_Input.__actions_default_in_PointerShoot.GetState(SteamVR_Input_Sources.RightHand))
             {
-                // Set position & rotation to hand
-                //if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.LeftHand))
-                //{
-                //    transform.position = leftHand.position;
-                //    transform.rotation = leftHand.rotation;
-                //}
-                //else if (SteamVR_Input.__actions_default_in_PointerShoot.GetLastState(SteamVR_Input_Sources.RightHand))
-                //{
-                //    transform.position = rightHand.position;
-                //    transform.rotation = rightHand.rotation;
-                //}
-
                 // Declare a raycast hit to store information about what our raycast hit
                 RaycastHit hit;
 

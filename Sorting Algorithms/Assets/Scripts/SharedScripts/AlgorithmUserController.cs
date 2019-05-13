@@ -94,7 +94,7 @@ public class AlgorithmUserController : MonoBehaviour {
                             if (mainManager.Settings.StepBack)
                                 mainManager.PerformDemoDeviceAction(DemoDevice.STEP_BACK, true);
                             else
-                                StartCoroutine(mainManager.SetFeedbackDisplay("Backward step not available for this algorithm."));
+                                StartCoroutine(mainManager.SetFeedbackDisplayDuration("Backward step not available for this algorithm."));
                         }
                     }
                     else // Demo play --> automatically update (speed adjustable)
