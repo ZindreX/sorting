@@ -111,7 +111,6 @@ public class BucketManager : MonoBehaviour, IManager {
     public IEnumerator PutElementsForDisplay(int bucketID)
     {
         //sortMain.UpdateCheckList(UtilSort.ALGORITHM_MANAGER, false);
-
         Bucket bucket = GetBucket(bucketID);
         bucket.SetEnterTrigger(false);
         yield return emptyBucketDuration;
@@ -120,12 +119,10 @@ public class BucketManager : MonoBehaviour, IManager {
 
         if (numberOfElements > 0)
         {
-            //Debug.Log("Bucket " + bucketID + " has " + numberOfElements + " to display");
             for (int y = 0; y < numberOfElements; y++)
             {
                 BucketSortElement element = (BucketSortElement)bucket.GetElementForDisplay(y);
-                //Debug.Log("Bucket " + bucketID + ", element " + y + " [" + element.Value + "]");
-                bucket.PutElementForDisplay(element); //element.transform.pos... bucket.transform.position + UtilSort.ABOVE_BUCKET_VR;// + (UtilSort.ABOVE_BUCKET_VR / 10) * y;
+                bucket.PutElementForDisplay(element);
                 StartCoroutine(bucket.Animation(Bucket.HIGHLIGHT, 1));
                 yield return emptyBucketDuration;
             }

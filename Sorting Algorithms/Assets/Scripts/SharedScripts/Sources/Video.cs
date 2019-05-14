@@ -53,6 +53,7 @@ public class Video : MonoBehaviour {
             {
                 title = "Bad tape";
                 Destroy(gameObject, 5f);
+                Debug.Log("Destroying VHS, check path: " + url);
             }
         }
 
@@ -118,10 +119,5 @@ public class Video : MonoBehaviour {
         {
             transform.position = startPos;
         }
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("VHS Destroyed, check path: " + url);
     }
 }

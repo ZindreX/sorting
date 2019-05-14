@@ -424,6 +424,7 @@ public class BucketSort : SortAlgorithm {
 
             // Change internal state of sorting element
             sortingElement = sortMain.ElementManager.GetSortingElement(bucketInstruction.SortingElementID).GetComponent<BucketSortElement>();
+            bucketIndex = bucketInstruction.BucketID;
         }
 
         if (instruction is InstructionLoop)
@@ -531,6 +532,10 @@ public class BucketSort : SortAlgorithm {
             case UtilSort.DISPLAY_ELEMENT: // TODO: Fix
                 //sortMain.WaitForSupportToComplete++; // add to list?
                 StartCoroutine(bucketManager.PutElementsForDisplay(bucketInstruction.BucketID));
+
+                if (!increment)
+                    bucketManager.GetBucket(bucketIndex).SetEnterTrigger(true);
+
                 break;
 
             case Util.SET_VAR_K:
@@ -633,6 +638,8 @@ public class BucketSort : SortAlgorithm {
                     {
                         sortingElement.transform.position = bucketSortManager.GetCorrectHolder(bucketInstruction.HolderID).transform.position + UtilSort.ABOVE_HOLDER_VR;
                         sortingElement.gameObject.SetActive(true);
+                        bucketManager.GetBucket(bucketIndex).RemoveSortingElement(sortingElement);
+                        sortingElement.RigidBody.constraints = RigidbodyConstraints.None;
                     }
                     break;
 

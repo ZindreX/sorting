@@ -123,6 +123,7 @@ public class Bucket : MonoBehaviour, ISortSubElement {
         if (currentHolding.Contains(sortingElement))
             return;
 
+        Debug.Log("Adding element: " + sortingElement.SortingElementID);
         currentHolding.Add(sortingElement);
 
         if (sortingElement is BucketSortElement)
@@ -132,8 +133,8 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             StartCoroutine(Animation(ENTER, 3));
 
             // Make invisible
-            bucketSortElement.RigidBody.constraints = RigidbodyConstraints.FreezeAll;
             bucketSortElement.transform.position = transform.position;
+            bucketSortElement.RigidBody.constraints = RigidbodyConstraints.FreezeAll;
         }
     }
 
@@ -159,6 +160,17 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             return element;
         }
         return null;
+    }
+
+    public void RemoveSortingElement(SortingElementBase sortingElement)
+    {
+        if (currentHolding.Contains(sortingElement))
+        {
+            currentHolding.Remove(sortingElement);
+
+            if (prevSortingElementID == sortingElement.SortingElementID)
+                prevSortingElementID = -1;
+        }
     }
 
     public IEnumerator Animation(string animation, int times)
@@ -247,6 +259,9 @@ public class Bucket : MonoBehaviour, ISortSubElement {
             if (onTopOfBucketTrigger.enabled)
             {
                 sortingElement.CurrentInside = null;
+                RemoveSortingElement(sortingElement);
+                sortingElement.RigidBody.constraints = RigidbodyConstraints.None;
+                prevSortingElementID = -1;
             }
         }
     }

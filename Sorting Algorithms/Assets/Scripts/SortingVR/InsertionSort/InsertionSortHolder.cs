@@ -69,23 +69,16 @@ public class InsertionSortHolder : HolderBase
                     CurrentColor = UtilSort.SORTED_COLOR;
             }
 
-            //if (isPivotHolder)
-            //{
-            //    currentHolding.RigidBody.constraints = RigidbodyConstraints.FreezePositionX;
-            //    currentHolding.RigidBody.constraints = RigidbodyConstraints.FreezePositionZ;
-            //}
+            if (isPivotHolder)
+                currentHolding.RigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; // Freeze X and Z (otherwise the sorting element starts to slip ontop of the pivot holder)
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.collider.tag == UtilSort.SORTING_ELEMENT_TAG)
-        {
-            // Current holding the sorting element that collided
-            InsertionSortElement wasHolding = collision.collider.GetComponent<InsertionSortElement>();
-            //if (isPivotHolder)
-            //    wasHolding.RigidBody.constraints = RigidbodyConstraints.None;
-        }
+        InsertionSortElement wasHolding = collision.collider.GetComponent<InsertionSortElement>();
+        if (wasHolding != null && isPivotHolder)
+            wasHolding.RigidBody.constraints = RigidbodyConstraints.None; // Unfreeze
     }
 
     //protected override void GiveHint()

@@ -46,11 +46,6 @@ public class BucketSortElement : SortingElementBase {
         set { currentInside = value; }
     }
 
-    public Rigidbody RigidBody
-    {
-        get { return rigidBody; }
-    }
-
     protected override void UpdateSortingElementState()
     {
         if (bucketSortInstruction != null)
