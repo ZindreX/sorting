@@ -54,7 +54,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
             {
                 rigidBody.constraints = RigidbodyConstraints.FreezeAll;
                 transform.rotation = Quaternion.identity;
-                transform.position = FindObjectOfType<SortingTable>().ReturnPosition.position;
+                transform.position = FindObjectOfType<SortingTable>().ReturnPosition;
                 rigidBody.constraints = RigidbodyConstraints.None;
             }
         }

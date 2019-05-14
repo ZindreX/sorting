@@ -8,6 +8,15 @@ public class AdjustableObject : MonoBehaviour {
     private float adjustHeightBy = 0.1f, minVal = -0.2f, maxVal = 1.8f;
 
 
+    // TODO: Fix sorting table issues: sorting elements get bugged sometimes (transform.parent changed)
+    //private bool hasMoveAbleObjectsOntop;
+    //private GameObject[] attachedObjects;
+
+    //private void Awake()
+    //{
+    //    if (GetComponent<SortingTable>() != null)
+    //        hasMoveAbleObjectsOntop = true;
+    //}
 
     public void AdjustUp()
     {

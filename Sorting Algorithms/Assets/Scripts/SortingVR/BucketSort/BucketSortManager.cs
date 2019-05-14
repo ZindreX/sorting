@@ -43,7 +43,7 @@ public class BucketSortManager : SortAlgorithmManager {
             bool isPivot = element.IsPivot;
             bool isCompare = element.IsCompare;
             bool isSorted = element.IsSorted;
-            elementStates[i] = new BucketSortInstruction(UtilSort.INIT_INSTRUCTION, 0, UtilSort.NO_VALUE, UtilSort.NO_VALUE, UtilSort.NO_VALUE, sortingElementID, value, isCompare, isSorted, holderID, UtilSort.NO_DESTINATION, UtilSort.NO_VALUE); // new BucketSortInstruction(sortingElementID, holderID, Util.NO_DESTINATION, Util.NO_DESTINATION, Util.NO_VALUE, Util.NO_VALUE, Util.INIT_INSTRUCTION, 0, value, isPivot, isCompare, isSorted);
+            elementStates[i] = new BucketSortInstruction(Util.INIT_INSTRUCTION, 0, Util.NO_VALUE, Util.NO_VALUE, Util.NO_VALUE, sortingElementID, value, isCompare, isSorted, holderID, UtilSort.NO_DESTINATION, Util.NO_VALUE);
         }
         return elementStates;
     }
@@ -52,8 +52,8 @@ public class BucketSortManager : SortAlgorithmManager {
     {
         Debug.Log(instruction.DebugInfo());
 
-        bool gotSortingElement = !bucketSort.SkipDict[UtilSort.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
-        bool noDestination = bucketSort.SkipDict[UtilSort.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
+        bool gotSortingElement = !bucketSort.SkipDict[Util.SKIP_NO_ELEMENT].Contains(instruction.Instruction);
+        bool noDestination = bucketSort.SkipDict[Util.SKIP_NO_DESTINATION].Contains(instruction.Instruction);
 
         switch (instruction.Instruction)
         {
