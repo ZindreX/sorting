@@ -23,8 +23,6 @@ public class DoubleDoor : Door {
     [SerializeField]
     private Vector3 openDoorRotation;
 
-    //private Vector3 closedPosition, openPosition;
-
     private MoveObject leftDoorMoveObject, rightDoorMoveObject;
 
     protected override void Awake()
@@ -32,11 +30,6 @@ public class DoubleDoor : Door {
         // Get move components of doors
         leftDoorMoveObject = leftDoor.GetComponent<MoveObject>();
         rightDoorMoveObject = rightDoor.GetComponent<MoveObject>();
-
-        // Set positions*
-        //closedPosition = rightDoor.transform.position;
-        //openPosition = closedPosition + openDoorPosition;
-
         base.Awake();
     }
 

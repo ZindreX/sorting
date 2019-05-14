@@ -5,9 +5,9 @@ using UnityEngine;
 public class Util : MonoBehaviour {
 
     /* ----------------------------------------- Information -----------------------------------------
-     * - Init settings              : Editor* / SortSettings / GraphSettings        | *Default (see editor)
-     * - Adjust support activation  : Util / UtilSort / UtilGraph (see below)       | pseudocode, holder feedback, list visual, etc... 
-     * 
+     * - Init settings                  : Editor* / SortSettings / GraphSettings        | *Default (see editor)
+     * - Adjust support activation      : Util / UtilSort / UtilGraph (see below)       | pseudocode, holder feedback, list visual, etc... 
+     * - Enable backstep for algorithm  : See abstract method in TeachingAlgorithm      | CanPerformBackStep
      * 
      * 
      * 
@@ -18,14 +18,13 @@ public class Util : MonoBehaviour {
     public static readonly int PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY = BEGINNER;
     public static readonly int SOUND_EFFECT_MAX_DIFFICULTY = EXAMINATION; // Not implemented/decided yet
 
-    // ----------------------------------------- GUI ----------------------------------------- 
+    // ----------------------------------------- Settings menu ----------------------------------------- 
     // Buttons
     public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
-    public const string START_BUTTON = "Start button";
+    public const string DELAY_BUTTON = "Delay button";
 
     // Sections
-    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", S_FAST_STR = "SFast";
-    public const string DEMO_SPEED = "Demo speed";
+    public const string ALGORITHM = "Algorithm", TEACHING_MODE = "Teaching mode", DIFFICULTY = "Difficulty";
     public const string PLUS = "Plus", MINUS = "Minus", ON = "ON", OFF = "OFF", START = "Start", READY = "Ready", OPTIONAL = "Optional";
     public const string PSEUDOCODE_STEP = "Pseudocode step", PSEUDOCODE_LINE_NR = "Pseudocode line nr", SCORE = "Score";
 
@@ -43,13 +42,18 @@ public class Util : MonoBehaviour {
 
     // Graph Algorithms
     public const string BFS = "BFS", DFS = "DFS", DFS_RECURSIVE = "DFS recursive", DIJKSTRA = "Dijkstra";
-    //public const string TREE_PRE_ORDER_TRAVERSAL = "Pre order", TREE_IN_ORDER_TRAVERSAL = "In order", TREE_POST_ORDER_TRAVERSAL = "Post order";
+    public const string TREE_PRE_ORDER_TRAVERSAL = "Pre order", TREE_IN_ORDER_TRAVERSAL = "In order", TREE_POST_ORDER_TRAVERSAL = "Post order";
+
+    // List types
     public const string QUEUE = "Queue", STACK = "Stack", PRIORITY_LIST = "Priority";
 
     // Difficulty
     public const string BEGINNER_STR = "Beginner", INTERMEDIATE_STR = "Intermediate", ADVANCED_STR = "Advanced", EXAMINATION_STR = "Examination";
     public const int BEGINNER = 0, INTERMEDIATE = 1, ADVANCED = 2, EXAMINATION = 3; // enum?
     public const int SLOW = 0, NORMAL = 1, FAST = 2, SFAST = 3;
+
+    // Algorithm speed
+    public const string DEMO_SPEED = "Demo speed", SLOW_STR = "Slow", NORMAL_STR = "Normal", FAST_STR = "Fast", S_FAST_STR = "SFast";
 
     // Rooms
     public const string START_ROOM = "Start room", MAIN_MENU = "Main menu", TUTORIAL_ROOM = "Tutorial room", VR_TEST_ROOM = "VR test room";
@@ -74,10 +78,6 @@ public class Util : MonoBehaviour {
 
     // Controllers
     public const string INCREMENT = "Incremenet", DECREMENT = "Decrement";
-
-    //
-    public const string ALGORITHM_MANAGER = "Algorithm manager";
-
 
     public const string SPLIT_INST = "::", INVALID_PSEUDO_CODE_LINE = "X";
     public static readonly char PSEUDO_SPLIT_LINE_ID = '§';
@@ -161,33 +161,12 @@ public class Util : MonoBehaviour {
         return Random.Range(ROLL_MIN, ROLL_MAX) < below;
     }
 
+    // Dictionaries
     public static Dictionary<int, string> difficultyConverterDict = new Dictionary<int, string>() { { BEGINNER, BEGINNER_STR }, { INTERMEDIATE, INTERMEDIATE_STR }, { ADVANCED, ADVANCED_STR }, { EXAMINATION, EXAMINATION_STR } };
-    //public static string ConvertDifficulty(int difficulty)
-    //{
-    //    switch (difficulty)
-    //    {
-    //        case 0: return BEGINNER_STR;
-    //        case 1: return INTERMEDIATE_STR;
-    //        case 2: return ADVANCED_STR;
-    //        case 3: return EXAMINATION_STR;
-    //        default: return "'" + difficulty + "' not found";
-    //    }
-    //}
-
     public static Dictionary<int, string> algorithSpeedConverterDict = new Dictionary<int, string>() { { SLOW, SLOW_STR }, { NORMAL, NORMAL_STR }, { FAST, FAST_STR }, { SFAST, S_FAST_STR } };
-    //public static string ConvertAlgorithmSpeed(int speed)
-    //{
-    //    switch (speed)
-    //    {
-    //        case 0: return SLOW_STR;
-    //        case 1: return NORMAL_STR;
-    //        case 2: return FAST_STR;
-    //        default: return "'" + speed + "' not found";
-    //    }
-    //}
 
+    // Moving object to hide them (since disabled objects, e.g buttons, still get clicked
     public static Vector3 moveUnderGround = new Vector3(0f, 10f, 0f);
-
     public static void HideObject(GameObject obj, bool visible)
     {
         Vector3 pos = obj.transform.position;
@@ -197,25 +176,7 @@ public class Util : MonoBehaviour {
             obj.transform.position -= moveUnderGround;
     }
 
-    //public static void HideObject(GameObject obj, bool visible, bool moveDown)
-    //{
-    //    if (moveDown)
-    //    {
-    //        Vector3 pos = obj.transform.position;
-    //        if (visible && obj.transform.position.y < 0)
-    //            obj.transform.position += moveUnderGround;
-    //        else if (obj.transform.position.y > 0)
-    //            obj.transform.position -= moveUnderGround;
-    //    }
-
-    //    //Component[] visibleParts = obj.GetComponentsInChildren<MeshRenderer>();
-    //    //foreach (MeshRenderer part in visibleParts)
-    //    //{
-    //    //    part.enabled = visible;
-    //    //}
-    //}
-
-
+    // Not used anymore (trigger boxes ftw)
     public static bool ObjectWithinBounderies(Vector3 objectPos, Vector3 bounderiesObject, float within)
     {
         float objectRelativeToBounderiesObjectX = Mathf.Abs(objectPos.x - bounderiesObject.x);

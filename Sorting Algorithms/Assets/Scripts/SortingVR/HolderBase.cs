@@ -109,8 +109,6 @@ public abstract class HolderBase : MonoBehaviour, ISortSubElement {
     // Remove element from this holder (if touched the holder)
     private void OnTriggerExit(Collider other)
     {
-        //Debug.Log("Exiting holder" + holderID + ": " + other.tag);
-
         if (other.tag == UtilSort.SORTING_ELEMENT_TAG)
         {
             // Check if other element bumped into this trigger (to avoid removing correct element)

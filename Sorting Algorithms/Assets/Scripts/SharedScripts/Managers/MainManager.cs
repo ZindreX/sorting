@@ -14,13 +14,13 @@ public abstract class MainManager : MonoBehaviour {
 
     protected string algorithmName, prevInstruction;
 
-    // When the user pause
+    // When the user pause (pauses the flow of instructions)
     protected bool userPausedTask;
 
-    // When the user click a button in game to stop the current process (demo, step-by-step, user test)
+    // When the user click a button in game to stop the current process (demo/step-by-step, user test)
     protected bool userStoppedTask = false;
 
-    // Used to pause the Update loop while learning assitance is working (difficulty=beginner -> pseudocode highlighting)
+    // Used to pause the Update loop while learning assitance is working (difficulty=beginner -> pseudocode highlighting, list visual update, etc..)
     protected int waitForSupportToComplete = 0;
 
     // Used to check whether the controller is ready for input (see method below)
@@ -29,6 +29,7 @@ public abstract class MainManager : MonoBehaviour {
     // Blocks the Update loop until the application is ready and initialized
     protected bool algorithmInitialized = false;
 
+    // 
     protected bool newDemoImplemented, hasFinishedOff;
 
     private bool requestBacktrack;

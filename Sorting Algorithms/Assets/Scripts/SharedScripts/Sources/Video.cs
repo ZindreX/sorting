@@ -67,7 +67,6 @@ public class Video : MonoBehaviour {
             int useColor = (int)titleColor;
             if (useColor < textMaterials.Length)
                 temp.fontSharedMaterial = textMaterials[useColor];
-
         }
     }
 

@@ -11,7 +11,7 @@ public class BFS : GraphAlgorithm, ITraverse {
 
     public override bool CanPerformBackStep
     {
-        get { return true; }
+        get { return false; }
     }
 
     public override string GetListType()

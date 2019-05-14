@@ -291,8 +291,6 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
         prevEdge = null;
         Dist = UtilGraph.INIT_NODE_DIST;
         CurrentColor = Util.STANDARD_COLOR;
-
-        //isEndNode = false;
     }
 
     // --------------------------------------- User test ---------------------------------------
@@ -355,7 +353,12 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 {
                     switch (algorithm)
                     {
-                        case Util.BFS: case Util.DFS: prevEdge = travInst.PrevEdge; break;
+                        case Util.BFS:
+                        case Util.DFS:
+                        case Util.DFS_RECURSIVE:
+                            prevEdge = travInst.PrevEdge;
+                            break;
+
                         case Util.DIJKSTRA:
                             currentEdge = travInst.PrevEdge; break;
                     }

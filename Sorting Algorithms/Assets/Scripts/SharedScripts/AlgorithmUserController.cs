@@ -33,7 +33,7 @@ public class AlgorithmUserController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        // ************* DEBUGGING *************
+        #region Debugging: Keyboard binding
         if (debugNextReady)
         {
             if (Input.GetKey(KeyCode.E))
@@ -60,7 +60,7 @@ public class AlgorithmUserController : MonoBehaviour {
                 mainManager.DestroyAndReset();
             }
         }
-        // *************
+        #endregion
 
         // Do actions according to what teaching mode the player has activated
         if (mainManager.AlgorithmInitialized)
@@ -70,7 +70,6 @@ public class AlgorithmUserController : MonoBehaviour {
             {
                 mainManager.ToggleVisibleStuff();
             }
-
 
             switch (mainManager.Settings.TeachingMode)
             {
@@ -129,7 +128,7 @@ public class AlgorithmUserController : MonoBehaviour {
         }
     }
 
-
+    #region Debugging: Keyboard binding delay
     private WaitForSeconds buttonClickWait = new WaitForSeconds(0.2f), warningMessageDuration = new WaitForSeconds(3f);
     private IEnumerator DebugWait()
     {
@@ -137,4 +136,5 @@ public class AlgorithmUserController : MonoBehaviour {
         yield return buttonClickWait;
         debugNextReady = true;
     }
+    #endregion
 }

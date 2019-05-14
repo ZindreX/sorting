@@ -59,8 +59,8 @@ public abstract class SettingsMenuItem : MonoBehaviour {
             case Util.ONE_ACTIVE_BUTTON: ((OneActiveButton)this).ActivateItem(); break;
             case Util.STATIC_BUTTON: ((StaticButton)this).DoSomething(); break;
             case Util.TOGGLE_BUTTON: ((ToggleButton)this).Toggle(); break;
-            case Util.START_BUTTON:
-                ((StartButton)this).Toggle();
+            case Util.DELAY_BUTTON:
+                ((DelayButton)this).Toggle();
                 reportDirectly = false;
                 break;
             case Util.MULTI_STATE_BUTTON: ((MultiStateButton)this).ToggleNextState(); break;

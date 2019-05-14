@@ -172,7 +172,6 @@ public abstract class TeachingSettings : SettingsBase {
         return teachingMode == Util.USER_TEST;
     }
 
-    // Beginner, Intermediate, or Examination
     public int Difficulty
     {
         get { return difficulty; }
@@ -189,7 +188,6 @@ public abstract class TeachingSettings : SettingsBase {
         get { return algSpeed; }
         set
         {
-            //Debug.Log("Algorithm speed level changed: " + value);
             algSpeed = value;
             InitButtonState(Util.DEMO_SPEED, Util.DEMO_SPEED, value);
             switch (value)
@@ -263,10 +261,7 @@ public abstract class TeachingSettings : SettingsBase {
         MainManager.SafeStop();
     }
 
-    protected abstract MainManager MainManager { get; set; }
-
-
-    // For listing items in the settings menu description
+    // For listing items in the settings menu description (e.g. difficulty levels)
     private string FixNewLines(string itemDescription)
     {
         string[] headerBodySplit = itemDescription.Split(':');
@@ -286,4 +281,8 @@ public abstract class TeachingSettings : SettingsBase {
         return itemDescription;
     }
 
+
+    // ------------------------ Abstract methods ------------------------
+
+    protected abstract MainManager MainManager { get; set; }
 }

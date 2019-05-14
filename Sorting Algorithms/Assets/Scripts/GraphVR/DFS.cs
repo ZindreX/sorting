@@ -448,6 +448,9 @@ public class DFS : GraphAlgorithm, ITraverse {
                 recursiveInstructions.Add(instNr, new TraverseInstruction(UtilGraph.PUSH_INST, instNr++, connectedNode, connectedEdge, true, false, addConnectedNode));
 
                 connectedNode.Visited = true;
+
+                // Line 9: End for-loop (comment out the next line to see the order of all the nodes traversed - not as planned, but kinda useful)
+                recursiveInstructions.Add(instNr, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr++, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
                 yield return RecursiveDFS(connectedNode);
             }
             // Line 8: End if statement
@@ -456,6 +459,5 @@ public class DFS : GraphAlgorithm, ITraverse {
         // Line 9: End for-loop
         //recursiveInstructions.Add(instNr++, new TraverseInstruction(UtilGraph.END_FOR_LOOP_INST, instNr, currentNode, false, false)); // <-- instructions.Add(instNr++, new ListVisualInstruction(UtilGraph.DESTROY_CURRENT_NODE, instNr, currentNode));
     }
-
     #endregion
 }

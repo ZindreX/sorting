@@ -24,9 +24,9 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     protected HolderBase currentStandingOn;
     protected Vector3 placementAboveHolder;
 
+    protected SortingTable sortingTable;
     protected ElementInteraction elementInteraction;
     protected Rigidbody rigidBody;
-
 
     // Debugging
     #region Debugging variables:
@@ -41,6 +41,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         sortingElementID = SORTING_ELEMENT_NR++;
         name = MyRole();
         elementInteraction = GetComponent<ElementInteraction>();
+        sortingTable = FindObjectOfType<SortingTable>();
 
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.constraints = RigidbodyConstraints.None;
@@ -54,7 +55,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
             {
                 rigidBody.constraints = RigidbodyConstraints.FreezeAll;
                 transform.rotation = Quaternion.identity;
-                transform.position = FindObjectOfType<SortingTable>().ReturnPosition;
+                transform.position = sortingTable.ReturnPosition;
                 rigidBody.constraints = RigidbodyConstraints.None;
             }
         }
@@ -117,13 +118,13 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
     public bool NextMove
     {
         get { return nextMove; }
-        set { nextMove = value; }// Debug.Log(">>> NextMove given to [" + this.value + "]"); }
+        set { nextMove = value; }
     }
 
     public bool Moving
     {
         get { return moving; }
-        set { moving = value; parent.GetComponent<ElementManager>().NotifyMovingElement(gameObject.GetComponent<SortingElementBase>(), value); }
+        set { moving = value; parent.ElementManager.NotifyMovingElement(gameObject.GetComponent<SortingElementBase>(), value); }
     }
 
     public bool IntermediateMove
@@ -175,7 +176,7 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
                 string validation = IsCorrectlyPlaced();
                 switch (validation)
                 {
-                    case UtilSort.INIT_OK:
+                    case Util.INIT_OK:
                         standingInCorrectHolder = true;
                         break;
 
@@ -230,28 +231,9 @@ public abstract class SortingElementBase : MonoBehaviour, ISortSubElement, IInst
         if (collision.collider.tag == UtilSort.HOLDER_TAG)
         {
             parent.AudioManager.Play("Collision");
-
-            //HolderBase holder = collision.collider.GetComponentInParent<HolderBase>();
-            //if (parent.SortSettings.IsDemo())
-            //    CurrentStandingOn = holder;
-            //else
-            //{
-            //    // Update sorting element
-            //    PerformUserMove(holder);
-            //}
         }
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        //if (collision.collider.tag == UtilSort.HOLDER_TAG)
-        //{
-        //    if (CurrentStandingOn != null)
-        //        prevHolderID = CurrentStandingOn.HolderID;
-
-        //    CurrentStandingOn = null;
-        //}
-    }
 
     // --------------------------------------- Implemented in subclass ---------------------------------------
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class StartButton : ToggleButton {
+public class DelayButton : ToggleButton {
 
     [SerializeField]
     private Material delayMaterial;
@@ -49,6 +49,6 @@ public class StartButton : ToggleButton {
 
     public override string ItemRole()
     {
-        return Util.START_BUTTON;
+        return Util.DELAY_BUTTON;
     }
 }

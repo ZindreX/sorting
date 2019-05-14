@@ -61,8 +61,9 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
         this.algorithmSupportsBackStep = algorithmSupportsBackStep;
 
         // Destroy backward step button if algorithm doesnt support it
-        if (!algorithmSupportsBackStep)
-            Destroy(buttons[STEP_BACK].gameObject);
+        //if (!algorithmSupportsBackStep)
+        buttons[STEP_BACK].gameObject.SetActive(algorithmSupportsBackStep);
+            //Destroy(buttons[STEP_BACK].gameObject);
     }
 
     /* ----- Buttons ------
