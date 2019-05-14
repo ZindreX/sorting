@@ -33,6 +33,11 @@ public class BucketSort : SortAlgorithm {
         get { return Util.BUCKET_SORT; }
     }
 
+    public override bool CanPerformBackStep
+    {
+        get { return true; }
+    }
+
     public override string CollectLine(int lineNr)
     {
         string lineOfCode = lineNr.ToString() + Util.PSEUDO_SPLIT_LINE_ID;

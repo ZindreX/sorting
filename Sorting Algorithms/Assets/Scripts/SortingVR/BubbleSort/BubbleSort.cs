@@ -29,6 +29,11 @@ public class BubbleSort : SortAlgorithm {
         get { return Util.BUBBLE_SORT; }
     }
 
+    public override bool CanPerformBackStep
+    {
+        get { return true; }
+    }
+
     public override void AddSkipAbleInstructions()
     {
         base.AddSkipAbleInstructions();

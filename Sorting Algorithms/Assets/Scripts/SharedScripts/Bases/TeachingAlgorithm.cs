@@ -146,8 +146,11 @@ public abstract class TeachingAlgorithm : MonoBehaviour {
 
     public abstract string AlgorithmName { get; }
 
+    // Step-by-step: Cann decrement to the previous instruction
+    public abstract bool CanPerformBackStep { get; }
 
     public abstract MainManager MainManager { get; }
+
 
     // Space between lines of code
     public abstract float LineSpacing { get; }

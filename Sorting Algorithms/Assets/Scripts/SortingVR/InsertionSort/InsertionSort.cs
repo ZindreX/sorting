@@ -36,6 +36,11 @@ public class InsertionSort : SortAlgorithm {
         get { return Util.INSERTION_SORT; }
     }
 
+    public override bool CanPerformBackStep
+    {
+        get { return true; }
+    }
+
     public HolderBase PivotHolder
     {
         get { return pivotHolder; }

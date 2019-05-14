@@ -91,7 +91,7 @@ public class AlgorithmUserController : MonoBehaviour {
                         // Backwards to the previous instruction
                         else if (SteamVR_Input.__actions_default_in_Decrement.GetStateDown(SteamVR_Input_Sources.LeftHand))
                         {
-                            if (mainManager.Settings.StepBack)
+                            if (mainManager.GetTeachingAlgorithm().CanPerformBackStep)
                                 mainManager.PerformDemoDeviceAction(DemoDevice.STEP_BACK, true);
                             else
                                 StartCoroutine(mainManager.SetFeedbackDisplayDuration("Backward step not available for this algorithm."));

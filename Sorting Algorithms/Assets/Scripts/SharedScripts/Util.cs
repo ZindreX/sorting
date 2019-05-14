@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Util : MonoBehaviour {
 
+    /* ----------------------------------------- Information -----------------------------------------
+     * - Init settings              : Editor* / SortSettings / GraphSettings        | *Default (see editor)
+     * - Adjust support activation  : Util / UtilSort / UtilGraph (see below)       | pseudocode, holder feedback, list visual, etc... 
+     * 
+     * 
+     * 
+     * 
+    */
+
     // Support until lvl
     public static readonly int PSEUDO_CODE_MAX_DIFFICULTY = ADVANCED;
     public static readonly int PSEUDO_CODE_HIGHTLIGHT_MAX_DIFFICULTY = BEGINNER;

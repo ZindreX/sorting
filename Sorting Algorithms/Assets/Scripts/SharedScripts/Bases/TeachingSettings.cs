@@ -172,12 +172,6 @@ public abstract class TeachingSettings : SettingsBase {
         return teachingMode == Util.USER_TEST;
     }
 
-    public bool StepBack
-    {
-        get { return stepBack; }
-        set { stepBack = value; } // Set by demo device,. check with each specific algorithm instead?
-    }
-
     // Beginner, Intermediate, or Examination
     public int Difficulty
     {

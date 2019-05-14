@@ -9,6 +9,11 @@ public class BFS : GraphAlgorithm, ITraverse {
         get { return Util.BFS; }
     }
 
+    public override bool CanPerformBackStep
+    {
+        get { return true; }
+    }
+
     public override string GetListType()
     {
         return Util.QUEUE;

@@ -35,6 +35,11 @@ public class MergeSort : SortAlgorithm {
         get { return Util.MERGE_SORT; }
     }
 
+    public override bool CanPerformBackStep
+    {
+        get { return false; }
+    }
+
     public override string CollectLine(int lineNr)
     {
         return "0: No pseudocode for merge sort yet.";

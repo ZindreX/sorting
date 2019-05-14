@@ -15,8 +15,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     private Section section;
     private ToggleButton pauseButton;
 
-    [SerializeField]
-    private bool enableStepBack;
+    private bool algorithmSupportsBackStep;
 
     private MainManager mainManager;
 
@@ -52,20 +51,18 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
     {
         // Find main manager
         mainManager = FindObjectOfType<MainManager>();
-
-        // Destroy backward step (not finished)
-        if (mainManager != null)
-            mainManager.Settings.StepBack = enableStepBack;
-
-        if (!enableStepBack)
-            Destroy(buttons[STEP_BACK].gameObject);
     }
 
-    public void InitDemoDevice(bool startPaused)
+    public void InitDemoDevice(bool startPaused, bool algorithmSupportsBackStep)
     {
         section.InitItem(PAUSE, startPaused);
         TransitionPause(startPaused);
         demoActive = true;
+        this.algorithmSupportsBackStep = algorithmSupportsBackStep;
+
+        // Destroy backward step button if algorithm doesnt support it
+        if (!algorithmSupportsBackStep)
+            Destroy(buttons[STEP_BACK].gameObject);
     }
 
     /* ----- Buttons ------
@@ -82,7 +79,7 @@ public class DemoDevice : InteractionDeviceBase, ISectionManager {
         buttons[REDUCE_SPEED].gameObject.SetActive(!paused);
         buttons[INCREASE_SPEED].gameObject.SetActive(!paused);
 
-        if (enableStepBack)
+        if (algorithmSupportsBackStep)
             buttons[STEP_BACK].gameObject.SetActive(paused);
 
         buttons[STEP_FORWARD].gameObject.SetActive(paused);

@@ -9,6 +9,11 @@ public class DFS : GraphAlgorithm, ITraverse {
         get { return Util.DFS; }
     }
 
+    public override bool CanPerformBackStep
+    {
+        get { return false; }
+    }
+
     public override string GetListType()
     {
         return UtilGraph.STACK;

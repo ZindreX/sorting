@@ -13,10 +13,14 @@ public class Dijkstra : GraphAlgorithm, IShortestPath {
         base.InitTeachingAlgorithm(algorithmSpeed);
     }
 
-
     public override string AlgorithmName
     {
         get { return Util.DIJKSTRA; }
+    }
+
+    public override bool CanPerformBackStep
+    {
+        get { return false; }
     }
 
     public string IfStatementContent

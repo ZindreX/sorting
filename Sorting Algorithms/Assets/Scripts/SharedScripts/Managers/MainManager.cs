@@ -344,7 +344,7 @@ public abstract class MainManager : MonoBehaviour {
 
     private string UserPausedText(bool pause)
     {
-        if (Settings.StepBack)
+        if (GetTeachingAlgorithm().CanPerformBackStep)
             return pause ? "Step-by-step\nUse grip buttons to step forward/backward" : "Demo\nUse grip buttons to adjust speed";
         return pause ? "Step-by-step\nClick right grip button to step forward" : "Demo\nUse grip buttons to adjust speed";
     }
@@ -382,7 +382,7 @@ public abstract class MainManager : MonoBehaviour {
         switch (teachingMode)
         {
             case Util.DEMO:
-                demoDevice.InitDemoDevice(userPausedTask);
+                demoDevice.InitDemoDevice(userPausedTask, GetTeachingAlgorithm().CanPerformBackStep);
                 demoDevice.SpawnDeviceInfrontOfPlayer();
                 PerformAlgorithmDemo();
                 break;
