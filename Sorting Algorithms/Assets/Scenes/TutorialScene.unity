@@ -1831,27 +1831,30 @@ PrefabInstance:
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_text
-      value: Insert the VHS cassette into the monitor.
+      value: 'Insert the VHS cassette into the monitor.
+
+
+        Useful videos can be found in the algorithm rooms. (outside the tutorial)'
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 41
+      value: 116
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 6
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 7
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 114664896654835496, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 114040269408031254, guid: 8a2244795314b324082892e60859f7cf,
         type: 3}
@@ -7841,20 +7844,20 @@ PrefabInstance:
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_text
-      value: '1) Add/relax a node: aim and click the trigger button (4)
+      value: 'Step 1) Add/relax a node: aim and click the trigger button [4]
 
 
-        2) Traverse the node: Teleport to it, using the trackpad (2)'
+        Step 2) Traverse the node: Teleport to it, using the trackpad [2]'
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 119
+      value: 129
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 23
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
@@ -7869,7 +7872,7 @@ PrefabInstance:
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 22
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
