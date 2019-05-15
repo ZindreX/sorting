@@ -292,14 +292,6 @@ public class GraphMain : MainManager {
         graphSettings.FillTooltips("Loading setup...", false);
         yield return loading;
 
-        if (feedbackDisplayText != null)
-        {
-            if (active)
-                feedbackDisplayText.text = graphSettings.TeachingMode;
-            else
-                feedbackDisplayText.text = "";
-        }
-
         // Settings menu
         graphSettings.ActiveInScene(!active);
 

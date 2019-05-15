@@ -133,7 +133,7 @@ public class SortSettings : TeachingSettings {
     {
         // Fill information on the "display" on the settings menu about the button just clicked
         FillTooltips(itemDescription, false);
-        Debug.Log("Section: " + sectionID + ", item: " + itemID + ", description: " + itemDescription);
+        //Debug.Log("Section: " + sectionID + ", item: " + itemID + ", description: " + itemDescription);
 
         switch (sectionID)
         {

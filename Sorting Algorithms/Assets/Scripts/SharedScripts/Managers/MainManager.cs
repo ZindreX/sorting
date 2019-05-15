@@ -368,6 +368,8 @@ public abstract class MainManager : MonoBehaviour {
         checkListModeActive = true;
         algorithmName = Settings.Algorithm;
 
+        SetFeedbackDisplay("Click start to play");
+
         // Debugging
         deleteWhenReached = debugLineNumbers;
     }

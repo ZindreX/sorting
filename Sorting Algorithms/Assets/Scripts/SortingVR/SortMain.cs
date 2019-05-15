@@ -236,7 +236,7 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn\nPause for step-by-step");
+        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn.\nPause for step-by-step");
 
         // Enable interaction
         elementManager.InteractionWithSortingElements(false);
@@ -363,14 +363,6 @@ public class SortMain : MainManager {
     {
         sortSettings.FillTooltips("Loading setup...", false);
         yield return loading;
-
-        if (feedbackDisplayText != null)
-        {
-            if (active)
-                feedbackDisplayText.text = sortSettings.TeachingMode;
-            else
-                feedbackDisplayText.text = "";
-        }
 
         // Settings menu
         sortSettings.ActiveInScene(!active);
