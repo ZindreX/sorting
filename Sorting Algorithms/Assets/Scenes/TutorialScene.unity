@@ -679,7 +679,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4205469460396212, guid: 8a2244795314b324082892e60859f7cf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.543
+      value: 0.746
       objectReference: {fileID: 0}
     - target: {fileID: 4205469460396212, guid: 8a2244795314b324082892e60859f7cf, type: 3}
       propertyPath: m_LocalPosition.y
@@ -13617,14 +13617,6 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1932050657, guid: 1c6479821e5152c43b03f6863bfecbda, type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1932050657, guid: 1c6479821e5152c43b03f6863bfecbda, type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 9008925569951643031, guid: 1c6479821e5152c43b03f6863bfecbda,
         type: 3}
       propertyPath: videoClips.Array.size
@@ -13659,6 +13651,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1932050657, guid: 1c6479821e5152c43b03f6863bfecbda, type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1932050657, guid: 1c6479821e5152c43b03f6863bfecbda, type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c6479821e5152c43b03f6863bfecbda, type: 3}
