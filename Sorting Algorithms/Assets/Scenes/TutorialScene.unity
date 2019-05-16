@@ -2491,27 +2491,27 @@ PrefabInstance:
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
       propertyPath: m_text
-      value: <--Observe the test object
+      value: <--Observe the test object as you click the buttons
       objectReference: {fileID: 0}
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 26
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
@@ -2526,8 +2526,13 @@ PrefabInstance:
     - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
         type: 3}
       propertyPath: m_firstOverflowCharacterIndex
-      value: -1
+      value: 27
       objectReference: {fileID: 0}
+    - target: {fileID: 114817540437568800, guid: c2c37000dfbdf3042be94bd4f2cb00df,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a6490ec68b0a3e54290905cf54ef4eb0, type: 2}
     - target: {fileID: 4440323433041388, guid: c2c37000dfbdf3042be94bd4f2cb00df, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.742
@@ -3930,7 +3935,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipsText: {fileID: 1259476877}
-  message: Init / Idle state
+  message: Move the element to the other holders (colored plates) in order to progress
+    to the next room
 --- !u!54 &523009832
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7400,6 +7406,21 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000004
       objectReference: {fileID: 0}
+    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 114862566340836112, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
         type: 3}
       propertyPath: itemID
@@ -7486,21 +7507,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 33152461197928554, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
         type: 3}
       propertyPath: m_Mesh
       value: 
@@ -7844,25 +7850,35 @@ PrefabInstance:
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_text
-      value: 'Step 1) Add/relax a node: aim and click the trigger button [4]
+      value: 'How to traverse a graph:
 
 
-        Step 2) Traverse the node: Teleport to it, using the trackpad [2]'
+        Step 1) Check a node: aim and click the trigger button [4]
+
+        - Pseudocode term: Add(), Enqueue(), Push(), Relax()
+
+
+        Step 2) Traverse the node: Teleport to it, using the trackpad [2]
+
+        - Pseudocode term: Dequeue(), Pop(), RemoveMin()
+
+
+        Step 3) Go to step 1, and repeat for all neighbor nodes'
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 129
+      value: 310
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 25
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 3
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
@@ -7872,17 +7888,17 @@ PrefabInstance:
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 24
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_fontSize
-      value: 0.2
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_margin.x
-      value: 9.850704
+      value: 10.000954
       objectReference: {fileID: 0}
     - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
@@ -7894,6 +7910,11 @@ PrefabInstance:
       propertyPath: m_textAlignment
       value: 257
       objectReference: {fileID: 0}
+    - target: {fileID: 862898603528085969, guid: 30c936cecbbb170499ef930febfe4377,
+        type: 3}
+      propertyPath: m_margin.y
+      value: 2.3468919
+      objectReference: {fileID: 0}
     - target: {fileID: 131824310079224573, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -7902,7 +7923,12 @@ PrefabInstance:
     - target: {fileID: 131824310079224573, guid: 30c936cecbbb170499ef930febfe4377,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.1391
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1278842735220696063, guid: 30c936cecbbb170499ef930febfe4377,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30c936cecbbb170499ef930febfe4377, type: 3}
@@ -15208,6 +15234,21 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 114862566340836112, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
         type: 3}
       propertyPath: itemID
@@ -15294,21 +15335,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 33152461197928554, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114839940078591906, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 33150613777482632, guid: 002e146dcd8a6a743b4fba6eb7fbb626,
         type: 3}
       propertyPath: m_Mesh
       value: 
