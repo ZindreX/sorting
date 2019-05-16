@@ -3765,6 +3765,16 @@ PrefabInstance:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5093265178759109494, guid: 1c6479821e5152c43b03f6863bfecbda,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5093453326509440864, guid: 1c6479821e5152c43b03f6863bfecbda,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5850559269809480769, guid: 1c6479821e5152c43b03f6863bfecbda,
         type: 3}
       propertyPath: m_Mesh
@@ -3779,16 +3789,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5093265178759109494, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5093453326509440864, guid: 1c6479821e5152c43b03f6863bfecbda,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2505096273252124653, guid: 1c6479821e5152c43b03f6863bfecbda,
         type: 3}
@@ -5777,6 +5777,26 @@ PrefabInstance:
         type: 3}
       propertyPath: graphTaskEditor
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: treeDepth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: nTree
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: edgeModeEditor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: edgeTypeEditor
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293765762908, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
