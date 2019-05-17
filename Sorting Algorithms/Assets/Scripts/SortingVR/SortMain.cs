@@ -236,8 +236,6 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmDemo()
     {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Watch and learn.\nPause for step-by-step");
-
         // Enable interaction
         elementManager.InteractionWithSortingElements(false);
 
@@ -266,7 +264,7 @@ public class SortMain : MainManager {
     */
     public override void PerformAlgorithmUserTest()
     {
-        displayUnitManager.SetText(UtilSort.SORT_TABLE_TEXT, "Use the trigger button to interact\n with the sorting elements");
+        SetFeedbackDisplay("Use the trigger button to interact\n with the sorting elements");
 
         // Enable interaction
         elementManager.InteractionWithSortingElements(true);

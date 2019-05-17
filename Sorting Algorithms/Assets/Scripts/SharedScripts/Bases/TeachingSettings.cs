@@ -242,6 +242,7 @@ public abstract class TeachingSettings : SettingsBase {
             case Util.DEMO:
             case Util.STEP_BY_STEP:
                 algorithmSpeed = AlgorithmSpeedLevel;
+                MainManager.SetFeedbackDisplay("Demo playing.\nClick pause for step-by-step");
                 break;
 
             case Util.USER_TEST:
@@ -251,7 +252,6 @@ public abstract class TeachingSettings : SettingsBase {
                     algorithmSpeed = 0f; //AlgorithmSpeedLevel = 3; // 0 Sec per step -- no "lag"
                 break;
         }
-
         MainManager.StartAlgorithm();
     }
 

@@ -328,28 +328,37 @@ public class Calculator : InteractionDeviceBase {
     {
         string feedback = "";
 
-        // First check if the the current node distance (user standing on) and edge cost is correct || order doesnt matter anymore
-        if (correctNode1Dist == value1 && correctEdgeCost == value2 || correctNode1Dist == value2 && correctEdgeCost == value1)
+        // Check operator
+        if (op == '+')
         {
-            int newDist = correctNode1Dist + correctEdgeCost;
-
-            if (newDist < correctNode2Dist && newValueLessThanCurrent == "<" || newDist > correctNode2Dist && newValueLessThanCurrent == ">")
+            // First check if the the current node distance (user standing on) and edge cost is correct || order doesnt matter anymore
+            if (correctNode1Dist == value1 && correctEdgeCost == value2 || correctNode1Dist == value2 && correctEdgeCost == value1)
             {
-                if (correctNode2Dist == value3)
+                int newDist = correctNode1Dist + correctEdgeCost;
+
+                if (newDist < correctNode2Dist && newValueLessThanCurrent == "<" || newDist > correctNode2Dist && newValueLessThanCurrent == ">")
                 {
-                    return Feedback(true, feedback);
+                    if (correctNode2Dist == value3)
+                    {
+                        return Feedback(true, feedback);
+                    }
+                    else
+                    {
+                        feedback = "Incorrect: right hand side";
+                        return Feedback(false, feedback);
+                    }
                 }
                 else
                 {
-                    feedback = "Incorrect: right hand side";
+                    feedback += "Incorrect: less/greater";
                     return Feedback(false, feedback);
                 }
             }
-            else
-            {
-                feedback += "Incorrect: less/greater";
-                return Feedback(false, feedback);
-            }
+        }
+        else
+        {
+            feedback += "Incorrect: operator";
+            return Feedback(false, feedback);
         }
 
         if (correctNode1Dist != value1)

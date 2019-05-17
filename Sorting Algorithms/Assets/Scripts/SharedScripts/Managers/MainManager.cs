@@ -411,6 +411,7 @@ public abstract class MainManager : MonoBehaviour {
      */
     public virtual void DestroyAndReset()
     {
+        SetFeedbackDisplay("");
         algorithmName = "";
         prevInstruction = "";
 

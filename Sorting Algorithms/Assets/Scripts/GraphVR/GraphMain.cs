@@ -390,6 +390,8 @@ public class GraphMain : MainManager {
     */
     public override void PerformAlgorithmUserTest()
     {
+        SetFeedbackDisplay("");
+
         // Getting instructions for this sample of sorting elements
         Dictionary<int, InstructionBase> instructions = null;
 
