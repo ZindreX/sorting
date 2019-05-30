@@ -336,7 +336,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                     visitNextMove = true;
 
                     if (graphMain.Settings.Difficulty <= UtilGraph.ANIMATION_DIRECTION_MAX_DIFFICULTY)
-                        animator.SetBool("NodeVisit", true);
+                        animator.SetBool("NodeCheck", true);
                 }
 
                 // This node is the next to be traversed (player move to node)
@@ -459,11 +459,14 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
 
                     shootStatus = false;
                     traverseStatus = false;
-                    graphMain.GetComponent<UserTestManager>().Mistake();
-                    graphMain.GetComponent<UserTestManager>().ReportError();
 
                     // mistake animation
-                    animator.Play("NodeError");
+                    if (graphMain.Settings.IsUserTest())
+                    {
+                        graphMain.GetComponent<UserTestManager>().Mistake();
+                        graphMain.GetComponent<UserTestManager>().ReportError();
+                        animator.Play("NodeError");
+                    }
                     break;
 
                 default: Debug.Log("'Add '" + validation + "' case, or ignore"); break;
@@ -492,7 +495,7 @@ public abstract class Node : MonoBehaviour, IComparable<Node>, IInstructionAble 
                 // Stop animation
                 if (graphMain.Settings.Difficulty <= UtilGraph.ANIMATION_DIRECTION_MAX_DIFFICULTY)
                 {
-                    animator.SetBool("NodeVisit", false);
+                    animator.SetBool("NodeCheck", false);
                     animator.SetBool("NodeTraverse", false);
                 }
             }

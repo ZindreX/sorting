@@ -40,7 +40,7 @@ public class UtilGraph : Util {
 
     // ----------------------------------------- Animation -----------------------------------------
 
-    public static readonly string NODE_VISIT_ANIMATION = "NodeVisit", NODE_TRAVERSE_ANIMATION = "NodeTraverse", NODE_ERROR_ANIMATION = "NodeError";
+    public static readonly string NODE_VISIT_ANIMATION = "NodeCheck", NODE_TRAVERSE_ANIMATION = "NodeTraverse", NODE_ERROR_ANIMATION = "NodeError";
 
     // Rules
     public const string SHORTEST_PATH_ONE_TO_ALL = "Shortest path one to all";
@@ -171,6 +171,5 @@ public class UtilGraph : Util {
         }
         return null;
     }
-
 }
 

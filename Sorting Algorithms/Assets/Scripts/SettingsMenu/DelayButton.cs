@@ -51,4 +51,22 @@ public class DelayButton : ToggleButton {
     {
         return Util.DELAY_BUTTON;
     }
+
+
+
+
+
+    private WaitForSeconds pauseDuration = new WaitForSeconds(1f);
+
+    public void TestMethod()
+    {
+        StartCoroutine(CoroutineMethod());
+    }
+
+    public IEnumerator CoroutineMethod()
+    {
+        // Do some stuff
+        yield return pauseDuration; // Pause for 1 second
+        // Do some more stuff
+    }
 }

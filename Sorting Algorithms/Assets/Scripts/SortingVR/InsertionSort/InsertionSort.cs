@@ -211,19 +211,20 @@ public class InsertionSort : SortAlgorithm {
     }
     #endregion
 
-    #region Insertion Sort: All Moves Demo (Visuals, OLD)
+    #region Insertion Sort: Old Demo System
     public override IEnumerator Demo(GameObject[] list)
     {
         Vector3 temp = new Vector3();
 
-        // Testing
+        // Set first element as sorted
         list[0].GetComponent<SortingElementBase>().IsSorted = true;
         UtilSort.IndicateElement(list[0]);
         yield return demoStepDuration;
 
-        i = 1;
         int listLength = list.Length;
-        lengthOfList = listLength.ToString();
+        lengthOfList = listLength.ToString(); // Pseudocode
+
+        i = 1;
         // Display pseudocode (set i)
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_STANDARD_COLOR);
 

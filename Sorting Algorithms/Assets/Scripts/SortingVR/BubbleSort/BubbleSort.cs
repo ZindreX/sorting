@@ -149,7 +149,7 @@ public class BubbleSort : SortAlgorithm {
         i = 0;
         j = 0;
 
-        // Display pseudocode (list length)
+        // Display pseudocode line 1: n = len(list)
         yield return HighlightPseudoCode(CollectLine(1), Util.HIGHLIGHT_STANDARD_COLOR);
 
         for (i=0; i < N; i++)
