@@ -58,6 +58,7 @@ public class ElementManager : MonoBehaviour, IManager {
         return Random.Range(minValue, maxValue);
     }
 
+    #region Not used
     // Creation without rules
     public void CreateObjects(int numberOfElements, Vector3[] positions) // NOT USED?
     {
@@ -91,6 +92,7 @@ public class ElementManager : MonoBehaviour, IManager {
 
         containsElements = true;
     }
+    #endregion
 
     // Creation with rules
     private HashSet<int> usedValues = new HashSet<int>();
@@ -124,7 +126,7 @@ public class ElementManager : MonoBehaviour, IManager {
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = newValue;
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
-            sortingElements[x].transform.parent = sortingTableElementsObj.transform;
+            sortingElements[x].GetComponent<ElementInteraction>().SetParent(sortingTableElementsObj.transform);
         }
 
         if (sortingCase != UtilSort.NONE)

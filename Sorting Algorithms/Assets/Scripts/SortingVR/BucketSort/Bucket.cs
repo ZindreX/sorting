@@ -44,7 +44,9 @@ public class Bucket : MonoBehaviour, ISortSubElement {
     void Awake()
     {
         bucketID = BUCKET_NR++;
+        name = "Bucket " + bucketID;
         currentHolding = new List<SortingElementBase>();
+
 
         // Bucket index text
         bucketIndexText.text = bucketID.ToString();
@@ -125,6 +127,9 @@ public class Bucket : MonoBehaviour, ISortSubElement {
 
         Debug.Log("Adding element: " + sortingElement.SortingElementID);
         currentHolding.Add(sortingElement);
+
+        // Change transform parent to this bucket
+        sortingElement.transform.parent = transform;
 
         if (sortingElement is BucketSortElement)
         {
@@ -279,6 +284,8 @@ public class Bucket : MonoBehaviour, ISortSubElement {
 
         // Enable Y-axis movement
         sortingElement.RigidBody.constraints = ~RigidbodyConstraints.FreezePositionY;
+
+        sortingElement.GetComponent<ElementInteraction>().PutBack();
 
         // Disable all constraints after some seconds
         //StartCoroutine(RemoveConstraintsDelay(sortingElement));

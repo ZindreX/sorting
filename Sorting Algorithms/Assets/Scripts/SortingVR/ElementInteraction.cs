@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ElementInteraction : MonoBehaviour {
+public class ElementInteraction : MonoBehaviour
+{
 
-    /* Used to check if user has interacted with the sorting element
-     * For instance, picked up the element for comparison (Bubblesort was kinda screwed at higher difficulty levels, because it just skipped all instruction but the swap instruction) 
+    /* >>> Used to check if user has interacted with the sorting element
+     * 
+     * - Bubble- / insertion sort comparison check
+     * - Restoring transform parent when deataching from hand
      * 
     */
 
@@ -16,8 +19,8 @@ public class ElementInteraction : MonoBehaviour {
 
     public void SetParent(Transform parent)
     {
-        transform.parent = parent;
         this.parent = parent;
+        transform.parent = parent;
     }
 
     public bool PickedUp
@@ -28,6 +31,9 @@ public class ElementInteraction : MonoBehaviour {
 
     public void PutBack()
     {
-        transform.parent = parent;
+        if (parent != null)
+            transform.parent = parent;
     }
+
+
 }

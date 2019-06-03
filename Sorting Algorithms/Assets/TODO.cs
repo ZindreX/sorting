@@ -35,11 +35,6 @@
  *      
  * 
  * 
- * *********************************** Remember to fix when moving from Non-VR -> VR **********************************************
- * 
- * > Change 'moving' variable when picking up/releasing a sorting element
- * 
- * 
  * 
  *  *********************************** Implementation ideas **********************************************
  * 
@@ -50,4 +45,17 @@
  * > User test
  *  - gather all user inputs (during examination?)
  *  - if any mistakes has been done by user --> show what and how (step/instructions/feedback/animations)
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  *********************************** Readme stuff **********************************************                   <----------------------------------------------------------- Readme!
+ *  
+ * > VHS: Destroyed?
+ * - Check filepath (TODO: add video file to project)
+ *  
+ *  
+ *  
 */
