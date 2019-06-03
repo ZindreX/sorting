@@ -9,11 +9,25 @@ public class ElementInteraction : MonoBehaviour {
      * 
     */
 
+    private Transform parent;
+
     private bool pickedUp;
+
+
+    public void SetParent(Transform parent)
+    {
+        transform.parent = parent;
+        this.parent = parent;
+    }
 
     public bool PickedUp
     {
         get { return pickedUp; }
         set { pickedUp = value; }
+    }
+
+    public void PutBack()
+    {
+        transform.parent = parent;
     }
 }

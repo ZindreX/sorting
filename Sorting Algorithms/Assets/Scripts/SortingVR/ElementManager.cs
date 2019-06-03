@@ -80,8 +80,7 @@ public class ElementManager : MonoBehaviour, IManager {
             }
             sortingElements[x].GetComponent<SortingElementBase>().Value = val++;//Random.Range(0, UtilSort.MAX_VALUE);
             sortingElements[x].GetComponent<ISortSubElement>().SuperElement = superElement;
-            sortingElements[x].transform.parent = sortingTableElementsObj.transform;
-
+            sortingElements[x].GetComponent<ElementInteraction>().SetParent(sortingTableElementsObj.transform);
         }
 
         for (int x = 0; x < sortingElements.Length; x++)
