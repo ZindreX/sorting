@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OneActiveButton : SettingsMenuButton {
+public class RadioButton : SettingsMenuButton {
 
     [SerializeField]
     private Material activeMat, inactiveMat;
@@ -57,6 +57,6 @@ public class OneActiveButton : SettingsMenuButton {
 
     public override string ItemRole()
     {
-        return Util.ONE_ACTIVE_BUTTON;
+        return Util.RADIO_BUTTON;
     }
 }

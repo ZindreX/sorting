@@ -20,7 +20,7 @@ public class Util : MonoBehaviour {
 
     // ----------------------------------------- Settings menu ----------------------------------------- 
     // Buttons
-    public const string ONE_ACTIVE_BUTTON = "One active button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
+    public const string RADIO_BUTTON = "Radio button", TOGGLE_BUTTON = "Toggle button", MULTI_STATE_BUTTON = "Multi state button", STATIC_BUTTON = "Static button";
     public const string DELAY_BUTTON = "Delay button";
 
     // Sections

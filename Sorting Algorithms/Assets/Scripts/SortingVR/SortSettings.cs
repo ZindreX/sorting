@@ -211,7 +211,7 @@ public class SortSettings : TeachingSettings {
 
     public void ChangeNumberOfBuckets(string buttonID)
     {
-        bool increaseNumberOfBuckets = buttonID == Util.PLUS;
+        bool increaseNumberOfBuckets = (buttonID == Util.PLUS);
         if (increaseNumberOfBuckets)
         {
             if (numberOfBuckets < UtilSort.MAX_NUMBER_OF_BUCKETS)
@@ -223,9 +223,7 @@ public class SortSettings : TeachingSettings {
                 numberOfBucketsText.text = numberOfBuckets.ToString();
             }
             else
-            {
                 FillTooltips("Maximum 10 buckets.", false);
-            }
         }
         else
         {
@@ -238,9 +236,7 @@ public class SortSettings : TeachingSettings {
                 numberOfBucketsText.text = numberOfBuckets.ToString();
             }
             else
-            {
                 FillTooltips("Minimum 2 buckets.", false);
-            }
         }
     }
 

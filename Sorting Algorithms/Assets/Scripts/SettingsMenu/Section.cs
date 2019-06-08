@@ -110,7 +110,7 @@ public class Section : MonoBehaviour {
 
         switch (item.ItemRole())
         {
-            case Util.ONE_ACTIVE_BUTTON: ((OneActiveButton)item).ActivateItem(); break;
+            case Util.RADIO_BUTTON: ((RadioButton)item).ActivateItem(); break;
             case Util.STATIC_BUTTON: break;
         }
     }
@@ -149,9 +149,9 @@ public class Section : MonoBehaviour {
             if (entry.Key != itemID)
             {
                 SettingsMenuItem item = entry.Value;
-                if (item.ItemRole() == Util.ONE_ACTIVE_BUTTON)
+                if (item.ItemRole() == Util.RADIO_BUTTON)
                 {
-                    OneActiveButton button = (OneActiveButton)entry.Value;
+                    RadioButton button = (RadioButton)entry.Value;
                     button.Deactivateitem();
                 }
             }

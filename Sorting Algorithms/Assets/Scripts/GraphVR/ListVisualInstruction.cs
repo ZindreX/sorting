@@ -67,9 +67,9 @@ public class ListVisualInstruction : InstructionBase {
     public override string DebugInfo()
     {
         if (node != null && index != Util.NO_INDEX_VALUE)
-            return "List visual instruction: " + base.DebugInfo() + " | Node: " + node.NodeAlphaID + ", index: " + index;
+            return base.DebugInfo() + "List visual instruction: " + " | Node: " + node.NodeAlphaID + ", index: " + index;
         else if (node != null)
-            return "List visual instruction: " + base.DebugInfo() + " | Node: " + node.NodeAlphaID;
-        return "List visual instruction: " + base.DebugInfo();
+            return base.DebugInfo() + "List visual instruction: " + " | Node: " + node.NodeAlphaID;
+        return base.DebugInfo() + "List visual instruction: ";
     }
 }

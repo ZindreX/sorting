@@ -1319,11 +1319,11 @@ MonoBehaviour:
     lineCount: 0
     pageCount: 0
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 443287508}
@@ -1971,11 +1971,11 @@ MonoBehaviour:
     lineCount: 0
     pageCount: 0
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 697791964}
@@ -2228,11 +2228,11 @@ MonoBehaviour:
     lineCount: 0
     pageCount: 0
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 743485944}
@@ -4231,11 +4231,11 @@ MonoBehaviour:
     lineCount: 0
     pageCount: 0
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1526100759}
@@ -5801,6 +5801,16 @@ PrefabInstance:
     - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
         type: 3}
       propertyPath: teachingModeEditor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: maxEdgeCost
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8329764293835331175, guid: 2fb58d9b5ec180847ba43008f033f8de,
+        type: 3}
+      propertyPath: minEdgeCost
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8329764293765762908, guid: 2fb58d9b5ec180847ba43008f033f8de,

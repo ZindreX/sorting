@@ -12171,6 +12171,21 @@ PrefabInstance:
       propertyPath: algorithmEditor
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
+        type: 3}
+      propertyPath: userTestScore
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
+        type: 3}
+      propertyPath: elementMaxValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4684018216397109422, guid: ed43fa95a0ec4be469aa2eddef108310,
+        type: 3}
+      propertyPath: numberOfElements
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4654152901785686430, guid: ed43fa95a0ec4be469aa2eddef108310,
         type: 3}
       propertyPath: m_havePropertiesChanged

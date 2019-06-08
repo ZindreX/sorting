@@ -124,7 +124,7 @@ public class Pointer : MonoBehaviour {
                     laserBeam.SetPosition(1, hit.point);
                     laserBeam.enabled = true;
 
-                    //Debug.Log("Gameobject: " + hit.collider.gameObject);
+                    // Debugging
                     hitObject = hit.collider.gameObject;
 
                     // Get a reference to the node the raycast collided with
@@ -159,7 +159,6 @@ public class Pointer : MonoBehaviour {
                         {
                             if (prevNodeShot != node)
                             {
-                                //Debug.Log("Node " + node.NodeAlphaID + " shot, performing user move on it");
                                 node.PerformUserMove(UtilGraph.NODE_VISITED);
                                 prevNodeShot = node;
                             }

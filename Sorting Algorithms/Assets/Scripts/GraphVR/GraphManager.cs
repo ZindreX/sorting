@@ -11,13 +11,14 @@ public abstract class GraphManager : MonoBehaviour {
     protected bool isShortestPath;
     protected string algorithmName, graphStructure, edgeType;
     protected List<GameObject> edges;
+    protected int minEdgeCost, maxEdgeCost;
 
     private Node startNode, endNode;
     private Dictionary<string, int> rngDict;
 
     private ListVisual listVisual;
 
-    public void InitGraphManager(string algorithmName, string graphStructure, string edgeType, bool isShortestPath, Dictionary<string, int> rngDict, ListVisual listVisual)
+    public void InitGraphManager(string algorithmName, string graphStructure, string edgeType, bool isShortestPath, Dictionary<string, int> rngDict, ListVisual listVisual, int minEdgeCost, int maxEdgeCost)
     {
         this.algorithmName = algorithmName;
         this.graphStructure = graphStructure;
@@ -25,6 +26,8 @@ public abstract class GraphManager : MonoBehaviour {
         this.isShortestPath = isShortestPath;
         this.rngDict = rngDict;
         this.listVisual = listVisual;
+        this.minEdgeCost = minEdgeCost;
+        this.maxEdgeCost = maxEdgeCost;
 
         // Init edges
         edges = new List<GameObject>();
@@ -95,7 +98,7 @@ public abstract class GraphManager : MonoBehaviour {
         // Set cost if algorithm requires it
         int edgeCost = UtilGraph.NO_COST;
         if (isShortestPath)
-            edgeCost = Random.Range(0, UtilGraph.EDGE_MAX_WEIGHT);
+            edgeCost = Random.Range(minEdgeCost, maxEdgeCost + 1); // include 100
 
         // Initialize edge
         switch (edgeType)

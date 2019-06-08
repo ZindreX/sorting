@@ -195,8 +195,10 @@ public class GraphMain : MainManager {
 
         // >>> Init Graph manager
         bool isShortestPath = graphTask == UtilGraph.SHORTEST_PATH;
+        int minEdge = graphSettings.MinEdgeCost;
+        int maxEdge = graphSettings.MaxEdgeCost;
         graphManager = ActivateDeactivateGraphComponents(graphSettings.GraphStructure);
-        graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict(), listVisual);
+        graphManager.InitGraphManager(algorithmName, graphStructure, edgeType, isShortestPath, graphSettings.RNGDict(), listVisual, minEdge, maxEdge);
 
         // Graph setup (rows/colums - tree depth/nTree - random?)
         graphManager.InitGraph(graphSetup);

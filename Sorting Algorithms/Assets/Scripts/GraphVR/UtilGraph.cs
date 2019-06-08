@@ -23,7 +23,7 @@ public class UtilGraph : Util {
     public static readonly int MAX_RANDOM_NODES = 5, MAX_RANDOM_EDGES = 20;
 
     // Graph space
-    public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16, EDGE_MAX_WEIGHT = 101;
+    public static readonly int GRAPH_MIN_X = -8, GRAPH_MAX_X = 8, GRAPH_MIN_Z = 0, GRAPH_MAX_Z = 16;// EDGE_MAX_WEIGHT = 101;
     public static readonly string SYMMETRIC_EDGE_CHANCE = "Symmetric edge chance", PARTIAL_BUILD_TREE_CHILD_CHANCE = "Partial build tree child chance", BUILD_EDGE_CHANCE = "Build edge chance";
 
     // ----------------------------------------- GUI ----------------------------------------- 

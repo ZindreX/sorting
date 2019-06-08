@@ -16,7 +16,6 @@ public class ElementInteraction : MonoBehaviour
 
     private bool pickedUp;
 
-
     public void SetParent(Transform parent)
     {
         this.parent = parent;

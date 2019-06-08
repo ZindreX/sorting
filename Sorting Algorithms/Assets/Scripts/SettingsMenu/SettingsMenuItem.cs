@@ -56,7 +56,7 @@ public abstract class SettingsMenuItem : MonoBehaviour {
         // Perform item role first
         switch (ItemRole())
         {
-            case Util.ONE_ACTIVE_BUTTON: ((OneActiveButton)this).ActivateItem(); break;
+            case Util.RADIO_BUTTON: ((RadioButton)this).ActivateItem(); break;
             case Util.STATIC_BUTTON: ((StaticButton)this).DoSomething(); break;
             case Util.TOGGLE_BUTTON: ((ToggleButton)this).Toggle(); break;
             case Util.DELAY_BUTTON:

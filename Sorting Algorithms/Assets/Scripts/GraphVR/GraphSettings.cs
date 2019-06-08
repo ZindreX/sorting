@@ -35,9 +35,31 @@ public class GraphSettings : TeachingSettings {
     private EdgeModeEditor edgeModeEditor;
     private enum EdgeModeEditor { Full, FullNoCrossing, Partial, PartialNoCrossing }
 
+    [SerializeField]
+    [Range(-100, 100)]
+    private int minEdgeCost;
+
+    [SerializeField]
+    [Range(-100, 100)]
+    private int maxEdgeCost;
+
+    // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
+    [Space(2)]
+    [Header("RNG stuff (Editor only)")]
+    [SerializeField]
+    [Range(0, 10)]
+    private int symmetricEdgeChance;
+
+    [SerializeField]
+    [Range(0, 10)]
+    private int partialBuildTreeChildChance;
+
+    [SerializeField]
+    [Range(0, 10)]
+    private int buildEdgeChance;
 
     // *** Grid graph ***
-    [Space(2)]
+    [Space(5)]
     [Header("Grid graph settings")]
     [SerializeField]
     [Range(1, 5)]
@@ -91,20 +113,6 @@ public class GraphSettings : TeachingSettings {
     [SerializeField]
     private bool selectStartEndNodes;
 
-    // Rolling random numbers: Random.Range(ROLL_START, ROLL_END) < 'INSERT_NAME'_CHANCE
-    [Space(5)]
-    [Header("RNG stuff (Editor only)")]
-    [SerializeField]
-    [Range(0, 10)]
-    private int symmetricEdgeChance;
-
-    [SerializeField]
-    [Range(0, 10)]
-    private int partialBuildTreeChildChance;
-
-    [SerializeField]
-    [Range(0, 10)]
-    private int buildEdgeChance;
 
     private string graphTask, graphStructure, edgeType, edgeBuildMode;
 
@@ -397,6 +405,16 @@ public class GraphSettings : TeachingSettings {
     {
         get { return edgeBuildMode; }
         set { edgeBuildMode = value; }
+    }
+
+    public int MinEdgeCost
+    {
+        get { return minEdgeCost; }
+    }
+
+    public int MaxEdgeCost
+    {
+        get { return maxEdgeCost; }
     }
 
     private void UpdateGraphSubVariables()
